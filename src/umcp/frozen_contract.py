@@ -13,6 +13,7 @@ because comparability has changed.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import Enum
 from typing import NamedTuple
@@ -57,7 +58,7 @@ TOL_SEAM: float = 0.005  # |s| ≤ tol_seam for PASS
 # =============================================================================
 
 
-def _bisect(f, lo: float, hi: float, tol: float = 1e-15, maxiter: int = 200) -> float:
+def _bisect(f: Callable[[float], float], lo: float, hi: float, tol: float = 1e-15, maxiter: int = 200) -> float:
     """Pure-numpy bisection (no scipy dependency). f(lo) and f(hi) must have opposite signs."""
     f_lo = f(lo)
     for _ in range(maxiter):
