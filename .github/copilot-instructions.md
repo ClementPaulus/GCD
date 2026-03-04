@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.3** · **5,247 tests** · **14 domains** · **120 closure modules** · **46 lemmas** · **37 dashboard pages**
+**UMCP v2.1.4** · **5,240 tests** · **14 domains** · **120 closure modules** · **46 lemmas** · **37 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -222,13 +222,13 @@ Before writing or modifying code, verify:
 
 UMCP (Universal Measurement Contract Protocol) validates reproducible computational workflows against mathematical contracts. The unit of work is a **casepack** — a directory containing raw data, a contract reference, closures, and expected outputs. The validator checks schema conformance, Tier-1 kernel identities (F = 1 − ω, IC ≈ exp(κ), IC ≤ F), regime classification, and SHA256 integrity, producing a three-valued CONFORMANT/NONCONFORMANT/NON_EVALUABLE verdict and appending to `ledger/return_log.csv`.
 
-**Version**: 2.1.3 · **Python**: ≥ 3.11 · **License**: MIT
+**Version**: 2.1.4 · **Python**: ≥ 3.11 · **License**: MIT
 
 ## Architecture
 
 ```
 src/umcp/
-├── __init__.py               # Public API: validate(), MeasurementEngine, __version__ (v2.1.3)
+├── __init__.py               # Public API: validate(), MeasurementEngine, __version__ (v2.1.4)
 ├── __main__.py               # python -m umcp entry point
 ├── cli.py                    # 2659-line argparse CLI — validation engine, all subcommands
 ├── validator.py              # Root-file validator (16 files, checksums, math identities)

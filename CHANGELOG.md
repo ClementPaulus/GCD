@@ -5,6 +5,47 @@ All notable changes to the UMCP validator and repository will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.4] - 2026-03-04
+
+### Added — Particle-to-Cognition Bridge, Dashboard Overhaul, Jungian Analysis
+
+**Particle-to-Cognition Bridge** (`scripts/particle_to_neuroscience_bridge.py`):
+Extended from 9 scales / 472 objects to **12 scales / 504 objects / 10 proofs**:
+- Scale 10: **Cognitive Functions** — 12 cognitive processes (working memory, attention,
+  language production, executive function, perception, emotion regulation, creativity,
+  logical reasoning, social cognition, metacognition, motor planning, autobiographical
+  memory) measured through the 10-channel brain kernel
+- Scale 11: **Consciousness States** — 8 states of awareness (deep sleep, REM dreaming,
+  default mode, focused attention, flow state, contemplative meditation, self-reflective
+  awareness, peak experience) measured through the same kernel
+- Scale 12: **Archetypal (Jungian)** — 12 Jungian archetypes (Shadow, Persona, Anima,
+  Animus, Self, Wise Old Man, Great Mother, Trickster, Hero, Child, Explorer, Collective
+  Unconscious) as recurrent channel configurations
+- New proofs: P8 (Cognitive Specialization vs. Integration), P9 (Consciousness as
+  Integrated Coherence), P10 (Archetypal Necessity)
+- Complete chain: quarks → nuclei → atoms → materials → cells → organisms → brains →
+  development → pathology → cognitive functions → consciousness → archetypes
+- 0 Tier-1 violations across all 504 objects
+
+**Jungian Structural Analysis** (`scripts/jung_proofs.py`, `scripts/jungian_analysis.py`):
+- 12/12 Jungian theorems PROVEN computationally
+- 10 Jungian structural fits with Rosetta cross-domain table
+- 8 named patterns discovered across brain kernel data
+
+**Dashboard Overhaul** (`src/umcp/dashboard/`):
+- Fixed 25+ blank page guards across 5 page modules (pages_science, pages_evolution,
+  pages_diagnostic, pages_advanced, pages_exploration)
+- Overhauled CSS with glass-morphism, gradient badges, hover effects (530 → 7341 chars)
+- Updated sidebar branding with version and Latin motto
+- Added prominent Interactive Dashboard section to README.md
+- All 144 dashboard tests pass
+
+### Changed
+
+- Version bump: 2.1.3 → 2.1.4 across all versioned files
+- Updated test count: 5,240 tests passing
+- Updated copilot-instructions.md with current stats
+
 ## [2.1.3] - 2026-02-19
 
 ### Changed — Version Bump, README Refinement & Accurate Stats

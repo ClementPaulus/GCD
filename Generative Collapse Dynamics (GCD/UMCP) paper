@@ -1,0 +1,760 @@
+% !TEX TS-program = xelatex
+% Compile: xelatex gcd_whitepaper.tex
+
+\documentclass[11pt]{article}
+
+% -------------------------
+% Page + typography
+% -------------------------
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{fontspec}
+\usepackage{amsmath,mathtools}
+\usepackage{unicode-math}
+
+% Font strategy:
+% Prefer TeX Gyre Termes family (Times-like, stable).
+% Fall back to Libertinus if Termes Math is not available.
+\setmainfont{TeX Gyre Termes}
+\setsansfont{TeX Gyre Heros}
+\IfFontExistsTF{TeX Gyre Termes Math}{
+  \setmathfont{TeX Gyre Termes Math}
+}{
+  \setmainfont{Libertinus Serif}
+  \setsansfont{Libertinus Sans}
+  \setmonofont{Libertinus Mono}
+  \setmathfont{Libertinus Math}
+}
+% Vector / bold symbols (unicode-math native)
+\newcommand{\vct}[1]{\symbf{#1}}   % preferred
+\newcommand{\bm}[1]{\symbf{#1}}    % compatibility alias for legacy \bm usage
+% -------------------------
+% Math
+% -------------------------
+
+\usepackage{amsthm}
+
+
+% -------------------------
+% Tables / lists
+% -------------------------
+\usepackage{booktabs}
+\usepackage{enumitem}
+\setlist[itemize]{topsep=3pt,itemsep=2pt,parsep=0pt,leftmargin=*}
+\setlist[enumerate]{topsep=3pt,itemsep=2pt,parsep=0pt,leftmargin=*}
+\usepackage{url}
+% Optional but very useful for whitepapers with notes under tables:
+\usepackage{threeparttable}
+
+% -------------------------
+% Color + hyperlinks (UMCP house color)
+% -------------------------
+\usepackage{xcolor}
+\definecolor{umcpblue}{HTML}{337799}
+
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Generative Collapse Dynamics (UMCP/GCD): Enabling Cross-Domain Comparability with Contract-Frozen Kernel Invariants and Typed Return},
+  pdfauthor={Clement Paulus},
+  colorlinks=true,
+  linkcolor=umcpblue,
+  citecolor=umcpblue,
+  urlcolor=umcpblue
+}
+
+% -------------------------
+% Notation helpers (Tier-1 objects only)
+% -------------------------
+\DeclareMathOperator{\clip}{clip}
+\DeclareMathOperator{\std}{std}
+
+% Typed tokens / invariants
+\newcommand{\Rinf}{\infty_{\mathrm{rec}}}     % typed no-return sentinel (math)
+\newcommand{\INFREC}{\texttt{INF\_REC}}       % typed no-return sentinel (text)
+\newcommand{\IC}{\mathrm{IC}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+% Vector / bold symbols (unicode-math native)
+
+
+% Protocol-token formatting
+\newcommand{\typed}[1]{\texttt{#1}}
+% Paper DOI (Zenodo deposit for this whitepaper)
+\newcommand{\PaperDOI}{10.5281/zenodo.18819238}
+% -------------------------
+% Theorem-like statements
+% (Use these for Tier-1 identities / kernel invariants only.)
+% -------------------------
+\theoremstyle{plain}
+\newtheorem{identity}{Identity}
+\newtheorem{proposition}{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+% -------------------------
+% Document identifiers (fill once, then freeze)
+% -------------------------
+\newcommand{\ValidatorLine}{v2.1.3}
+\newcommand{\ReleaseMonth}{February 2026}
+\newcommand{\Timezone}{America/Chicago}
+\newcommand{\WeldID}{W-2025-12-31-PHYS-COHERENCE}
+
+% Canon anchors (context)
+\newcommand{\CanonPRE}{10.5281/zenodo.17756705}
+\newcommand{\CanonPOST}{10.5281/zenodo.18072852}
+
+% Repository identifiers (primary = release line; commit optional)
+\newcommand{\RepoURL}{https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS}
+\newcommand{\RepoRelease}{v2.1.3}
+\newcommand{\RepoCommit}{30ccd4023f0208c0d8a9329d7175f91720c03699}          % optional: set to e.g. 3b9a739
+\newcommand{\RepoZenodo}{10.5281/zenodo.18616616}          % optional: Zenodo *software* DOI if minted
+
+% Print optional fields only when provided
+\newcommand{\RepoCommitLine}{%
+  \ifx\RepoCommit\empty\else\; (commit: \typed{\RepoCommit})\fi
+}
+\newcommand{\RepoZenodoLine}{%
+  \ifx\RepoZenodo\empty\else\; (Zenodo software DOI: \href{https://doi.org/\RepoZenodo}{10.5281/zenodo.18616616})\fi}
+
+\title{\textbf{Generative Collapse Dynamics (UMCP/GCD):}\\
+Enabling Cross-Domain Comparability via Contract-Frozen Kernel Invariants and Typed Return\\[0.35em]
+\large Whitepaper — release line \typed{\RepoRelease}\ (\ReleaseMonth)}
+
+\author{Clement Paulus\\
+\small ORCID: \href{https://orcid.org/0009-0000-6069-8234}{0009-0000-6069-8234}}
+
+\date{\small TZ: \Timezone\\
+\small Paper DOI: \href{https://doi.org/\PaperDOI}{\PaperDOI}\\
+\small Canon (context): \href{https://doi.org/\CanonPRE}{\CanonPRE} (PRE) $\,\cdot\,$ \href{https://doi.org/\CanonPOST}{\CanonPOST} (POST)\\
+\small Weld-ID (context): \WeldID\\
+\small Repo: \href{\RepoURL}{GCD} \; (release line: \typed{\RepoRelease})\RepoCommitLine\RepoZenodoLine}
+
+\begin{document}
+\maketitle
+% -------------------------
+% Jurisdiction / Tier discipline (place immediately after \maketitle)
+% -------------------------
+\noindent\textbf{Jurisdiction / Tier discipline.}
+This whitepaper operates under the UMCP contract-first rule: the Tier-1 ledger
+$\{\omega, F, S, C, \tau_R, \kappa, \IC\}$ is computed \emph{only} by the kernel on the bounded trace
+$\Psi(t)\in[0,1]^n$ under the active frozen contract, and these symbols are reserved (no redefinition
+by prose, domain semantics, or overlays).
+Tier-0 specifies the measurable interface—observables $x(t)$, adapter $N_K$, bounds/OOR and missingness policy,
+and return settings $(\norm{\cdot},\eta,D_\theta)$—and therefore defines the object being measured.
+Tier-2 objects (scores, labels, narratives, auxiliary diagnostics) may be introduced only as diagnostics and must not be used as
+regime or weld gates unless promoted through an explicit seam, a new frozen run, and a recorded weld decision.
+Segments with $\tau_R=\Rinf$ are \emph{typed} as censored for return credit under the default rule-set (no return observed under the contract),
+and must be treated as such in any continuity accounting.
+\par\vspace{0.75em}
+
+% -------------------------
+% Abstract
+% -------------------------
+\begin{abstract}
+Generative Collapse Dynamics (GCD) is a contract-first measurement discipline governed by a single admissibility axiom:
+\emph{collapse is generative; only what returns through collapse is real}.
+In UMCP terms, “real” is not metaphysical; it is an audit rule: a claim receives epistemic credit only if
+(i) it is evaluated on a declared bounded trace $\Psi(t)\in[0,1]^n$ produced by a declared adapter $N_K$ from observables $x(t)$,
+and (ii) it exhibits finite re-entry time $\tau_R(t)$ under the same frozen evaluation rules across the collapse/return boundary.
+We formalize the Tier-1 kernel ledger $\{\omega,F,S,C,\kappa,\IC\}$ and the typed return output $\tau_R$,
+state the Tier-1 identities that hold for every admissible trace, and introduce two diagnostics that recur across domains
+without altering Tier-1 meanings: the heterogeneity gap $\Delta \coloneqq F-\IC$ and coherence efficiency
+$\rho \coloneqq \IC/F$ (defined when $F>0$).
+Finally, we record the scale-ladder summary reported in the \ValidatorLine\ release line (406 objects across 11 rungs) as a
+cross-scale comparability stress test under a single kernel.
+\end{abstract}
+
+% -------------------------
+% Scope and non-negotiables
+% -------------------------
+\section*{Scope and non-negotiables}
+\begin{enumerate}[leftmargin=2.1em]
+  \item \textbf{Tier-1 reservation.}
+  The symbols $\{\omega, F, S, C, \tau_R, \kappa, \IC\}$ denote kernel outputs on $\Psi_\varepsilon(t)$ under the frozen contract.
+  They are not redefined by overlays, narrative interpretation, or domain-specific semantics.
+
+  \item \textbf{Structural-change rule.}
+  Any change to the embedding $N_K$; the return neighborhood generator $D_\theta$; the metric $\norm{\cdot}$; tolerance $\eta$;
+  weights $\bm{w}$; clipping level $\varepsilon$; or any closure entering seam accounting constitutes a structural change.
+  Continuity claims across structural change require an explicit seam specification and (if adopted as “the same object”) a weld.
+\end{enumerate}
+\subsection{Run identity and freeze statement}
+A UMCP evaluation is identified by a run key that binds \emph{what was measured} to \emph{how it was evaluated}.
+We denote this key by $\mathrm{RunID}$ and treat it as immutable for the purpose of comparison:
+\begin{equation}
+  \mathrm{RunID} \;\equiv\; \bigl(\Pi,\; N_K,\; \varepsilon,\; \bm{w},\; \norm{\cdot},\; \eta,\; D_\theta,\; \mathcal{C}\bigr),
+\end{equation}
+where $\Pi$ is the acquisition/pipeline declaration, $N_K$ the adapter, $\varepsilon$ the log-safety clip,
+$\bm{w}$ the frozen weights, $(\norm{\cdot},\eta)$ the return metric and tolerance, $D_\theta$ the return neighborhood generator,
+and $\mathcal{C}$ the active frozen contract/closure registry.
+Two results are audit-comparable only if they share the same $\mathrm{RunID}$ (or else the comparison is explicitly staged across a seam).
+Any modification to any component of $\mathrm{RunID}$ constitutes a structural change and must be declared before inference.
+% -------------------------
+% Measured object: observables, adapter, bounded trace
+% -------------------------
+\section{Measured object: observables, adapter, bounded trace}
+
+\subsection{Observables and time base}
+Let $x(t)$ denote the observed data stream at discrete index $t\in\{0,1,2,\dots\}$.
+A UMCP measurement is the pair $(x(t),\Pi)$, where $\Pi$ is the declared acquisition and preprocessing pipeline.
+Audit-equivalence requires that the following be declared:
+
+\begin{enumerate}[leftmargin=2.1em]
+  \item \textbf{Units and frame.} Units, reference frame, and any coordinate conventions for each observable channel.
+  \item \textbf{Time base.} Sampling cadence, windowing/segmentation rule, and any resampling or interpolation.
+  \item \textbf{Timestamps.} Absolute timestamps (preferred) or an explicit statement that $t$ is an abstract index.
+  \item \textbf{Pipeline provenance.} Instrument + preprocessing steps (software versions, calibration steps, filters, transforms).
+\end{enumerate}
+
+If any component is unspecified, the induced trace $\Psi(t)$ is not reproducible and the run is not audit-equivalent.
+
+\subsection{Adapter (embedding)}
+An adapter (embedding) $N_K$ maps observables into a bounded trace:
+\begin{equation}
+  N_K:\; x(t)\mapsto \Psi(t)\in[0,1]^n,
+\end{equation}
+where $n$ is fixed by the adapter schema and does not vary within a run.
+The adapter is part of the measured object: changing $N_K$ changes what it means to measure $x(t)$.
+
+\paragraph{Minimum adapter declaration.}
+The adapter specification must include, at minimum:
+\begin{enumerate}[leftmargin=2.1em]
+  \item \textbf{Channel map.} The ordered channel list $\Psi(t)=(c_1(t),\dots,c_n(t))$ and the meaning of each channel
+  (including any physical units prior to normalization).
+  \item \textbf{Normalization.} The explicit map from raw values to $[0,1]$ for each channel, including constants, priors,
+  baselines, or calibration tables, and their provenance.
+  \item \textbf{Bounds policy.} The out-of-range (OOR) rule: clip, saturate, rescale, drop, or flag; and how OOR affects
+  subsequent computation and receipts.
+  \item \textbf{Missingness policy.} The rule for missing/undefined values: impute, mask, skip, or fail-fast; and the
+  audit log field that records the event.
+\end{enumerate}
+Absent an explicit declaration, the default assumption is \emph{no assumption}: the run is non-auditable.
+
+\paragraph{Weights and evaluation interface.}
+While $\bm{w}$ is a kernel input, the choice of weights is part of the evaluation interface and must be frozen
+together with the adapter. The statement “$\Psi(t)\in[0,1]^n$” is incomplete without both the channel map and
+$\bm{w}$, because the kernel is a weighted functional on $\Psi_\varepsilon(t)$.
+
+\paragraph{Log-safety and boundary honesty.}
+Fix $\varepsilon\in(0,\tfrac12)$ by the frozen contract and define componentwise $\varepsilon$-clipping:
+\begin{equation}
+  \Psi_\varepsilon(t)\coloneqq \clip\bigl(\Psi(t),\varepsilon,1-\varepsilon\bigr).
+\end{equation}
+All log-domain quantities—specifically $\kappa(t)=\sum_i w_i\ln(c_{i,\varepsilon}(t))$ and
+$\IC(t)=\exp(\kappa(t))$—are computed on $\Psi_\varepsilon(t)$.
+Boundary operations are not silent conveniences: every OOR correction and every $\varepsilon$-induced substitution
+must be recorded in the run log. Silent boundary substitution is nonconformant under the contract because it changes
+$\IC$ and $\kappa$ while denying provenance.
+
+\subsection{Run identity and freeze statement}
+\label{subsec:runid_pointer}
+The run key $\mathrm{RunID}$ is defined in \S\;0.1 and is treated as immutable for audit-comparison.
+All results in this paper are interpreted relative to that frozen $\mathrm{RunID}$; comparisons across changes
+to any component of $\mathrm{RunID}$ are descriptive only unless explicitly staged across a declared seam and weld.
+Where $\Pi$ is the acquisition/pipeline declaration, $N_K$ the adapter, $\varepsilon$ the log-safety clip,
+$\bm{w}$ the frozen weights, $(\norm{\cdot},\eta)$ the return metric and tolerance, $D_\theta$ the return neighborhood generator,
+and $\mathcal{C}$ the active frozen contract/closure registry.
+Two results are audit-comparable only if they share the same $\mathrm{RunID}$ (or the comparison is explicitly staged across a seam).
+Any modification to any component of $\mathrm{RunID}$ constitutes a structural change and must be declared before inference.
+
+% -------------------------
+% Kernel (Tier-1) and notation
+% -------------------------
+\section{Kernel (Tier-1) and notation}
+\label{sec:kernel}
+
+This section fixes notation and states the Tier-1 kernel objects computed from the $\varepsilon$-clipped bounded trace
+$\Psi_\varepsilon(t)\in[\varepsilon,1-\varepsilon]^n$. The kernel is evaluated pointwise in $t$; all quantities below are
+deterministic functions of $(\Psi_\varepsilon(t),\bm{w})$ under the active frozen contract.
+
+\subsection{Weights}
+Let $\bm{w}=(w_1,\dots,w_n)$ satisfy
+\begin{equation}
+  w_i \ge 0 \quad (i=1,\dots,n),
+  \qquad
+  \sum_{i=1}^n w_i = 1.
+\end{equation}
+Weights are part of the evaluation interface and are frozen within a run (see $\mathrm{RunID}$). They are not fitted post hoc.
+
+\subsection{Trace components and clipping}
+Write the clipped trace in components
+\begin{equation}
+  \Psi_\varepsilon(t) = \bigl(c_{1,\varepsilon}(t),\dots,c_{n,\varepsilon}(t)\bigr),
+  \qquad
+  c_{i,\varepsilon}(t)\in[\varepsilon,1-\varepsilon].
+\end{equation}
+When unambiguous, we suppress the $\varepsilon$ subscript and write $c_i(t)$ for $c_{i,\varepsilon}(t)$; log-domain expressions
+always use the clipped values.
+
+\subsection{Fidelity and drift}
+Define the weighted fidelity and drift
+\begin{equation}
+  F(t) \coloneqq \sum_{i=1}^n w_i\,c_{i,\varepsilon}(t),
+  \qquad
+  \omega(t) \coloneqq 1 - F(t).
+\end{equation}
+
+\begin{identity}[Complementarity]
+\label{id:complementarity}
+For all $t$,
+\begin{equation}
+  F(t)+\omega(t)=1.
+\end{equation}
+\end{identity}
+
+\begin{proof}
+Immediate from the definition $\omega(t)\coloneqq 1-F(t)$.
+\end{proof}
+
+\subsection{Log-integrity and integrity composite}
+Define the log-integrity and integrity composite
+\begin{equation}
+  \kappa(t) \coloneqq \sum_{i=1}^n w_i\,\ln\!\bigl(c_{i,\varepsilon}(t)\bigr),
+  \qquad
+  \IC(t) \coloneqq \exp\!\bigl(\kappa(t)\bigr)
+  = \prod_{i=1}^n c_{i,\varepsilon}(t)^{\,w_i}.
+\end{equation}
+The $\varepsilon$-clipping guarantees $c_{i,\varepsilon}(t)\in(0,1)$, hence $\kappa(t)\in(-\infty,0)$ and $\IC(t)\in(0,1)$.
+
+\begin{identity}[Exponentiation]
+\label{id:exponentiation}
+For all $t$,
+\begin{equation}
+  \IC(t)=\exp(\kappa(t))
+  \quad\text{and}\quad
+  \kappa(t)=\ln(\IC(t)).
+\end{equation}
+\end{identity}
+
+\begin{proof}
+By definition, $\IC(t)=\exp(\kappa(t))$. Since $\IC(t)>0$, applying $\ln(\cdot)$ yields $\ln(\IC(t))=\kappa(t)$.
+\end{proof}
+
+\subsection{Entropy functional}
+Define the Bernoulli-field entropy functional
+\begin{equation}
+  S(t) \coloneqq -\sum_{i=1}^n w_i\Bigl[
+    c_{i,\varepsilon}(t)\ln c_{i,\varepsilon}(t)
+    + \bigl(1-c_{i,\varepsilon}(t)\bigr)\ln\bigl(1-c_{i,\varepsilon}(t)\bigr)
+  \Bigr].
+\end{equation}
+
+\begin{remark}[Role of $S$]
+$S(t)$ is a dispersion functional on bounded traces. Any thermodynamic interpretation is an overlay and must be declared
+as Tier-2; $S$ itself is a Tier-1 kernel output.
+\end{remark}
+
+\subsection{Curvature proxy}
+Let $\std(\bm{c}(t))$ denote the population standard deviation of the multiset
+$\{c_{1,\varepsilon}(t),\dots,c_{n,\varepsilon}(t)\}$. The canon default proxy is
+\begin{equation}
+  C(t) \coloneqq \frac{\std(\bm{c}(t))}{0.5}.
+\end{equation}
+Because $c_{i,\varepsilon}(t)\in[\varepsilon,1-\varepsilon]\subset[0,1]$, we have $\std(\bm{c}(t))\le 0.5$ and therefore
+$C(t)\in[0,1]$ under the trace bounds.
+
+\subsection{Integrity bound}
+\begin{identity}[Integrity bound]
+\label{id:integrity_bound}
+For $c_{i,\varepsilon}(t)\in(0,1)$ and weights $\bm{w}$ with $w_i\ge 0$ and $\sum_i w_i=1$,
+\begin{equation}
+  \IC(t)\le F(t).
+\end{equation}
+\end{identity}
+
+\begin{proof}
+Let $a_i=c_{i,\varepsilon}(t)\in(0,1)$. The weighted AM--GM inequality gives
+$\prod_{i=1}^n a_i^{w_i} \le \sum_{i=1}^n w_i a_i$ for nonnegative weights summing to one.
+Substituting the definitions $\IC(t)=\prod_i a_i^{w_i}$ and $F(t)=\sum_i w_i a_i$ yields $\IC(t)\le F(t)$.
+\end{proof}
+% -------------------------
+% Return typing and censoring
+% -------------------------
+\section{Return typing and censoring}
+\label{sec:return}
+
+Return is a contract object. The kernel does not infer return; it receives a return neighborhood generator and a metric
+as frozen evaluation settings. This section defines the admissible candidate set, the re-entry delay $\tau_R$, and the
+typed censoring rule used when no return is observed under the active contract.
+
+\subsection{Return neighborhood and admissible candidates}
+Fix a closure-defined return domain (candidate set) $D_\theta(t)$ at time $t$, parameterized by $\theta$, together with a
+frozen metric $\norm{\cdot}$ on $\Psi$-space and a frozen tolerance $\eta>0$.
+The admissible candidate set is
+\begin{equation}
+  U_\theta(t) \coloneqq \Bigl\{\,u\in D_\theta(t)\;:\; \norm{\Psi(t)-\Psi(u)}\le \eta \Bigr\}.
+\end{equation}
+Here $u$ ranges over the evaluation indices available to the run (e.g., $u\in\{0,1,\dots,t\}$ for a retrospective search,
+or a specified horizon window if the contract restricts search). The horizon rule is part of the closure specification:
+changing it changes $D_\theta$ and therefore changes the measured object.
+
+\begin{remark}[Contract dependence]
+The triple $(D_\theta,\norm{\cdot},\eta)$ is part of $\mathrm{RunID}$. Any modification to the return domain generator,
+metric, tolerance, or horizon constitutes a structural change and must be declared before inference.
+\end{remark}
+
+\subsection{Re-entry delay}
+Define the (typed) re-entry delay:
+\begin{equation}
+  \tau_R(t) \coloneqq
+  \begin{cases}
+    \min\{\,t-u:\; u\in U_\theta(t)\,\}, & \text{if } U_\theta(t)\neq\varnothing,\\[0.35em]
+    \Rinf, & \text{if } U_\theta(t)=\varnothing.
+  \end{cases}
+\end{equation}
+Thus $\tau_R(t)$ is either a nonnegative integer (finite return observed under the contract) or the typed sentinel
+$\Rinf$ (no return observed under the contract).\par
+\noindent\textbf{Note.} Unless the active contract specifies return evaluation on $\Psi_\varepsilon$,
+the return metric is evaluated on $\Psi$ (unclipped) while log-domain quantities are evaluated on $\Psi_\varepsilon$.
+\begin{remark}[Typed censoring and return credit]
+\label{rem:typed_censoring}
+$\Rinf$ is a typed censoring value, not a large number. It asserts:
+\emph{under the active contract and within the active horizon, no admissible candidate $u$ was found.}
+Unless a different censoring rule is explicitly declared and frozen, segments with $\tau_R=\Rinf$ receive zero return credit
+in any seam or continuity accounting, and must be treated as censored rather than as finite-but-large delays.
+\end{remark}
+
+% -------------------------
+% Diagnostics from the invariant ledger (Tier-2; non-gating)
+% -------------------------
+\section{Diagnostics from the invariant ledger (Tier-2; non-gating)}
+\label{sec:diagnostics}
+
+This section defines Tier-2 diagnostics constructed from the Tier-1 ledger.
+They are permitted as \emph{descriptive} quantities (ranking, visualization, clustering, annotation),
+but they are \emph{not} regime or weld gates unless explicitly promoted through a declared seam and a new frozen run.
+In particular, no Tier-2 score may override (i) the active regime gates or (ii) typed return censoring.
+
+\subsection{Heterogeneity gap}
+\begin{definition}[Heterogeneity gap]
+\label{def:delta}
+For each $t$, define
+\begin{equation}
+  \Delta(t) \coloneqq F(t) - \IC(t).
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Nonnegativity]
+\label{prop:delta_nonneg}
+For all $t$, $\Delta(t)\ge 0$.
+\end{proposition}
+
+\begin{proof}
+Immediate from the Tier-1 integrity bound $\IC(t)\le F(t)$ (Identity~\ref{id:integrity_bound}).
+\end{proof}
+
+\noindent\textbf{Operational meaning.}
+$F(t)$ is an arithmetic aggregate of channel confidence, while $\IC(t)$ is multiplicative and therefore bottlenecked by weak channels.
+Large $\Delta(t)$ indicates imbalance: the mean can remain moderate while multiplicative coherence is driven toward the guard band.
+Equivalently, $\Delta(t)$ is the gap between “average adequacy” and “weakest-link survivability” under the frozen weights.
+
+\paragraph{Diagnostic-only class labels (conventional).}
+The following thresholds are optional labels for reporting and visualization only; they are not gates.
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Condition on $\Delta(t)$ & Diagnostic label \\
+\midrule
+$\Delta(t) < 10^{-6}$ & homogeneous \\
+$10^{-6} \le \Delta(t) < 10^{-2}$ & coherent \\
+$10^{-2} \le \Delta(t) < 5\times 10^{-2}$ & heterogeneous \\
+$\Delta(t) \ge 5\times 10^{-2}$ & fragmented \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Coherence efficiency}
+When $F(t)>0$, define the coherence-efficiency ratio
+\begin{equation}
+  \rho(t) \coloneqq \frac{\IC(t)}{F(t)} \in (0,1].
+\end{equation}
+\noindent\textbf{Operational meaning.}
+$\rho(t)$ measures how much of the arithmetic mean survives multiplicatively under the frozen weights.
+At fixed $F(t)$, smaller $\rho(t)$ indicates stronger bottlenecking by one (or several) weak channels.
+When reporting $\rho$, always report alongside $\Delta$ (or $\IC$) so that “efficiency loss” is not confused with low fidelity.
+
+\subsection{Regimes from drift (reported in \ValidatorLine)}
+The \ValidatorLine\ release line reports drift-banded regime labels:
+\begin{equation}
+\text{Stable: }\omega<0.10;\quad
+\text{Watch: }0.10\le\omega<0.20;\quad
+\text{Tension: }0.20\le\omega<0.30;\quad
+\text{Collapse: }\omega\ge0.30.
+\end{equation}
+These labels are acceptable for narrative reporting, but they do not replace the active regime gates.
+If a tighter multi-gate regime definition on $(\omega,F,S,C)$ is active for the run, the full gate set must be listed as part of the frozen contract and treated as the governing classifier.
+% -------------------------
+% Cross-domain patterns (reported; expressed in kernel terms)
+% -------------------------
+\section{Cross-domain patterns (reported; expressed in kernel terms)}
+\label{sec:cross_domain}
+
+The kernel exists to make comparison possible without importing domain-native units into the invariant ledger.
+Each domain supplies a declared adapter $N_K$ that produces a bounded trace $\Psi(t)\in[0,1]^n$; after that point, the
+quantities $(F,\omega,\kappa,\IC,S,C,\tau_R)$ are the \emph{same mathematical objects} in every domain.
+Accordingly, the statements in this section are expressed in kernel terms: they refer to the invariant ledger and its
+Tier-2 diagnostics $(\Delta,\rho)$, not to the native physical units of the source measurements.
+Where a statement depends on a boundary (e.g.\ quark$\to$hadron), that boundary is understood as a domain-labeled region
+in which the adapter changes the channel mixture (but the kernel does not change).
+
+\subsection{Particle and atomic physics (reported)}
+\label{subsec:particle_atomic}
+
+\noindent\textbf{Reported patterns.}
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{Identity conformance at scale.}
+  A set of 31 Standard Model particles and 118 chemical elements is reported to satisfy the Tier-1 identities
+  (Complementarity, Exponentiation, Integrity bound) with zero violations under the active adapters.
+  \item \textbf{Generation monotonicity (integrity ordering).}
+  “Generation monotonicity” is reported as a strict ordering in integrity-derived quantities across fermion generations,
+  expressed as a decrease in $\IC$ (and typically $\rho$) from first- to third-generation particles.
+  \item \textbf{Integrity cliff at the quark$\to$hadron boundary.}
+  A sharp discontinuity is reported at the quark$\to$hadron transition, expressed as an abrupt drop in $\IC$ and/or $\rho$,
+  often accompanied by a spike in $\Delta$ (weak-channel bottlenecking).
+\end{itemize}
+
+\noindent\textbf{Kernel meaning.}
+These are statements about $(F,\IC,\Delta,\rho,\omega)$ computed from domain traces.
+They do not require (and do not imply) any claim about domain-native units beyond what is already encoded in the adapter.
+
+\subsection{Quantum mechanics and materials (reported)}
+\label{subsec:quantum_materials}
+
+\noindent\textbf{Reported patterns.}
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{Complementarity cliff (channel co-failure).}
+  A “complementarity cliff” is reported when wave- and particle-proxy channels simultaneously approach the guard band.
+  The kernel signature is:
+  (i) $F$ remains nonzero (the mean does not vanish),
+  (ii) $\IC$ collapses toward the guard band (multiplicative failure), hence $\Delta$ spikes,
+  and (iii) return may fail in the affected window, yielding typed censoring $\tau_R=\Rinf$.
+  \item \textbf{Phase-transition signatures in materials.}
+  Phase transitions are reported as joint excursions in dispersion diagnostics:
+  spikes in $\Delta$ (imbalance) and $C$ (dispersion), with corresponding drops in coherence efficiency $\rho$.
+\end{itemize}
+
+\noindent\textbf{Kernel meaning.}
+The “cliff” language denotes a regime where a small subset of channels becomes bottlenecking.
+In kernel terms, the arithmetic aggregate can remain stable while the multiplicative aggregate collapses.
+
+\subsection{Nuclear, RCFT, cosmology (reported)}
+\label{subsec:nuclear_rcft_cosmo}
+
+\noindent\textbf{Reported patterns.}
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{Critical points as dispersion maxima (nuclear / RCFT).}
+  In nuclear closures and RCFT closures, “critical points” are reported as local maxima in $\Delta$ (imbalance) and/or $C$
+  (dispersion), often coincident with increased entropy $S$ and elevated drift $\omega$.
+  \item \textbf{Cosmological heterogeneity (near-zero channel suppression).}
+  Cosmological closures are reported to exhibit persistent heterogeneity: one or more near-zero channels suppress $\IC$
+  toward the guard band while leaving $F$ moderate, producing large $\Delta$ and small $\rho$.
+\end{itemize}
+
+\noindent\textbf{Kernel meaning.}
+These reports describe the same mechanism: multiplicative suppression by weak channels in an otherwise moderate mean.
+In cosmology, the claim is not “the universe is low-fidelity,” but “coherence is bottlenecked by one or more channels.”
+
+\subsection{Finance, evolution, everyday systems (reported)}
+\label{subsec:finance_evolution_everyday}
+
+\noindent\textbf{Reported patterns.}
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{Finance: stress as weak-channel dominance.}
+  Systemic stress is reported as spikes in $\Delta$ (weak-channel suppression of $\IC$) and drops in $\rho$,
+  with $\omega$ typically increasing as coherence degrades.
+  \item \textbf{Evolution: anti-proof configurations and human heterogeneity.}
+  Cancer is reported as an “anti-proof” configuration: local channel fidelity can remain high while organism-level $\IC$
+  collapses (large $\Delta$, low $\rho$). Humans are reported with $\Delta\approx 0.34$ under the relevant adapter.
+  \item \textbf{Everyday physics: identity preservation under macroscopic adapters.}
+  Macroscopic systems (thermodynamics, optics, electromagnetism) are reported to satisfy the Tier-1 identities under their
+  declared adapters, supporting single-kernel comparability across scale.
+\end{itemize}
+
+\noindent\textbf{Kernel meaning.}
+In each case, the diagnostic content is the same: $\Delta$ isolates imbalance, $\rho$ quantifies multiplicative survival
+relative to the mean, and typed return censoring ($\tau_R=\Rinf$) forbids continuity credit where return is not observed.
+
+% -------------------------
+% Scale-ladder summary (406 objects; 11 rungs; reported)
+% -------------------------
+\section{Scale-ladder summary (406 objects; 11 rungs; reported)}
+\label{sec:scale_ladder}
+
+The scale-ladder run applies a single kernel to a heterogeneous catalog: 406 objects spanning 11 scale rungs
+(from Planck length through the cosmic horizon). The run is reported to use a frozen $\varepsilon$ and equal weights,
+so that cross-object comparison is driven by the trace values rather than by tuned weighting.
+The items below are reported outcomes expressed strictly in kernel terms.
+
+\begin{enumerate}[leftmargin=2.2em]
+  \item \textbf{Exact complementarity.}
+  For every object evaluated, the Tier-1 identity holds:
+  \begin{equation}
+    F+\omega=1.
+  \end{equation}
+  This is not a trend; it is an identity enforced by the kernel definition.
+
+  \item \textbf{Fidelity is not monotone in scale.}
+  Mean fidelity does not increase or decrease monotonically with physical size.
+  The highest reported mean $F$ occurs at the galactic rung (characteristic scale $\sim 10^{21}\,\mathrm{m}$),
+  while Planck-scale objects are reported to have near-zero $F$ under the scale-ladder adapter.
+
+  \item \textbf{A single incoherence mechanism (weak-channel suppression).}
+  Across rungs, $\Delta$ is reported to diagnose incoherence by the same mechanism:
+  one (or more) near-zero channels suppress $\IC$ toward the guard band even when the arithmetic mean remains moderate.
+  In kernel terms, incoherence appears as large $\Delta=F-\IC$ and small $\rho=\IC/F$.
+
+  \item \textbf{Geological objects maximize low-integrity incidence.}
+  The geological rung is reported to contain the largest fraction of objects with extremely low integrity,
+  quantified as $\IC<0.01$.
+  This is a statement about multiplicative collapse in the trace (and therefore large $\Delta$), not about low mean fidelity.
+
+  \item \textbf{Watch regime is rare under drift-banding.}
+  Under the reported drift-banded labels, only $10/406$ objects fall in \textsc{Watch}.
+  This highlights that intermediate drift is uncommon in the reported catalog; objects cluster toward stable or collapse
+  under the drift-banding convention.
+
+  \item \textbf{Coherence efficiency separates nuclear from cosmological.}
+  Coherence efficiency $\rho=\IC/F$ is reported to be maximized in nuclear objects (approximately $72.6\%$)
+  and minimized in cosmological objects (approximately $17.6\%$).
+  Interpreted purely in kernel terms: for comparable mean fidelity, the nuclear rung preserves multiplicative coherence,
+  while the cosmological rung loses it to weak-channel suppression.
+
+  \item \textbf{Specialization as imbalance (biological rungs).}
+  Biological specialization is reported to be quantified by the ratio $\Delta/F$.
+  Highly specialized cells are reported to exhibit large $\Delta/F$, with near-zero $\IC$ despite moderate $F$,
+  while yeast is reported to remain comparatively balanced (small $\Delta$), hence higher $\rho$.
+\end{enumerate}
+
+\noindent\textbf{Reporting rule.}
+These scale-ladder claims are recorded as reported summaries under the \ValidatorLine\ release line.
+Any attempt to promote a scale-ladder pattern into a gate, a closure, or a continuity claim must bind the claim to a frozen
+$\mathrm{RunID}$ and (when structural changes are involved) to an explicit seam and weld decision.
+
+% -------------------------
+% Seam and continuity (notation-only summary)
+% -------------------------
+\section{Seam and continuity (notation-only summary)}
+\label{sec:seam_continuity}
+
+Continuity is not assumed; it is evaluated. If continuity across a structural change is claimed (adapter change, return-rule change,
+weights change, closure change, or any modification of $\mathrm{RunID}$), then a seam must be explicitly declared and a weld
+decision must be recorded under the active frozen closure registry.
+
+\subsection{Structural change and seam declaration}
+A \emph{seam} names the boundary between two evaluations $\mathrm{RunID}_{\mathrm{pre}}$ and $\mathrm{RunID}_{\mathrm{post}}$.
+It is defined by (i) the comparison points $(t_0,t_1)$ (or windows), (ii) the identity-check rule in force,
+and (iii) the frozen closure registry used to compute seam costs and return credit.
+Absent an explicit seam declaration, comparisons across structural changes are descriptive only and do not carry continuity credit.
+
+\subsection{Seam residual (reported form in \ValidatorLine)}
+In the \ValidatorLine\ release line, the seam residual is written in $\kappa$-budget form as
+\begin{equation}
+  s \coloneqq R\cdot \tau_R \;-\; \bigl(\Delta\kappa + D_\omega + D_C\bigr),
+\end{equation}
+where
+\begin{equation}
+  \Delta\kappa \coloneqq \kappa_{\mathrm{post}}(t_1) - \kappa_{\mathrm{pre}}(t_0)
+\end{equation}
+is the ledger change in log-integrity across the seam, $D_\omega$ and $D_C$ are closure-defined cost terms (frozen),
+and $R\cdot\tau_R$ is the return-credit term computed under the active return rule-set.
+
+\subsection{Weld decision (PASS/FAIL rule)}
+A weld \textsc{PASS} requires:
+\begin{enumerate}[leftmargin=2.2em]
+  \item \textbf{Finite return.} $\tau_R$ is finite (typed return observed), i.e.\ $\tau_R\neq \Rinf$.
+  \item \textbf{Residual tolerance.} The seam residual satisfies
+  \begin{equation}
+    |s|\le \mathrm{tol},
+  \end{equation}
+  where $\mathrm{tol}$ is the frozen seam tolerance in the closure registry.
+\end{enumerate}
+If $\tau_R=\Rinf$, return credit is censored by typing (default rule), and no weld may claim continuity credit on that segment.
+\section{Citation and reproducibility}
+\label{sec:citation_repro}
+
+\subsection*{Whitepaper citation (Zenodo; fixed artifact)}
+\noindent\textbf{Preferred.}
+C.~Paulus, \emph{Generative Collapse Dynamics (UMCP/GCD): Kernel invariants, return typing, and cross-domain diagnostics},
+Zenodo, \ReleaseMonth. DOI: \href{https://doi.org/\PaperDOI}{\PaperDOI}.
+
+\subsection*{Repository citation (GitHub; release line primary, commit optional)}
+\noindent\textbf{Primary (release line).}
+Generative Collapse Dynamics (UMCP/GCD). Validator line \typed{\RepoRelease} (\ReleaseMonth).
+Repository: \url{\RepoURL}. MIT License.
+
+\medskip
+\noindent\textbf{Preferred (release line + immutable pointer).}
+Generative Collapse Dynamics (UMCP/GCD). Validator line \typed{\RepoRelease} (\ReleaseMonth).
+Repository:\\
+\url{\RepoURL}. MIT License.
+\ifx\RepoCommit\empty\relax
+\emph{Add the commit hash for audit-grade reproducibility.}
+\else
+Commit: \texttt{\RepoCommit}.
+\fi
+
+\subsection*{Canon anchors (context)}
+\noindent PRE: \href{https://doi.org/\CanonPRE}{\CanonPRE}. \quad
+POST: \href{https://doi.org/\CanonPOST}{\CanonPOST}. \quad
+These anchors define the contract-first invariant skeleton and continuity-law context for the present release line.
+
+\subsection*{Endnote (admissibility stance; non-gating)}
+\noindent Axiom-0 is enforced as an admissibility rule: if return is not observed under the active contract, the system is typed as
+no-return ($\tau_R=\Rinf$) and receives zero return credit under the default censoring rule.
+No-return is recorded and censored (typed); any change that converts no-return to return must be declared as a structural seam and
+evaluated under a weld decision.
+
+% =========================
+% Acknowledgements + Lineage (drop-in)
+% =========================
+
+\section*{Acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+
+This whitepaper is a release-line report of the \textit{Generative Collapse Dynamics (UMCP/GCD)} reference implementation and its validator suite: every identity claim, invariant definition, regime label, and reported cross-domain summary in the present document is intended to be reproducible as a literal proof or computed artifact from the repository under the pinned release line/commit (\cite{umcpmetadatarepo}; see also the runnable CasePack, \cite{paulus2026umcpcasepack}).
+
+Archival support and fixed-artifact citation are provided via Zenodo, with canon anchoring through the PRE/POST works that define the invariant skeleton and weld/continuity context (\cite{paulus2025episteme,paulus2025physicscoherence}). Additional practitioner-facing consolidation and audit discipline are carried by the broader toolkit/protocol manuscripts in the corpus (\cite{paulus2025toolkit,paulus2025umcp,paulus2025cmp,paulus2025canonnote}).
+
+
+\section*{Lineage and provenance}
+\addcontentsline{toc}{section}{Lineage and provenance}
+
+\paragraph{Canon anchors (PRE\,$\rightarrow$\,POST).}
+The UMCP/GCD invariant skeleton and the continuity-law stance used here are canon-anchored by \textit{The Episteme of Return} (PRE) and \textit{The Physics of Coherence: Recursive Collapse \& Continuity Laws} (POST) (\cite{paulus2025episteme,paulus2025physicscoherence}). These anchors fix the contract-first posture (bounded trace, frozen closures, typed censoring of no-return) and constrain continuity claims across structural change to explicit seam/weld bookkeeping.
+
+\paragraph{Protocol lineage (contract-first measurement).}
+The measurement discipline underlying the present release line proceeds from the contract-first method texts in the corpus: the Universal Measurement Contract Protocol, the Collapse Metric Protocol, and the canon/provenance bookkeeping note (\cite{paulus2025umcp,paulus2025cmp,paulus2025canonnote}). Seam admissibility and continuity geometry are treated as explicit objects (not implicit assumptions) in the seam taxonomy work (\cite{paulus2025seams}).
+
+\paragraph{Runnable proofs and reproducibility.}
+All results reported in this whitepaper are claims about what the reference implementation computes and what its validator suite proves under the declared adapter and frozen RunID: in particular,
+(i) Tier-1 quantities are computed as explicit functions on the bounded trace under the active contract,
+(ii) Tier-2 diagnostics are explicitly non-gating and cannot overwrite Tier-1 symbols, and
+(iii) any change converting typed no-return to return is treated as a structural seam requiring an explicit weld decision.
+The repository is therefore the primary proof substrate for the present document (\cite{umcpmetadatarepo}), and the UMCP CasePack provides runnable audit examples in a fixed publication form (\cite{paulus2026umcpcasepack}).
+
+\paragraph{Cross-domain audit lineage (context, not a substitution for the kernel).}
+Where the paper reports cross-domain patterns, those statements are summaries of computed outputs expressed in kernel terms, not imported domain-native theory. The broader audit series and calibration notes provide additional context for how UMCP/GCD is applied across domains while preserving contract discipline (\cite{paulus2025procurement,paulus2025hawking,paulus2025isinganyon,paulus2025activematter,paulus2025toolkit}).
+
+% End of drop-in sections.
+\clearpage
+\bibliographystyle{unsrturl}
+\bibliography{bibliography}
+\clearpage
+\section*{License}
+
+\noindent\textcopyright\ \the\year\ Clement Paulus.
+
+\medskip
+\noindent This paper is shared under the \textit{Creative Commons Attribution 4.0 International} license (CC BY 4.0).
+
+\medskip
+\noindent You may copy, share, and modify this paper (including for commercial use), as long as you:
+(i) give credit to the author, (ii) link to the license, and (iii) say if you made changes.
+
+\medskip
+\noindent License text: \url{https://creativecommons.org/licenses/by/4.0/}
+\end{document}
