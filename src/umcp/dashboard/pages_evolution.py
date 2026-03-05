@@ -53,7 +53,13 @@ CLADE_COLORS = {
     "Aves": "#f39c12",
     "Mammalia": "#e74c3c",
     "Primates": "#c0392b",
+    "Primates (Great Ape)": "#8e44ad",
+    "Primates (Old World monkey)": "#c0392b",
     "Hominidae": "#8e44ad",
+    "Rodentia": "#e67e22",
+    "Carnivora": "#e74c3c",
+    "Cetacea": "#2980b9",
+    "Proboscidea": "#795548",
     "Proteobacteria": "#1abc9c",
     "Cyanobacteria": "#2ecc71",
     "Euryarchaeota": "#d35400",
@@ -826,7 +832,7 @@ def render_brain_kernel_page() -> None:
         selected_species = st.multiselect(
             "Select species to compare",
             species_names,
-            default=["Homo sapiens", "Pan troglodytes (chimp)"],
+            default=["Homo sapiens", "Pan troglodytes (chimpanzee)"],
             key="brain_radar_select",
             help="Pick species for radar comparison",
         )
@@ -1185,7 +1191,7 @@ def render_cognitive_traversal_page() -> None:
         # Compute for representative species
         key_species = [
             "Homo sapiens",
-            "Pan troglodytes (chimp)",
+            "Pan troglodytes (chimpanzee)",
             "Canis lupus familiaris (dog)",
             "Corvus corax (raven)",
             "Apis mellifera (honeybee)",
@@ -1263,7 +1269,7 @@ def render_cognitive_traversal_page() -> None:
         species_to_plot = st.multiselect(
             "Select species",
             [p.species for p in BRAIN_CATALOG],
-            default=["Homo sapiens", "Pan troglodytes (chimp)", "Caenorhabditis elegans"],
+            default=["Homo sapiens", "Pan troglodytes (chimpanzee)", "Caenorhabditis elegans"],
             key="trav_curves_select",
             help="Pick species for convergence curves",
         )
@@ -1323,6 +1329,7 @@ def render_cognitive_traversal_page() -> None:
 
         try:
             dev_trajectory = compute_developmental_trajectory()
+            from closures.evolution.brain_kernel import DEVELOPMENT_STAGES as _STAGES
         except Exception as e:
             st.error(f"Error: {e}")
             return
@@ -1331,9 +1338,6 @@ def render_cognitive_traversal_page() -> None:
         sweet_data = []
         for d in dev_trajectory:
             ic_f = d.get("IC_F", 0)
-            # Need to compute S for this stage
-            from closures.evolution.brain_kernel import DEVELOPMENT_STAGES as _STAGES
-
             stage_name = d["stage"]
             matching = [s for s in _STAGES if s[0] == stage_name]
             if matching:

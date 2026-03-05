@@ -99,13 +99,14 @@ def auth_headers():
 
 
 def test_root_endpoint(client):
-    """Test root endpoint returns API info."""
+    """Test root endpoint returns HTML landing page."""
     response = client.get("/")
     assert response.status_code == 200
-    data = response.json()
-    assert "name" in data
-    assert "version" in data
-    assert data["docs"] == "/docs"
+    assert "text/html" in response.headers.get("content-type", "")
+    text = response.text
+    assert "UMCP REST API" in text
+    assert "/docs" in text
+    assert "/health" in text
 
 
 def test_health_endpoint(client):

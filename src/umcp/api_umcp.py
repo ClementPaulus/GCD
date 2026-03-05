@@ -50,7 +50,7 @@ from typing import Any, Literal, cast
 
 from fastapi import FastAPI, HTTPException, Query, Security
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, Field
 
@@ -377,15 +377,120 @@ def _run_cli_command(args: list[str], cwd: Path | None = None) -> tuple[int, str
 # ============================================================================
 
 
-@app.get("/", tags=["Info"])
-async def root() -> dict[str, str]:
-    """API root - returns basic info."""
-    return {
-        "name": API_TITLE,
-        "version": API_VERSION,
-        "docs": "/docs",
-        "health": "/health",
-    }
+@app.get("/", tags=["Info"], response_class=HTMLResponse)
+async def root() -> HTMLResponse:
+    """API root - returns an HTML landing page."""
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{API_TITLE}</title>
+<style>
+  :root {{ --bg: #0d1117; --fg: #c9d1d9; --accent: #58a6ff; --card: #161b22;
+           --border: #30363d; --green: #3fb950; --yellow: #d29922; }}
+  * {{ margin:0; padding:0; box-sizing:border-box; }}
+  body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+         background: var(--bg); color: var(--fg); min-height: 100vh;
+         display: flex; align-items: center; justify-content: center; }}
+  .container {{ max-width: 720px; width: 90%; padding: 2rem 0; }}
+  h1 {{ color: var(--accent); font-size: 1.8rem; margin-bottom: .25rem; }}
+  .version {{ color: #8b949e; font-size: .9rem; margin-bottom: 1.5rem; }}
+  .cards {{ display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1.5rem; }}
+  .card {{ background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+          padding: 1rem 1.25rem; text-decoration: none; color: var(--fg);
+          transition: border-color .15s; }}
+  .card:hover {{ border-color: var(--accent); }}
+  .card h3 {{ color: var(--accent); font-size: .95rem; margin-bottom: .35rem; }}
+  .card p {{ font-size: .8rem; color: #8b949e; line-height: 1.4; }}
+  .section {{ margin-bottom: 1.25rem; }}
+  .section h2 {{ font-size: 1rem; color: var(--fg); margin-bottom: .5rem;
+                border-bottom: 1px solid var(--border); padding-bottom: .35rem; }}
+  .endpoints {{ list-style: none; }}
+  .endpoints li {{ padding: .3rem 0; font-size: .85rem; display: flex; align-items: baseline; gap: .5rem; }}
+  .method {{ font-weight: 700; font-size: .75rem; padding: .1rem .4rem; border-radius: 3px;
+            font-family: monospace; }}
+  .get {{ background: #1f3a2c; color: var(--green); }}
+  .post {{ background: #3a2f1f; color: var(--yellow); }}
+  .endpoints a {{ color: var(--accent); text-decoration: none; font-family: monospace; font-size: .85rem; }}
+  .endpoints a:hover {{ text-decoration: underline; }}
+  .foot {{ text-align: center; color: #484f58; font-size: .75rem; margin-top: 2rem; }}
+  @media (max-width: 480px) {{ .cards {{ grid-template-columns: 1fr; }} }}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>&#x1F9EA; {API_TITLE}</h1>
+  <p class="version">v{API_VERSION} &middot; UMCP {__version__}</p>
+
+  <div class="cards">
+    <a class="card" href="/docs">
+      <h3>&#x1F4D6; Interactive Docs</h3>
+      <p>Swagger UI &mdash; explore and test all endpoints live.</p>
+    </a>
+    <a class="card" href="/redoc">
+      <h3>&#x1F4DA; ReDoc</h3>
+      <p>Clean, readable API reference documentation.</p>
+    </a>
+    <a class="card" href="/health">
+      <h3>&#x1F49A; Health Check</h3>
+      <p>System status, version info, and diagnostic checks.</p>
+    </a>
+    <a class="card" href="/version">
+      <h3>&#x2699;&#xFE0F; Version</h3>
+      <p>API and validator version information.</p>
+    </a>
+  </div>
+
+  <div class="section">
+    <h2>Core Endpoints</h2>
+    <ul class="endpoints">
+      <li><span class="method post">POST</span><a href="/docs#/Validation/validate_validate_post">/validate</a> Validate a casepack or repo</li>
+      <li><span class="method get">GET</span><a href="/casepacks">/casepacks</a> List available casepacks</li>
+      <li><span class="method get">GET</span><a href="/contracts">/contracts</a> List contracts</li>
+      <li><span class="method get">GET</span><a href="/closures">/closures</a> List closures</li>
+      <li><span class="method get">GET</span><a href="/ledger">/ledger</a> Query the return log</li>
+      <li><span class="method get">GET</span><a href="/domains">/domains</a> List all domains</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Kernel &amp; Analysis</h2>
+    <ul class="endpoints">
+      <li><span class="method post">POST</span><a href="/docs#/Kernel/compute_kernel_kernel_compute_post">/kernel/compute</a> Compute kernel invariants</li>
+      <li><span class="method post">POST</span><a href="/docs#/Kernel/compute_budget_kernel_budget_post">/kernel/budget</a> Compute seam budget</li>
+      <li><span class="method post">POST</span><a href="/docs#/Calculator/calculate_calculate_post">/calculate</a> Universal calculator</li>
+      <li><span class="method post">POST</span><a href="/docs#/Analysis">/analysis/*</a> Time series, statistics, correlation</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Domain Closures</h2>
+    <ul class="endpoints">
+      <li><span class="method post">POST</span><a href="/docs#/ASTRO">/astro/*</a> Astronomy (6 endpoints)</li>
+      <li><span class="method post">POST</span><a href="/docs#/NUC">/nuclear/*</a> Nuclear physics (6 endpoints)</li>
+      <li><span class="method post">POST</span><a href="/docs#/QM">/qm/*</a> Quantum mechanics (6 endpoints)</li>
+      <li><span class="method post">POST</span><a href="/docs#/FIN">/finance/embed</a> Finance embedding</li>
+      <li><span class="method get">GET</span><a href="/docs#/WEYL">/weyl/*</a> WEYL cosmology (4 endpoints)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Outputs</h2>
+    <ul class="endpoints">
+      <li><span class="method get">GET</span><a href="/badge/status.svg">/badge/status.svg</a> Status badge (SVG)</li>
+      <li><span class="method get">GET</span><a href="/badge/regime.svg">/badge/regime.svg</a> Regime badge (SVG)</li>
+      <li><span class="method get">GET</span><a href="/output/ascii/gauge">/output/ascii/gauge</a> ASCII gauge</li>
+      <li><span class="method get">GET</span><a href="/output/mermaid/regime">/output/mermaid/regime</a> Mermaid diagram</li>
+    </ul>
+  </div>
+
+  <p class="foot">UMCP &mdash; Universal Measurement Contract Protocol</p>
+</div>
+</body>
+</html>
+"""
+    return HTMLResponse(content=html)
 
 
 @app.get("/health", response_model=HealthResponse, tags=["System"])

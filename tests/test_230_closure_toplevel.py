@@ -256,12 +256,15 @@ class TestTauROptimized:
         result = comp.compute_tau_R(trace[9], trace, t=9)
         assert result.tau_R == INF_REC
 
-    def test_norm_types(self):
+    @pytest.mark.parametrize("norm", ["l2", "l1", "linf"])
+    def test_norm_types(self, norm: str):
+        from typing import Literal, cast
+
         from closures.tau_R_optimized import OptimizedReturnComputer
 
-        for norm in ["l2", "l1", "linf"]:
-            comp = OptimizedReturnComputer(eta=0.1, H_rec=64, norm_type=norm)  # type: ignore[arg-type]
-            assert comp.norm_type == norm
+        norm_lit = cast(Literal["l2", "l1", "linf"], norm)
+        comp = OptimizedReturnComputer(eta=0.1, H_rec=64, norm_type=norm_lit)
+        assert comp.norm_type == norm
 
     def test_compute_function_exists(self):
         from closures.tau_R_optimized import compute_tau_R_optimized
