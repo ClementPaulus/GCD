@@ -49,15 +49,15 @@
 				"ms-python.mypy-type-checker",
 				"redhat.vscode-yaml",
 				"james-yu.latex-workshop",
-				"github.copilot"
+				"github.copilot",
+				"github.copilot-chat",
+				"github.vscode-pull-request-github"
 			],
 
 			"settings": {
 				// ── Python ──
 				"python.defaultInterpreterPath": "/usr/local/bin/python",
 				"python.terminal.activateEnvironment": false,
-				"python.analysis.typeCheckingMode": "basic",
-				"python.analysis.autoImportCompletions": true,
 
 				// ── Ruff (format + lint on save, matching CI) ──
 				"[python]": {

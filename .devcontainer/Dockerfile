@@ -63,4 +63,4 @@ WORKDIR /workspaces/UMCP-Metadata-Runnable-Code
 
 LABEL maintainer="Clement Paulus"
 LABEL description="UMCP development container — Python 3.12 + LaTeX + full toolchain"
-LABEL version="2.1.4"
+LABEL version="2.1.5"
