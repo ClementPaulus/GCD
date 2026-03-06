@@ -327,7 +327,11 @@ class TestSingleKernelComputation:
     """Test that compute_flow_system produces correct outputs for known inputs."""
 
     def test_homogeneous_flow_system(self) -> None:
-        """A homogeneous flow system (all channels = 0.7) has F ≈ 0.7."""
+        """A homogeneous flow system (all channels = 0.7) has F ≈ 0.7, IC ≈ F.
+
+        When all channels are equal, geometric mean = arithmetic mean,
+        so IC should equal F (up to ε-clipping rounding).
+        """
         fs = FlowSystem(
             name="Homogeneous Test",
             regime_class="laminar",
@@ -348,6 +352,8 @@ class TestSingleKernelComputation:
         assert abs(r.F + r.omega - 1.0) < TOL_DUALITY
         assert r.IC_leq_F
         assert r.IC_eq_exp_kappa
+        # For homogeneous trace, geometric mean = arithmetic mean → IC ≈ F
+        assert abs(r.IC - r.F) < 1e-5, f"IC ({r.IC:.6f}) should ≈ F ({r.F:.6f}) for homogeneous trace"
 
     def test_near_stall_flow(self) -> None:
         """A flow with near-zero boundary_adherence collapses (high ω)."""

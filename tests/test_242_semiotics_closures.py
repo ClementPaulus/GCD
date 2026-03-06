@@ -295,7 +295,11 @@ class TestSingleKernelComputation:
     """Test that compute_sign_system produces correct outputs for known inputs."""
 
     def test_homogeneous_sign_system(self) -> None:
-        """A homogeneous sign system (all channels = 0.8) has F = 0.8, IC ≈ F."""
+        """A homogeneous sign system (all channels = 0.8) has F = 0.8, IC ≈ F.
+
+        When all channels are equal, geometric mean = arithmetic mean,
+        so IC should equal F (up to ε-clipping rounding).
+        """
         ss = SignSystem(
             name="Homogeneous Test",
             tradition="Peircean",
@@ -317,6 +321,8 @@ class TestSingleKernelComputation:
         assert abs(r.F + r.omega - 1.0) < TOL_DUALITY
         assert r.IC_leq_F
         assert r.IC_eq_exp_kappa
+        # For homogeneous trace, geometric mean = arithmetic mean → IC ≈ F
+        assert abs(r.IC - r.F) < 1e-5, f"IC ({r.IC:.6f}) should ≈ F ({r.F:.6f}) for homogeneous trace"
 
     def test_near_collapse_sign_system(self) -> None:
         """A sign system with very low convention collapses (high ω)."""
