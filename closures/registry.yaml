@@ -773,6 +773,36 @@ registry:
           - "closures/evolution/evolution_kernel.py"
           - "closures/evolution/axiom0_instantiation_map.py"
 
+    semiotics:
+      - name: "sign_kernel"
+        path: "closures/semiotics/sign_kernel.py"
+        description: "20 sign systems (Peirce, Saussure, Barthes, Eco) mapped to 8-channel trace → Tier-1 invariants. Demonstrates semiotic collapse (pidgin, dead language, stall), return (creolization), and geometric slaughter via absent convention."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["name", "tradition", "sign_type", "domain", "syntactic_integrity", "semantic_fidelity", "pragmatic_coherence", "iconicity", "indexicality", "conventionality", "interpretant_stability", "contextual_return"]
+        outputs: ["F", "omega", "IC", "kappa", "S", "C", "gap", "regime", "dominant_channel", "weakest_channel"]
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_sign_systems: 20
+        cross_references:
+          - "closures/evolution/evolution_kernel.py"
+          - "closures/rcft/collapse_grammar.py"
+
+    fluid_dynamics:
+      - name: "flow_kernel"
+        path: "closures/fluid_dynamics/flow_kernel.py"
+        description: "20 fluid flow regimes (Stokes to hypersonic, biological to geophysical) mapped to 8-channel trace → Tier-1 invariants. Demonstrates laminar-turbulent collapse cliff, geometric slaughter in separated flow, and return-to-laminar under favorable gradient."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["name", "regime_class", "re_range", "viscous_fidelity", "inertial_coherence", "pressure_integrity", "boundary_adherence", "vorticity_control", "thermal_coupling", "compressibility_margin", "return_to_laminar"]
+        outputs: ["F", "omega", "IC", "kappa", "S", "C", "gap", "regime", "strongest_channel", "weakest_channel"]
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_flow_systems: 20
+        cross_references:
+          - "closures/everyday_physics/thermodynamics.py"
+          - "closures/gcd/generative_flux.py"
+
     unified:
       - name: "unified_minimal_structure"
         path: "closures/unified_minimal_structure.py"
