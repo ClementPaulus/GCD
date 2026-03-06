@@ -1,0 +1,181 @@
+# canon/semiotics_anchors.yaml
+# Dynamic Semiotics Canon Anchors — UMCP.CANON.SEM.v1
+# Cross-references: contracts/UMA.INTSTACK.v1.yaml, closures/dynamic_semiotics/
+schema: canon.domain_anchors.schema.json
+id: "UMCP.CANON.SEM.v1"
+version: "1.0.0"
+domain: "Dynamic Semiotics (Collapse-Return Dynamics of Meaning)"
+hierarchy: "GCD > SEM (Tier-2)"
+description: >
+  Canon anchors for the dynamic semiotics domain closure — the 15th domain.
+  Maps 30 sign systems across the phylogenesis of meaning to 8-channel trace
+  vectors and computes Tier-1 invariants. Demonstrates that semiotic processes
+  are instances of collapse-return structure. Sign repertoire is loss (ω),
+  interpretant depth is return (τ_R), ground stability is contract persistence,
+  and integrity is derived — never asserted — from the reconciled ledger.
+  Connects to brain_kernel channel 8 (language_architecture = 0.98 for
+  Homo sapiens) to unpack that single neural score into 8 measurable
+  dimensions of the sign systems that language_architecture enables.
+
+axioms:
+  - id: "AX-SEM0"
+    name: "Semiotic Duality"
+    statement: >
+      Every sign system partitions its budget exhaustively:
+      what the system preserves (F) + what it loses (ω) = 1.
+      A sign system with F = 1 carries every meaning perfectly;
+      a system with ω = 1 loses everything to drift. No third
+      reservoir exists. Peirce's unlimited semiosis is the
+      degenerate limit where ω → 0 and F → 1 across infinite
+      interpretant chains.
+    frozen: true
+
+  - id: "AX-SEM1"
+    name: "Geometric Slaughter (Channel Fragility)"
+    statement: >
+      IC ≤ F: semiotic coherence (geometric mean across channels)
+      cannot exceed mean channel fidelity (arithmetic mean). One
+      near-zero channel drives IC toward ε regardless of others.
+      A natural language with zero ground_stability collapses into
+      unintelligibility even if its vocabulary is vast. The heterogeneity
+      gap Δ = F − IC measures semiotic fragility — how many channels
+      must die for the system to lose coherence.
+    frozen: true
+
+  - id: "AX-SEM2"
+    name: "Dead Language as Gestus"
+    statement: >
+      A dead or extinct sign system has τ_R = ∞_rec for the living
+      community channel. The system is internally consistent (Latin
+      grammar still works) but non-returning — no living interpretive
+      community completes the collapse-return cycle. Classical Latin
+      is a gestus: high ground_stability (corpus frozen), low
+      indexical_coupling (no living reference). IC persists but
+      return does not. Si τ_R = ∞_rec, nulla fides datur.
+    frozen: true
+
+  - id: "AX-SEM3"
+    name: "Brain Kernel Bridge"
+    statement: >
+      The brain kernel's language_architecture channel (channel 8)
+      scores 0.98 for Homo sapiens. This single value is unpacked
+      by the semiotic kernel into 8 measurable dimensions. The semiotic
+      kernel is the Tier-2 formalization of what the brain kernel
+      registers as raw neural capacity. F_semiotic < language_architecture
+      because the 8 channels reveal heterogeneity hidden in the scalar.
+    frozen: true
+
+  - id: "AX-SEM4"
+    name: "Formal System Robustness"
+    statement: >
+      Formal systems (mathematics, logic, DNA) have high ground_stability
+      and translation_fidelity but low iconic_persistence and indexical_coupling.
+      Their heterogeneity gap Δ is typically lower than natural languages
+      because near-unity channels dominate while near-zero channels remain
+      non-critical (the system never claimed iconicity). Robustness is
+      purchased by restricting the channel space, not by maximizing all channels.
+    frozen: true
+
+symbols:
+  - name: "omega_sem"
+    tier: 1
+    definition: "drift = 1 − F = semiotic loss rate"
+  - name: "F_sem"
+    tier: 1
+    definition: "fidelity = mean semiotic channel preservation"
+  - name: "S_sem"
+    tier: 1
+    definition: "Bernoulli field entropy of the semiotic trace"
+  - name: "C_sem"
+    tier: 1
+    definition: "curvature = semiotic channel heterogeneity"
+  - name: "IC_sem"
+    tier: 1
+    definition: "integrity composite = geometric mean coherence = exp(κ)"
+  - name: "delta_sem"
+    tier: 1
+    definition: "heterogeneity gap Δ = F − IC (semiotic fragility)"
+  - name: "sign_repertoire"
+    tier: 2
+    definition: "Vocabulary size / symbol space richness [0,1]"
+  - name: "interpretant_depth"
+    tier: 2
+    definition: "Recursion depth of interpretation chains [0,1]"
+  - name: "ground_stability"
+    tier: 2
+    definition: "Convention persistence — how frozen is the contract [0,1]"
+  - name: "translation_fidelity"
+    tier: 2
+    definition: "Cross-lens Rosetta preservation (F across lenses) [0,1]"
+  - name: "semiotic_density"
+    tier: 2
+    definition: "Signs per unit of discourse [0,1]"
+  - name: "indexical_coupling"
+    tier: 2
+    definition: "Connection strength between sign and object [0,1]"
+  - name: "iconic_persistence"
+    tier: 2
+    definition: "Resemblance stability of sign over time [0,1]"
+  - name: "symbolic_recursion"
+    tier: 2
+    definition: "Self-referential capacity (language about language) [0,1]"
+
+regime_gates:
+  sign_system:
+    Stable: "ω < 0.038 AND F > 0.90 AND S < 0.15 AND C < 0.14"
+    Watch: "intermediate (Stable gates not all satisfied, ω < 0.30)"
+    Collapse: "ω ≥ 0.30"
+
+  semiotic_type:
+    Alive_Recursive_Balanced: "symbolic_recursion > 0.70, interpretant_depth > 0.70, Δ < 0.20"
+    Alive_Recursive_Fragile: "symbolic_recursion > 0.70, interpretant_depth > 0.70, Δ ≥ 0.20"
+    Stable_Formal: "ground_stability > 0.85, translation_fidelity > 0.80"
+    Fixed_Signal: "indexical_coupling > 0.70, symbolic_recursion < 0.15"
+    Biological_Signal: "category = Animal Communication"
+    Gestus_Dead: "status = dead/extinct, indexical_coupling < 0.20"
+
+anchors:
+  sign_systems:
+    description: "30 sign systems spanning the phylogenesis of meaning"
+    categories:
+      - "Natural Language (living): Modern English, Mandarin, Arabic, Japanese, Pirahã"
+      - "Natural Language (dead/extinct): Classical Latin, Sumerian"
+      - "Formal System: Mathematical Notation, Formal Logic, Programming Languages, DNA/RNA"
+      - "Visual Code: Road Signs, Hieroglyphs, Emoji"
+      - "Aesthetic System: Abstract Painting"
+      - "Auditory System: Western Tonal Music, Morse Code"
+      - "Gestural: ASL, Pointing Gesture"
+      - "Animal Communication: Bee Dance, Vervet Calls, Whale Song, Ant Pheromones"
+      - "Digital/Artificial: HTML, Bitcoin Blockchain, LLM Output"
+      - "Specialized: Braille, Maritime Flags, Chemical Notation, Musical Score"
+    count: 30
+    channels: 8
+    key_predictions:
+      - "Pirahã: lowest symbolic_recursion (0.05) → extreme heterogeneity gap"
+      - "Mathematical Notation: highest ground_stability (0.98) → Stable Formal"
+      - "Latin: high ground_stability + zero living community → Gestus"
+      - "LLM Output: high sign_repertoire (0.93) but low ground_stability (0.20) → fragile"
+      - "Ant Pheromones: highest indexical_coupling (0.95) → Fixed Signal"
+      - "DNA: highest ground_stability (0.99), 3.8 Gyr persistence"
+
+  cross_domain_bridges:
+    brain_kernel:
+      description: >
+        Channel 8 of brain_kernel (language_architecture = 0.98 for Homo sapiens)
+        is unpacked by 8 semiotic channels. The semiotic F < 0.98 because the
+        8 channels reveal heterogeneity hidden in the brain's scalar score.
+    evolution_kernel:
+      description: >
+        Sign systems have evolutionary dynamics — languages speciate, go extinct,
+        and radiate. The evolution kernel maps this at the organism level; the
+        semiotic kernel maps it at the sign system level.
+    epistemic_weld:
+      description: >
+        Epistemic cost tracking applies directly: semiotic interpretation has
+        a cost. Each observation (parsing a sign) deforms the field. The
+        epistemic weld Theorem T9 governs interpretant chain cost.
+    rosetta:
+      description: >
+        The Rosetta Translation Engine IS a semiotic operation — translating
+        the five words across lenses. The semiotic kernel formalizes the
+        structure that the Rosetta performs informally.

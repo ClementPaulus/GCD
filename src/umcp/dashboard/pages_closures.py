@@ -1,7 +1,7 @@
 """
 UMCP Dashboard — Closure Explorer
 
-Dedicated page for exploring all 14 domain closure families as interactive,
+Dedicated page for exploring all 15 domain closure families as interactive,
 clickable cards. Each domain expands to show every closure with its full
 schematic (input → processing → output), docstring, source code, and
 spine-position metadata.
@@ -416,13 +416,13 @@ def _render_distribution_chart(
 
 
 def render_closure_explorer_page() -> None:
-    """Render the full Closure Explorer page — all 14 domains as clickable cards."""
+    """Render the full Closure Explorer page — all 15 domains as clickable cards."""
     if st is None:
         return
 
     st.title("🗂️ Closure Explorer")
     st.caption(
-        "All 14 domain closure families  ·  Click any domain to expand  ·  "
+        "All 15 domain closure families  ·  Click any domain to expand  ·  "
         "Full schematics, source code, and spine position for every closure"
     )
 

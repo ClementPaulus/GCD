@@ -2,7 +2,7 @@
 """Deep Pattern Discovery — Probe for previously unknown correlations.
 
 This script runs 8 independent computational probes across the GCD kernel
-manifold and across all 13 domains, hunting for structural patterns that
+manifold and across all 15 domains, hunting for structural patterns that
 have not been documented or formalized.
 """
 

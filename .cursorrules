@@ -32,7 +32,7 @@
 # TIER SYSTEM:
 #   Tier-1: Immutable invariants (F+ω=1, IC≤F, IC≈exp(κ))
 #   Tier-0: Protocol (src/umcp/ — validation, kernel, seam, contracts)
-#   Tier-2: Closures (closures/ — 13 domains validated through Tier-0)
+#   Tier-2: Closures (closures/ — 15 domains validated through Tier-0)
 #
 # KEY FILES:
 #   src/umcp/frozen_contract.py   — frozen constants, regime classification

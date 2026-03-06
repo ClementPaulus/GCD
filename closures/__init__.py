@@ -19,6 +19,8 @@ Available Subpackages:
     - materials_science: Element database (118 elements, 18 fields)
     - standard_model: Subatomic kernel (31 particles), 10 proven theorems
     - everyday_physics: Thermodynamics, electromagnetism, optics, wave phenomena
+    - evolution: 40 organisms, 20 species brain kernel, 60 kernel states
+    - dynamic_semiotics: 30 sign systems, 8 semiotic channels, semiotic kernel
 
 See closures/registry.yaml for the complete closure registry.
 """
@@ -28,7 +30,7 @@ from pathlib import Path
 # Closure package root
 CLOSURES_ROOT = Path(__file__).parent
 
-# Available closure domains (13 total)
+# Available closure domains (15 total)
 CLOSURE_DOMAINS = [
     "gcd",
     "rcft",
@@ -43,6 +45,8 @@ CLOSURE_DOMAINS = [
     "materials_science",
     "standard_model",
     "everyday_physics",
+    "evolution",
+    "dynamic_semiotics",
 ]
 
 __all__ = ["CLOSURES_ROOT", "CLOSURE_DOMAINS"]

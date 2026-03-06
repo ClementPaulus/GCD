@@ -2,7 +2,7 @@
 test_220_closure_registry_sweep.py — Load and execute every registered closure.
 
 The closure registry (closures/registry.yaml) lists ~80 closure modules
-across 13 domains. Previously, no test verified that every registered
+across 15 domains. Previously, no test verified that every registered
 closure can be imported and executed with valid inputs. This module
 performs a comprehensive sweep.
 
@@ -108,7 +108,7 @@ class TestRegistryStructure:
         assert not missing, f"Missing closure files: {missing}"
 
     def test_at_least_13_domains(self) -> None:
-        """Registry should span at least 13 domain extensions."""
+        """Registry should span at least 15 domain extensions."""
         yaml = pytest.importorskip("yaml")
         reg_path = _WORKSPACE / "closures" / "registry.yaml"
         with open(reg_path) as f:

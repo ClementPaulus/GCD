@@ -1,6 +1,6 @@
 # Cross-Domain Realizations
 
-**Computational Findings from 357 Objects Across 6 Scales, 13 Domains**
+**Computational Findings from 357 Objects Across 6 Scales, 15 Domains**
 
 *Generated 2026-02-21 by running every iterable closure in the repository
 through the GCD kernel with frozen parameters (ε = 10⁻⁸, equal weights).
@@ -454,7 +454,7 @@ for r in run_all_theorems(): print(f'{r.name}: {r.verdict} ({r.n_passed}/{r.n_te
 # Re-derive all biological / Jungian kernel receipts
 python scripts/jungian_analysis.py
 
-# Run the full test suite (5,247 tests)
+# Run the full test suite (5,326 tests)
 python -m pytest -q --tb=no
 
 # Validate the repository

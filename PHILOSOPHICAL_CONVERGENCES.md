@@ -784,7 +784,7 @@ Jung defined archetypes not as inherited images but as inherited *forms of appre
 >
 > — Jung, *Man and His Symbols* (1964), ed. Jung et al., p. 67
 
-In GCD, the frozen parameters (ε, p, tol_seam) serve this structural role. They are not content — they do not prescribe what the trace *is*. They are inherited constraints on how any trace can be measured. The kernel specification (F, ω, S, C, κ, IC) is the archetype of measurement: it shapes every domain closure without determining the result. The *form* is invariant; the *content* varies freely across 13 domains.
+In GCD, the frozen parameters (ε, p, tol_seam) serve this structural role. They are not content — they do not prescribe what the trace *is*. They are inherited constraints on how any trace can be measured. The kernel specification (F, ω, S, C, κ, IC) is the archetype of measurement: it shapes every domain closure without determining the result. The *form* is invariant; the *content* varies freely across 15 domains.
 
 The Contract is the archetype of the run — it defines the structural conditions under which meaning can emerge without specifying what meaning will emerge. Different casepacks sharing the same Contract produce entirely different stances, just as different individuals sharing the same archetypes produce entirely different lives.
 
@@ -1014,7 +1014,7 @@ Different channels, same mechanism: the weakest channel determines regime more p
 | Enantiodromia | F + ω = 1 | r(F,ω) = −1.0000; verified to 0.0e+00 residual |
 | Transcendent Function | The seam | residual ≤ tol_seam = 0.005 |
 | Archetypes | Frozen parameters | ε = 1e-8, p = 3, tol = 0.005 (seam-derived) |
-| Collective Unconscious | Tier-1 invariants | F + ω = 1, IC ≤ F, IC = exp(κ) across all 14 domains |
+| Collective Unconscious | Tier-1 invariants | F + ω = 1, IC ≤ F, IC = exp(κ) across all 15 domains |
 | Inflation | Symbol capture | 0% of organisms reach Stable; claiming "Stable = good" is inflation |
 | Complex | Single-channel IC collapse | ~36.4% IC drop per complex constellation |
 | Synchronicity | Cross-domain Tier-1 universality | Brain: language (89%), Evo: behavior (55%) |

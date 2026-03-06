@@ -7,7 +7,7 @@ Targets:
   §4  RCFT information geometry (binary_entropy, fisher_metric, fisher_distance, etc.)
   §5  Weyl cosmology background (compute_background, individual functions, embedding)
   §6  Kinematics energy mechanics (all 7 public functions)
-  §7  Contract ↔ closure bridge (all 13 domains have matching contract YAML + closures)
+  §7  Contract ↔ closure bridge (all 15 domains have matching contract YAML + closures)
 
 Every test validates Tier-1 identities where kernel invariants are produced.
 """
@@ -627,7 +627,7 @@ class TestEnergyMechanics:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# §7  Contract ↔ Closure Bridge (all 13 domains)
+# §7  Contract ↔ Closure Bridge (all 15 domains)
 # ═══════════════════════════════════════════════════════════════════════════
 _BRIDGE_DOMAINS = [
     "gcd",

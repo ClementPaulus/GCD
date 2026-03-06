@@ -808,3 +808,28 @@ registry:
           - "closures/everyday_physics/optics.py"
           - "closures/everyday_physics/wave_phenomena.py"
           - "closures/astronomy/cosmology.py"
+
+    dynamic_semiotics:
+      - name: "semiotic_kernel"
+        path: "closures/dynamic_semiotics/semiotic_kernel.py"
+        description: "Dynamic semiotics kernel: 30 sign systems × 8 channels → Tier-1 invariants. Connects to brain_kernel channel 8 (language_architecture)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["sign_system_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "heterogeneity_gap", "regime", "semiotic_type"]
+        channels:
+          - "sign_repertoire"
+          - "interpretant_depth"
+          - "ground_stability"
+          - "translation_fidelity"
+          - "semiotic_density"
+          - "indexical_coupling"
+          - "iconic_persistence"
+          - "symbolic_recursion"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_sign_systems: 30
+        cross_references:
+          - "closures/evolution/brain_kernel.py"
+          - "src/umcp/epistemic_weld.py"
+          - "canon/semiotics_anchors.yaml"

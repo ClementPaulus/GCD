@@ -12,10 +12,10 @@
 | Metric | Value |
 |---|---|
 | **Overall Verdict** | **CONFORMANT** — 0 errors, 0 warnings |
-| **Test Suite** | **3,618 tests — ALL PASSED** |
+| **Test Suite** | **5,326 tests — ALL PASSED** |
 | **Integrity** | **138 files verified — 0 mismatches, 0 missing** |
 | **Casepacks Validated** | **14/14 CONFORMANT** + 1 repo-level |
-| **Domain Closures** | **13 domains, ~120 closure files** |
+| **Domain Closures** | **15 domains, 121 closure files** |
 | **Tier-1 Proof** | **10,162 identity tests — 0 failures** |
 | **Standard Model Theorems** | **10/10 PROVEN — 74/74 subtests** |
 | **Total Python LOC** | **~127,833** across 153 files |
@@ -236,7 +236,7 @@ $$s = \Delta\kappa_\text{budget} - \Delta\kappa_\text{ledger}$$
 
 ### Contracts
 
-- **14 domain contracts** (YAML) + 1 universal (UMA.INTSTACK.v1)
+- **15 domain contracts** (YAML) + 1 universal (UMA.INTSTACK.v1)
 - Each specifies required closures, expected outputs, invariant checks, and SHA256 references
 
 ### Canon Anchors
@@ -358,4 +358,4 @@ Bibliography: 37+ entries (PDG 2024, Cabibbo 1963, Kobayashi-Maskawa 1973, Wolfe
 
 ---
 
-*Report generated via automated full-repo assessment: test suite (3,618/3,618 passed), repo validation (CONFORMANT), integrity check (138/138 OK), source analysis of all 13 domain closures, 10 Standard Model theorems, exhaustive Tier-1 proof, and cross-scale bridge analysis.*
+*Report generated via automated full-repo assessment: test suite (3,618/3,618 passed), repo validation (CONFORMANT), integrity check (138/138 OK), source analysis of all 15 domain closures, 10 Standard Model theorems, exhaustive Tier-1 proof, and cross-scale bridge analysis.*

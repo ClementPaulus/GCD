@@ -85,7 +85,7 @@ Skip any step and you either overclaim or abandon:
 
 **The cost**: The modified kernel could no longer classify particles across 61 orders of magnitude. The Planck scale and the cosmological scale became incomparable. The 10,162 Tier-1 identity tests would fail. The scale ladder would collapse.
 
-**Why the frozen parameters cannot be changed**: ε = 10⁻⁸, the log-normalization, and the equal channel weights exist at the *unique* values where seams close consistently across 13 domains. They were not chosen by convention — they were discovered by the seam. Changing any one of them to "fix" one result destroys all others.
+**Why the frozen parameters cannot be changed**: ε = 10⁻⁸, the log-normalization, and the equal channel weights exist at the *unique* values where seams close consistently across 15 domains. They were not chosen by convention — they were discovered by the seam. Changing any one of them to "fix" one result destroys all others.
 
 **Lesson**: The frozen parameters are discovered constraints, not tunable hyperparameters. Modifying the kernel to improve one correlation destroys the universal applicability that makes the kernel valuable. This is the difference between *trans suturam congelatum* (frozen across the seam) and arbitrary constants.
 

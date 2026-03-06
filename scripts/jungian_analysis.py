@@ -440,7 +440,7 @@ rosetta = [
         "Collective Unconscious",
         "Tier-1 invariants",
         "F+ω=1, IC≤F, IC=exp(κ)",
-        "Domain-independent identities held across all 14 closure domains",
+        "Domain-independent identities held across all 15 closure domains",
     ),
     (
         "Inflation",

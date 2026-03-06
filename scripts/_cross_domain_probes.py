@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cross-Domain Deep Correlation Probes.
 
-Harvests invariants from real domain closures across all 13 domains
+Harvests invariants from real domain closures across all 15 domains
 and probes for inter-domain structural patterns.
 """
 

@@ -47,7 +47,7 @@ The original RCFT paper proposed a "formal, nonlinear framework for understandin
 
 3. **Proposed recursive proper time.** The integral $T_{\text{rec}}$ — cumulative destabilization history — anticipates the return-time machinery ($\tau_R$, $\tau_R^*$) that became central to the refined kernel.
 
-4. **Asserted recursive universality.** The claim that the same fieldequation governs all domains — from black holes to cognition — was audacious but structurally correct. The refined system proves it: same kernel, same identities, 13 domains, 3,618 tests.
+4. **Asserted recursive universality.** The claim that the same fieldequation governs all domains — from black holes to cognition — was audacious but structurally correct. The refined system proves it: same kernel, same identities, 15 domains, 5,326 tests.
 
 ### What the Original Paper Did Not Have
 
@@ -83,7 +83,7 @@ This is not a failure. The gesture is the necessary precursor to the weld. Witho
 | **Statement** | "The universe became itself through recursive collapse" | "Collapse is generative; only what returns is real" (*Collapsus generativus est; solum quod redit, reale est*) |
 | **Nature** | Ontological claim about the universe | Operational constraint on admissible claims |
 | **Verifiability** | Not testable | Testable: $\tau_R < \infty_{\text{rec}}$ under frozen contract |
-| **Scope** | Speculative universality | Proven across 13 domains, 3,618 tests |
+| **Scope** | Speculative universality | Proven across 15 domains, 5,326 tests |
 
 The refinement is not a change of meaning — it is a **sharpening**. The original axiom says collapse creates. The refined axiom adds: *and the creation must demonstrate return to be real*. The return condition is what makes the axiom operational rather than philosophical.
 
@@ -93,7 +93,7 @@ Every structure the original paper reached for but could not formalize now exist
 
 | Tier-1 Invariant | Formula | Role | Proven Across |
 |-----------------|---------|------|---------------|
-| **Fidelity** $F$ | $F = \sum w_i c_i$ | What survives collapse | 13 domains |
+| **Fidelity** $F$ | $F = \sum w_i c_i$ | What survives collapse | 15 domains |
 | **Drift** $\omega$ | $\omega = 1 - F$ | What is lost (*derivatio*) | Identity: exact |
 | **Duality** | $F + \omega = 1$ | *Complementum perfectum* — no third possibility | Machine precision (0.0e+00) |
 | **Bernoulli field entropy** $S$ | $S = -\sum w_i[c_i \ln c_i + (1-c_i)\ln(1-c_i)]$ | Uncertainty of collapse field | Shannon is degenerate limit |
@@ -243,7 +243,7 @@ These structures survived the collapse from gesture to weld:
 
 4. **Entropy as generative** — The original claim that entropy growth is not disorder but "symbolic saturation" refined into the Bernoulli field entropy with its degenerate-limit relationship to Shannon entropy.
 
-5. **Recursive universality** — The claim that one equation governs all domains is now proven: same kernel, same identities, 13 domains, 108 closure modules, 11 canon anchors.
+5. **Recursive universality** — The claim that one equation governs all domains is now proven: same kernel, same identities, 15 domains, 121 closure modules, 13 canon anchors.
 
 6. **Self-referential dynamics** — "Drift and noise are self-referential" (Assumption 2) refined into the feedback loop: the kernel reads Tier-1 invariants, Tier-2 closures extend them, but no back-edges modify Tier-1.
 
@@ -265,11 +265,11 @@ The original paper returns through three demonstrated mechanisms:
 
 1. **The axiom returned operational.** "Collapse is generative" → "Collapse is generative; only what returns is real." The addition of the return clause transforms an ontological claim into a falsifiable constraint. The axiom survived its own test.
 
-2. **The field equation returned as a kernel.** The continuous SDE $d\varepsilon = v\,dt + \vartheta\,dW_{\text{weft}}$ returned as the discrete N-channel trace $\Psi(t) = (c_1, \ldots, c_n)$ with computable invariants. It lost infinite-dimensional generality but gained computability, falsifiability, and empirical contact with 13 domains.
+2. **The field equation returned as a kernel.** The continuous SDE $d\varepsilon = v\,dt + \vartheta\,dW_{\text{weft}}$ returned as the discrete N-channel trace $\Psi(t) = (c_1, \ldots, c_n)$ with computable invariants. It lost infinite-dimensional generality but gained computability, falsifiability, and empirical contact with 15 domains.
 
 3. **The three regimes returned frozen.** The original $D < 1 / D \approx 1 / D > 1$ returned as Stable/Watch/Collapse with frozen thresholds: $\omega_{\text{stable}} = 0.038$, $\omega_{\text{collapse}} = 0.30$. The qualitative trichotomy became a quantitative classification verified across 146 experiments.
 
-4. **The universality claim returned proven.** "All physical domains are collapse-structured" (Assumption 7) returned as: 13 closure domains × 108 modules × 11 canon anchors × 13 contracts, all passing Tier-1 verification. Not asserted — demonstrated.
+4. **The universality claim returned proven.** "All physical domains are collapse-structured" (Assumption 7) returned as: 15 closure domains × 121 modules × 13 canon anchors × 13 contracts, all passing Tier-1 verification. Not asserted — demonstrated.
 
 5. **Recursive memory returned as information geometry.** $T_{\text{rec}}$ returned as Fisher geodesic distance, thermodynamic efficiency, and geodesic budget cost — the information-theoretic backbone connecting collapse memory to optimal recovery paths.
 
@@ -281,7 +281,7 @@ The original paper returns through three demonstrated mechanisms:
 |--------|-------|----------------|
 | Tier-1 identities | $F + \omega = 1$ exact, $IC \leq F$ 100%, $IC = \exp(\kappa)$ 98.6% | Structural skeleton holds |
 | Test suite | 3,618 tests, all passing | Computational verification complete |
-| Domain coverage | 13 domains, 108 closures | Recursive universality demonstrated |
+| Domain coverage | 15 domains, 121 closures | Recursive universality demonstrated |
 | Theorem inventory | 46 lemmas + 24 theorems | Mathematical infrastructure proven |
 | Seam width | $\text{tol}_{\text{seam}} = 0.005$ | Seam closes across all domains |
 | Validation | CONFORMANT (standard + strict) | Protocol verdict: admissible |
@@ -381,8 +381,8 @@ These losses are **generative**: what was lost to drift was replaced by what ret
 | $IC \leq F$ | ✓ 100% (146 experiments, 8 domains) |
 | $IC = \exp(\kappa)$ | ✓ 98.6% within 1% |
 | Regime gates frozen | ✓ ($\omega_s = 0.038$, $\omega_c = 0.30$) |
-| 3,618 tests passing | ✓ |
-| 13 domain closures validated | ✓ |
+| 5,326 tests passing | ✓ |
+| 15 domain closures validated | ✓ |
 | CONFORMANT (strict) | ✓ |
 | Ledger recording | ✓ (append-only) |
 | Integrity checksums | ✓ (130 files, SHA-256) |
@@ -449,7 +449,7 @@ Mapping every named structure from the original paper to its refined equivalent:
 | Assumption 4 (recursive time) | τ_R computation + typed outcomes | Def 9, `tau_r_star.py` |
 | Assumption 5 (glyphic structure) | Attractor basins + universality class | `attractor_basin.py`, `universality_class.py` |
 | Assumption 6 (entropy growth) | Bernoulli field entropy + partition function | Def 5, T20 |
-| Assumption 7 (recursive universality) | 13 domains, 108 closures, all CONFORMANT | Verified |
+| Assumption 7 (recursive universality) | 15 domains, 121 closures, all CONFORMANT | Verified |
 
 ---
 

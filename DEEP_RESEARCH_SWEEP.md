@@ -148,7 +148,7 @@ From CROSS_DOMAIN_REALIZATIONS.md: Wave phenomena dominate coherence (IC/F > 0.9
 | Parameter | Value | Discovered by |
 |-----------|-------|---------------|
 | ε | 1e-8 | Pole isolation at ω = 1 |
-| p | 3 | Seam closure across 13 domains |
+| p | 3 | Seam closure across 15 domains |
 | α | 1.0 | Barrier height ΔΓ = α (T11) |
 | tol_seam | 0.005 | IC ≤ F holds at 100% |
 

@@ -81,7 +81,7 @@ These are the **canonical names** of GCD structures, first established in [LIBER
 
 ## IV. Lexicon Novum — Terms for Discovered Phenomena
 
-These terms name structures that emerged from computation across 13 domain closures, 3,618 tests, and the full scale ladder from subatomic particles to 118 elements. They are not imposed; they are named for what was found.
+These terms name structures that emerged from computation across 15 domain closures, 5,326 tests, and the full scale ladder from subatomic particles to 118 elements. They are not imposed; they are named for what was found.
 
 ### IV.A Phenomena of Channel Collapse
 

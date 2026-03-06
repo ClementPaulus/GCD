@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **5,247 tests** · **14 domains** · **120 closure modules** · **46 lemmas** · **28 structural identities** · **44 dashboard pages**
+**UMCP v2.1.5** · **5,326 tests** · **15 domains** · **121 closure modules** · **46 lemmas** · **28 structural identities** · **45 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -139,7 +139,7 @@ The entire system can be grasped through **one axiom, one spine, five words, six
 | **ε** | 10⁻⁸ | Guard band: pole at ω=1 does not affect measurements to machine precision |
 | **p** | 3 | Unique integer where ω_trap is a Cardano root of x³+x−1=0 |
 | **α** | 1.0 | Curvature cost coefficient (unit coupling) |
-| **tol_seam** | 0.005 | Width where IC ≤ F holds at 100% across all 14 domains |
+| **tol_seam** | 0.005 | Width where IC ≤ F holds at 100% across all 15 domains |
 | **c\*** | 0.7822 | Logistic self-dual fixed point: maximizes S + κ per channel |
 
 **THREE IDENTITIES** (always true, by construction):
@@ -253,7 +253,7 @@ The UMCP tier system has exactly three tiers. No half-tiers. No confusion. Every
 
 ### Frozen Parameters (from `frozen_contract.py` — Seam-Derived, Not Prescribed)
 
-These values are the unique constants where seams close consistently across all 14 domains. They are discovered by the mathematics, not chosen by convention. All code **must** reference these from `frozen_contract.py`, never hardcode alternatives.
+These values are the unique constants where seams close consistently across all 15 domains. They are discovered by the mathematics, not chosen by convention. All code **must** reference these from `frozen_contract.py`, never hardcode alternatives.
 
 | Parameter | Value | Symbol | Role | Source |
 |-----------|-------|--------|------|--------|
@@ -368,7 +368,7 @@ If not built, all operations fall back to NumPy transparently. Same formulas, sa
 parameters — Tier-0 Protocol only (no Tier-1 symbols redefined). Build:
 `cd src/umcp_cpp && mkdir build && cd build && cmake .. && make`
 
-**Closure domains** (14 total, each in `closures/<domain>/`):
+**Closure domains** (15 total, each in `closures/<domain>/`):
 
 ```
 closures/
@@ -385,6 +385,7 @@ closures/
 ├── materials_science/        # Element database (118 elements, 18 fields)
 ├── everyday_physics/         # Thermodynamics, optics, electromagnetism, wave phenomena
 ├── evolution/                # 40 organisms, 10-channel brain kernel, 20 species comparative neuroscience
+├── dynamic_semiotics/        # 30 sign systems, 8-channel semiotic kernel
 └── standard_model/           # Subatomic kernel (31 particles), 10 proven theorems
 ```
 
@@ -491,7 +492,7 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 5,247 tests (pytest --collect-only | grep "::" | wc -l to verify)
+pytest                                       # 5,326 tests (pytest --collect-only | grep "::" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
@@ -553,12 +554,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**5,247 test cases** across **106 test files** in `tests/` (105 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_241_*`). Single `tests/conftest.py` provides:
+**5,326 test cases** across **107 test files** in `tests/` (106 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_241_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 5,247 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 5,326 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -586,10 +587,11 @@ umcp validate <target>
 | `test_200–201` | Fleet, recursive instantiation, neutrino oscillation | 182 |
 | `test_210–237` | Cross-domain, casepack roundtrip, registry sweep, domain unit tests | 882 |
 | `test_238` | Kernel structural theorems (T-KS-1 through T-KS-7) | 47 |
+| `test_239` | Dynamic semiotics closures | 70 |
 | `test_240–241` | Evolution kernel, brain kernel | 120 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
-| **TOTAL** | | **5,247** |
+| **TOTAL** | | **5,326** |
 
 ## Extension System
 
@@ -664,7 +666,7 @@ There is no fourth option. No external framework is co-equal with Axiom-0 inside
 
 2. **Classical results are degenerate limits, not sources.** The arrow of derivation runs FROM Axiom-0 TO classical results. Strip the channel semantics from IC ≤ F and you get AM-GM. Strip the collapse field from S and you get Shannon entropy. Strip the cost function from F + ω = 1 and you get unitarity. The classical versions are what remain when degrees of freedom are removed.
 
-3. **Frozen parameters are seam-derived, not prescribed.** Standard frameworks prescribe constants from outside (α = 0.05 by convention, 3σ by tradition, hyperparameters by cross-validation). UMCP's frozen parameters are the unique values where seams close consistently: p = 3 is discovered (not chosen), tol_seam = 0.005 is where IC ≤ F holds at 100% across 14 domains, ε = 10⁻⁸ is where the pole at ω = 1 does not affect any measurement to machine precision.
+3. **Frozen parameters are seam-derived, not prescribed.** Standard frameworks prescribe constants from outside (α = 0.05 by convention, 3σ by tradition, hyperparameters by cross-validation). UMCP's frozen parameters are the unique values where seams close consistently: p = 3 is discovered (not chosen), tol_seam = 0.005 is where IC ≤ F holds at 100% across 15 domains, ε = 10⁻⁸ is where the pole at ω = 1 does not affect any measurement to machine precision.
 
 4. **Three-valued verdicts, not boolean.** CONFORMANT / NONCONFORMANT / NON_EVALUABLE. There is always a third state. *Tertia via semper patet.*
 

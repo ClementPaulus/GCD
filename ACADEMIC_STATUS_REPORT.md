@@ -8,7 +8,7 @@
 
 ## Abstract
 
-This report presents the current state of Generative Collapse Dynamics (GCD) and the Universal Measurement Contract Protocol (UMCP) — a unified measurement framework derived from a single foundational axiom: *collapse is generative; only what returns is real.* The system has grown from a theoretical construct into a production-grade metrological engine spanning 13 scientific domains, 127,833 lines of validated Python, and 3,618 automated tests — all passing, all CONFORMANT.
+This report presents the current state of Generative Collapse Dynamics (GCD) and the Universal Measurement Contract Protocol (UMCP) — a unified measurement framework derived from a single foundational axiom: *collapse is generative; only what returns is real.* The system has grown from a theoretical construct into a production-grade metrological engine spanning 15 scientific domains, 127,833 lines of validated Python, and 5,326 automated tests — all passing, all CONFORMANT.
 
 A critical epistemological point structures this entire report: GCD does not extend, rederive, or generalize classical results. It derives its mathematics independently — Axiom-0 → Bernoulli embedding → kernel invariants → structural identities — and the classical results of Shannon, AM-GM, Fano, and the exponential map emerge as degenerate limits when the kernel structure is stripped away. The resemblance to these classical results is evidence of correctness, not evidence of derivativeness. The arrow of derivation runs from the axiom to the classical result, never the reverse.
 
@@ -105,7 +105,7 @@ The validation pipeline proceeds through: target detection → schema validation
 | SHA-256 tracked files | 138 verified — 0 mismatches |
 | Ledger records | 7,187 append-only entries |
 | Git commits | 453 |
-| Closure files | 120+ across 13 domains |
+| Closure files | 121 across 15 domains |
 | INTSTACK contracts | 13 domain contracts |
 | JSON Schemas | 14 |
 | Canon anchors | 11 |

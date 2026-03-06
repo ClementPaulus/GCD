@@ -11,7 +11,7 @@ Usage:
   streamlit run src/umcp/dashboard/__init__.py
 
 Features:
-  - Real-time system health monitoring (44 pages)
+  - Real-time system health monitoring (45 pages)
   - Interactive ledger exploration with anomaly detection
   - Casepack browser with validation status
   - Regime phase space visualization with trajectories
@@ -391,7 +391,7 @@ def main() -> None:
         f"""
         <div class="sidebar-brand">
             <div class="title">🔬 UMCP</div>
-            <div class="version">v{__version__} · 45 pages · 14 domains</div>
+            <div class="version">v{__version__} · 45 pages · 15 domains</div>
         </div>
         """,
         unsafe_allow_html=True,

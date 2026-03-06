@@ -74,7 +74,7 @@ The axiom states that **reality is declared by demonstrating closure after colla
 
 ## The Mathematics of Return: 28 Verified Identities
 
-The axiom is not only a philosophical constraint — it generates a complete mathematics. Starting from "collapse is generative; only what returns is real" and the kernel definitions (F, ω, S, C, κ, IC), **28 structural identities** have been derived and verified to machine precision across all 14 domains. Every identity below traces back to Axiom-0 without importing external structure.
+The axiom is not only a philosophical constraint — it generates a complete mathematics. Starting from "collapse is generative; only what returns is real" and the kernel definitions (F, ω, S, C, κ, IC), **28 structural identities** have been derived and verified to machine precision across all 15 domains. Every identity below traces back to Axiom-0 without importing external structure.
 
 ### The Geometry: Fisher Coordinates
 
@@ -157,7 +157,7 @@ All identities are computationally verified in `scripts/deep_diagnostic.py` (E1�
 
 The axiom at its most fundamental level: the structural identities (F + ω = 1, IC ≤ F, IC ≈ exp(κ)) embody the return principle — what isn't lost to drift IS fidelity, and coherence cannot exceed fidelity. These hold across 146 experiments in 8 domains not because they were imposed, but because the structure of collapse forces them.
 
-**Each identity is derived independently from Axiom-0; classical results emerge as degenerate limits**: F = 1 − ω is the Pythagorean theorem in Fisher coordinates (sin²θ + cos²θ = 1 on the flat Bernoulli manifold); strip the Fisher geometry and you get arithmetic complementarity. IC = exp(κ) is universal across domains (98.6% within 1% across 14 domains, no retraining); strip the kernel architecture and you get the classical exponential map. IC ≤ F is the solvability condition for trace recovery (for n=2 channels, c₁,₂ = F ± √(F² − IC²) has real roots iff IC ≤ F); strip the channel semantics, weights, and guard band and you get the AM-GM inequality. The classical versions are what remain when degrees of freedom are removed. The arrow of derivation runs from the axiom to the classical result, not the reverse. See [KERNEL_SPECIFICATION.md §5.3](KERNEL_SPECIFICATION.md) for the complete comparison.
+**Each identity is derived independently from Axiom-0; classical results emerge as degenerate limits**: F = 1 − ω is the Pythagorean theorem in Fisher coordinates (sin²θ + cos²θ = 1 on the flat Bernoulli manifold); strip the Fisher geometry and you get arithmetic complementarity. IC = exp(κ) is universal across domains (98.6% within 1% across 15 domains, no retraining); strip the kernel architecture and you get the classical exponential map. IC ≤ F is the solvability condition for trace recovery (for n=2 channels, c₁,₂ = F ± √(F² − IC²) has real roots iff IC ≤ F); strip the channel semantics, weights, and guard band and you get the AM-GM inequality. The classical versions are what remain when degrees of freedom are removed. The arrow of derivation runs from the axiom to the classical result, not the reverse. See [KERNEL_SPECIFICATION.md §5.3](KERNEL_SPECIFICATION.md) for the complete comparison.
 
 ### Tier-0: Translation Layer (Protocol)
 

@@ -463,7 +463,7 @@ _CUSTOM_CSS = """
 <style>
 /* ══════════════════════════════════════════════════════════════════
    UMCP Dashboard — Professional Theme
-   Generative Collapse Dynamics · 44 pages · 14 domains
+   Generative Collapse Dynamics · 45 pages · 15 domains
    ══════════════════════════════════════════════════════════════════ */
 
 /* ── Global typography and spacing ────────────────────────────── */

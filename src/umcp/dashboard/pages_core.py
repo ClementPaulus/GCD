@@ -42,7 +42,7 @@ def render_overview_page() -> None:
         return
 
     st.title("🔬 UMCP Dashboard")
-    st.caption(f"Universal Measurement Contract Protocol | v{__version__} | 44 pages · 14 domains")
+    st.caption(f"Universal Measurement Contract Protocol | v{__version__} | 45 pages · 15 domains")
 
     # ========== Core Axiom ==========
     with st.expander("📜 **Axiom-0**: Collapse is generative; only what returns is real", expanded=False):
@@ -81,7 +81,7 @@ def render_overview_page() -> None:
             st.metric("📜 Contracts", len(contracts), help="Mathematical contracts defining validation rules")
 
         with metrics_cols[3]:
-            st.metric("🔧 Closures", len(closures), help="Computational closures across 14 domains")
+            st.metric("🔧 Closures", len(closures), help="Computational closures across 15 domains")
 
         with metrics_cols[4]:
             if not df.empty and "run_status" in df.columns:

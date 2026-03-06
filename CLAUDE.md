@@ -71,7 +71,7 @@ python scripts/pre_commit_protocol.py       # Full 9-step protocol, must exit 0
 
 - **Tier-1** (Immutable): F+ω=1, IC≤F, IC≈exp(κ) — structural identities
 - **Tier-0** (Protocol): `src/umcp/` — validation, kernel, seam, contracts
-- **Tier-2** (Expansion): `closures/` — 14 domain closures validated through Tier-0
+- **Tier-2** (Expansion): `closures/` — 15 domain closures validated through Tier-0
 
 Key files: `src/umcp/frozen_contract.py` (constants), `src/umcp/kernel_optimized.py`
 (kernel), `src/umcp/validator.py` (validation), `src/umcp/epistemic_weld.py`

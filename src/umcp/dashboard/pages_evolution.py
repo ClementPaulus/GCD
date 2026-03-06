@@ -2,7 +2,7 @@
 Evolution domain dashboard pages: Evolution Kernel, Brain Kernel,
 Awareness Manifold, Cognitive Traversal.
 
-Covers the ``closures/evolution/`` domain (14th domain closure):
+Covers the ``closures/evolution/`` domain (14th domain closure, of 15):
   - 40-organism evolution kernel (8 channels)
   - 19-species brain kernel (10 channels, developmental trajectory, pathologies)
   - Awareness manifold analysis (floor constraints, emergence thresholds)
