@@ -1,7 +1,7 @@
 # UMCP Repository Comprehensive Analysis
-**Generated**: February 10, 2026  
-**Repository**: calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS  
-**Branch**: copilot/analyze-repository  
+**Generated**: February 10, 2026
+**Repository**: calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS
+**Branch**: copilot/analyze-repository
 **Current Version**: 2.0.0
 
 ---
@@ -126,11 +126,11 @@ Jobs:
      - ruff format --check
      - ruff check
      - mypy src/umcp (continue-on-error: true)
-  
+
   2. test (Run pytest suite)
      - python -m pytest -v --cov=umcp --cov-fail-under=80
      - Coverage requirement: 80%
-  
+
   3. umcp-validate (UMCP validation)
      - Baseline: umcp validate . (must be CONFORMANT)
      - Strict: umcp validate --strict casepacks/UMCP-REF-E2E-0001
@@ -226,7 +226,7 @@ Steps:
 **Three invariant checks** (always enforced):
 1. **F + ω = 1** (Focus-Omega normalization)
 2. **IC ≈ exp(κ)** (Information Concentration from curvature)
-3. **IC ≤ F** (AM-GM inequality, heterogeneity constraint)
+3. **IC ≤ F** (integrity bound, heterogeneity constraint)
 
 **Regime classification** based on τ_R (return time):
 - **STABLE**: τ_R within normal operating bounds
@@ -238,7 +238,7 @@ Steps:
 
 **21 optimizations** based on **34 formal lemmas** (KERNEL_SPECIFICATION.md):
 - **OPT-1**: Homogeneity detection via Lemma 10 (40% speedup)
-- **OPT-2,3,4**: Log-space κ computation, Lemma 1 bounds, AM-GM gap
+- **OPT-2,3,4**: Log-space κ computation, Lemma 1 bounds, heterogeneity gap
 - **OPT-7,8,9**: τ_R domain caching, Karp's cycle detection, vectorized bounds
 - **OPT-10,11**: ε-closure caching, incremental seam updates
 - **OPT-12,14,15**: Gradient-based diagnostics, single-pass S computation

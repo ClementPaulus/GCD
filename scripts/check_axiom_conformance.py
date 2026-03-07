@@ -377,7 +377,12 @@ def check_repo(root: Path, target: Path | None = None) -> ConformanceReport:
             continue
         if filepath.suffix not in extensions:
             continue
-        if any(part in skip_dirs for part in filepath.parts):
+        # Check relative path parts so the repo root name doesn't match skip_dirs
+        try:
+            rel_parts = filepath.relative_to(search_root).parts
+        except ValueError:
+            continue
+        if any(part in skip_dirs for part in rel_parts):
             continue
 
         report.files_checked += 1
