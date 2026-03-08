@@ -5,9 +5,9 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](src/umcp_cpp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![UMCP v2.1.5](https://img.shields.io/badge/UMCP-v2.1.5-orange.svg)](pyproject.toml)
-[![Tests: 7,181](https://img.shields.io/badge/tests-7%2C181-brightgreen.svg)](tests/)
+[![Tests: 7,194](https://img.shields.io/badge/tests-7%2C194-brightgreen.svg)](tests/)
 [![Domains: 17](https://img.shields.io/badge/domains-17-blueviolet.svg)](closures/)
-[![Closures: 130](https://img.shields.io/badge/closures-130-informational.svg)](closures/)
+[![Closures: 148](https://img.shields.io/badge/closures-148-informational.svg)](closures/)
 [![Theorems: 76](https://img.shields.io/badge/theorems-76_proven-ff69b4.svg)](closures/)
 [![Identities: 28](https://img.shields.io/badge/identities-28_verified-9cf.svg)](scripts/)
 
@@ -17,7 +17,7 @@
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Python + C++ integration**: The framework is written in Python with **17 domains**, **130 closure modules**, **76 proven theorems**, and **7,181 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
+**Python + C++ integration**: The framework is written in Python with **17 domains**, **148 closure modules**, **76 proven theorems**, and **7,194 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
 
 ---
 
@@ -29,7 +29,7 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
   - [The Three-Tier Stack](#the-three-tier-stack)
 - [Interactive Dashboard](#interactive-dashboard)
 - [Architecture](#architecture)
-- [Closure Domains (15 Physics Domains)](#closure-domains)
+- [Closure Domains (17 Domains)](#closure-domains)
 - [The Kernel](#the-kernel)
 - [Originality & Terminology](#originality--terminology)
 - [Installation](#installation)
@@ -134,7 +134,7 @@ Every `umcp validate` run is recorded in the append-only ledger. Cumulative runs
 
 ## Interactive Dashboard
 
-**50 pages · 16 science domains · Real-time kernel exploration**
+**50 pages · 17 science domains · Real-time kernel exploration**
 
 UMCP ships with a full-featured **Streamlit dashboard** for interactive exploration of every domain, kernel metric, and validation result. No coding required — launch it with one command and explore everything from subatomic particles to neuroscience through the GCD kernel.
 
@@ -155,7 +155,7 @@ That's it. The dashboard auto-detects all casepacks, contracts, closures, and le
 | Category | Pages | Highlights |
 |----------|-------|------------|
 | **Core** | Overview, Domain Overview, Health, Ledger, Metrics | System-wide health monitoring, conformance tracking, kernel metric trends |
-| **Science Domains** | Cosmology, Astronomy, Nuclear, Quantum, Atomic Physics, Standard Model, Materials Science, Finance, RCFT, Security, Everyday Physics, Dynamic Semiotics | Interactive closure exploration for all 16 domains with live kernel computation |
+| **Science Domains** | Cosmology, Astronomy, Nuclear, Quantum, Atomic Physics, Standard Model, Materials Science, Finance, RCFT, Security, Everyday Physics, Dynamic Semiotics | Interactive closure exploration for all 17 domains with live kernel computation |
 | **Evolution & Cognition** | Evolution Kernel, Brain Kernel, Awareness Manifold, Cognitive Traversal | 40-organism evolution kernel, 10-channel brain analysis, compositional traversal |
 | **Analysis** | Regime, Time Series, Comparison, Formula Builder, Precision | Regime phase diagrams, cross-domain comparison, custom formula evaluation |
 | **Exploration** | Canon Explorer, Geometry, Rosetta Translation (9 lenses), Orientation, Physics, Kinematics | Cross-domain Rosetta translation (incl. Semiotics lens), three-layer geometry visualization |
@@ -169,7 +169,7 @@ That's it. The dashboard auto-detects all casepacks, contracts, closures, and le
 - **Live validation** — run `umcp validate` on any casepack directly from the browser
 - **Regime visualization** — interactive phase space plots with Stable / Watch / Collapse classification
 - **Kernel computation** — compute F, ω, S, C, κ, IC on custom trace vectors in real time
-- **Cross-domain comparison** — compare kernel outputs across all 16 physics domains
+- **Cross-domain comparison** — compare kernel outputs across all 17 domains
 - **Auto-refresh mode** — continuously monitor validation status
 - **Responsive layout** with compact mode for data-dense views
 
@@ -209,7 +209,7 @@ casepacks/my_experiment/
 └── expected/              # Expected outputs for verification
 ```
 
-UMCP ships with **15 casepacks** spanning all 16 physics domains.
+UMCP ships with **15 casepacks** spanning all 17 domains.
 
 ### Core Engine
 
@@ -257,7 +257,7 @@ src/umcp_cpp/                   # Optional C++ accelerator (Tier-0 Protocol)
 | **Schemas** | 14 | `schemas/*.schema.json` | JSON Schema files validating all artifacts |
 | **Canon Anchors** | 14 | `canon/*.yaml` | Domain-specific canonical reference points |
 | **Casepacks** | 15 | `casepacks/` | Reproducible validation bundles |
-| **Closure Domains** | 16 | `closures/*/` | Domain closure packages (122 modules) |
+| **Closure Domains** | 17 | `closures/*/` | Domain closure packages (148 modules) |
 | **Closure Registry** | 1 | `closures/registry.yaml` | Central listing of all closures |
 | **Validator Rules** | 1 | `validator_rules.yaml` | Semantic rule definitions (E101, W201, ...) |
 | **Integrity** | 1 | `integrity/sha256.txt` | SHA-256 checksums for 151 tracked files |
@@ -266,7 +266,7 @@ src/umcp_cpp/                   # Optional C++ accelerator (Tier-0 Protocol)
 
 ## Closure Domains
 
-UMCP validates across **16 domains** with **122 closure modules**, each encoding real-world measurements into the 8-channel kernel trace:
+UMCP validates across **17 domains** with **148 closure modules**, each encoding real-world measurements into the 8-channel kernel trace:
 
 ### Standard Model — 9 modules
 
@@ -335,17 +335,17 @@ The crown jewel: 31 particles mapped through the GCD kernel with **10 proven the
 | `surface_catalysis.py` | Surface catalysis reactions |
 | `gap_capture_ss1m.py` | SS1M gap capture |
 
-### Nuclear Physics — 8 modules
+### Nuclear Physics — 9 modules
 
-Alpha decay, fission, shell structure, decay chains, and Bethe-Weizsäcker binding energy for all nuclides.
+Alpha decay, fission, shell structure, decay chains, Bethe-Weizsäcker binding energy, and **QGP/RHIC closure** (27 entities, 10 theorems, 266 tests — quark-gluon plasma phase structure from RHIC/STAR/PHENIX data).
 
 ### RCFT (Recursive Collapse Field Theory) — 9 modules
 
 Attractor basins, fractal dimension, collapse grammar, information geometry, universality class assignment, active matter dynamics, and RCFT field diagnostics.
 
-### Astronomy — 7 modules
+### Astronomy — 8 modules
 
-Stellar evolution, HR diagram classification, distance ladder, gravitational dynamics, orbital mechanics, spectral analysis, and stellar luminosity.
+Stellar evolution, HR diagram classification, distance ladder, gravitational dynamics, orbital mechanics, spectral analysis, stellar luminosity, and **stellar ages cosmology** (Tomasetti et al. 2026 — oldest MW stars, H₀ tension, 159 tests).
 
 ### Kinematics — 6 modules
 
@@ -568,7 +568,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                           # All 7,194 tests
+pytest                            # All 7,194 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
@@ -632,7 +632,7 @@ umcp integrity                             # Verify SHA-256 checksums
 umcp validate .                            # Full repo validation → CONFORMANT
 
 # 3. Run the test suite
-pytest -v --tb=short                       # 7,181 tests
+pytest -v --tb=short                       # 7,194 tests
 ```
 
 ### C++ Accelerator — Build & Verify
@@ -750,7 +750,7 @@ umcp validate <target>
 The GitHub Actions workflow (`.github/workflows/validate.yml`) enforces:
 
 1. **Lint** — `ruff format --check` + `ruff check` + `mypy`
-2. **Test** — Full pytest suite (7,181 tests, 117 test files)
+2. **Test** — Full pytest suite (7,194 tests, 117 test files)
 3. **Validate** — Baseline + strict validation (both must return CONFORMANT)
 
 ### Pre-Commit Protocol
@@ -769,7 +769,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 
 ## Test Suite
 
-**7,181 tests** across **117 test files**, organized by tier and domain:
+**7,194 tests** across **117 test files**, organized by tier and domain:
 
 | Test Range | Domain | Tests |
 |------------|--------|------:|
@@ -884,7 +884,7 @@ All papers use RevTeX4-2 (LaTeX) or Markdown. Build LaTeX: `pdflatex → bibtex 
 
 ### Zenodo Publications (9 DOIs)
 
-The framework is anchored by peer-reviewed Zenodo publications covering the core theory, physics coherence proofs, casepack specifications, and domain applications. Bibliography: `paper/Bibliography.bib` (58 entries, including PDG 2024, foundational QFT papers, and classical references).
+The framework is anchored by peer-reviewed Zenodo publications covering the core theory, physics coherence proofs, casepack specifications, and domain applications. Bibliography: `paper/Bibliography.bib` (93 entries, including PDG 2024, foundational QFT papers, classical references, RHIC/STAR measurements, active matter, stellar ages cosmology, and semiotic theory).
 
 ### Key DOIs
 
@@ -906,7 +906,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 │   ├── epistemic_weld.py      # Epistemic cost tracking
 │   ├── fleet/                 # Distributed validation
 │   └── dashboard/             # Modular Streamlit dashboard
-├── closures/                  # 17 domains, 130 modules
+├── closures/                  # 17 domains, 148 modules
 │   ├── standard_model/        # 31 particles, 10 theorems
 │   ├── atomic_physics/        # 118 elements, Tier-1 proof
 │   ├── quantum_mechanics/     # Double slit, entanglement, tunneling, QDM, FQHE
@@ -927,8 +927,8 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 ├── schemas/                   # 14 JSON Schema files
 ├── canon/                     # 14 canonical anchor files
 ├── casepacks/                 # 15 reproducible validation bundles
-├── tests/                     # 117 test files, 7,181 tests
-├── paper/                     # 6 LaTeX papers + 1 Markdown paper + Bibliography.bib
+├── tests/                     # 117 test files, 7,194 tests
+├── paper/                     # 6 LaTeX papers + 1 Markdown paper + Bibliography.bib (93 entries)
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log
 ├── scripts/                   # Pre-commit protocol, integrity update
@@ -1056,7 +1056,7 @@ python scripts/cross_domain_bridge_phase2.py # 8 identities (D1-D8): deep struct
 | 5 | **4-dimensional closure algebra** — 5 diagnostics span 4 effective dimensions | Half the degrees of freedom are constrained by the kernel |
 | 6 | **Stability is rare** — Collapse 63% / Watch 24% / Stable 12.5% of Fisher space | Return from collapse to stability is the exception, not the norm |
 
-### Across 17 Physics Domains and 38 Proven Theorems
+### Across 17 Domains and 76 Proven Theorems
 
 1. **Confinement is a cliff**: IC drops 98.1% at the quark→hadron boundary — confinement is visible as geometric-mean collapse in the kernel trace
 
