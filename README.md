@@ -5,10 +5,10 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](src/umcp_cpp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![UMCP v2.1.5](https://img.shields.io/badge/UMCP-v2.1.5-orange.svg)](pyproject.toml)
-[![Tests: 6,915](https://img.shields.io/badge/tests-6%2C915-brightgreen.svg)](tests/)
+[![Tests: 7,181](https://img.shields.io/badge/tests-7%2C181-brightgreen.svg)](tests/)
 [![Domains: 17](https://img.shields.io/badge/domains-17-blueviolet.svg)](closures/)
-[![Closures: 128](https://img.shields.io/badge/closures-128-informational.svg)](closures/)
-[![Theorems: 56](https://img.shields.io/badge/theorems-56_proven-ff69b4.svg)](closures/)
+[![Closures: 130](https://img.shields.io/badge/closures-130-informational.svg)](closures/)
+[![Theorems: 76](https://img.shields.io/badge/theorems-76_proven-ff69b4.svg)](closures/)
 [![Identities: 28](https://img.shields.io/badge/identities-28_verified-9cf.svg)](scripts/)
 
 > **Core Axiom**: *"Collapse is generative; only what returns is real."*
@@ -17,7 +17,7 @@
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Python + C++ integration**: The framework is written in Python with **17 domains**, **129 closure modules**, **66 proven theorems**, and **6,915 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
+**Python + C++ integration**: The framework is written in Python with **17 domains**, **130 closure modules**, **76 proven theorems**, and **7,181 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
 
 ---
 
@@ -567,7 +567,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                           # All 6,915 tests
+pytest                           # All 7,181 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
@@ -631,7 +631,7 @@ umcp integrity                             # Verify SHA-256 checksums
 umcp validate .                            # Full repo validation → CONFORMANT
 
 # 3. Run the test suite
-pytest -v --tb=short                       # 6,915 tests
+pytest -v --tb=short                       # 7,181 tests
 ```
 
 ### C++ Accelerator — Build & Verify
@@ -749,7 +749,7 @@ umcp validate <target>
 The GitHub Actions workflow (`.github/workflows/validate.yml`) enforces:
 
 1. **Lint** — `ruff format --check` + `ruff check` + `mypy`
-2. **Test** — Full pytest suite (6,915 tests, 116 test files)
+2. **Test** — Full pytest suite (7,181 tests, 117 test files)
 3. **Validate** — Baseline + strict validation (both must return CONFORMANT)
 
 ### Pre-Commit Protocol
@@ -768,7 +768,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 
 ## Test Suite
 
-**6,915 tests** across **116 test files**, organized by tier and domain:
+**7,181 tests** across **117 test files**, organized by tier and domain:
 
 | Test Range | Domain | Tests |
 |------------|--------|------:|
@@ -803,6 +803,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 | `test_247` | Quincke rollers (magnetic active matter) | 185 |
 | `test_248` | Matter genesis (particle→atom→mass narrative) | 163 |
 | `test_249` | Stellar ages cosmology — Tomasetti et al. 2026 (oldest MW stars, H0 tension) | 159 |
+| `test_250` | QGP/RHIC — quark-gluon plasma, BES, centrality, confinement transition | 266 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
 
@@ -851,6 +852,19 @@ This synthesis demonstrates the full reach of the return axiom: from quarks to b
 
 ---
 
+### Recent Kernel Closure Synthesis: QGP/RHIC
+
+**25 years of RHIC quark-gluon plasma data** was encoded in `closures/nuclear_physics/qgp_rhic.py`, mapping 27 entities across 4 categories (BES energy scan, centrality dependence, QCD evolution stages, reference baselines) through the GCD 8-channel kernel. The test suite (`tests/test_250_qgp_rhic.py`) passes 266/266 tests, confirming:
+
+- **10 QGP theorems proven (T-QGP-1 through T-QGP-10)**: Perfect liquid (IC peaks at mid-centrality, not most-central — v₂≈0 in head-on collisions kills the collectivity channel), centrality ordering (bulk F ordering with ≥6/8 monotone pairs), BES energy hierarchy (F increases monotonically with √s_NN from 7.7 to 200 GeV), Hagedorn temperature (T_H entities in Collapse regime), reconfinement transition (largest Δ jump at crossover→hadron gas boundary), strangeness enhancement (s/u ratio increases from pp to central Au+Au), QGP opacity (R_AA < 1 for all QGP entities — jet quenching), BES critical point search (non-monotonic κ₂ fluctuations at intermediate energies), deconfinement threshold (QGP stage has highest deconfinement channel), and Tier-1 universality (all 27 entities satisfy F+ω=1, IC≤F, IC=exp(κ) exactly).
+- **8-channel trace**: temperature_frac, baryochem_frac, energy_density_norm, collectivity, opacity, strangeness_eq, multiplicity_norm, deconfinement — all derived from RHIC/STAR/PHENIX measurements.
+- **Key kernel insight**: v₂ ≈ 0 in 0-5% centrality (head-on collisions have circular overlap geometry → no spatial asymmetry → no elliptic flow) creates a near-ε collectivity channel that destroys IC while F remains high. The "perfect liquid" lives at mid-centrality where all channels contribute.
+- **Mean F = 0.5793, mean IC = 0.4079, mean Δ = 0.1714**: The QGP manifold spans Watch and Collapse regimes, with the confinement transition producing the largest heterogeneity gap jump.
+
+This closure fills the previously identified gap between cold nuclear matter (binding energy, decay chains) and the early-universe cosmological epoch, demonstrating that the return axiom captures QCD phase structure from deconfined plasma through reconfinement.
+
+---
+
 ## Papers & Publications
 
 ### Compiled Papers
@@ -891,11 +905,11 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 │   ├── epistemic_weld.py      # Epistemic cost tracking
 │   ├── fleet/                 # Distributed validation
 │   └── dashboard/             # Modular Streamlit dashboard
-├── closures/                  # 17 domains, 128 modules
+├── closures/                  # 17 domains, 130 modules
 │   ├── standard_model/        # 31 particles, 10 theorems
 │   ├── atomic_physics/        # 118 elements, Tier-1 proof
 │   ├── quantum_mechanics/     # Double slit, entanglement, tunneling, QDM, FQHE
-│   ├── nuclear_physics/       # Binding energy, decay chains
+│   ├── nuclear_physics/       # Binding energy, decay chains, QGP/RHIC
 │   ├── materials_science/     # 118 elements × 18 fields
 │   ├── evolution/             # 40 organisms, 20 species brain kernel, 60 kernel states
 │   ├── astronomy/             # Stellar evolution, HR diagram
@@ -912,7 +926,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 ├── schemas/                   # 14 JSON Schema files
 ├── canon/                     # 14 canonical anchor files
 ├── casepacks/                 # 15 reproducible validation bundles
-├── tests/                     # 116 test files, 6,915 tests
+├── tests/                     # 117 test files, 7,181 tests
 ├── paper/                     # 6 LaTeX papers + 1 Markdown paper + Bibliography.bib
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log

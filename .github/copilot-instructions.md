@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **6,915 tests** · **17 domains** · **129 closure modules** · **66 lemmas** · **28 structural identities** · **50 dashboard pages**
+**UMCP v2.1.5** · **7,181 tests** · **17 domains** · **130 closure modules** · **76 lemmas** · **28 structural identities** · **50 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -379,7 +379,7 @@ closures/
 ├── weyl/                     # WEYL cosmology (modified gravity)
 ├── security/                 # Input validation, audit
 ├── astronomy/                # Stellar classification, HR diagram
-├── nuclear_physics/          # Binding energy, decay chains
+├── nuclear_physics/          # Binding energy, decay chains, QGP/RHIC
 ├── quantum_mechanics/        # Wavefunction, entanglement, QDM, FQHE
 ├── finance/                  # Portfolio continuity, market coherence
 ├── atomic_physics/           # 118 elements, periodic kernel, cross-scale, Tier-1 proof
@@ -497,7 +497,7 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 6,915 tests (pytest --collect-only | grep "::" | wc -l to verify)
+pytest                                       # 7,181 tests (pytest --collect-only | grep "::" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
@@ -563,12 +563,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**6,915 test cases** across **116 test files** in `tests/` (115 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_249_*`). Single `tests/conftest.py` provides:
+**7,181 test cases** across **117 test files** in `tests/` (116 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_250_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 6,756 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 7,181 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -605,9 +605,10 @@ umcp validate <target>
 | `test_247` | Quincke rollers (magnetic active matter) | 185 |
 | `test_248` | Matter genesis (particle→atom→mass narrative) | 163 |
 | `test_249` | Stellar ages cosmology — Tomasetti et al. 2026 (oldest MW stars, H0 tension) | 159 |
+| `test_250` | QGP/RHIC — quark-gluon plasma, BES, centrality, confinement transition | 266 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
-| **TOTAL** | | **6,915** |
+| **TOTAL** | | **7,181** |
 
 ## Extension System
 
