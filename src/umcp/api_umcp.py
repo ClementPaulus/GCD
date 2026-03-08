@@ -120,8 +120,10 @@ Neutrino Oscillation · Matter Genesis (99 entities) · Matter Map (485 entities
 Atomic · Materials · Everyday · Evolution · Semiotics · Consciousness ·
 Continuity · Standard Model
 
-**Authentication**: API key via `X-API-Key` header.
-Set `UMCP_DEV_MODE=1` for local development.
+**Access Control**: All read and compute endpoints are publicly accessible —
+no API key needed.  State-mutating admin operations (e.g. seam reset)
+require an admin key via the `X-API-Key` header (set `UMCP_ADMIN_KEY` env var).
+Set `UMCP_DEV_MODE=1` to promote all callers to admin during development.
 
 **Three-valued verdicts**: CONFORMANT / NONCONFORMANT / NON_EVALUABLE — never boolean.
 """
@@ -141,16 +143,27 @@ _METRICS: dict[str, Any] = {
     "endpoints_hit": {},
 }
 
-# API key from environment (production should use secrets management)
-API_KEY = os.environ.get("UMCP_API_KEY", "umcp-dev-key")
+# ── Auth (single source of truth in auth.py) ──
+try:
+    from .auth import ADMIN_KEY, DEV_MODE, require_admin, require_public
+except ImportError:  # direct-run fallback
+    DEV_MODE = os.environ.get("UMCP_DEV_MODE", "0").lower() in ("1", "true", "yes")
+    ADMIN_KEY = os.environ.get("UMCP_ADMIN_KEY", os.environ.get("UMCP_API_KEY", "umcp-dev-key"))
+
+    def require_public(api_key: str | None = Security(APIKeyHeader(name="X-API-Key", auto_error=False))) -> str:  # type: ignore[misc]
+        return api_key or "public"
+
+    def require_admin(api_key: str | None = Security(APIKeyHeader(name="X-API-Key", auto_error=False))) -> str:  # type: ignore[misc]
+        if DEV_MODE:
+            return "dev-mode-admin"
+        if not api_key or api_key != ADMIN_KEY:
+            raise HTTPException(status_code=401, detail="Admin API key required")
+        return api_key
+
+
+# Keep legacy aliases so existing tests that reference them still work
+API_KEY = ADMIN_KEY
 API_KEY_NAME = "X-API-Key"
-
-# Development mode: disable authentication for testing/local use
-# Set UMCP_DEV_MODE=1 to enable (authentication disabled)
-# Set UMCP_DEV_MODE=0 or unset for production (authentication required)
-DEV_MODE = os.environ.get("UMCP_DEV_MODE", "0").lower() in ("1", "true", "yes")
-
-api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
 
 def get_repo_root() -> Path:
@@ -164,9 +177,9 @@ def get_repo_root() -> Path:
     return Path.cwd()
 
 
-def verify_api_key(api_key: str | None = Security(api_key_header)) -> bool:
-    """Verify the API key."""
-    # In dev mode, allow access without API key
+# Legacy wrappers — kept for backward compatibility with existing tests
+def verify_api_key(api_key: str | None = None) -> bool:
+    """Legacy: verify API key (use require_public / require_admin instead)."""
     if DEV_MODE:
         return True
     if api_key is None:
@@ -174,9 +187,8 @@ def verify_api_key(api_key: str | None = Security(api_key_header)) -> bool:
     return api_key == API_KEY
 
 
-def validate_api_key(api_key: str = Security(api_key_header)) -> str:
-    """Validate API key and return it, or raise 401."""
-    # In dev mode, skip authentication
+def validate_api_key(api_key: str | None = None) -> str:
+    """Legacy: validate API key (use require_public / require_admin instead)."""
     if DEV_MODE:
         return "dev-mode-enabled"
     if not api_key or api_key != API_KEY:
@@ -378,13 +390,16 @@ try:
 except ImportError:
     pass  # Routes module not available — graceful degradation
 
-# CORS middleware for browser access
+# CORS middleware — open access for public endpoints.
+# Credentials are not used (public access), so allow_credentials=False
+# is correct with allow_origins=["*"].  Admin endpoints rely on the
+# X-API-Key header (not cookies) so this is safe.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*", "X-API-Key"],
 )
 
 
@@ -760,7 +775,7 @@ async def get_version() -> VersionResponse:
 @app.post("/validate", response_model=ValidationResponse, tags=["Validation"])
 async def validate_path(
     request: ValidationRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ValidationResponse:
     """
     Validate a casepack or repository path.
@@ -839,7 +854,7 @@ async def validate_path(
 
 @app.get("/casepacks", response_model=list[CasepackSummary], tags=["Casepacks"])
 async def list_casepacks(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[CasepackSummary]:
     """
     List all available casepacks.
@@ -899,7 +914,7 @@ async def list_casepacks(
 @app.get("/casepacks/{casepack_id}", response_model=CasepackDetail, tags=["Casepacks"])
 async def get_casepack(
     casepack_id: str,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> CasepackDetail:
     """
     Get detailed information about a specific casepack.
@@ -971,7 +986,7 @@ async def get_casepack(
 async def run_casepack(
     casepack_id: str,
     request: CasepackRunRequest | None = None,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> CasepackRunResponse:
     """
     Run a casepack and return results.
@@ -1038,7 +1053,7 @@ async def query_ledger(
     limit: int = Query(100, ge=1, le=1000, description="Maximum entries to return"),
     offset: int = Query(0, ge=0, description="Offset for pagination"),
     status: str | None = Query(None, description="Filter by status (CONFORMANT, NONCONFORMANT)"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> LedgerResponse:
     """
     Query the return log ledger.
@@ -1092,7 +1107,7 @@ async def query_ledger(
 
 @app.get("/contracts", response_model=list[ContractSummary], tags=["Contracts"])
 async def list_contracts(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[ContractSummary]:
     """
     List all available contracts.
@@ -1129,7 +1144,7 @@ async def list_contracts(
 
 @app.get("/closures", response_model=list[ClosureSummary], tags=["Closures"])
 async def list_closures(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[ClosureSummary]:
     """
     List all available closures.
@@ -1200,7 +1215,7 @@ async def classify_regime_endpoint(
     F: float = Query(..., ge=0.0, le=1.0, description="Freshness F = 1-ω"),
     S: float = Query(..., description="Seam residual"),
     C: float = Query(..., description="Curvature κ"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> RegimeClassification:
     """
     Classify the computational regime based on kernel invariants.
@@ -1354,7 +1369,7 @@ async def get_ascii_sparkline(
 
 @app.get("/output/markdown/report", tags=["Outputs"])
 async def get_markdown_report(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, str]:
     """
     Get Markdown validation report.
@@ -1410,7 +1425,7 @@ async def get_mermaid_regime_diagram() -> dict[str, str]:
 
 @app.get("/output/html/card", tags=["Outputs"])
 async def get_html_card(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, str]:
     """
     Get embeddable HTML status card.
@@ -1455,7 +1470,7 @@ async def get_html_card(
 @app.get("/output/latex/invariants", tags=["Outputs"])
 async def get_latex_table(
     limit: int = Query(10, ge=1, le=100, description="Max rows"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, str]:
     """
     Get LaTeX table of kernel invariants.
@@ -1499,7 +1514,7 @@ async def get_latex_table(
 
 @app.get("/output/junit", tags=["Outputs"])
 async def get_junit_xml(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> JSONResponse:
     """
     Get JUnit XML for CI/CD integration.
@@ -1536,7 +1551,7 @@ async def get_junit_xml(
 
 @app.get("/output/jsonld", tags=["Outputs"])
 async def get_json_ld(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Get JSON-LD for semantic web integration.
@@ -1618,7 +1633,7 @@ class CoordinateEmbeddingResponse(BaseModel):
 @app.post("/convert/measurements", response_model=MeasurementConversionResponse, tags=["Conversion"])
 async def convert_measurements(
     request: MeasurementConversionRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> MeasurementConversionResponse:
     """
     Convert measurements between unit types.
@@ -1698,7 +1713,7 @@ async def convert_measurements(
 @app.post("/convert/embed", response_model=CoordinateEmbeddingResponse, tags=["Conversion"])
 async def embed_coordinates(
     request: CoordinateEmbeddingRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> CoordinateEmbeddingResponse:
     """
     Embed values into UMCP coordinate domain [ε, 1-ε].
@@ -1788,7 +1803,7 @@ class BudgetIdentityResponse(BaseModel):
 @app.post("/kernel/compute", response_model=KernelComputeResponse, tags=["Kernel"])
 async def compute_kernel(
     request: KernelComputeRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> KernelComputeResponse:
     """
     Compute UMCP kernel invariants from coordinates and weights.
@@ -1881,7 +1896,7 @@ class BatchKernelResponse(BaseModel):
 @app.post("/kernel/batch", response_model=BatchKernelResponse, tags=["Kernel"])
 async def compute_kernel_batch(
     request: BatchKernelRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> BatchKernelResponse:
     """
     Compute kernel invariants for multiple traces in a single request.
@@ -1984,7 +1999,7 @@ class SpineResponse(BaseModel):
 @app.post("/kernel/spine", response_model=SpineResponse, tags=["Kernel"])
 async def evaluate_spine(
     request: SpineRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> SpineResponse:
     """
     Full spine evaluation: Contract → Canon → Closures → Integrity Ledger → Stance.
@@ -2159,7 +2174,7 @@ async def get_metrics() -> dict[str, Any]:
 
 @app.get("/sm/particles", tags=["Standard Model"])
 async def get_sm_particles(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Get the Standard Model particle catalog with kernel data.
@@ -2223,7 +2238,7 @@ async def get_sm_particles(
 
 @app.get("/sm/theorems", tags=["Standard Model"])
 async def get_sm_theorems(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Get the 10 Standard Model theorems with verification status.
@@ -2321,7 +2336,7 @@ async def get_sm_theorems(
 async def get_atomic_elements(
     Z_min: int = Query(1, ge=1, le=118, description="Minimum atomic number"),
     Z_max: int = Query(118, ge=1, le=118, description="Maximum atomic number"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Get periodic table kernel data for elements Z_min through Z_max.
@@ -2376,7 +2391,7 @@ async def get_atomic_elements(
 
 @app.get("/evolution/organisms", tags=["Evolution"])
 async def get_evolution_organisms(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Get evolution kernel data for 40 organisms spanning bacteria to mammals.
@@ -2456,7 +2471,7 @@ class UniversalCalcResponse(BaseModel):
 @app.post("/calculate", response_model=UniversalCalcResponse, tags=["Calculator"])
 async def universal_calculate(
     request: UniversalCalcRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> UniversalCalcResponse:
     """
     Universal UMCP Calculator - compute all metrics in one call.
@@ -2528,7 +2543,7 @@ async def verify_budget_identity(
     D_omega: float = Query(..., description="Omega drift component"),
     D_C: float = Query(..., description="Curvature drift component"),
     delta_kappa: float = Query(..., description="Ledger delta κ"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> BudgetIdentityResponse:
     """
     Verify the UMCP budget identity: R·τ_R = D_ω + D_C + Δκ
@@ -2599,7 +2614,7 @@ class UncertaintyResponse(BaseModel):
 @app.post("/uncertainty/propagate", response_model=UncertaintyResponse, tags=["Uncertainty"])
 async def propagate_uncertainty(
     request: UncertaintyRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> UncertaintyResponse:
     """
     Propagate measurement uncertainty through the kernel.
@@ -2705,7 +2720,7 @@ class TimeSeriesResponse(BaseModel):
 @app.post("/analysis/timeseries", response_model=TimeSeriesResponse, tags=["Analysis"])
 async def analyze_timeseries(
     request: TimeSeriesRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> TimeSeriesResponse:
     """
     Analyze a time series of kernel invariants.
@@ -2856,7 +2871,7 @@ class CorrelationResponse(BaseModel):
 @app.post("/analysis/statistics", response_model=StatisticsResponse, tags=["Analysis"])
 async def compute_statistics(
     request: StatisticsRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> StatisticsResponse:
     """
     Compute comprehensive descriptive statistics.
@@ -2919,7 +2934,7 @@ async def compute_statistics(
 @app.post("/analysis/correlation", response_model=CorrelationResponse, tags=["Analysis"])
 async def compute_correlation(
     request: CorrelationRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> CorrelationResponse:
     """
     Compute correlation and regression between two variables.
@@ -3017,7 +3032,7 @@ class LedgerAnalysisResponse(BaseModel):
 
 @app.get("/analysis/ledger", response_model=LedgerAnalysisResponse, tags=["Analysis"])
 async def analyze_ledger(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> LedgerAnalysisResponse:
     """
     Comprehensive analysis of the validation ledger.
@@ -3229,7 +3244,7 @@ class ClosureResult(BaseModel):
 
 @app.get("/domains", response_model=list[DomainInfo], tags=["Domains"])
 async def list_domains(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[DomainInfo]:
     """List all 17 UMCP domains with metadata."""
     return [
@@ -3391,7 +3406,7 @@ async def list_domains(
 
 @app.get("/canon", response_model=list[CanonAnchor], tags=["Domains"])
 async def list_canon_anchors(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[CanonAnchor]:
     """List all canon anchor files with summary metadata."""
     repo_root = get_repo_root()
@@ -3432,7 +3447,7 @@ async def list_canon_anchors(
 @app.get("/canon/{domain}", tags=["Domains"])
 async def get_canon_detail(
     domain: str,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Get full canon anchor data for a specific domain."""
     repo_root = get_repo_root()
@@ -3459,7 +3474,7 @@ async def get_canon_detail(
 @app.post("/astro/luminosity", response_model=ClosureResult, tags=["ASTRO"])
 async def compute_astro_luminosity(
     req: AstroLuminosityRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute stellar luminosity via Stefan-Boltzmann and mass-luminosity relations."""
     try:
@@ -3474,7 +3489,7 @@ async def compute_astro_luminosity(
 @app.post("/astro/distance", response_model=ClosureResult, tags=["ASTRO"])
 async def compute_astro_distance(
     req: AstroDistanceRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Cross-validate distances via modulus, parallax, and Hubble flow."""
     try:
@@ -3491,7 +3506,7 @@ async def compute_astro_spectral(
     t_eff: float = Query(..., description="Effective temperature (K)"),
     b_v: float = Query(..., description="B-V color index"),
     spectral_class: str = Query(default="G", description="Spectral class (O,B,A,F,G,K,M)"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Analyze spectrum: Wien peak, color-temperature, spectral embedding."""
     try:
@@ -3509,7 +3524,7 @@ async def compute_astro_evolution(
     l_obs: float = Query(..., description="Observed luminosity (L☉)"),
     t_eff: float = Query(..., description="Effective temperature (K)"),
     age_gyr: float = Query(..., description="Age in Gyr"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute stellar evolution: MS lifetime, phase, ZAMS properties."""
     try:
@@ -3527,7 +3542,7 @@ async def compute_astro_orbital(
     a_semi: float = Query(..., description="Semi-major axis (AU)"),
     m_total: float = Query(..., description="Total mass (solar masses)"),
     e_orb: float = Query(..., ge=0.0, lt=1.0, description="Eccentricity"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Validate Kepler III, compute orbital velocity and energy."""
     try:
@@ -3545,7 +3560,7 @@ async def compute_astro_dynamics(
     r_obs: float = Query(..., description="Observed radius (kpc)"),
     sigma_v: float = Query(..., description="Velocity dispersion (km/s)"),
     m_luminous: float = Query(..., description="Luminous mass (solar masses)"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute virial mass, dark matter fraction, virial ratio."""
     try:
@@ -3565,7 +3580,7 @@ async def compute_astro_dynamics(
 @app.post("/nuclear/binding", response_model=ClosureResult, tags=["NUC"])
 async def compute_nuclear_binding(
     req: NucBindingRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute SEMF binding energy per nucleon and regime classification."""
     try:
@@ -3580,7 +3595,7 @@ async def compute_nuclear_binding(
 @app.post("/nuclear/alpha-decay", response_model=ClosureResult, tags=["NUC"])
 async def compute_nuclear_alpha(
     req: NucAlphaRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute alpha decay Q-value and Geiger-Nuttall half-life estimate."""
     try:
@@ -3595,7 +3610,7 @@ async def compute_nuclear_alpha(
 @app.post("/nuclear/shell", response_model=ClosureResult, tags=["NUC"])
 async def compute_nuclear_shell(
     req: NucBindingRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute shell structure: magic number proximity and shell closure strength."""
     try:
@@ -3610,7 +3625,7 @@ async def compute_nuclear_shell(
 @app.post("/nuclear/fissility", response_model=ClosureResult, tags=["NUC"])
 async def compute_nuclear_fissility(
     req: NucBindingRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute fissility parameter Z²/A vs critical value."""
     try:
@@ -3627,7 +3642,7 @@ async def compute_nuclear_decay_chain(
     Z: int = Query(..., ge=2, le=120, description="Starting proton number"),
     A: int = Query(..., ge=4, le=300, description="Starting mass number"),
     max_steps: int = Query(default=14, ge=1, le=50, description="Maximum chain length"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute sequential decay chain from parent nuclide."""
     try:
@@ -3646,7 +3661,7 @@ async def compute_nuclear_decay_chain(
 @app.post("/nuclear/double-sided", response_model=ClosureResult, tags=["NUC"])
 async def compute_nuclear_double_sided(
     req: NucBindingRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute double-sided collapse: fusion vs fission convergence on iron peak."""
     try:
@@ -3668,7 +3683,7 @@ async def compute_nuclear_double_sided(
 @app.post("/qm/collapse", response_model=ClosureResult, tags=["QM"])
 async def compute_qm_collapse(
     req: QMCollapseRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute Born-rule wavefunction collapse: deviation, fidelity, purity."""
     try:
@@ -3683,7 +3698,7 @@ async def compute_qm_collapse(
 @app.post("/qm/entanglement", response_model=ClosureResult, tags=["QM"])
 async def compute_qm_entanglement(
     req: QMEntanglementRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute entanglement metrics: concurrence, von Neumann entropy, Bell-CHSH parameter."""
     try:
@@ -3698,7 +3713,7 @@ async def compute_qm_entanglement(
 @app.post("/qm/tunneling", response_model=ClosureResult, tags=["QM"])
 async def compute_qm_tunneling(
     req: QMTunnelingRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute quantum tunneling: WKB transmission coefficient."""
     try:
@@ -3717,7 +3732,7 @@ async def compute_qm_oscillator(
     e_observed: float = Query(..., description="Observed energy (eV)"),
     coherent_alpha: float = Query(default=0.0, description="Coherent state amplitude"),
     squeeze_r: float = Query(default=0.0, description="Squeeze parameter"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute quantized energy levels E_n = ℏω(n+½)."""
     try:
@@ -3735,7 +3750,7 @@ async def compute_qm_spin(
     s_z_observed: float = Query(..., description="Observed S_z component"),
     b_field: float = Query(..., description="Magnetic field (T)"),
     g_factor: float | None = Query(default=None, description="Landé g-factor"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Compute spin measurement: Stern-Gerlach, Larmor frequency, Zeeman splitting."""
     try:
@@ -3752,7 +3767,7 @@ async def compute_qm_uncertainty(
     delta_x: float = Query(..., description="Position uncertainty (nm)"),
     delta_p: float = Query(..., description="Momentum uncertainty"),
     units: str = Query(default="SI", description="Unit system: SI or natural"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Check Heisenberg uncertainty: Δx·Δp ≥ ℏ/2."""
     try:
@@ -3785,7 +3800,7 @@ class FinanceEmbedRequest(BaseModel):
 @app.post("/finance/embed", response_model=ClosureResult, tags=["FIN"])
 async def compute_finance_embed(
     req: FinanceEmbedRequest,
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> ClosureResult:
     """Embed financial data into UMCP [0,1]⁴ coordinates and compute invariants."""
     try:
@@ -3882,7 +3897,7 @@ class UMCPMapping(BaseModel):
 @app.get("/weyl/background", response_model=BackgroundResult, tags=["WEYL"])
 async def compute_weyl_background(
     z: float = Query(..., ge=0.0, le=10.0, description="Redshift"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> BackgroundResult:
     """
     Compute background cosmology quantities at redshift z.
@@ -3918,7 +3933,7 @@ async def compute_weyl_sigma(
     z: float = Query(..., ge=0.0, le=3.0, description="Redshift"),
     Sigma_0: float = Query(default=0.24, ge=-1.0, le=1.0, description="Σ₀ amplitude"),
     g_model: str = Query(default="constant", description="g(z) model: constant, exponential, standard"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> SigmaResult:
     """
     Compute Σ(z) modified gravity parameter.
@@ -3955,7 +3970,7 @@ async def compute_weyl_sigma(
 
 @app.get("/weyl/des-y3", response_model=DESY3Data, tags=["WEYL"])
 async def get_des_y3_data(
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> DESY3Data:
     """
     Get DES Y3 reference data from Nature Communications 15:9295 (2024).
@@ -3990,7 +4005,7 @@ async def compute_weyl_umcp_mapping(
     Sigma_0: float = Query(default=0.24, ge=-1.0, le=1.0, description="Σ₀ amplitude"),
     chi2_Sigma: float = Query(default=1.1, ge=0.0, description="χ² of Σ model fit"),
     chi2_LCDM: float = Query(default=2.1, ge=0.0, description="χ² of ΛCDM fit"),
-    api_key: str = Security(validate_api_key),
+    api_key: str = Security(require_public),
 ) -> UMCPMapping:
     """
     Map WEYL Σ measurements to UMCP invariants.

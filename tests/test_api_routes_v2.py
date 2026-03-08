@@ -117,10 +117,10 @@ class TestSeamEndpoints:
         assert isinstance(data["is_returning"], bool)
         assert isinstance(data["failure_detected"], bool)
 
-    def test_seam_requires_auth(self, client):
-        """Seam endpoints require authentication."""
+    def test_seam_metrics_public_access(self, client):
+        """Seam metrics endpoint is publicly accessible."""
         resp = client.get("/seam/metrics")
-        assert resp.status_code == 401
+        assert resp.status_code == 200
 
 
 # ============================================================================
@@ -857,7 +857,7 @@ class TestSystemEndpoints:
 
 
 class TestAuthBoundary:
-    """Verify auth is required on all v2 routes."""
+    """Verify public endpoints work without auth and admin endpoints require auth."""
 
     @pytest.mark.parametrize(
         "method,path",
@@ -886,7 +886,17 @@ class TestAuthBoundary:
             ("GET", "/integrity"),
         ],
     )
-    def test_auth_required(self, client, method, path):
-        """All v2 endpoints require authentication."""
+    def test_public_no_auth_needed(self, client, method, path):
+        """Public endpoints succeed without API key."""
         resp = getattr(client, method.lower())(path)
-        assert resp.status_code == 401, f"{method} {path} should require auth"
+        assert resp.status_code != 401, f"{method} {path} should be public"
+
+    def test_seam_reset_requires_admin(self, client):
+        """POST /seam/reset requires admin API key."""
+        resp = client.post("/seam/reset")
+        assert resp.status_code == 401, "/seam/reset should require admin key"
+
+    def test_seam_reset_with_admin_key(self, client, headers):
+        """POST /seam/reset succeeds with admin API key."""
+        resp = client.post("/seam/reset", headers=headers)
+        assert resp.status_code == 200

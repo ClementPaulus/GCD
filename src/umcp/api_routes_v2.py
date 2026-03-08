@@ -19,11 +19,9 @@ All endpoints use lazy imports for optional dependencies.
 from __future__ import annotations
 
 import math
-import os
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, Security
-from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, Field
 
 
@@ -46,23 +44,17 @@ def _native(obj: Any) -> Any:
     return obj
 
 
-# ── API Key Security (mirrors main module pattern) ──
-_API_KEY = os.environ.get("UMCP_API_KEY", "umcp-dev-key")
-_DEV_MODE = os.environ.get("UMCP_DEV_MODE", "0").lower() in ("1", "true", "yes")
-_api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+# ── Auth (shared module — single source of truth) ──
+try:
+    from .auth import require_admin, require_public
+except ImportError:  # direct-run fallback
+    from fastapi.security import APIKeyHeader as _AKH
 
+    def require_public(api_key: str | None = Security(_AKH(name="X-API-Key", auto_error=False))) -> str:  # type: ignore[misc]
+        return api_key or "public"
 
-def _validate_api_key(api_key: str = Security(_api_key_header)) -> str:
-    """Validate API key — skipped in dev mode."""
-    if _DEV_MODE:
-        return "dev-mode-enabled"
-    if not api_key or api_key != _API_KEY:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid or missing API key",
-            headers={"WWW-Authenticate": "ApiKey"},
-        )
-    return api_key
+    def require_admin(api_key: str | None = Security(_AKH(name="X-API-Key", auto_error=False))) -> str:  # type: ignore[misc]
+        raise HTTPException(status_code=401, detail="Admin key required")
 
 
 # ============================================================================
@@ -398,7 +390,7 @@ def _get_seam_accumulator() -> Any:
 @router.post("/seam/compute", response_model=SeamRecordResponse, tags=["Seam"])
 async def compute_seam(
     req: SeamComputeRequest,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> SeamRecordResponse:
     """Add a seam record and return the computed seam with residual."""
     acc = _get_seam_accumulator()
@@ -427,7 +419,7 @@ async def compute_seam(
 
 @router.get("/seam/metrics", response_model=SeamMetricsResponse, tags=["Seam"])
 async def get_seam_metrics(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> SeamMetricsResponse:
     """Get cumulative seam chain metrics."""
     acc = _get_seam_accumulator()
@@ -446,9 +438,9 @@ async def get_seam_metrics(
 
 @router.post("/seam/reset", tags=["Seam"])
 async def reset_seam_accumulator(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_admin),
 ) -> dict[str, str]:
-    """Reset the seam chain accumulator."""
+    """Reset the seam chain accumulator (admin only)."""
     global _seam_accumulator
     _seam_accumulator = None
     return {"status": "reset", "message": "Seam accumulator cleared"}
@@ -462,7 +454,7 @@ async def reset_seam_accumulator(
 @router.post("/tau-r-star/compute", response_model=TauRStarResponse, tags=["Thermodynamic"])
 async def compute_tau_r_star(
     req: TauRStarRequest,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> TauRStarResponse:
     """
     Compute τ_R* thermodynamic diagnostic.
@@ -531,7 +523,7 @@ async def compute_tau_r_star(
 @router.post("/tau-r-star/r-critical", tags=["Thermodynamic"])
 async def compute_r_critical(
     req: RCriticalRequest,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, float]:
     """Compute R_critical — minimum return credit for seam passage."""
     try:
@@ -546,7 +538,7 @@ async def compute_r_critical(
 @router.post("/tau-r-star/r-min", tags=["Thermodynamic"])
 async def compute_r_min(
     req: RMinRequest,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, float]:
     """Compute R_min — minimum return credit for a target τ_R."""
     try:
@@ -565,7 +557,7 @@ async def compute_r_min(
 
 @router.get("/tau-r-star/trapping-threshold", tags=["Thermodynamic"])
 async def get_trapping_threshold(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, float]:
     """Get c_trap — the trapping threshold (Cardano root of x³+x−1=0)."""
     try:
@@ -585,7 +577,7 @@ async def get_trapping_threshold(
 @router.post("/epistemic/classify", response_model=EpistemicClassifyResponse, tags=["Epistemic"])
 async def classify_epistemic_act(
     req: EpistemicClassifyRequest,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> EpistemicClassifyResponse:
     """
     Classify an epistemic act as RETURN, GESTURE, or DISSOLUTION.
@@ -624,7 +616,7 @@ async def classify_epistemic_act(
 @router.post("/epistemic/positional-illusion", response_model=PositionalIllusionResponse, tags=["Epistemic"])
 async def quantify_positional_illusion(
     req: PositionalIllusionRequest,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> PositionalIllusionResponse:
     """Quantify positional illusion for a given drift ω and observation count."""
     try:
@@ -646,7 +638,7 @@ async def quantify_positional_illusion(
 @router.post("/epistemic/trace-assessment", response_model=EpistemicTraceResponse, tags=["Epistemic"])
 async def assess_epistemic_trace(
     req: EpistemicTraceRequest,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> EpistemicTraceResponse:
     """Assess an epistemic trace for conformance."""
     try:
@@ -688,7 +680,7 @@ async def assess_epistemic_trace(
 
 @router.get("/insights/summary", response_model=InsightSummaryResponse, tags=["Insights"])
 async def get_insight_summary(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> InsightSummaryResponse:
     """Get summary statistics from the insight engine."""
     try:
@@ -709,7 +701,7 @@ async def get_insight_summary(
 
 @router.get("/insights/discover", tags=["Insights"])
 async def discover_insights(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[dict[str, Any]]:
     """Run pattern discovery and return all discovered insights."""
     try:
@@ -725,7 +717,7 @@ async def discover_insights(
 @router.get("/insights/random", tags=["Insights"])
 async def get_random_insight(
     seed: int | None = Query(None, description="Random seed for reproducibility"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, str]:
     """Get a random startup insight."""
     try:
@@ -743,7 +735,7 @@ async def query_insights(
     domain: str | None = Query(None, description="Filter by domain"),
     severity: str | None = Query(None, description="Filter by severity"),
     pattern_type: str | None = Query(None, description="Filter by pattern type"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[dict[str, Any]]:
     """Query insights with optional filters."""
     try:
@@ -774,7 +766,7 @@ async def compute_ckm(
     A: float = Query(0.790, description="Wolfenstein A"),
     rho_bar: float = Query(0.141, description="Wolfenstein ρ̄"),
     eta_bar: float = Query(0.357, description="Wolfenstein η̄"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> CKMResponse:
     """
     Compute CKM quark mixing matrix with Wolfenstein parametrization.
@@ -809,7 +801,7 @@ async def compute_ckm(
 @router.get("/sm/coupling", response_model=CouplingResponse, tags=["Standard Model"])
 async def compute_coupling(
     Q_GeV: float = Query(91.2, gt=0.0, description="Energy scale Q in GeV"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> CouplingResponse:
     """
     Compute running coupling constants at energy scale Q.
@@ -842,7 +834,7 @@ async def compute_coupling(
 async def compute_cross_section(
     sqrt_s_GeV: float = Query(91.2, gt=0.0, description="Center-of-mass energy √s in GeV"),
     R_measured: float | None = Query(None, description="Measured R-ratio (optional)"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> CrossSectionResponse:
     """
     Compute e⁺e⁻→hadrons cross section at √s.
@@ -876,7 +868,7 @@ async def compute_cross_section(
 async def compute_higgs(
     v_GeV: float = Query(246.22, description="Vacuum expectation value in GeV"),
     m_H_GeV: float = Query(125.25, description="Higgs mass in GeV"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> HiggsResponse:
     """
     Compute Higgs mechanism / electroweak symmetry breaking.
@@ -912,7 +904,7 @@ async def neutrino_probability(
     L_km: float = Query(1285.0, gt=0.0, description="Baseline in km"),
     E_GeV: float = Query(2.5, gt=0.0, description="Neutrino energy in GeV"),
     antineutrino: bool = Query(False, description="Antineutrino mode"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Compute vacuum neutrino oscillation probability P(ν_α → ν_β)."""
     try:
@@ -939,7 +931,7 @@ async def neutrino_probability(
 
 @router.get("/sm/neutrino/dune", tags=["Standard Model"])
 async def dune_prediction(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Compute DUNE experiment predictions with matter effects."""
     try:
@@ -971,7 +963,7 @@ async def dune_prediction(
 
 @router.get("/sm/matter-genesis", tags=["Standard Model"])
 async def get_matter_genesis(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Run full matter genesis analysis — 99 entities across 7 acts.
@@ -1014,7 +1006,7 @@ async def get_matter_genesis(
 
 @router.get("/sm/matter-genesis/mass-origins", tags=["Standard Model"])
 async def get_mass_origins(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[dict[str, Any]]:
     """Get mass origin analysis — how mass is generated at each scale."""
     try:
@@ -1040,7 +1032,7 @@ async def get_mass_origins(
 
 @router.get("/sm/matter-map", tags=["Standard Model"])
 async def get_matter_map(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Build full 6-scale matter map: fundamental → composite → nuclear → atomic → molecular → bulk.
@@ -1094,7 +1086,7 @@ async def get_matter_map(
 @router.get("/sm/matter-map/scale/{scale}", tags=["Standard Model"])
 async def get_matter_map_scale(
     scale: str,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Get entities for a specific scale level (fundamental/composite/nuclear/atomic/molecular/bulk)."""
     try:
@@ -1138,7 +1130,7 @@ async def get_matter_map_scale(
 
 @router.get("/semiotics/systems", tags=["Semiotics"])
 async def list_semiotic_systems(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[dict[str, Any]]:
     """List all 30 sign systems with kernel invariants."""
     try:
@@ -1153,7 +1145,7 @@ async def list_semiotic_systems(
 @router.get("/semiotics/system/{name}", tags=["Semiotics"])
 async def get_semiotic_system(
     name: str,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Get kernel result for a specific sign system by name."""
     try:
@@ -1172,7 +1164,7 @@ async def get_semiotic_system(
 
 @router.get("/semiotics/structure", tags=["Semiotics"])
 async def get_semiotic_structure(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Get structural analysis of all sign systems."""
     try:
@@ -1193,7 +1185,7 @@ async def get_semiotic_structure(
 
 @router.get("/semiotics/brain-bridge", tags=["Semiotics"])
 async def get_semiotic_brain_bridge(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Bridge semiotic kernel to the brain/consciousness kernel."""
     try:
@@ -1211,7 +1203,7 @@ async def get_semiotic_brain_bridge(
 
 @router.get("/consciousness/systems", tags=["Consciousness"])
 async def list_coherence_systems(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[dict[str, Any]]:
     """List all 20 coherence systems with kernel invariants."""
     try:
@@ -1226,7 +1218,7 @@ async def list_coherence_systems(
 @router.get("/consciousness/system/{name}", tags=["Consciousness"])
 async def get_coherence_system(
     name: str,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Get kernel result for a specific coherence system by name."""
     try:
@@ -1248,7 +1240,7 @@ async def get_coherence_system(
 
 @router.get("/consciousness/structure", tags=["Consciousness"])
 async def get_coherence_structure(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Get structural analysis of all coherence systems."""
     try:
@@ -1280,7 +1272,7 @@ async def list_material_elements(
     block: str | None = Query(None, description="Filter by block (s/p/d/f)"),
     period: int | None = Query(None, ge=1, le=7, description="Filter by period"),
     category: str | None = Query(None, description="Filter by category"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[dict[str, Any]]:
     """List all 118 elements with their material properties."""
     try:
@@ -1303,7 +1295,7 @@ async def list_material_elements(
 @router.get("/materials/element/{identifier}", tags=["Materials"])
 async def get_material_element(
     identifier: str,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Get a single element by atomic number Z or symbol."""
     try:
@@ -1337,7 +1329,7 @@ async def get_material_element(
 @router.get("/atomic/cross-scale", tags=["Atomic"])
 async def list_cross_scale_elements(
     limit: int = Query(118, ge=1, le=118, description="Max elements to return"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[dict[str, Any]]:
     """Get 12-channel cross-scale kernel for all elements (nuclear + electronic + bulk)."""
     try:
@@ -1352,7 +1344,7 @@ async def list_cross_scale_elements(
 @router.get("/atomic/cross-scale/{Z}", tags=["Atomic"])
 async def get_cross_scale_element(
     Z: int,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Get 12-channel cross-scale kernel for a specific element by Z."""
     try:
@@ -1373,7 +1365,7 @@ async def get_cross_scale_element(
 async def compute_binding_energy(
     Z: int = Query(..., ge=1, le=118, description="Atomic number"),
     A: int = Query(..., ge=1, description="Mass number"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, float]:
     """Compute Bethe-Weizsäcker binding energy per nucleon (MeV)."""
     try:
@@ -1389,7 +1381,7 @@ async def compute_binding_energy(
 async def compute_magic_proximity(
     Z: int = Query(..., ge=1, le=118, description="Atomic number"),
     A: int = Query(..., ge=1, description="Mass number"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Compute proximity to magic numbers for shell closure."""
     try:
@@ -1448,7 +1440,7 @@ _ROSETTA_LENSES: dict[str, dict[str, str]] = {
 @router.post("/rosetta/translate", response_model=RosettaResponse, tags=["Rosetta"])
 async def rosetta_translate(
     req: RosettaRequest,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> RosettaResponse:
     """
     Translate the five words across Rosetta lenses.
@@ -1498,7 +1490,7 @@ async def rosetta_translate(
 
 @router.get("/rosetta/lenses", tags=["Rosetta"])
 async def list_rosetta_lenses(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, dict[str, str]]:
     """List all available Rosetta lenses with their five-word mappings."""
     return _ROSETTA_LENSES
@@ -1512,7 +1504,7 @@ async def list_rosetta_lenses(
 @router.get("/orientation", tags=["Orientation"])
 async def run_orientation(
     section: int | None = Query(None, ge=1, le=7, description="Specific section (1–7), or all"),
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Run live orientation computation — re-derives structural insights.
@@ -1690,7 +1682,7 @@ async def run_orientation(
 async def compare_traces(
     traces: list[list[float]],
     weights: list[float] | None = None,
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """
     Compare multiple trace vectors by computing kernel invariants for each
@@ -1754,7 +1746,7 @@ async def compare_traces(
 
 @router.get("/frozen-contract", tags=["System"])
 async def get_frozen_contract(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Return all frozen contract parameters and regime thresholds."""
     try:
@@ -1793,7 +1785,7 @@ async def get_frozen_contract(
 
 @router.get("/schemas", tags=["System"])
 async def list_schemas(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> list[dict[str, str]]:
     """List all available JSON Schema files."""
     from pathlib import Path
@@ -1824,7 +1816,7 @@ async def list_schemas(
 
 @router.get("/integrity", tags=["System"])
 async def check_integrity(
-    api_key: str = Security(_validate_api_key),
+    api_key: str = Security(require_public),
 ) -> dict[str, Any]:
     """Check SHA-256 integrity of tracked files."""
     import hashlib

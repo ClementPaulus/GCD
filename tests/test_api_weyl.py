@@ -229,20 +229,20 @@ class TestUMCPMappingEndpoint:
 
 
 class TestWeylAPIAuth:
-    """Test WEYL API authentication."""
+    """Test WEYL API public access (no key needed)."""
 
-    def test_no_api_key(self) -> None:
-        """Test endpoints require API key."""
+    def test_no_api_key_still_works(self) -> None:
+        """Public endpoints succeed without API key."""
         client_no_auth = TestClient(app)  # No API key header
 
         response = client_no_auth.get("/weyl/background", params={"z": 0.5})
-        assert response.status_code == 401
+        assert response.status_code != 401
 
         response = client_no_auth.get("/weyl/sigma", params={"z": 0.5})
-        assert response.status_code == 401
+        assert response.status_code != 401
 
         response = client_no_auth.get("/weyl/des-y3")
-        assert response.status_code == 401
+        assert response.status_code != 401
 
         response = client_no_auth.get("/weyl/umcp-mapping")
-        assert response.status_code == 401
+        assert response.status_code != 401

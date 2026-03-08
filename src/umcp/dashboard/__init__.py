@@ -51,6 +51,7 @@ Package structure:
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -294,7 +295,20 @@ def main() -> None:
     # If called from CLI (not inside Streamlit runtime), launch streamlit as subprocess
     if not _is_running_in_streamlit():
         dashboard_path = str(Path(__file__).resolve())
-        cmd = [sys.executable, "-m", "streamlit", "run", dashboard_path, "--server.headless", "true"]
+        port = os.environ.get("UMCP_DASHBOARD_PORT", "8001")
+        cmd = [
+            sys.executable,
+            "-m",
+            "streamlit",
+            "run",
+            dashboard_path,
+            "--server.headless",
+            "true",
+            "--server.port",
+            port,
+            "--server.address",
+            "0.0.0.0",
+        ]
         sys.exit(subprocess.call(cmd))
 
     # st is guaranteed to be available here since HAS_VIZ_DEPS is True

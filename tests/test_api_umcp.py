@@ -129,10 +129,10 @@ def test_version_endpoint(client):
     assert "python_version" in data
 
 
-def test_casepacks_endpoint_requires_auth(client):
-    """Test casepacks endpoint requires authentication."""
+def test_casepacks_endpoint_public_access(client):
+    """Test casepacks endpoint is publicly accessible (no auth needed)."""
     response = client.get("/casepacks")
-    assert response.status_code == 401
+    assert response.status_code == 200
 
 
 def test_casepacks_endpoint_with_auth(client, auth_headers):
@@ -179,11 +179,11 @@ def test_casepack_not_found(client, auth_headers):
     assert response.status_code == 404
 
 
-def test_invalid_api_key(client):
-    """Test invalid API key returns 401."""
+def test_invalid_api_key_on_public_endpoint(client):
+    """Public endpoints accept any key (or none)."""
     headers = {"X-API-Key": "invalid-key"}
     response = client.get("/casepacks", headers=headers)
-    assert response.status_code == 401
+    assert response.status_code == 200
 
 
 # ============================================================================
