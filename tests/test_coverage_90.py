@@ -101,28 +101,28 @@ def test_api_classify_regime_positive():
     """Test regime classification with stable values (STABLE regime)."""
     from umcp.api_umcp import classify_regime
 
-    # omega=0.5 in [0.3, 0.7] with small seam = STABLE
-    result = classify_regime(0.5, 0.5, 0.001, 0.5)
+    # Stable requires: omega < 0.038, F > 0.90, S < 0.15, C < 0.14
+    result = classify_regime(0.02, 0.95, 0.01, 0.05)
     assert result == "STABLE"
 
 
 @skip_if_no_fastapi
 def test_api_classify_regime_negative():
-    """Test regime classification with extreme omega (COLLAPSE regime)."""
+    """Test regime classification with high omega (COLLAPSE regime)."""
     from umcp.api_umcp import classify_regime
 
-    # omega < 0.1 = COLLAPSE
-    result = classify_regime(0.05, 0.5, 0.001, 0.5)
+    # Collapse: omega >= 0.30 (with IC approx >= 0.30 so Critical doesn't override)
+    result = classify_regime(0.50, 0.50, 0.50, 0.50)
     assert result == "COLLAPSE"
 
 
 @skip_if_no_fastapi
 def test_api_classify_regime_unknown():
-    """Test regime classification with large seam (CRITICAL regime)."""
+    """Test regime classification with very high omega triggers CRITICAL overlay."""
     from umcp.api_umcp import classify_regime
 
-    # |S| > 0.01 = CRITICAL
-    result = classify_regime(0.5, 0.5, 0.02, 0.5)
+    # Critical overlay: IC < 0.30. IC approx = max(1-omega, eps), so omega=0.95 -> IC~0.05
+    result = classify_regime(0.95, 0.05, 0.90, 0.90)
     assert result == "CRITICAL"
 
 
