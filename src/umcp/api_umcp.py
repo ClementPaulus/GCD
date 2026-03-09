@@ -4061,17 +4061,21 @@ def run_server(
     print("=" * 60)
     print("UMCP REST API Server")
     print("=" * 60)
+    display_host = "localhost" if host == "0.0.0.0" else host
     print(f"Version:  {__version__}")
     print(f"API:      v{API_VERSION}")
-    print(f"Host:     {host}")
-    print(f"Port:     {port}")
-    print(f"Docs:     http://{host}:{port}/docs")
-    print(f"ReDoc:    http://{host}:{port}/redoc")
+    print(f"Bind:     {host}:{port}")
+    print(f"Docs:     http://{display_host}:{port}/docs")
+    print(f"ReDoc:    http://{display_host}:{port}/redoc")
     print("=" * 60)
     print("\nPress Ctrl+C to stop the server\n")
 
+    # Use string import when reload is enabled (uvicorn requirement);
+    # pass the app object directly otherwise to avoid double-importing
+    # the module and duplicating middleware / router registration.
+    app_ref: str | Any = "umcp.api_umcp:app" if reload else app
     uvicorn.run(  # type: ignore[no-untyped-call]
-        "umcp.api_umcp:app",
+        app_ref,
         host=host,
         port=port,
         reload=reload,
