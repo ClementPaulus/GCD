@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../../../schemas/embedding.schema.json
+schema: "schemas/embedding.schema.json"
+
+embedding:
+  id: "ricp_v2_consciousness.embedding"
+  version: "1.0.0"
+  source_space: "RICP_v2_14stage"
+  target_space: "unit_cube_8d"
+  transform: "min_max_clip"

@@ -1,0 +1,17 @@
+t,c_1,c_2,c_3,c_4,c_5,c_6,c_7,c_8,oor_1,oor_2,oor_3,oor_4,oor_5,oor_6,oor_7,oor_8,miss_1,miss_2,miss_3,miss_4,miss_5,miss_6,miss_7,miss_8
+0,0.05,0.05,0.05,0.1,0.08,0.1,0.05,0.05,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+1,0.15,0.1,0.08,0.2,0.12,0.15,0.1,0.08,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+2,0.22,0.18,0.12,0.28,0.2,0.22,0.15,0.12,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+3,0.35,0.25,0.2,0.4,0.3,0.3,0.25,0.2,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+4,0.45,0.32,0.35,0.48,0.42,0.38,0.38,0.3,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+5,0.55,0.4,0.45,0.55,0.5,0.45,0.45,0.4,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+6,0.65,0.52,0.58,0.62,0.58,0.52,0.55,0.48,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+7,0.75,0.65,0.7,0.7,0.65,0.6,0.65,0.55,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+8,0.8,0.68,0.72,0.72,0.67,0.62,0.67,0.58,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+9,0.85,0.75,0.8,0.8,0.75,0.7,0.75,0.65,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+10,0.88,0.82,0.88,0.85,0.82,0.78,0.82,0.72,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+11,0.7,0.45,0.6,0.65,0.85,0.35,0.55,0.5,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+12,0.4,0.78,0.15,0.3,0.45,0.72,0.65,0.55,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+13,0.8,0.4,0.75,0.78,0.82,0.45,0.6,0.55,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+14,0.94,0.93,0.96,0.93,0.92,0.9,0.92,0.88,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+15,0.95,0.94,0.97,0.94,0.93,0.92,0.93,0.9,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false

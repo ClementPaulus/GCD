@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schemas/return.schema.json",
+  "title": "UMCP Return Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "return"],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "schemas/return.schema.json"
+    },
+    "return": {
+      "type": "object",
+      "required": ["id", "version"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "return_norm": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "id": { "type": "string" },
+            "method": { "type": "string" },
+            "formula": { "type": "string" },
+            "threshold_eta": { "type": "number" },
+            "description": { "type": "string" }
+          }
+        },
+        "return_domain": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "generator_id": { "type": "string" },
+            "method": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        },
+        "return_horizon": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "H_rec": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        },
+        "typing": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "tau_R_finite": { "type": "string" },
+            "tau_R_infinite": { "type": "string" }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

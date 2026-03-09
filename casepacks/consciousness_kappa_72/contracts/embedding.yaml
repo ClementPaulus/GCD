@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../schemas/embedding.schema.json
+schema: "schemas/embedding.schema.json"
+
+embedding:
+  id: "consciousness_kappa_72.embedding"
+  version: "1.0.0"
+
+  source_space:
+    description: "RIP level channel measurements — already in [0,1]"
+    channels:
+      - name: "harmonic_ratio"
+        unit: "dimensionless"
+        physical_range: [0.0, 1.0]
+      - name: "recursive_depth"
+        unit: "dimensionless"
+        physical_range: [0.0, 1.0]
+      - name: "return_fidelity"
+        unit: "dimensionless"
+        physical_range: [0.0, 1.0]
+      - name: "spectral_coherence"
+        unit: "dimensionless"
+        physical_range: [0.0, 1.0]
+      - name: "phase_stability"
+        unit: "dimensionless"
+        physical_range: [0.0, 1.0]
+      - name: "information_density"
+        unit: "dimensionless"
+        physical_range: [0.0, 1.0]
+      - name: "temporal_persistence"
+        unit: "dimensionless"
+        physical_range: [0.0, 1.0]
+      - name: "cross_scale_coupling"
+        unit: "dimensionless"
+        physical_range: [0.0, 1.0]
+
+  target_space:
+    description: "Unit hypercube — identity embedding (data already normalized to [0,1])"
+    interval: [0.0, 1.0]
+    coordinates: ["c_1", "c_2", "c_3", "c_4", "c_5", "c_6", "c_7", "c_8"]
+
+  transform:
+    method: "linear_affine"
+    formula: "c_i = (x_i - a) / (b - a)"
+    parameters:
+      a: 0.0
+      b: 1.0

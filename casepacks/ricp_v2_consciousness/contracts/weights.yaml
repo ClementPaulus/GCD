@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../../../schemas/weights.schema.json
+schema: "schemas/weights.schema.json"
+
+weights:
+  id: "ricp_v2_consciousness.weights"
+  version: "1.0.0"
+  policy: "equal"
+  channels:
+    - name: "harmonic_ratio"
+      weight: 0.125
+    - name: "recursive_depth"
+      weight: 0.125
+    - name: "return_fidelity"
+      weight: 0.125
+    - name: "spectral_coherence"
+      weight: 0.125
+    - name: "phase_stability"
+      weight: 0.125
+    - name: "information_density"
+      weight: 0.125
+    - name: "temporal_persistence"
+      weight: 0.125
+    - name: "cross_scale_coupling"
+      weight: 0.125

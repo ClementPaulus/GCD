@@ -1,0 +1,10 @@
+schema: "schemas/closures_registry.schema.json"
+
+closures:
+  id: "ricp_v2_consciousness.closures"
+  version: "1.0.0"
+  entries:
+    - name: "consciousness_coherence"
+      path: "closures/consciousness_coherence/"
+      version: "1.0.0"
+      description: "Consciousness coherence domain closure — 8-channel kernel for recursive systems"

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../../schemas/embedding.schema.json
 schema: "schemas/embedding.schema.json"
 
 embedding:

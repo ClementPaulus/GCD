@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../../../schemas/return.schema.json
+schema: "schemas/return.schema.json"
+
+return:
+  id: "ricp_v2_consciousness.return"
+  version: "1.0.0"
+  return_norm: "L2"
+  return_domain: "window"
+  return_horizon: 64

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schemas/weights.schema.json",
+  "title": "UMCP Weights Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "weights"],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "schemas/weights.schema.json"
+    },
+    "weights": {
+      "type": "object",
+      "required": ["id", "version", "policy", "channels"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "policy": {
+          "type": "string",
+          "enum": ["nonnegative_sum_to_one"]
+        },
+        "channels": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "weight"],
+            "additionalProperties": true,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "label": { "type": "string" },
+              "weight": { "type": "number", "minimum": 0 }
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "sum": { "type": "number" },
+            "tolerance": { "type": "number" }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

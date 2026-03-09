@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=../../../schemas/weights.schema.json
+schema: "schemas/weights.schema.json"
+
+weights:
+  id: "consciousness_kappa_72.weights"
+  version: "1.0.0"
+  policy: "nonnegative_sum_to_one"
+
+  channels:
+    - name: "c_1"
+      label: "harmonic_ratio"
+      weight: 0.125
+    - name: "c_2"
+      label: "recursive_depth"
+      weight: 0.125
+    - name: "c_3"
+      label: "return_fidelity"
+      weight: 0.125
+    - name: "c_4"
+      label: "spectral_coherence"
+      weight: 0.125
+    - name: "c_5"
+      label: "phase_stability"
+      weight: 0.125
+    - name: "c_6"
+      label: "information_density"
+      weight: 0.125
+    - name: "c_7"
+      label: "temporal_persistence"
+      weight: 0.125
+    - name: "c_8"
+      label: "cross_scale_coupling"
+      weight: 0.125
+
+  validation:
+    sum: 1.0

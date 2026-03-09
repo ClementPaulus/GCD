@@ -1,0 +1,197 @@
+{
+  "schema": "schemas/invariants.schema.json",
+  "format": "tier1_invariants",
+  "contract_id": "UMA.INTSTACK.v1",
+  "closure_registry_id": "UMCP.CLOSURES.DEFAULT.v1",
+  "canon": {
+    "pre_doi": "10.5281/zenodo.17756705",
+    "post_doi": "10.5281/zenodo.18072852",
+    "weld_id": "W-2025-12-31-PHYS-COHERENCE",
+    "timezone": "America/Chicago"
+  },
+  "rows": [
+    {
+      "t": 0,
+      "omega": 0.93375,
+      "F": 0.06625,
+      "S": 0.24018894191010584,
+      "C": 0.04351723796382303,
+      "tau_R": "INF_REC",
+      "kappa": -2.7636950247582877,
+      "IC": 0.06305833524471807,
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": true
+      }
+    },
+    {
+      "t": 1,
+      "omega": 0.8775,
+      "F": 0.1225,
+      "S": 0.36505628509286886,
+      "C": 0.07794228634059948,
+      "tau_R": "INF_REC",
+      "kappa": -2.1475711116263194,
+      "IC": 0.11676742866745844,
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": true
+      }
+    },
+    {
+      "t": 2,
+      "omega": 0.71875,
+      "F": 0.28125,
+      "S": 0.5834577558084585,
+      "C": 0.13169567191065923,
+      "tau_R": "INF_REC",
+      "kappa": -1.295690376516586,
+      "IC": 0.2737088369355135,
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": true
+      }
+    },
+    {
+      "t": 3,
+      "omega": 0.53125,
+      "F": 0.46875,
+      "S": 0.6849830728933001,
+      "C": 0.11110243021644488,
+      "tau_R": "INF_REC",
+      "kappa": -0.7646157168091013,
+      "IC": 0.4655127853453048,
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 4,
+      "omega": 0.34375,
+      "F": 0.65625,
+      "S": 0.6359442683194172,
+      "C": 0.11659223816361015,
+      "tau_R": "INF_REC",
+      "kappa": -0.4252554166410275,
+      "IC": 0.6536028227707142,
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 5,
+      "omega": 0.3175,
+      "F": 0.6825,
+      "S": 0.6157364892732796,
+      "C": 0.12519984025548916,
+      "tau_R": "INF_REC",
+      "kappa": -0.3861915344561486,
+      "IC": 0.6796403386704261,
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 6,
+      "omega": 0.24375000000000002,
+      "F": 0.75625,
+      "S": 0.5461037887285397,
+      "C": 0.1165922381636102,
+      "tau_R": "INF_REC",
+      "kappa": -0.2824137636890905,
+      "IC": 0.7539616580278632,
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 7,
+      "omega": 0.17874999999999996,
+      "F": 0.82125,
+      "S": 0.4613251012075685,
+      "C": 0.09921567416492216,
+      "tau_R": "INF_REC",
+      "kappa": -0.1988129893699494,
+      "IC": 0.8197031722067784,
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 8,
+      "omega": 0.13749999999999996,
+      "F": 0.8625,
+      "S": 0.3932413432593508,
+      "C": 0.08351646544245035,
+      "tau_R": "INF_REC",
+      "kappa": -0.14912086813851905,
+      "IC": 0.861464984936959,
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 9,
+      "omega": 0.11499999999999999,
+      "F": 0.885,
+      "S": 0.3513158528293349,
+      "C": 0.06782329983125274,
+      "tau_R": "INF_REC",
+      "kappa": -0.12291374304136524,
+      "IC": 0.8843399397446563,
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 10,
+      "omega": 0.09375,
+      "F": 0.90625,
+      "S": 0.306186619958292,
+      "C": 0.058255900988655226,
+      "tau_R": "INF_REC",
+      "kappa": -0.09896256717797505,
+      "IC": 0.9057766131637169,
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 11,
+      "omega": 0.0774999999999999,
+      "F": 0.9225000000000001,
+      "S": 0.2689670340349366,
+      "C": 0.045552167895721474,
+      "tau_R": "INF_REC",
+      "kappa": -0.08097448611922832,
+      "IC": 0.9222172204846573,
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 12,
+      "omega": 0.06499999999999995,
+      "F": 0.935,
+      "S": 0.23729033694128335,
+      "C": 0.03872983346207411,
+      "tau_R": "INF_REC",
+      "kappa": -0.06742335244687278,
+      "IC": 0.9347993679544144,
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    }
+  ],
+  "notes": "Kernel invariants for 13 RIP levels computed from 8-channel consciousness coherence kernel. All Tier-1 identities verified to machine precision."
+}

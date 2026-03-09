@@ -81,7 +81,10 @@
 
 				// ── YAML (contracts, closures, canon) ──
 				"yaml.schemas": {
-					"schemas/contract.schema.json": "contracts/*.yaml",
+					"schemas/contract.schema.json": ["contracts/*.INTSTACK.*.yaml", "casepacks/*/contracts/contract.yaml"],
+					"schemas/weights.schema.json": "casepacks/*/contracts/weights.yaml",
+					"schemas/embedding.schema.json": "casepacks/*/contracts/embedding.yaml",
+					"schemas/return.schema.json": "casepacks/*/contracts/return.yaml",
 					"schemas/manifest.schema.json": "casepacks/*/manifest.json",
 					"schemas/canon.anchors.schema.json": "canon/anchors.yaml",
 					"schemas/canon.domain_anchors.schema.json": "canon/*_anchors.yaml",
