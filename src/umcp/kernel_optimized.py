@@ -13,6 +13,13 @@ Key optimizations:
 - OPT-3: Heterogeneity gap analysis (Lemmas 4, 34)
 - OPT-12: Lipschitz error propagation (Lemmas 23, 30)
 
+Coupling diagnostics:
+- KernelDiagnostics: Reveals the coupling structure that makes the six
+  outputs projections of ONE object (the trace vector c), not six
+  independent measurements. Computes IC/F ratio, canonical 4-gate
+  regime, gate margins, binding gate, cost decomposition, and
+  per-channel sensitivity ∂IC/∂cₖ = IC·wₖ/cₖ.
+
 Interconnections:
 - Used by: validator.py, scripts/update_integrity.py
 - Implements: KERNEL_SPECIFICATION.md formal definitions (Tier-1 function)
@@ -27,7 +34,24 @@ from typing import Any
 
 import numpy as np
 
-from umcp.frozen_contract import EPSILON as _FROZEN_EPSILON
+from umcp.frozen_contract import (
+    DEFAULT_THRESHOLDS as _DEFAULT_THRESHOLDS,
+)
+from umcp.frozen_contract import (
+    EPSILON as _FROZEN_EPSILON,
+)
+from umcp.frozen_contract import (
+    RegimeThresholds,
+)
+from umcp.frozen_contract import (
+    classify_regime as _classify_regime,
+)
+from umcp.frozen_contract import (
+    cost_curvature as _cost_curvature,
+)
+from umcp.frozen_contract import (
+    gamma_omega as _gamma_omega,
+)
 
 
 @dataclass
@@ -366,6 +390,206 @@ class ThresholdCalibrator:
         gap = F - IC
         adaptive_threshold = base_threshold * (1 - 2 * gap)
         return float(np.clip(adaptive_threshold, 0.1, 0.5))
+
+
+# =============================================================================
+# KERNEL DIAGNOSTICS — Coupling Structure
+# =============================================================================
+#
+# The six kernel outputs (F, ω, S, C, κ, IC) are six projections of ONE
+# object: the trace vector c ∈ [0,1]ⁿ. KernelDiagnostics reveals how
+# they couple — IC/F ratio, canonical 4-gate regime, gate margins,
+# cost decomposition, and per-channel sensitivity.
+
+
+@dataclass
+class GateMargins:
+    """How far each invariant is from its regime threshold.
+
+    Positive margin = inside Stable territory.
+    Negative margin = outside (Watch or Collapse).
+    The gate with the smallest (most negative or least positive) margin
+    is the binding constraint — the one that determines the regime.
+    """
+
+    omega: float  # threshold − ω   (positive = safe)
+    F: float  # F − threshold    (positive = safe)
+    S: float  # threshold − S   (positive = safe)
+    C: float  # threshold − C   (positive = safe)
+    binding: str  # Name of the binding gate ("omega", "F", "S", or "C")
+
+    @property
+    def min_margin(self) -> float:
+        """Smallest margin (most constraining gate)."""
+        return min(self.omega, self.F, self.S, self.C)
+
+
+@dataclass
+class CostDecomposition:
+    """Seam budget cost breakdown.
+
+    The total debit t_d = Γ(ω) + D_C reveals whether drift or
+    curvature dominates the cost. The crossover at ω ≈ 0.30 is
+    structurally significant — below it, curvature cost dominates;
+    above it, drift cost dominates.
+    """
+
+    gamma: float  # Γ(ω) = ω^p / (1 − ω + ε) — drift cost
+    d_c: float  # D_C = α·C — curvature cost
+    total_debit: float  # t_d = Γ + D_C
+    dominant: str  # "drift" or "curvature"
+
+
+@dataclass
+class KernelDiagnostics:
+    """Coupling diagnostics for kernel outputs.
+
+    These are Tier-0 interpretive quantities derived from the Tier-1
+    kernel outputs and the raw trace vector. They make the mathematical
+    coupling structure visible:
+
+    - ic_f_ratio: How much of fidelity is multiplicatively coherent.
+      IC/F = 1.0 means perfectly uniform channels. IC/F → 0 means
+      geometric slaughter — one channel is killing integrity.
+
+    - regime: Canonical 4-gate classification (Stable/Watch/Collapse),
+      with Critical overlay when IC < 0.30.
+
+    - gates: How far each invariant is from its threshold, and which
+      gate binds. This is where the coupling becomes visible — you
+      can have high F but still be in Watch because S or C failed.
+
+    - costs: The seam budget decomposition. Reveals whether drift or
+      curvature dominates the debit structure.
+
+    - sensitivity: ∂IC/∂cₖ = IC · wₖ / cₖ for each channel k.
+      This is the formula that makes coupling self-evident: channels
+      with low cₖ have HUGE sensitivity, while ∂F/∂cₖ = wₖ is flat.
+
+    - c_min / c_min_idx: The weakest channel and its index. This is
+      where geometric slaughter originates.
+    """
+
+    # Coupling ratio
+    ic_f_ratio: float  # IC/F — multiplicative coherence fraction
+
+    # Canonical regime (4-gate system from frozen_contract)
+    regime: str  # "STABLE", "WATCH", "COLLAPSE", or "CRITICAL"
+    critical: bool  # IC < 0.30 overlay
+
+    # Gate margins
+    gates: GateMargins
+
+    # Cost decomposition
+    costs: CostDecomposition
+
+    # Channel-level diagnostics
+    c_min: float  # Minimum channel value (weakest link)
+    c_min_idx: int  # Index of weakest channel
+    c_max: float  # Maximum channel value
+    sensitivity: np.ndarray  # ∂IC/∂cₖ = IC·wₖ/cₖ for each channel
+    sensitivity_ratio: float  # max(sensitivity)/min(sensitivity) — coupling spread
+
+    def __repr__(self) -> str:
+        sens_min = float(np.min(self.sensitivity))
+        sens_max = float(np.max(self.sensitivity))
+        return (
+            f"KernelDiagnostics("
+            f"regime={self.regime}, "
+            f"IC/F={self.ic_f_ratio:.4f}, "
+            f"binding={self.gates.binding}[{self.gates.min_margin:+.4f}], "
+            f"cost={self.costs.dominant}({self.costs.total_debit:.4f}), "
+            f"c_min[{self.c_min_idx}]={self.c_min:.4f}, "
+            f"sens=[{sens_min:.4f}..{sens_max:.4f}])"
+        )
+
+
+def diagnose(
+    outputs: KernelOutputs,
+    c: np.ndarray,
+    w: np.ndarray,
+    thresholds: RegimeThresholds = _DEFAULT_THRESHOLDS,
+) -> KernelDiagnostics:
+    """Compute coupling diagnostics from kernel outputs and raw channels.
+
+    This is the function that makes the six kernel outputs reveal their
+    coupling structure. It takes the same (c, w) that produced the
+    KernelOutputs and computes what those numbers mean TOGETHER:
+
+    - How uniformly integrity distributes (IC/F ratio)
+    - Which regime gate binds and by how much
+    - Whether drift or curvature dominates cost
+    - Which channel has the most sensitivity (∂IC/∂cₖ)
+
+    Args:
+        outputs: KernelOutputs from OptimizedKernelComputer.compute()
+        c: The trace vector that produced the outputs
+        w: The weight vector that produced the outputs
+        thresholds: Regime gate thresholds (frozen per run)
+
+    Returns:
+        KernelDiagnostics revealing coupling structure
+    """
+    epsilon = _FROZEN_EPSILON
+
+    # IC/F ratio — multiplicative coherence fraction
+    ic_f_ratio = outputs.IC / outputs.F if epsilon < outputs.F else 0.0
+
+    # Canonical 4-gate regime
+    regime_enum = _classify_regime(outputs.omega, outputs.F, outputs.S, outputs.C, outputs.IC, thresholds)
+    regime_str = regime_enum.value
+    critical = thresholds.I_critical_max > outputs.IC
+
+    # Gate margins (positive = inside Stable, negative = outside)
+    margin_omega = thresholds.omega_stable_max - outputs.omega
+    margin_F = outputs.F - thresholds.F_stable_min
+    margin_S = thresholds.S_stable_max - outputs.S
+    margin_C = thresholds.C_stable_max - outputs.C
+
+    margins = {"omega": margin_omega, "F": margin_F, "S": margin_S, "C": margin_C}
+    binding_name = min(margins, key=margins.get)  # type: ignore[arg-type]
+
+    gates = GateMargins(
+        omega=margin_omega,
+        F=margin_F,
+        S=margin_S,
+        C=margin_C,
+        binding=binding_name,
+    )
+
+    # Cost decomposition
+    gamma = _gamma_omega(outputs.omega)
+    d_c = _cost_curvature(outputs.C)
+    total_debit = gamma + d_c
+    dominant = "drift" if gamma >= d_c else "curvature"
+
+    costs = CostDecomposition(gamma=gamma, d_c=d_c, total_debit=total_debit, dominant=dominant)
+
+    # Channel-level diagnostics
+    c_clamped = np.clip(c, epsilon, 1.0 - epsilon)
+    c_min_idx = int(np.argmin(c_clamped))
+    c_min = float(c_clamped[c_min_idx])
+    c_max = float(np.max(c_clamped))
+
+    # Sensitivity: ∂IC/∂cₖ = IC · wₖ / cₖ
+    # This makes coupling self-evident: low cₖ → huge sensitivity
+    sensitivity = outputs.IC * w / c_clamped
+
+    sens_min = float(np.min(sensitivity))
+    sensitivity_ratio = float(np.max(sensitivity) / sens_min) if sens_min > 0 else float("inf")
+
+    return KernelDiagnostics(
+        ic_f_ratio=ic_f_ratio,
+        regime=regime_str,
+        critical=critical,
+        gates=gates,
+        costs=costs,
+        c_min=c_min,
+        c_min_idx=c_min_idx,
+        c_max=c_max,
+        sensitivity=sensitivity,
+        sensitivity_ratio=sensitivity_ratio,
+    )
 
 
 # Convenience functions for backward compatibility

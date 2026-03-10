@@ -30,6 +30,7 @@ __all__ = [
     "ComputationMode",
     "ContinuityLawSpec",
     "ContinuityVerdict",
+    "CostDecomposition",
     "EditionIdentity",
     "EditionTriad",
     "EmbeddingConfig",
@@ -37,7 +38,9 @@ __all__ = [
     "EmbeddingStrategy",
     "EngineResult",
     "FrozenContract",
+    "GateMargins",
     "InvariantRow",
+    "KernelDiagnostics",
     "KernelGradients",
     "KernelOutput",
     "MeasurementEngine",
@@ -68,6 +71,7 @@ __all__ = [
     "compute_utils",
     "continuity_law",
     "create_weld",
+    "diagnose",
     "diagnose_extended",
     "diagnose_thermodynamic",
     "diagnose_thermodynamic_batch",
@@ -126,7 +130,13 @@ from .frozen_contract import (
     compute_kernel,
     gamma_omega,
 )
-from .kernel_optimized import OptimizedKernelComputer
+from .kernel_optimized import (
+    CostDecomposition,
+    GateMargins,
+    KernelDiagnostics,
+    OptimizedKernelComputer,
+    diagnose,
+)
 from .measurement_engine import (
     EmbeddingConfig,
     EmbeddingSpec,
