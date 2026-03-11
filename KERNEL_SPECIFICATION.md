@@ -1384,6 +1384,67 @@ Ten additional structural identities (N-series) complement the E/B/D series. All
 
 **Tier justification**: Each N-series identity is a theorem about the kernel function $K$, requiring only the definitions of $F$, $\kappa$, $S$, $C$, $\text{IC}$, and $g_F$ to state and prove. No domain-specific inputs, no Tier-0 protocol choices, and no external structure is imported.
 
+### 5.3-C The Identity Network (Connection Clusters)
+
+The 38 structural identities are not independent facts — they form a connected network with six computationally verified clusters. Each cluster reveals a structural relationship that no single identity expresses alone. Verification script: `scripts/identity_connections.py`.
+
+**Cluster 1 — The Equator Web** (E1, N4, N16, E8)
+
+The point $c = 1/2$ ($\theta = \pi/4$ in Fisher coordinates) is a **quintuple fixed point** where five kernel quantities simultaneously take special values:
+
+$$S(1/2) = \ln 2, \quad (S+\kappa)|_{1/2} = 0, \quad h'(1/2) = 0, \quad g_F(1/2) = 4, \quad \theta = \pi/4$$
+
+The reflection formula (N16) vanishes here: $f(\pi/4) + f(\pi/4) = 2\ln(1) \cdot \cos(0) = 0$. This is the unique point where Bernoulli field entropy generation and log-integrity loss exactly cancel.
+
+**Cluster 2 — The Dual Bounding Pair** (B2, N10)
+
+The kernel outputs are sandwiched between dual Jensen bounds:
+
+$$\text{IC} \leq F \quad \text{(B2: integrity bound)} \qquad S \leq h(F) \quad \text{(N10: entropy bound)}$$
+
+Both become equalities if and only if $C = 0$ (homogeneous trace). Together they constrain the kernel from two directions: $\text{IC}$ cannot exceed $F$ (multiplicative coherence bounded by arithmetic fidelity), and $S$ cannot exceed $h(F)$ (mean entropy bounded by entropy of fidelity).
+
+**Cluster 3 — The Perturbation Chain** (N3 $\to$ N8 $\to$ B2)
+
+This chain connects the exact rank-2 solution, its perturbative expansion, and the integrity bound:
+
+$$\text{N3:}\; \text{IC} = \sqrt{F^2 - C^2/4} \quad \xrightarrow{\text{Taylor}} \quad \text{N8:}\; \kappa = \ln F - \frac{C^2}{8F^2} + O(C^4) \quad \xrightarrow{\text{sign}} \quad \text{B2:}\; \text{IC} \leq F$$
+
+The correction $-C^2/(8F^2)$ is always negative (squared quantity divided by positive quantity), so $\kappa < \ln F$ whenever $C > 0$, giving $\text{IC} = e^\kappa < F$. The integrity bound follows from the kernel's own perturbative structure — no external concavity argument is needed. This also yields **linearized collapse theory**: for small heterogeneity, $\text{IC} \approx F \cdot \exp(-C^2/(8F^2))$.
+
+**Cluster 4 — The Composition Algebra** (D6, N12, D8)
+
+Fidelity, integrity, and the heterogeneity gap all have explicit composition laws:
+
+$$F_{12} = \frac{F_1 + F_2}{2} \quad \text{(arithmetic)}, \qquad \text{IC}_{12} = \sqrt{\text{IC}_1 \cdot \text{IC}_2} \quad \text{(geometric)}$$
+
+$$\Delta_{12} = \frac{\Delta_1 + \Delta_2}{2} + \frac{(\sqrt{\text{IC}_1} - \sqrt{\text{IC}_2})^2}{2}$$
+
+The correction term $(\sqrt{\text{IC}_1} - \sqrt{\text{IC}_2})^2/2$ is a Hellinger-like distance. The gap always grows when composing systems with unequal integrity — integrity differences cannot be hidden. The composition algebra is a monoid (D8): associative with an identity element, verified to $|\text{error}| = 5.55 \times 10^{-17}$.
+
+**Cluster 5 — The Fixed-Point Triangle** (E2/E3, N6, N4)
+
+Three special points define the manifold skeleton:
+- $c = 1/2$: equator, quintuple fixed point (Cluster 1)
+- $c^{\ast} = 0.7822$: self-dual, triple coincidence via N6: $(1-c^{\ast})/c^{\ast} = \exp(-1/c^{\ast}) = (S+\kappa)|_{c^{\ast}}$
+- $c_{\text{trap}} = 1 - c^{\ast} = 0.3178$: weld threshold where $\Gamma$ first drops below 1.0
+
+N16 bridges $c^{\ast}$ and $c_{\text{trap}}$ through the reflection formula $f(\theta) + f(\pi/2-\theta) = 2\ln(\tan\theta)\cos(2\theta)$, verified to $< 10^{-15}$.
+
+**Cluster 6 — The Spectral Family** (E4, N1, N2, N11)
+
+The coupling function $f(c) = S(c) + \kappa(c) = h(c) + \ln c$ is **spectrally complete**: all polynomial moments have closed forms.
+
+$$\mu_n \equiv \int_0^1 f(c) \cdot c^n\, dc = \frac{(n+1)H_{n+1} - (n+2)}{(n+1)^2(n+2)}$$
+
+where $H_k = \sum_{j=1}^k 1/j$ is the $k$-th harmonic number. E4 is $\mu_0 = -1/2$. N2 is $\mu_1 = 0$ (the centroid vanishes). N1 adds the Fisher-weighted integral $\int_0^1 g_F \cdot S\, dc = \pi^2/3 = 2\zeta(2)$, connecting kernel geometry to the Basel constant.
+
+**Summary**: The identity network reduces the kernel from a black box to a constrained geometric object:
+- The perturbation chain (Cluster 3) explains *why* the bounds hold.
+- The composition algebra (Cluster 4) enables *prediction without re-computation*.
+- The spectral family (Cluster 6) proves $f = S + \kappa$ is *fully characterized*.
+- The fixed-point triangle (Cluster 5) shows the manifold has a *two-point skeleton*.
+
 ---
 
 ### 5.3a The Noise Structure of the Kernel

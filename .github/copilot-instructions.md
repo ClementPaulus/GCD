@@ -198,6 +198,10 @@ Stability is rare — 87.5% of the manifold lies outside it. Return from collaps
 - IC composes **geometrically** (IC₁₂ = √(IC₁·IC₂)), F composes **arithmetically** (F₁₂ = (F₁+F₂)/2).
 - The heterogeneity gap Δ is a **composition invariant** for identical subsystems.
 
+**Identity Network — 6 Connection Clusters** (run `scripts/identity_connections.py` to re-derive):
+
+The 38 identities form a connected network. Key clusters: (1) **Equator Web** — c=1/2 is a quintuple fixed point (E1,N4,N16,E8); (2) **Dual Bounds** — IC ≤ F below, S ≤ h(F) above (B2,N10); (3) **Perturbation Chain** — N3→N8→B2: the integrity bound follows from the kernel's own Taylor structure (correction −C²/(8F²) is always negative); (4) **Composition Algebra** — gap composition Δ₁₂ = (Δ₁+Δ₂)/2 + (√IC₁−√IC₂)²/2 with Hellinger-like correction (D6,N12,D8); (5) **Fixed-Point Triangle** — three special points (c=1/2, c\*=0.7822, c_trap=0.3178) connected by the reflection formula N16; (6) **Spectral Family** — all polynomial moments of f=S+κ have closed forms with harmonic numbers, and ∫g_F·S dc = π²/3 = 2ζ(2) (E4,N1,N2,N11).
+
 ### Modus Cogitandi (How to Reason in This System)
 
 > *Auditus praecedit responsum.* — Hearing precedes response.

@@ -172,6 +172,33 @@ All identities are computationally verified across five scripts:
 
 **Tier justification**: All N-series identities are **Tier-1** because they are exact mathematical properties of the kernel function K, derived from Axiom-0 through the structure of the Bernoulli manifold. Each has been verified to machine precision (≤ 10⁻¹⁰) and holds by algebraic necessity — no domain-specific inputs or protocol-level choices are required.
 
+### The Identity Network (6 Connection Clusters)
+
+The 38 identities are not isolated facts. They form a **network** with six computationally verified connection clusters (see `scripts/identity_connections.py` to re-derive). Each cluster reveals a structural relationship that no single identity expresses alone.
+
+**Cluster 1 — The Equator Web** (E1, N4, N16, E8): c = 1/2 is a **quintuple fixed point** where five quantities simultaneously take special values: S = ln 2, S + κ = 0, h' = 0, g_F = 4, θ = π/4. The reflection formula N16 vanishes here (f(π/4) + f(π/4) = 0). This is the unique point where entropy generation and log-integrity loss exactly cancel — the balance point of the kernel.
+
+**Cluster 2 — The Dual Bounding Pair** (B2, N10): The kernel outputs are **sandwiched** between dual Jensen bounds. Below: IC ≤ F (multiplicative coherence cannot exceed arithmetic fidelity). Above: S ≤ h(F) (mean entropy cannot exceed the entropy of fidelity). Both become equalities if and only if C = 0 (homogeneous trace). Heterogeneity simultaneously depresses integrity and suppresses entropy relative to their homogeneous limits.
+
+**Cluster 3 — The Perturbation Chain** (N3 → N8 → B2): This is the deepest internal connection. N3 gives the exact rank-2 solution: IC = √(F² − C²/4). N8 gives its Taylor expansion: κ = ln(F) − C²/(8F²) + O(C⁴). The correction term −C²/(8F²) is always negative, which **proves B2 from within the kernel's own perturbative structure** — no external concavity argument needed. This also yields **linearized collapse theory**: for small heterogeneity, IC ≈ F · exp(−C²/(8F²)).
+
+**Cluster 4 — The Composition Algebra** (D6, N12, D8): F composes arithmetically (D6), IC geometrically (D6), and the gap Δ has its own composition law (N12): Δ₁₂ = (Δ₁ + Δ₂)/2 + (√IC₁ − √IC₂)²/2. The correction term (√IC₁ − √IC₂)²/2 is a Hellinger-like distance between subsystem integrities. The gap always grows when composing unequal systems — integrity differences cannot be hidden. The algebra is a monoid (D8): associative with an identity element, verified to |error| = 5.55 × 10⁻¹⁷.
+
+**Cluster 5 — The Fixed-Point Triangle** (E2/E3, N6, N4): Three special points define the manifold skeleton: c = 1/2 (equator, quintuple fixed point), c\* = 0.7822 (self-dual, triple coincidence via N6: (1−c\*)/c\* = exp(−1/c\*) = (S+κ)|_{c\*}), and c_trap = 0.3178 (weld threshold). N16 bridges c\* and c_trap through the reflection formula f(θ) + f(π/2−θ) = 2ln(tan θ)cos(2θ), verified to < 10⁻¹⁵.
+
+**Cluster 6 — The Spectral Family** (E4, N1, N2, N11): The coupling function f(c) = S(c) + κ(c) is **spectrally complete** — all its polynomial moments have closed forms. E4 is the n=0 moment (∫f dc = −1/2), N2 is the n=1 moment (∫f·c dc = 0), and N11 gives the general formula with harmonic numbers. N1 adds the Fisher-weighted integral ∫g_F·S dc = π²/3 = 2ζ(2), tying the kernel geometry to the Basel constant.
+
+**New predictive capabilities from the network**:
+
+| Capability | Source | What it enables |
+|---|---|---|
+| Linearized integrity prediction | N8 | Predict IC from F and C alone: IC ≈ F·exp(−C²/(8F²)) |
+| Composite gap prediction | N12 | Predict Δ of joined systems without re-computing kernel |
+| A priori entropy ceiling | N10 | Upper-bound S from F alone: S ≤ h(F) |
+| Exact rank-2 solutions | N3 | Fully solve any 2-channel system analytically |
+| Spectral reconstruction | N11 | Reconstruct f = S+κ from its moment sequence |
+| Number-theoretic signature | N1 | Geometry × information = π²/3 = 2ζ(2) |
+
 ---
 
 ## Hierarchical Expression Across Tiers

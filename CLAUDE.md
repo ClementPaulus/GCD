@@ -161,3 +161,12 @@ and `scripts/identity_deep_probes.py` to re-derive these computationally.
 - **Low-rank closures**: 5 diagnostics → 4 effective dimensions (PCA)
 - **Composition**: IC geometric (IC₁₂ = √(IC₁·IC₂)), F arithmetic
 - **Regime partition**: Collapse 63% / Watch 24% / Stable 12.5% of Fisher space
+
+**Identity Network — 6 Connection Clusters** (run `scripts/identity_connections.py`):
+
+1. **Equator Web** (E1,N4,N16,E8) — c=1/2 is quintuple fixed point
+2. **Dual Bounds** (B2,N10) — kernel sandwiched: IC ≤ F below, S ≤ h(F) above
+3. **Perturbation Chain** (N3→N8→B2) — integrity bound from Taylor structure
+4. **Composition Algebra** (D6,N12,D8) — gap has Hellinger-like composition law
+5. **Fixed-Point Triangle** (E2/E3,N6,N4) — manifold skeleton: equator + c\* + c_trap
+6. **Spectral Family** (E4,N1,N2,N11) — f=S+κ spectrally complete, ∫g_F·S dc = π²/3

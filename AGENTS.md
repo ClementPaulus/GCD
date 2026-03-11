@@ -101,3 +101,7 @@ Run the five diagnostic scripts to re-derive computationally:
 - **Rank classification**: Rank-1 (homogeneous, 1 DOF) ⊂ Rank-2 (2-channel, 2 DOF) ⊂ Rank-3 (general, 3 DOF)
 - **Composition**: IC geometric (IC₁₂ = √(IC₁·IC₂)), F arithmetic (F₁₂ = (F₁+F₂)/2)
 - **Regime partition**: Collapse 63% / Watch 24% / Stable 12.5% of Fisher space
+
+**Identity Network — 6 Connection Clusters** (run `scripts/identity_connections.py`):
+
+The 38 identities form a connected network: (1) Equator Web — c=1/2 quintuple fixed point; (2) Dual Bounds — IC ≤ F + S ≤ h(F); (3) Perturbation Chain — N3→N8→B2; (4) Composition Algebra — gap has Hellinger-like law; (5) Fixed-Point Triangle — manifold skeleton; (6) Spectral Family — f=S+κ spectrally complete, ∫g_F·S dc = π²/3.
