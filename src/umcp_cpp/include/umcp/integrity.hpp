@@ -22,7 +22,7 @@
 #include <vector>
 
 #ifdef UMCP_HAS_OPENSSL
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #endif
 
 namespace umcp {
@@ -55,15 +55,20 @@ public:
         std::array<unsigned char, DIGEST_SIZE> digest{};
 
 #ifdef UMCP_HAS_OPENSSL
-        SHA256_CTX ctx;
-        SHA256_Init(&ctx);
+        EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+        if (!ctx) {
+            throw std::runtime_error("EVP_MD_CTX_new failed");
+        }
+        EVP_DigestInit_ex(ctx, EVP_sha256(), nullptr);
 
         std::vector<char> buffer(BUFFER_SIZE);
         while (file.read(buffer.data(), static_cast<std::streamsize>(BUFFER_SIZE)) || file.gcount() > 0) {
-            SHA256_Update(&ctx, buffer.data(), static_cast<std::size_t>(file.gcount()));
+            EVP_DigestUpdate(ctx, buffer.data(), static_cast<std::size_t>(file.gcount()));
         }
 
-        SHA256_Final(digest.data(), &ctx);
+        unsigned int digest_len = 0;
+        EVP_DigestFinal_ex(ctx, digest.data(), &digest_len);
+        EVP_MD_CTX_free(ctx);
 #else
         // Portable SHA-256 implementation
         digest = sha256_portable(file);
@@ -83,7 +88,15 @@ public:
         std::array<unsigned char, DIGEST_SIZE> digest{};
 
 #ifdef UMCP_HAS_OPENSSL
-        SHA256(static_cast<const unsigned char*>(data), len, digest.data());
+        EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+        if (!ctx) {
+            throw std::runtime_error("EVP_MD_CTX_new failed");
+        }
+        EVP_DigestInit_ex(ctx, EVP_sha256(), nullptr);
+        EVP_DigestUpdate(ctx, data, len);
+        unsigned int digest_len = 0;
+        EVP_DigestFinal_ex(ctx, digest.data(), &digest_len);
+        EVP_MD_CTX_free(ctx);
 #else
         digest = sha256_bytes_portable(
             static_cast<const unsigned char*>(data), len);
