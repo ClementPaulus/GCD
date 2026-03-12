@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **7,442 tests** · **18 domains** · **133 closure modules** · **76 lemmas** · **38 structural identities** · **50 dashboard pages**
+**UMCP v2.1.5** · **7,442 tests** · **18 domains** · **133 closure modules** · **46 lemmas** · **38 structural identities** · **50 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -483,10 +483,10 @@ closures/
 **Data artifacts** (not Python — never import these):
 - `contracts/*.yaml` — 13 versioned mathematical contracts (JSON Schema Draft 2020-12)
 - `closures/registry.yaml` — central registry; must list every closure used in a run
-- `casepacks/*/manifest.json` — 15 casepack manifests referencing contract, closures, expected outputs
-- `schemas/*.schema.json` — 14 JSON Schema Draft 2020-12 files validating all artifacts
+- `casepacks/*/manifest.json` — 17 casepack manifests referencing contract, closures, expected outputs
+- `schemas/*.schema.json` — 17 JSON Schema Draft 2020-12 files validating all artifacts
 - `canon/*.yaml` — 14 canonical anchor files (domain-specific reference points)
-- `integrity/sha256.txt` — SHA-256 checksums for 151 tracked files
+- `integrity/sha256.txt` — SHA-256 checksums for 164 tracked files
 - `ledger/return_log.csv` — append-only validation log
 
 ## Standard Model Formalism (10 Theorems)
@@ -531,17 +531,18 @@ Published papers live in `paper/`. Current papers:
 
 | File | Title | Pages |
 |---|---|---|
-| `generated_demo.tex` | Statistical Mechanics of the UMCP Budget Identity | 5 |
 | `tau_r_star_dynamics.tex` | τ_R* dynamics paper | — |
 | `standard_model_kernel.tex` | Particle Physics in the GCD Kernel: Ten Tier-2 Theorems | 5 |
 | `confinement_kernel.tex` | Confinement Kernel Analysis | — |
 | `measurement_substrate.tex` | Measurement Substrate Theory | — |
 | `rcft_second_edition.tex` | RCFT Second Edition: Foundations and Implications | — |
+| `consciousness_coherence.tex` | Consciousness Coherence: Seven Theorems in the GCD Kernel | — |
+| `awareness_cognition_kernel.tex` | Awareness-Cognition Kernel: Ten Theorems Across Phylogeny | — |
 | `RCFT_FREEZE_WELD.md` | RCFT Freeze–Weld Identity | — |
 
 All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bib`. Compile: `pdflatex → bibtex → pdflatex → pdflatex`.
 
-**Bibliography** (`paper/Bibliography.bib`): **58 entries** organized by section:
+**Bibliography** (`paper/Bibliography.bib`): **109 entries** organized by section:
 - Standard Model: PDG 2024, Cabibbo 1963, Kobayashi-Maskawa 1973, Wolfenstein 1983, Jarlskog 1985, Gross-Wilczek 1973, Politzer 1973, Higgs 1964, Weizsäcker 1935, Bethe 1936
 - Canon anchors: paulus2025episteme (Zenodo DOI:10.5281/zenodo.17756705), paulus2025physicscoherence (Zenodo DOI:10.5281/zenodo.18072852), paulus2026umcpcasepack (Zenodo DOI:10.5281/zenodo.18226878)
 - Core corpus: paulus2025umcp, paulus2025ucd, paulus2025cmp, paulus2025seams, paulus2025gor, paulus2025canonnote, paulus2026kinematics
@@ -558,7 +559,7 @@ pytest                                       # 7,442 tests (pytest --collect-onl
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
-umcp integrity                              # Verify SHA-256 checksums (151 tracked files)
+umcp integrity                              # Verify SHA-256 checksums (164 tracked files)
 ```
 
 **⚠️ `python scripts/update_integrity.py` is mandatory** after modifying any `src/umcp/*.py`, `contracts/*.yaml`, `closures/**`, `schemas/**`, or `scripts/*.py` file. It regenerates SHA256 checksums in `integrity/sha256.txt`. CI will fail on mismatch.
@@ -582,8 +583,8 @@ This script mirrors CI exactly and must exit 0 before committing. It runs 11 ste
 5. `git add -A` — stage all changes
 6. Repository health check — drift detection, version sync, freeze verification
 7. Update test count in documentation
-8. Regenerate SHA-256 integrity checksums (151 tracked files)
-9. Pytest bounds — collect tests and verify count within bounds (1000–6000)
+8. Regenerate SHA-256 integrity checksums (164 tracked files)
+9. Pytest bounds — collect tests and verify count within bounds (1000–7500)
 10. `umcp validate .` — contract validation (must be CONFORMANT)
 11. Axiom-0 conformance — terminology, symbol capture, frozen params check
 
@@ -620,12 +621,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**7,181 test cases** across **117 test files** in `tests/` (116 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_250_*`). Single `tests/conftest.py` provides:
+**7,442 test cases** across **120 test files** in `tests/` (119 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_251_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 7,181 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 7,442 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -663,9 +664,10 @@ umcp validate <target>
 | `test_248` | Matter genesis (particle→atom→mass narrative) | 163 |
 | `test_249` | Stellar ages cosmology — Tomasetti et al. 2026 (oldest MW stars, H0 tension) | 159 |
 | `test_250` | QGP/RHIC — quark-gluon plasma, BES, centrality, confinement transition | 266 |
+| `test_251` | Awareness-cognition closures (34 organisms, 10 theorems) | 67 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
-| **TOTAL** | | **7,181** |
+| **TOTAL** | | **7,442** |
 
 ## Extension System
 
@@ -699,7 +701,7 @@ Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version
 | Tier-1 proof | `closures/atomic_physics/tier1_proof.py` (10,162 tests) |
 | Element database | `closures/materials_science/element_database.py` (118 × 18 fields) |
 | SM paper | `paper/standard_model_kernel.tex` (RevTeX4-2, 10 theorems) |
-| Bibliography | `paper/Bibliography.bib` (58 entries, PDG → Kramers) |
+| Bibliography | `paper/Bibliography.bib` (109 entries, PDG → Kramers) |
 | Test fixtures | `tests/conftest.py` (first 100 lines) |
 | Casepack structure | `casepacks/hello_world/` |
 | Contract format | `contracts/UMA.INTSTACK.v1.yaml` |

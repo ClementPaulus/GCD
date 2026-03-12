@@ -8,8 +8,8 @@
 [![Tests: 7,442](https://img.shields.io/badge/tests-7%2C442-brightgreen.svg)](tests/)
 [![Domains: 18](https://img.shields.io/badge/domains-18-blueviolet.svg)](closures/)
 [![Closures: 133](https://img.shields.io/badge/closures-133-informational.svg)](closures/)
-[![Theorems: 76](https://img.shields.io/badge/theorems-76_proven-ff69b4.svg)](closures/)
-[![Identities: 29](https://img.shields.io/badge/identities-29_verified-9cf.svg)](scripts/)
+[![Theorems: 136](https://img.shields.io/badge/theorems-136_proven-ff69b4.svg)](closures/)
+[![Identities: 38](https://img.shields.io/badge/identities-38_verified-9cf.svg)](scripts/)
 
 > **Core Axiom**: *"Collapse is generative; only what returns is real."*
 
@@ -17,7 +17,7 @@
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Python + C++ integration**: The framework is written in Python with **18 domains**, **133 closure modules**, **76 proven theorems**, and **7,442 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
+**Python + C++ integration**: The framework is written in Python with **18 domains**, **133 closure modules**, **136 proven theorems**, and **7,442 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
 
 ---
 
@@ -114,7 +114,7 @@ Every claim, measurement, validation, and narrative in UMCP follows exactly **fi
 
 ### The Three-Tier Stack
 
-Tier-1 (38 structural identities, 46 lemmas, 76 proven theorems) → Tier-0 (7,442 tests, 133 closure modules, C++17 accelerator) → Tier-2 (18 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
+Tier-1 (38 structural identities, 46 lemmas, 136 proven theorems) → Tier-0 (7,442 tests, 133 closure modules, C++17 accelerator) → Tier-2 (18 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
 
 ![Tier Architecture](images/10_tier_architecture.png)
 
@@ -209,7 +209,7 @@ casepacks/my_experiment/
 └── expected/              # Expected outputs for verification
 ```
 
-UMCP ships with **15 casepacks** spanning all 18 domains.
+UMCP ships with **17 casepacks** spanning all 18 domains.
 
 ### Core Engine
 
@@ -254,13 +254,13 @@ src/umcp_cpp/                   # Optional C++ accelerator (Tier-0 Protocol)
 | Artifact | Count | Location | Purpose |
 |----------|:-----:|----------|---------|
 | **Contracts** | 13 | `contracts/*.yaml` | Frozen mathematical contracts (JSON Schema Draft 2020-12) |
-| **Schemas** | 14 | `schemas/*.schema.json` | JSON Schema files validating all artifacts |
+| **Schemas** | 17 | `schemas/*.schema.json` | JSON Schema files validating all artifacts |
 | **Canon Anchors** | 14 | `canon/*.yaml` | Domain-specific canonical reference points |
-| **Casepacks** | 15 | `casepacks/` | Reproducible validation bundles |
+| **Casepacks** | 17 | `casepacks/` | Reproducible validation bundles |
 | **Closure Domains** | 18 | `closures/*/` | Domain closure packages (133 modules) |
 | **Closure Registry** | 1 | `closures/registry.yaml` | Central listing of all closures |
 | **Validator Rules** | 1 | `validator_rules.yaml` | Semantic rule definitions (E101, W201, ...) |
-| **Integrity** | 1 | `integrity/sha256.txt` | SHA-256 checksums for 151 tracked files |
+| **Integrity** | 1 | `integrity/sha256.txt` | SHA-256 checksums for 164 tracked files |
 
 ---
 
@@ -270,7 +270,7 @@ UMCP validates across **18 domains** with **133 closure modules**, each encoding
 
 ### Standard Model — 9 modules
 
-The crown jewel: 31 particles mapped through the GCD kernel with **10 proven theorems** (74/74 subtests at machine precision). Part of a **24-theorem corpus** across three formalisms (10 SM + 7 kernel structural + 7 universal regime calibration), all proven with 241 total computational subtests.
+The crown jewel: 31 particles mapped through the GCD kernel with **10 proven theorems** (74/74 subtests at machine precision). Part of a **136-theorem corpus** across 17 formalisms spanning particle physics, quantum mechanics, nuclear physics, materials science, evolution, consciousness, semiotics, awareness-cognition, and active matter.
 
 | Module | What It Encodes |
 |--------|----------------|
@@ -395,6 +395,32 @@ Thermodynamics, optics, electromagnetism, wave phenomena, and epistemic coherenc
 **Key discoveries**: Natural languages (English, Mandarin) achieve highest IC (≈0.60) through balanced channels — no single channel dominates. Formal systems (Mathematical Notation, Formal Logic) show the largest heterogeneity gap Δ due to geometric slaughter from low noise immunity channels. Traffic signals are "Fixed Signal" systems (high noise immunity but no symbolic recursion). Dead writing systems (Egyptian Hieroglyphs, Sumerian Cuneiform) are correctly classified as "Gestus Dead System" (τ_R = ∞_rec). The brain kernel bridge maps 8 semiotic channels onto 10 neuroscience channels, revealing that language_architecture is the universal bottleneck across species.
 
 **Semiotic convergence discovery** (see [SEMIOTIC_CONVERGENCE.md](SEMIOTIC_CONVERGENCE.md)): GCD does not *use* semiotics — GCD *is* a semiotic system. The Peirce sign triad (Object–Sign–Interpretant) maps exactly to the GCD pipeline (x(t)–Ψ(t)–kernel invariants). The seam is the formal mechanism that completes Peirce's unlimited semiosis by distinguishing signs that *return* from signs that are merely *gestures*. Channel-IC correlation analysis reveals that meaning is **density × depth** (semiotic_density r = +0.886 with IC), not stability × resemblance (iconic_persistence r ≈ 0). GCD's own tools — kernel equations, Latin lexicon, discourse spine, Python codebase — all share `iconic_persistence` as their weakest channel, confirming the system's root trade-off: abstraction over iconicity.
+
+### Consciousness Coherence — 2 modules
+
+20 consciousness systems mapped through a coherence kernel with **7 proven theorems** (T-CC-1 through T-CC-7). Includes Butzbach embedding for cross-scale consciousness analysis.
+
+| Module | What It Encodes |
+|--------|----------------|
+| `coherence_kernel.py` | 20 consciousness systems × 8 channels |
+| `consciousness_theorems.py` | 7 theorems: coherence bounds, regime classification, cross-domain bridges |
+
+### Awareness Cognition — 2 modules
+
+34 organisms across phylogeny mapped through a **5+5 awareness-aptitude kernel** (5 awareness channels + 5 aptitude channels) with **10 proven theorems** (T-AW-1 through T-AW-10).
+
+| Module | What It Encodes |
+|--------|----------------|
+| `awareness_kernel.py` | 34 organisms × 10 channels (5 awareness + 5 aptitude) |
+| `awareness_theorems.py` | 10 theorems: inversion, instability, slaughter bottleneck, sensitivity, cross-domain isomorphism |
+
+**Key discoveries**: Awareness and aptitude anti-correlate across phylogeny (T-AW-1). Zero organisms reach Stable regime — universal instability (T-AW-2). Aptitude channels control IC for aware organisms via geometric slaughter (T-AW-3). Same kernel signature as SM confinement T3 — cross-domain isomorphism (T-AW-5). Human development trajectory: F peaks at adult, declines in elderly (T-AW-7).
+
+### Continuity Theory — 1 module
+
+| Module | What It Encodes |
+|--------|----------------|
+| `butzbach_embedding.py` | Continuity law closures and Butzbach embedding |
 
 ---
 
@@ -805,6 +831,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 | `test_248` | Matter genesis (particle→atom→mass narrative) | 163 |
 | `test_249` | Stellar ages cosmology — Tomasetti et al. 2026 (oldest MW stars, H0 tension) | 159 |
 | `test_250` | QGP/RHIC — quark-gluon plasma, BES, centrality, confinement transition | 266 |
+| `test_251` | Awareness-cognition closures (34 organisms, 10 theorems) | 67 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
 
@@ -872,19 +899,20 @@ This closure fills the previously identified gap between cold nuclear matter (bi
 
 | Paper | Title | Location |
 |-------|-------|----------|
-| `generated_demo.tex` | Statistical Mechanics of the UMCP Budget Identity | `paper/` |
 | `standard_model_kernel.tex` | Particle Physics in the GCD Kernel: Ten Tier-2 Theorems | `paper/` |
 | `tau_r_star_dynamics.tex` | τ_R* Dynamics | `paper/` |
 | `confinement_kernel.tex` | Confinement Kernel Analysis | `paper/` |
 | `measurement_substrate.tex` | Measurement Substrate Theory | `paper/` |
 | `rcft_second_edition.tex` | RCFT Second Edition: Foundations, Derivations, and Implications | `paper/` |
+| `consciousness_coherence.tex` | Consciousness Coherence: Seven Theorems in the GCD Kernel | `paper/` |
+| `awareness_cognition_kernel.tex` | Awareness-Cognition Kernel: Ten Theorems Across Phylogeny | `paper/` |
 | `RCFT_FREEZE_WELD.md` | RCFT Freeze–Weld Identity: From Publication to Proven Kernel | `paper/` |
 
 All papers use RevTeX4-2 (LaTeX) or Markdown. Build LaTeX: `pdflatex → bibtex → pdflatex → pdflatex`.
 
 ### Zenodo Publications (9 DOIs)
 
-The framework is anchored by peer-reviewed Zenodo publications covering the core theory, physics coherence proofs, casepack specifications, and domain applications. Bibliography: `paper/Bibliography.bib` (93 entries, including PDG 2024, foundational QFT papers, classical references, RHIC/STAR measurements, active matter, stellar ages cosmology, and semiotic theory).
+The framework is anchored by peer-reviewed Zenodo publications covering the core theory, physics coherence proofs, casepack specifications, and domain applications. Bibliography: `paper/Bibliography.bib` (109 entries, including PDG 2024, foundational QFT papers, classical references, RHIC/STAR measurements, active matter, stellar ages cosmology, semiotic theory, consciousness coherence, and awareness-cognition).
 
 ### Key DOIs
 
@@ -921,18 +949,19 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 │   ├── everyday_physics/      # Thermodynamics, optics, electromagnetism
 │   ├── dynamic_semiotics/     # 30 sign systems, semiotic kernel
 │   ├── consciousness_coherence/ # 20 systems, coherence kernel, 7 theorems
+│   ├── awareness_cognition/  # 34 organisms, 5+5 channels, 10 theorems
 │   ├── continuity_theory/     # Continuity law closures
 │   └── finance/ & security/   # Applied domains
 ├── contracts/                 # 13 mathematical contracts (YAML)
-├── schemas/                   # 14 JSON Schema files
+├── schemas/                   # 17 JSON Schema files
 ├── canon/                     # 14 canonical anchor files
-├── casepacks/                 # 15 reproducible validation bundles
+├── casepacks/                 # 17 reproducible validation bundles
 ├── tests/                     # 120 test files, 7,442 tests
-├── paper/                     # 6 LaTeX papers + 1 Markdown paper + Bibliography.bib (93 entries)
+├── paper/                     # 7 LaTeX papers + 1 Markdown paper + Bibliography.bib (109 entries)
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log
 ├── scripts/                   # Pre-commit protocol, integrity update
-├── docs/                      # 30+ documentation files
+├── docs/                      # 33 documentation files
 └── pyproject.toml             # Project configuration
 ```
 
@@ -1059,7 +1088,7 @@ python scripts/identity_deep_probes.py      # N11-N16: moment families, composit
 | 5 | **4-dimensional closure algebra** — 5 diagnostics span 4 effective dimensions | Half the degrees of freedom are constrained by the kernel |
 | 6 | **Stability is rare** — Collapse 63% / Watch 24% / Stable 12.5% of Fisher space | Return from collapse to stability is the exception, not the norm |
 
-### Across 18 Domains and 76 Proven Theorems
+### Across 18 Domains and 136 Proven Theorems
 
 1. **Confinement is a cliff**: IC drops 98.1% at the quark→hadron boundary — confinement is visible as geometric-mean collapse in the kernel trace
 
