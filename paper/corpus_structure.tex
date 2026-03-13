@@ -227,8 +227,10 @@ The entire system derives from one axiom.
 The paper is organized to alternate between \emph{why} a structure
 exists and \emph{how} it operates, so that motivation and
 mechanism are never separated.
-Section~\ref{sec:axiom} states the axiom and derives the chain
-of structural consequences.
+Section~\ref{sec:axiom} states the axiom, derives the chain
+of structural consequences, and defines the operational
+semantics of the system's vocabulary---what each term means
+and what it explicitly does not mean.
 Section~\ref{sec:tiers} defines the three-tier architecture,
 its dependency rules, and the operational semantics of tier
 boundaries.
@@ -253,12 +255,20 @@ are degenerate limits, exhibiting the exact mechanism by
 which degrees of freedom are removed.
 Section~\ref{sec:verdicts} defines the three-valued verdict
 logic and its operational rules.
-Section~\ref{sec:canon} presents the five-word canon and the
-spine---the mandatory five-stop protocol through which every
-claim is constructed and audited.
+Section~\ref{sec:canon} presents the five-word canon, the
+spine, and the Rosetta---the cross-domain translation mechanism
+through which the five words map across fields without losing
+operational precision.
+Section~\ref{sec:equalizer} demonstrates the cognitive
+equalizer: why the system produces agent-independent verdicts
+as a structural consequence, not a design aspiration.
 Section~\ref{sec:contracts} specifies the contract and $\RunID$
 structure, including how contracts are frozen, versioned, and
 welded.
+Section~\ref{sec:governance} defines the governance
+mechanisms---manifest and weld---that allow the system to evolve
+without corrupting its history, and formalizes the distinction
+between gestures and welds.
 Section~\ref{sec:scope} summarizes the demonstrated scope
 across 18~domains.
 Section~\ref{sec:conclusions} concludes.
@@ -318,6 +328,50 @@ tier structure, regime classification, seam calculus, and all
 44~algebraic identities.  Nothing beyond the axiom is assumed;
 every structural element follows from these three mandatory
 consequences of the single generative axiom.
+
+\subsection{Operational semantics}
+
+The axiom generates technical vocabulary that shares surface form
+with common language but carries distinct operational meaning.
+Misreading these terms through their everyday or disciplinary
+connotations is the most common source of misclassification.
+
+\begin{center}
+{\small\begin{tabular}{@{}lp{3.3cm}l@{}}
+\toprule
+\textbf{Term} & \textbf{Operational definition} & \textbf{Not} \\
+\midrule
+Collapse & Regime label: $\omega \geq 0.30$ (kernel gates, frozen thresholds) & Failure, catastrophe \\
+Return & Re-entry: $\exists\, u \in D_\theta$ with $\|\Psi(t){-}\Psi(u)\| \leq \eta$; yields $\tR$ or $\IR$ & Repetition, periodicity \\
+Gesture & Epistemic emission: $\tR = \IR$ or $|s| > \tolseam$.  No credit & Approximation \\
+Drift & $\omega = 1{-}F$: measured diversion from fidelity & Random walk, velocity \\
+Integrity & $\IC = e^\kappa$: multiplicative coherence.  From ledger, never asserted & Moral integrity \\
+Frozen & Same value both sides of every collapse-return boundary & Arbitrary constant \\
+Seam & Verification boundary: outbound collapse $\leftrightarrow$ demonstrated return & A join, a border \\
+Dissolution & Regime $\omega \geq 0.30$: boundary that makes return meaningful & Death, destruction \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\noindent The distinction between \emph{gesture} and \emph{weld}
+is foundational.  A gesture is any claim or emission that does not
+close a seam---its return is infinite or its residual exceeds
+tolerance.  A gesture receives no epistemic credit but is not
+erased: it remains in the ledger as an observation without a
+return.  A weld, by contrast, is a demonstrated return: finite
+$\tR$, closed residual, and verified identities.  The entire
+system is a machine for distinguishing gestures from welds.
+
+\begin{remark}[Why operational definitions matter]
+``Collapse'' in physics typically connotes catastrophic failure
+or wavefunction reduction.  In this system, collapse is the
+generic state---63.1\% of the manifold is Collapse regime
+(\S\ref{sec:regime}).  ``Return'' does not mean coming back to
+where you started; it means demonstrable re-entry into an
+evidential neighborhood with a measured delay.  Every
+misapplication of these terms in external discourse traces to
+reading the everyday word instead of the operational definition.
+\end{remark}
 
 % ============================================================
 \section{The Three-Tier Architecture}\label{sec:tiers}
@@ -723,30 +777,19 @@ consistently across all domain closures.
 
 \subsection{The five frozen parameters}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}lllP{3.0cm}@{}}
+{\small\begin{tabular}{@{}lllp{3.2cm}@{}}
 \toprule
-Symbol & Value & Name & Derivation \\
+\textbf{Symbol} & \textbf{Value} & \textbf{Name} & \textbf{Derivation} \\
 \midrule
-$\eps$ & $10^{-8}$ & Guard band &
-  Unique value where the pole at $\omega = 1$ does not affect
-  any measurement to machine precision. \\[0.5em]
-$p$ & $3$ & Drift exponent &
-  Unique integer where $\omega_{\mathrm{trap}}$ is the Cardano
-  root of $x^3 + x - 1 = 0$. No other integer yields a solvable
-  algebraic form. \\[0.5em]
-$\alpha$ & $1.0$ & Curvature coefficient &
-  Unit coupling: $D_C = \alpha \cdot C$.  Seam budget
-  normalization. \\[0.5em]
-$\lambda$ & $0.2$ & Auxiliary coefficient &
-  Return-rate adaptation speed in $\tRS$ dynamics. \\[0.5em]
-$\tolseam$ & $0.005$ & Seam tolerance &
-  Width where $\IC \leq F$ holds at $100\%$ across all
-  18~domains. \\
+$\eps$ & $10^{-8}$ & Guard band & Pole at $\omega=1$ does not affect measurements to machine precision \\
+$p$ & $3$ & Drift exponent & Unique integer: $\omega_{\mathrm{trap}}$ is Cardano root of $x^3+x-1=0$ \\
+$\alpha$ & $1.0$ & Curvature coeff.\ & Unit coupling: $D_C = \alpha \cdot C$ \\
+$\lambda$ & $0.2$ & Auxiliary coeff.\ & Return-rate adaptation in $\tRS$ dynamics \\
+$\tolseam$ & $0.005$ & Seam tolerance & $\IC \leq F$ holds at 100\% across all 18 domains \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \subsection{The five structural constants}
 
@@ -754,31 +797,19 @@ These constants are \emph{derived} from the frozen parameters by
 solving structural equations.  They partition the Bernoulli manifold
 and determine all critical phase boundaries.
 
-{\small\setlength{\tabcolsep}{3pt}
 \begin{center}
-\begin{tabular}{@{}llP{3.0cm}@{}}
+{\small\begin{tabular}{@{}llp{2.8cm}@{}}
 \toprule
-Symbol / Value & Name & Derivation \\
+\textbf{Symbol / Value} & \textbf{Name} & \textbf{Derivation} \\
 \midrule
-$c^* \approx 0.7822$ & Self-dual fixed point &
-  Solves $\ln\!\bigl((1{-}c)/c\bigr) + 1/c = 0$.
-  Maximizes $S + \kappa$ per channel. \\[0.5em]
-$\omega_{\mathrm{trap}} \approx 0.6823$ & Trapping threshold &
-  Solution of $\Gam(\omega) = 1$ where
-  $\Gam(\omega) = \omega^3/(1{-}\omega{+}\eps)$.
-  Cardano root of $x^3 {+} x {-} 1 = 0$. \\[0.5em]
-$c_{\mathrm{trap}} \approx 0.3177$ & Channel trapping &
-  $c_{\mathrm{trap}} = 1 - \omega_{\mathrm{trap}}$.
-  Duality in channel space. \\[0.5em]
-$c_{\mathrm{eq}} = 0.5$ & Equator &
-  Geometric center.  $S + \kappa = 0$ exactly.  Quintuple
-  fixed point (\S\ref{sec:identities}). \\[0.5em]
-$\omega^* \approx 0.218$ & Drift at $c^*$ &
-  $\omega^* = 1 - c^*$.  Boundary between coupling growth
-  and decay. \\
+$c^* \approx 0.7822$ & Self-dual fixed pt.\ & $(1{-}c)/c = e^{-1/c}$; max.\ $S+\kappa$ \\
+$\omega_{\mathrm{trap}} \approx 0.6823$ & Trapping thresh.\ & $\Gam=1$; Cardano: $x^3{+}x{-}1$ \\
+$c_{\mathrm{trap}} \approx 0.3177$ & Channel trapping & $1 - \omega_{\mathrm{trap}}$; duality \\
+$c_{\mathrm{eq}} = 0.5$ & Equator & $S+\kappa=0$; quintuple f.p. \\
+$\omega^* \approx 0.218$ & Drift at $c^*$ & $1-c^*$; growth/decay bdry \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \subsection{Why these values are self-determining}
 
@@ -1066,153 +1097,91 @@ They are organized into four series by character.
 
 \subsection{E-series: extremal and fixed-point properties (8)}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}clP{3.5cm}@{}}
+{\small\begin{tabular}{@{}clp{4.2cm}@{}}
 \toprule
-Tag & Name & Statement \\
+\textbf{Tag} & \textbf{Name} & \textbf{Statement} \\
 \midrule
-E1 & Logistic self-duality &
-  $c^* = \sigma(1/c^*)$; $c^* \approx 0.7822$ \\
-E2 & Coupling maximum &
-  $\max(S{+}\kappa) = (1{-}c^*)/c^* \approx 0.278$ \\
-E3 & Log-odds reciprocal &
-  $\ln\!\bigl(c^*/(1{-}c^*)\bigr) = 1/c^*$ \\
-E4 & Integral conservation &
-  $\int_0^1 [h(c){+}\ln c]\,dc = -\tfrac{1}{2}$ \\
-E5 & Curvature decomposition &
-  $f''(c) = -\gF(c) - 1/c^2$ (78\% Fisher + 22\% pole) \\
-E6 & Gap identity &
-  $\ln 2 - \max(S{+}\kappa) \approx 0.415$ \\
-E7 & Fisher-geometric scaling &
-  $\Delta$ and $\mathrm{Var}(\arcsin\sqrt{c})$ co-vanish \\
-E8 & $\omega$ hierarchy &
-  $\omega_\mathrm{s} < \omega^* < \omega_\mathrm{c}
-    < \omega_\mathrm{trap}$ \\
+E1 & Logistic self-duality & $c^* = \sigma(1/c^*)$; $c^* \approx 0.7822$ \\
+E2 & Coupling maximum & $\max(S{+}\kappa) = (1{-}c^*)/c^*$ \\
+E3 & Log-odds reciprocal & $\ln\!\bigl(c^*/(1{-}c^*)\bigr) = 1/c^*$ \\
+E4 & Integral conservation & $\int_0^1 [h(c){+}\ln c]\,dc = -\tfrac{1}{2}$ \\
+E5 & Curvature decomp.\ & $f''(c) = -\gF(c) - 1/c^2$ \\
+E6 & Gap identity & $\ln 2 - \max(S{+}\kappa) \approx 0.415$ \\
+E7 & Fisher-geometric & $\Delta$ and $\mathrm{Var}(\arcsin\sqrt{c})$ co-vanish \\
+E8 & $\omega$ hierarchy & $\omega_\mathrm{s} < \omega^* < \omega_\mathrm{c} < \omega_\mathrm{trap}$ \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \subsection{B-series: bounds and conservation (12)}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}clP{3.5cm}@{}}
+{\small\begin{tabular}{@{}clp{3.7cm}@{}}
 \toprule
-Tag & Name & Statement \\
+\textbf{Tag} & \textbf{Name} & \textbf{Statement} \\
 \midrule
-B1 & Pythagorean duality &
-  $F + \omega = 1$ \\
-B2 & Integrity bound &
-  $\IC \leq F$; equality iff homogeneous \\
-B3 & Composition law &
-  $\IC_{12} = \sqrt{\IC_1 \cdot \IC_2}$;
-  $F_{12} = (F_1{+}F_2)/2$ \\
-B4 & Fisher volume &
-  $Z = -\sum w_i \ln[c_i(1{-}c_i)]$ \\
-B5 & Budget conservation &
-  $\Delta\kappa = R \cdot \tR - (D_\omega{+}D_C)$;
-  $|\Delta\kappa| \leq \tolseam$ \\
-B6 & Self-dual maximum &
-  $f(c^*) = 2\cos^2\theta^* \cdot \ln(\tan\theta^*)$ \\
-B7 & Cubic trapping &
-  $\Gam(\omega_\mathrm{trap}) = 1$; root of
-  $x^3{+}x{-}1 = 0$ \\
-B8 & Curvature = Fisher + pole &
-  $f''(c) = -1/[c(1{-}c)] - 1/c^2$ \\
-B9 & Low-rank closures &
-  5 diagnostics $\to$ 4 effective dim
-  (Thm.~\ref{thm:dof}) \\
-B10 & Geodesic partition &
-  $\{\eps, c_\mathrm{trap}, \tfrac{1}{2}, c^*, 1{-}\eps\}$
-  partition $[0,\pi]$ \\
-B11 & Cost elasticity &
-  $\varepsilon_\Gam = \omega(3{-}2\omega)/(1{-}\omega)
-  \to 4$ at pole \\
-B12 & IC democracy &
-  $\mathrm{CV}(\text{IC-drop}) \approx 7 \times 10^{-4}$ \\
+B1 & Pythagorean duality & $F + \omega = 1$ \\
+B2 & Integrity bound & $\IC \leq F$; equality iff homogeneous \\
+B3 & Composition law & $\IC_{12} = \sqrt{\IC_1 \cdot \IC_2}$; $F_{12} = (F_1{+}F_2)/2$ \\
+B4 & Fisher volume & $Z = -\sum w_i \ln[c_i(1{-}c_i)]$ \\
+B5 & Budget conservation & $\Delta\kappa = R \cdot \tR - (D_\omega{+}D_C)$; $|\Delta\kappa| \leq \tolseam$ \\
+B6 & Self-dual maximum & $f(c^*) = 2\cos^2\theta^* \ln(\tan\theta^*)$ \\
+B7 & Cubic trapping & $\Gam(\omega_\mathrm{trap}) = 1$; root of $x^3{+}x{-}1$ \\
+B8 & Curvature = Fisher + pole & $f''(c) = -1/[c(1{-}c)] - 1/c^2$ \\
+B9 & Low-rank closures & 5 diagnostics $\to$ 4 effective dim \\
+B10 & Geodesic partition & $\{\eps, c_\mathrm{trap}, \tfrac{1}{2}, c^*, 1{-}\eps\}$ \\
+B11 & Cost elasticity & $\varepsilon_\Gam = \omega(3{-}2\omega)/(1{-}\omega)$ \\
+B12 & IC democracy & $\mathrm{CV}(\text{IC-drop}) \approx 7{\times}10^{-4}$ \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \subsection{D-series: deep geometric structure (8)}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}clP{3.5cm}@{}}
+{\small\begin{tabular}{@{}clp{4.2cm}@{}}
 \toprule
-Tag & Name & Statement \\
+\textbf{Tag} & \textbf{Name} & \textbf{Statement} \\
 \midrule
-D1 & Fisher flatness &
-  $\gF(\theta) = 1$; Bernoulli manifold is flat \\
-D2 & $f$ in Fisher coords &
-  $f(\theta) = 2\cos^2\theta \cdot \ln(\tan\theta)$;
-  verified $< 10^{-16}$ \\
-D3 & $\kappa$ as log-sine &
-  $\kappa = 2\sum w_i \ln|\sin\theta_i|$ \\
-D4 & $n{=}2$ determinancy &
-  $c_{1,2} = F \pm \sqrt{F^2 - \IC^2}$;
-  real iff $\IC \leq F$ \\
-D5 & $p{=}3$ Cardano root &
-  Discriminant $D = -31 < 0$; unique real root \\
-D6 & Composition invariance &
-  $\Delta(n\,\mathrm{copies}) = \Delta(1)$ exactly \\
-D7 & Regime partition &
-  Collapse 63\% / Watch 24\% / Stable 12.5\% \\
-D8 & Dimension collapse &
-  8-channel kernel $\to$ 4 effective dim \\
+D1 & Fisher flatness & $\gF(\theta) = 1$; manifold is flat \\
+D2 & $f$ in Fisher coords & $f(\theta) = 2\cos^2\theta \cdot \ln(\tan\theta)$ \\
+D3 & $\kappa$ as log-sine & $\kappa = 2\sum w_i \ln|\sin\theta_i|$ \\
+D4 & $n{=}2$ determinancy & $c_{1,2} = F \pm \sqrt{F^2 - \IC^2}$; real iff $\IC \leq F$ \\
+D5 & $p{=}3$ Cardano root & Discriminant $D = -31 < 0$; unique real root \\
+D6 & Composition inv.\ & $\Delta(n\,\mathrm{copies}) = \Delta(1)$ exactly \\
+D7 & Regime partition & Collapse 63\% / Watch 24\% / Stable 12.5\% \\
+D8 & Dimension collapse & 8-channel kernel $\to$ 4 effective dim \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \subsection{N-series: integral and compositional (16)}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}clP{3.5cm}@{}}
+{\small\begin{tabular}{@{}clp{3.8cm}@{}}
 \toprule
-Tag & Name & Statement \\
+\textbf{Tag} & \textbf{Name} & \textbf{Statement} \\
 \midrule
-N1 & Fisher-entropy integral &
-  $\int_0^1 \gF \cdot S\,dc = \pi^2/3 = 2\zeta(2)$ \\
-N2 & Coupling centroid &
-  $\int_0^1 (S{+}\kappa)\,c\,dc = 0$ \\
-N3 & Rank-2 closed form &
-  $\IC = \sqrt{F^2 - C^2/4}$ for $n = 2$ \\
-N4 & Equator quintuple &
-  At $c = \tfrac{1}{2}$: $S = \ln 2$, $S{+}\kappa = 0$,
-  $h' = 0$, $\gF = 4$, $\theta = \pi/4$ \\
-N5 & Fano-Fisher duality &
-  $h''(c) = -\gF(c) = -1/[c(1{-}c)]$ \\
-N6 & Triple peak identity &
-  $(1{-}c^*)/c^* = e^{-1/c^*} = (S{+}\kappa)|_{c^*}$ \\
-N7 & Asymptotic IC-curvature &
-  $\IC^2 \approx F^2 - \beta_n C^2$ \\
-N8 & Log-integrity correction &
-  $\kappa = \ln F - C^2/(8F^2) + O(C^4)$ \\
-N9 & Budget cost crossover &
-  $\exists\,\omega_\mathrm{cross} \approx 0.58$:
-  $\Gam(\omega) = E[D_C|\omega]$ \\
-N10 & Jensen entropy bound &
-  $S \leq h(F)$; equality iff $C = 0$ \\
-N11 & Moment family &
-  $\mu_n =
-  \frac{(n{+}1)H_{n{+}1}{-}(n{+}2)}{(n{+}1)^2(n{+}2)}$ \\
-N12 & Gap composition &
-  $\Delta_{12} = (\Delta_1{+}\Delta_2)/2$
-  ${} + (\sqrt{\IC_1}{-}\sqrt{\IC_2})^2\!/2$ \\
-N13 & Entropy moment table &
-  $\int_0^1 c^n S\,dc$ has closed rational form \\
-N14 & Jensen entropy-fidelity &
-  $S \leq h(F)$ (formalized sandwich) \\
-N15 & Gap Taylor &
-  $\Delta \approx C^2/(8F)$ \\
-N16 & Reflection formula &
-  $f(\theta) + f(\pi/2{-}\theta)
-  = 2\ln(\tan\theta)\cos(2\theta)$ \\
+N1 & Fisher-entropy integral & $\int_0^1 \gF \cdot S\,dc = \pi^2/3 = 2\zeta(2)$ \\
+N2 & Coupling centroid & $\int_0^1 (S{+}\kappa)\,c\,dc = 0$ \\
+N3 & Rank-2 closed form & $\IC = \sqrt{F^2 - C^2/4}$ for $n = 2$ \\
+N4 & Equator quintuple & At $c = \tfrac{1}{2}$: $S = \ln 2$, $S{+}\kappa = 0$, $h' = 0$, $\gF = 4$, $\theta = \pi/4$ \\
+N5 & Fano-Fisher duality & $h''(c) = -\gF(c)$ \\
+N6 & Triple peak identity & $(1{-}c^*)/c^* = e^{-1/c^*}$ \\
+N7 & Asymptotic IC-curvature & $\IC^2 \approx F^2 - \beta_n C^2$ \\
+N8 & Log-integrity correction & $\kappa = \ln F - C^2/(8F^2) + O(C^4)$ \\
+N9 & Budget cost crossover & $\exists\,\omega_\mathrm{cross} \approx 0.58$: $\Gam(\omega) = E[D_C|\omega]$ \\
+N10 & Jensen entropy bound & $S \leq h(F)$; equality iff $C = 0$ \\
+N11 & Moment family & $\mu_n = \frac{(n{+}1)H_{n{+}1}{-}(n{+}2)}{(n{+}1)^2(n{+}2)}$ \\
+N12 & Gap composition & $\Delta_{12} = (\Delta_1{+}\Delta_2)/2 + (\sqrt{\IC_1}{-}\sqrt{\IC_2})^2\!/2$ \\
+N13 & Entropy moment table & $\int_0^1 c^n S\,dc$ has closed rational form \\
+N14 & Jensen entropy-fidelity & $S \leq h(F)$ (formalized sandwich) \\
+N15 & Gap Taylor & $\Delta \approx C^2/(8F)$ \\
+N16 & Reflection formula & $f(\theta) + f(\pi/2{-}\theta) = 2\ln(\tan\theta)\cos(2\theta)$ \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \subsection{The six connection clusters}
 
@@ -1272,126 +1241,71 @@ the connections between kernel outputs.
 
 \subsection{Core lemmas (L1--L34)}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}clP{3.5cm}@{}}
+{\small\begin{tabular}{@{}clp{4.0cm}@{}}
 \toprule
-\# & Name & Statement \\
+\textbf{\#} & \textbf{Name} & \textbf{Statement} \\
 \midrule
-L1 & $F$ range &
-  $F \in [\eps, 1{-}\eps]$ \\
-L2 & $\omega$ range &
-  $\omega \in [\eps, 1{-}\eps]$ \\
-L3 & $\kappa$ bounds &
-  $\kappa \in [\ln\eps, 0] \approx [-18.42, 0]$ \\
-L4 & IC = geometric mean &
-  $\IC = \exp(\sum w_i \ln c_i)$ \\
-L5 & $S = \ln 2$ iff equator &
-  $S(c) = \ln 2 \Leftrightarrow c = 1/2$ \\
-L6 & IC sensitivity &
-  $\partial\IC/\partial c_i = (w_i/c_i)\IC$ \\
-L7 & $\IC \leq F$ &
-  Integrity bound on $\eps$-clamped domain \\
-L8 & Regime well-defined &
-  Every $(\omega,F,S,C) \mapsto$ one regime \\
-L9 & Stable $\subset$ (low $\omega$, high $F$) &
-  Stable requires $\omega < 0.038$ and $F > 0.90$ \\
-L10 & Lipschitz $F$ &
-  $|\Delta F| \leq \max(w_i) \cdot \|\Delta c\|_\infty$ \\
-L11 & Lipschitz $\kappa$ &
-  $|\Delta\kappa| \leq \max(w_i/c_i) \cdot \|\Delta c\|_\infty$ \\
-L12 & $C$ monotone in spread &
-  Wider $c_i$ spread $\to$ larger $C$ \\
-L13 & $S$ Lipschitz &
-  Bounded by $\max(w_i) \cdot |\ln((1{-}c_{\min})/c_{\min})|$ \\
-L14 & $F$ monotone up &
-  $F$ non-decreasing in each $c_i$ \\
-L15 & $\kappa$ monotone up &
-  $\kappa$ non-decreasing in each $c_i$ \\
-L16 & $\IC$ monotone up &
-  $\IC$ non-decreasing in each $c_i$ \\
-L17 & $\eps$-clipping bounded &
-  $|F_\mathrm{clip} - F_\mathrm{raw}|
-  \leq \max(w_i)\eps$ \\
-L18 & $\kappa$ clipping bounded &
-  $|\kappa_\mathrm{clip} - \kappa_\mathrm{raw}|$ bounded \\
-L19 & Stable $\Rightarrow$ low budget &
-  $\Gam(\omega) < 10^{-5}$ in Stable \\
-L20 & Seam telescoping &
-  $\sum_i \Delta\kappa_i = \kappa(t_n) - \kappa(t_0)$ \\
-L21 & Residual telescoping &
-  Cumulative residual = $\sum$ budget $-$ $\sum$ ledger \\
-L22 & $\Gam$ convexity &
-  $\Gam$ convex on $[0, 1{-}\eps)$ for $p \geq 2$ \\
-L23 & $\Gam$ pole at $\omega = 1$ &
-  $\lim_{\omega\to1}\Gam(\omega) = +\infty$ \\
-L24 & Stable attractor &
-  Near-stable states require $O(\eps^2)$ to exit \\
-L25 & Return monotonicity &
-  If $\tR < \infty$ and $\omega$ decreases:
-  $\tR$ can only decrease \\
-L26 & Weld strengthening &
-  Adding closures tightens, never loosens \\
-L27 & Residual growth bound &
-  $|\text{cumul.}| \leq K \cdot \tolseam$ for $K$ seams \\
-L28 & Closure minimality &
-  Removing redundancy preserves weld verdict \\
-L29 & Contract monotonicity &
-  Tightening preserves PASS if data unchanged \\
-L30 & IC collapse cascade &
-  $c_i \to \eps \Longrightarrow
-  \IC \to \eps^{w_i} \cdot \IC_\mathrm{rest}$ \\
-L31 & Zero-weight pruning &
-  $w_i = 0$ channels deletable without change \\
-L32 & Weight Lipschitz &
-  $|\Delta F| \leq \max(c_i) \cdot \|\Delta w\|_1$ \\
-L33 & IC/$F$ ratio bound &
-  $\IC/F \in [\eps^{(1-\min w_i)}/F, \, 1]$ \\
-L34 & Entropy-curvature coupling &
-  $C \to 0 \Longrightarrow S \to h(F)$, $\IC \to F$ \\
+L1 & $F$ range & $F \in [\eps, 1{-}\eps]$ \\
+L2 & $\omega$ range & $\omega \in [\eps, 1{-}\eps]$ \\
+L3 & $\kappa$ bounds & $\kappa \in [\ln\eps, 0]$ \\
+L4 & IC = geometric mean & $\IC = \exp(\sum w_i \ln c_i)$ \\
+L5 & $S = \ln 2$ iff equator & $S(c) = \ln 2 \Leftrightarrow c = 1/2$ \\
+L6 & IC sensitivity & $\partial\IC/\partial c_i = (w_i/c_i)\IC$ \\
+L7 & $\IC \leq F$ & Integrity bound on $\eps$-clamped domain \\
+L8 & Regime well-defined & Every $(\omega,F,S,C) \mapsto$ one regime \\
+L9 & Stable $\subset$ low $\omega$ & Stable requires $\omega < 0.038$ and $F > 0.90$ \\
+L10 & Lipschitz $F$ & $|\Delta F| \leq \max(w_i) \cdot \|\Delta c\|_\infty$ \\
+L11 & Lipschitz $\kappa$ & $|\Delta\kappa| \leq \max(w_i/c_i) \cdot \|\Delta c\|_\infty$ \\
+L12 & $C$ monotone in spread & Wider $c_i$ spread $\to$ larger $C$ \\
+L13 & $S$ Lipschitz & Bounded by $\max(w_i) |\ln((1{-}c_{\min})/c_{\min})|$ \\
+L14 & $F$ monotone up & $F$ non-decreasing in each $c_i$ \\
+L15 & $\kappa$ monotone up & $\kappa$ non-decreasing in each $c_i$ \\
+L16 & $\IC$ monotone up & $\IC$ non-decreasing in each $c_i$ \\
+L17 & $\eps$-clipping bounded & $|F_\mathrm{clip} - F_\mathrm{raw}| \leq \max(w_i)\eps$ \\
+L18 & $\kappa$ clipping bounded & $|\kappa_\mathrm{clip} - \kappa_\mathrm{raw}|$ bounded \\
+L19 & Stable $\Rightarrow$ low budget & $\Gam(\omega) < 10^{-5}$ in Stable \\
+L20 & Seam telescoping & $\sum_i \Delta\kappa_i = \kappa(t_n) - \kappa(t_0)$ \\
+L21 & Residual telescoping & Cumulative residual = $\sum$ budget $-$ $\sum$ ledger \\
+L22 & $\Gam$ convexity & $\Gam$ convex on $[0, 1{-}\eps)$ for $p \geq 2$ \\
+L23 & $\Gam$ pole at $\omega = 1$ & $\lim_{\omega\to1}\Gam(\omega) = +\infty$ \\
+L24 & Stable attractor & Near-stable states require $O(\eps^2)$ to exit \\
+L25 & Return monotonicity & If $\tR < \infty$ and $\omega$ decreases: $\tR$ can only decrease \\
+L26 & Weld strengthening & Adding closures tightens, never loosens \\
+L27 & Residual growth bound & $|\text{cumul.}| \leq K \cdot \tolseam$ for $K$ seams \\
+L28 & Closure minimality & Removing redundancy preserves weld verdict \\
+L29 & Contract monotonicity & Tightening preserves PASS if data unchanged \\
+L30 & IC collapse cascade & $c_i \to \eps \Longrightarrow \IC \to \eps^{w_i} \cdot \IC_\mathrm{rest}$ \\
+L31 & Zero-weight pruning & $w_i = 0$ channels deletable without change \\
+L32 & Weight Lipschitz & $|\Delta F| \leq \max(c_i) \cdot \|\Delta w\|_1$ \\
+L33 & IC/$F$ ratio bound & $\IC/F \in [\eps^{(1-\min w_i)}/F, \, 1]$ \\
+L34 & Entropy-curvature & $C \to 0 \Longrightarrow S \to h(F)$, $\IC \to F$ \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \subsection{Extended lemmas (L35--L46)}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}clP{3.5cm}@{}}
+{\small\begin{tabular}{@{}clp{3.7cm}@{}}
 \toprule
-\# & Name & Statement \\
+\textbf{\#} & \textbf{Name} & \textbf{Statement} \\
 \midrule
-L35 & Return-collapse duality &
-  If $\tR$ finite and drift-dominated: $\tR \approx D_C$ \\
-L36 & Generative flux bound &
-  $\Phi_\mathrm{gen} \leq \Gam(\omega)(1{-}S)$ \\
-L37 & Duality-horizon transition &
-  $\Delta\kappa \approx 0.1$ marks cost-credit boundary \\
-L38 & Universal horizon deficit &
-  Cross-domain mean $\IC$ at deficit $\approx 0.947$ \\
-L39 & Super-exp.\ convergence &
-  IC convergence to $F$ faster than exponential as
-  $C \to 0$ \\
-L40 & Stable attractor radius &
-  $\IC/F > 0.95$, $\omega < 0.05$ basin width \\
-L41 & Entropy-integrity anti-corr. &
-  $S + \kappa = 0$ at $c = 1/2$;
-  $\max(S{+}\kappa)$ at $c^*$ \\
-L42 & Coherence-entropy product &
-  $\IC \cdot e^S \leq 1$; equality at $c = 1/2$ \\
-L43 & RCFT convergence &
-  Recursive kernel application converges \\
-L44 & Fractal return scaling &
-  Return distances: power law in recursion depth \\
-L45 & Seam residual algebra &
-  Monoid; associativity error
-  $5.55 \times 10^{-17}$ \\
-L46 & Weld closure composition &
-  PASS$_1 \wedge$ PASS$_2 \Rightarrow$ PASS$_{12}$
-  if residuals within tolerance \\
+L35 & Return-collapse duality & If $\tR$ finite and drift-dominated: $\tR \approx D_C$ \\
+L36 & Generative flux bound & $\Phi_\mathrm{gen} \leq \Gam(\omega)(1{-}S)$ \\
+L37 & Duality-horizon trans.\ & $\Delta\kappa \approx 0.1$ marks cost-credit bdry \\
+L38 & Univ.\ horizon deficit & Cross-domain mean $\IC$ at deficit $\approx 0.947$ \\
+L39 & Super-exp.\ convergence & IC convergence to $F$ faster than exponential as $C \to 0$ \\
+L40 & Stable attractor radius & $\IC/F > 0.95$, $\omega < 0.05$ basin width \\
+L41 & Entropy-integrity anti-corr.\ & $S + \kappa = 0$ at $c = 1/2$; $\max(S{+}\kappa)$ at $c^*$ \\
+L42 & Coherence-entropy product & $\IC \cdot e^S \leq 1$; equality at $c = 1/2$ \\
+L43 & RCFT convergence & Recursive kernel application converges \\
+L44 & Fractal return scaling & Return distances: power law in recursion depth \\
+L45 & Seam residual algebra & Monoid; associativity error $5.55 \times 10^{-17}$ \\
+L46 & Weld closure composition & PASS$_1 \wedge$ PASS$_2 \Rightarrow$ PASS$_{12}$ if residuals within tolerance \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 
 % ============================================================
@@ -1425,33 +1339,20 @@ explicit and reproducible: one can state precisely which
 structure is removed and verify that the classical result
 emerges.
 
-{\small
 \begin{center}
-\begin{tabular}{@{}P{2.1cm}P{2.1cm}P{2.8cm}@{}}
+{\small\begin{tabular}{@{}lp{2.5cm}l@{}}
 \toprule
-GCD structure & Removed structure & Classical limit \\
+\textbf{GCD structure} & \textbf{Removed structure} & \textbf{Classical limit} \\
 \midrule
-$F + \omega = 1$ &
-  Fisher geometry, collapse field &
-  Unitarity \\[0.3em]
-$\IC \leq F$ &
-  Solvability, composition laws, gap diagnostic &
-  Weighted AM-GM \\[0.3em]
-$S$ (Bernoulli) &
-  Intermediate values of collapse field &
-  Shannon entropy \\[0.3em]
-$\IC = e^\kappa$ &
-  Channel weights, measurement context &
-  Exponential map \\[0.3em]
-Regime gates &
-  Third verdict, non-ergodic switching &
-  Binary pass/fail \\[0.3em]
-Budget $\Delta\kappa$ &
-  Epistemic cost, return typing &
-  Energy conservation \\
+$F + \omega = 1$ & Fisher geometry, collapse field & Unitarity \\
+$\IC \leq F$ & Solvability, composition, gap & Weighted AM-GM \\
+$S$ (Bernoulli) & Intermediate collapse field values & Shannon entropy \\
+$\IC = e^\kappa$ & Channel weights, context & Exponential map \\
+Regime gates & Third verdict, non-ergodic switching & Binary pass/fail \\
+Budget $\Delta\kappa$ & Epistemic cost, return typing & Energy conservation \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 We now prove the three principal cases in detail.  Each proof
 is reproducible: the code references point to executable
@@ -1722,30 +1623,29 @@ removed.
 
 \subsection{Summary of structural performance}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}lcc@{}}
+{\small\begin{tabular}{@{}lcc@{}}
 \toprule
-Capability & GCD & Classical \\
+\textbf{Capability} & \textbf{GCD} & \textbf{Classical} \\
 \midrule
 \multicolumn{3}{@{}l}{\textit{Integrity bound / AM-GM}} \\
 \quad Ordering $\IC \leq F$ & \checkmark & \checkmark \\
 \quad Channel recovery & \checkmark & --- \\
 \quad Composition laws & \checkmark & --- \\
-\quad Gap diagnostic & \checkmark & --- \\[0.3em]
+\quad Gap diagnostic & \checkmark & --- \\
 \multicolumn{3}{@{}l}{\textit{Bernoulli entropy / Shannon}} \\
 \quad Discrete uncertainty & \checkmark & \checkmark \\
 \quad Continuous field gradients & \checkmark & --- \\
 \quad Equator cancellation & \checkmark & --- \\
-\quad Entropy--fidelity bound & \checkmark & --- \\[0.3em]
+\quad Entropy--fidelity bound & \checkmark & --- \\
 \multicolumn{3}{@{}l}{\textit{Duality / unitarity}} \\
 \quad Normalization to 1 & \checkmark & \checkmark \\
 \quad Fidelity/drift partition & \checkmark & --- \\
 \quad Fisher metric attribution & \checkmark & --- \\
 \quad Weighted channel semantics & \checkmark & --- \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \noindent Every classical capability is preserved.  The
 additional capabilities are not additions---they are
@@ -1766,21 +1666,21 @@ significant/not, detected/undetected.  GCD replaces this with a
 \emph{three-valued} logic:
 
 \begin{center}
-\begin{tabular}{@{}lP{5cm}@{}}
+{\small\begin{tabular}{@{}lp{5.5cm}@{}}
 \toprule
-Verdict & Meaning \\
+\textbf{Verdict} & \textbf{Meaning} \\
 \midrule
 \conform{} &
-  All identity checks pass, schema conforms, SHA-256 integrity
-  verified, regime computed, seam residual within tolerance. \\[0.3em]
+  All identity checks pass, schema conforms, SHA-256 verified,
+  regime computed, seam residual within tolerance. \\[0.3em]
 \nonconform{} &
   One or more checks fail with a definite violation. \\[0.3em]
 \regime{non\_evaluable} &
-  The data, contract, or closure is insufficient to produce a
-  verdict.  This is not failure---it is the recognition that the
-  question cannot be answered with the available structure. \\
+  Data, contract, or closure insufficient for a verdict.
+  Not failure---recognition that the question cannot be
+  answered with available structure. \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{center}
 
 The third value is essential.  Without it, systems that are
@@ -1807,27 +1707,27 @@ The canon is narrated in exactly five words, each with a fixed
 operational definition tied to the frozen contract:
 
 \begin{center}
-\begin{tabular}{@{}llP{3.5cm}@{}}
+{\small\begin{tabular}{@{}llp{4.0cm}@{}}
 \toprule
-Word & Latin & Operational role \\
+\textbf{Word} & \textbf{Latin} & \textbf{Operational role} \\
 \midrule
 Drift & \textit{derivatio} &
-  Debit $D_\omega$ to the ledger.
-  $\omega = 1 - F$: what moved relative to the contract. \\[0.3em]
+  Debit $D_\omega$. $\omega = 1 - F$:
+  what moved relative to contract. \\[0.3em]
 Fidelity & \textit{fidelitas} &
-  Retention of contract-specified invariants.
+  Retention of invariants.
   $F = \sum w_i c_i$: what persisted. \\[0.3em]
 Roughness & \textit{curvatura} &
-  Debit $D_C$ to the ledger.
-  $C = \mathrm{std}(\tvec)/0.5$: where it was bumpy. \\[0.3em]
+  Debit $D_C$.
+  $C = \mathrm{std}(\tvec)/0.5$: friction. \\[0.3em]
 Return & \textit{reditus} &
-  Credit $R \cdot \tR$ in the ledger.
+  Credit $R \cdot \tR$.
   Typed re-entry; zero if $\tR = \IR$. \\[0.3em]
 Integrity & \textit{integritas} &
   Read from reconciled ledger.
   Never asserted, always derived. \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{center}
 
 The conservation budget $\Delta\kappa = R \cdot \tR - (D_\omega
@@ -1844,31 +1744,166 @@ Every claim passes through exactly five stops, in order:
 \eeq
 
 \begin{center}
-\begin{tabular}{@{}lP{5cm}@{}}
+{\small\begin{tabular}{@{}lp{5.5cm}@{}}
 \toprule
-Stop & Role \\
+\textbf{Stop} & \textbf{Role} \\
 \midrule
 \textbf{Contract} &
   Define rules \emph{before} evidence: freeze sources,
   normalization, thresholds. \\[0.3em]
 \textbf{Canon} &
-  Narrate using the five words: Drift, Fidelity, Roughness,
-  Return, Integrity. \\[0.3em]
+  Narrate using the five words: Drift, Fidelity,
+  Roughness, Return, Integrity. \\[0.3em]
 \textbf{Closures} &
-  Publish thresholds; stance must change when gates are
-  crossed.  No mid-episode edits. \\[0.3em]
+  Publish thresholds; stance must change when
+  gates are crossed.  No mid-episode edits. \\[0.3em]
 \textbf{Integrity Ledger} &
-  Debit Drift + Roughness, credit Return.  Residual must
-  close: $|s| \leq \tolseam$. \\[0.3em]
+  Debit Drift + Roughness, credit Return.
+  Residual must close: $|s| \leq \tolseam$. \\[0.3em]
 \textbf{Stance} &
-  Derived verdict: \regime{Stable} / \regime{Watch} /
-  \regime{Collapse}.  Never asserted. \\
+  Derived verdict: \regime{Stable} /
+  \regime{Watch} / \regime{Collapse}.  Never asserted. \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{center}
 
 The spine is non-negotiable.  It governs code, theory, discussion,
 and cross-domain translation equally.
+
+\subsection{Cross-domain translation: the Rosetta}
+
+The five words have fixed operational definitions, but their
+surface expression varies across intellectual fields.  The Rosetta
+maps each word to the dialect of a given \emph{lens} without
+changing the underlying operational meaning.
+
+\begin{center}
+{\scriptsize\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lllllll@{}}
+\toprule
+Lens & Drift & Fidelity & Roughness & Return & \multicolumn{2}{l}{Integrity} \\
+\midrule
+Epistem. &
+  Belief chg. &
+  Warrant &
+  Friction &
+  Re-entry &
+  \multicolumn{2}{l}{\emph{(ledger)}} \\
+Ontology &
+  State trans. &
+  Conserved &
+  Seams &
+  Coherence &
+  \multicolumn{2}{l}{\emph{(ledger)}} \\
+Phenom. &
+  Shift &
+  Stable feat. &
+  Distress &
+  Repair &
+  \multicolumn{2}{l}{\emph{(ledger)}} \\
+History &
+  Period. &
+  Continuity &
+  Rupture &
+  Reconcil. &
+  \multicolumn{2}{l}{\emph{(ledger)}} \\
+Policy &
+  Reg.\ shift &
+  Mandate &
+  Friction &
+  Reinstate. &
+  \multicolumn{2}{l}{\emph{(ledger)}} \\
+Semiotics &
+  Sign drift &
+  Ground &
+  Tr.\ loss &
+  Interp.\ cl. &
+  \multicolumn{2}{l}{\emph{(ledger)}} \\
+\bottomrule
+\end{tabular*}}
+\end{center}
+
+\noindent Integrity is never asserted within the Rosetta; it is
+read from the reconciled ledger.  This is what makes cross-domain
+synthesis mechanical rather than interpretive: the prose maps
+through the Rosetta in the chosen lens, while $I = e^\kappa$
+provides unitless multiplicative comparability across seams.
+
+Translation follows a four-step protocol: (1)~bind to the frozen
+contract; (2)~write Drift, Fidelity, Roughness, Return in the
+chosen lens's dialect; (3)~reconcile the ledger separately; and
+(4)~publish provenance so readers can verify that the Rosetta
+statements correspond to a closed seam.  The meanings of the
+columns remain stable while the dialect changes---this is the
+mechanism by which 18~domains speak to each other through a
+shared grammar.
+
+
+% ============================================================
+\section{The Cognitive Equalizer}\label{sec:equalizer}
+% ============================================================
+
+\subsection{Agent-independence as structural consequence}
+
+A compass does not require the navigator to know which way is
+north; it produces the same reading regardless of who holds it.
+The GCD architecture replaces six cognitive tasks---tasks that
+traditionally depend on agent judgment---with structural readings
+that depend only on the data and the frozen contract:
+
+\begin{center}
+{\small\begin{tabular}{@{}lp{2.4cm}p{3.0cm}@{}}
+\toprule
+\textbf{Decision} & \textbf{Standard} & \textbf{GCD} \\
+\midrule
+Threshold & Agent picks ($\alpha{=}0.05$) & Frozen (seam-derived) \\
+Vocabulary & Agent chooses & Five words (defined) \\
+Conclusion & Agent frames & Three-valued (gates) \\
+Methodology & Agent designs & The spine (5 stops) \\
+Ambiguity & Agent guesses & \regime{non\_evaluable} \\
+Calibration & Reads docs & Orientation (re-derive) \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\noindent This is not a design aspiration---it is a testable
+structural property.  If two agents feed the same data through the
+same frozen contract, they must arrive at the same stance, because
+the verdict is computed from gates and residuals, not from
+judgment.  The test is reproducible: run the orientation script
+with any agent and verify that the same 10~receipts emerge.  The
+numbers are the proof.
+
+\subsection{What agents contribute}
+
+Agent independence does not mean agents are interchangeable
+in all respects.  Agents contribute at Tier-2: they choose
+\emph{which question to ask}---which channels to measure,
+which normalization to declare, which domain closure to invoke.
+This choice is the creative act.  Once the question is declared
+and frozen as a contract, the answer is determined by the kernel.
+
+Creativity lives in the question; rigor lives in the answer.
+The architecture separates these structurally: the agent's
+contribution is the contract (Tier-2 channel selection), and the
+system's contribution is the verdict (Tier-0 computation of
+Tier-1 invariants).  The separation is enforced by the prohibition
+on back-edges (\S\ref{sec:tiers}): once the contract is frozen,
+no agent action can alter the verdict.
+
+\subsection{Empirical verification}
+
+The orientation script (\texttt{scripts/orientation.py})
+re-derives 10~structural receipts through live computation.
+Any cognitive agent---human or automated---that runs the script
+will produce the same numbers, because the numbers are outputs
+of deterministic functions on fixed inputs.  An agent that reads
+descriptions may call $\IC \leq F$ a ``reformulation'' of the
+classical AM-GM inequality~\cite{hardylittlewoodpolya1952}; an
+agent that runs the orientation will not, because the derivation
+chain---solvability condition, composition laws, gap
+diagnostic---is loaded by computation, not by familiarity.  The
+distinction between reading and computing is the distinction
+between a gesture and a weld.
 
 
 % ============================================================
@@ -1917,6 +1952,106 @@ edited.  Corrections cross a \emph{weld}---a named structural
 change at a shared anchor with pre/post tests and
 $\kappa$-continuity verification.  Errata are first-class objects:
 they preserve the full audit trail.
+
+
+% ============================================================
+\section{Governance: Manifest and Weld}\label{sec:governance}
+% ============================================================
+
+The architecture must be capable of evolution without corruption
+of its own history.  Two governance mechanisms accomplish this:
+the manifest (provenance) and the weld (continuity across change).
+They punctuate the spine without being the spine itself.
+
+\subsection{The manifest}
+
+A manifest binds an artifact to its provenance---time, tools, data
+sources, checksums, and the contract under which it was produced.
+Every claim carries its receipt; no orphan claims are admitted.
+Formally:
+\beq
+  M = \bigl(\text{artifact},\; \text{timestamp},\;
+  \text{tool\_id},\; \text{SHA-256},\; \RunID\bigr).
+\eeq
+Manifests are append-only: never edited, only superseded.
+
+\subsection{The weld protocol}
+
+A weld is the only legitimate mechanism for changing policy,
+thresholds, or contract terms across runs.  It is a named
+structural change at a shared anchor:
+
+\begin{enumerate}[leftmargin=*,label=(\arabic*)]
+\item \textbf{Name the anchor.}  Identify the shared reference
+  point between old and new states: a contract version, a prior
+  ledger row, or a canonical anchor.
+\item \textbf{Run pre-tests.}  Evaluate the old contract on the
+  anchor; record $\kappa_\mathrm{pre}$.
+\item \textbf{Apply the change.}  Modify the contract, closure,
+  or policy.
+\item \textbf{Run post-tests.}  Evaluate the new contract on the
+  same anchor; record $\kappa_\mathrm{post}$.
+\item \textbf{Enforce $\kappa$-continuity.}
+  $|\kappa_\mathrm{post} - \kappa_\mathrm{pre}| \leq \tolseam$.
+  If the residual exceeds tolerance, the weld fails and the change
+  is rejected.
+\end{enumerate}
+
+\noindent The weld imposes a continuity constraint on change
+itself: the system can evolve, but only through demonstrated
+$\kappa$-continuity.  Arbitrary rewrites are structurally
+impossible---history is append-only, and every modification passes
+through the seam.
+
+\subsection{Errata as first-class objects}
+
+When a prior claim must be corrected, the correction is an
+\emph{errata weld}: the original remains in the ledger, the
+correction is appended with a weld linking it to the original,
+and the full audit trail is preserved.  Corrections are not
+failures; they are demonstrated returns.  The system does not
+distinguish ``new finding'' from ``correction of old finding'' in
+its accounting---both are seam transitions that must close.
+
+\subsection{Gesture vs.\ weld: the epistemic boundary}
+
+Any epistemic emission that does not close a seam is a
+\emph{gesture}---recorded but uncredited:
+
+\begin{center}
+{\small\begin{tabular}{@{}lcc@{}}
+\toprule
+& \textbf{Gesture} & \textbf{Weld} \\
+\midrule
+Return time & $\tR = \IR$ & $\tR < \infty$ \\
+Residual & $|s| > \tolseam$ & $|s| \leq \tolseam$ \\
+Identities & May fail & All pass \\
+Epistemic credit & Zero & Positive \\
+Ledger status & Uncredited & Credited \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\noindent A gesture is not a failed weld; it is a
+\emph{different kind of object}.  A weld that fails its residual
+reverts to a gesture.  A gesture that later achieves finite return
+and closed residual becomes a weld.  The boundary is sharp,
+structural, and reversible---it tracks what the system \emph{knows}
+versus what it has merely \emph{observed}.
+
+\begin{remark}[Falsifiability]
+The architecture does not claim metaphysical truth.  It claims
+operational validity: if the frozen parameters are correct, the
+identities hold, and the verdicts are reproducible.  The system
+would be falsified by: (a)~a domain where $\IC > F$ persists at
+$100\%$ within the tolerance band; (b)~a frozen parameter value
+that closes seams in more domains; (c)~a fourth regime gate that
+sharpens the partition without redundancy; or (d)~two agents with
+the same data and contract producing different stances.  The
+existence of these concrete falsification conditions is itself a
+structural consequence: only what returns is real includes the
+axiom's own claims about itself.
+\end{remark}
 
 
 % ============================================================
@@ -1970,11 +2105,10 @@ and evolutionary biology~\cite{darwin1859origin}.
 
 \subsection{Corpus statistics}
 
-{\small
 \begin{center}
-\begin{tabular}{@{}lr@{}}
+{\small\begin{tabular}{@{}lr@{}}
 \toprule
-Metric & Count \\
+\textbf{Metric} & \textbf{Count} \\
 \midrule
 Automated tests & 7{,}442 \\
 Test files & 120 \\
@@ -1991,8 +2125,8 @@ Schemas (JSON Schema 2020-12) & 17 \\
 Papers (LaTeX) & 8 \\
 Bibliography entries & 109 \\
 \bottomrule
-\end{tabular}
-\end{center}}
+\end{tabular}}
+\end{center}
 
 \subsection{Verification summary}
 
