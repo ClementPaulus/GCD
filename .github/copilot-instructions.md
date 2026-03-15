@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **7,442 tests** · **18 domains** · **133 closure modules** · **46 lemmas** · **44 structural identities** · **50 dashboard pages**
+**UMCP v2.1.5** · **7,875 tests** · **18 domains** · **133 closure modules** · **46 lemmas** · **44 structural identities** · **50 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -538,6 +538,7 @@ Published papers live in `paper/`. Current papers:
 | `rcft_second_edition.tex` | RCFT Second Edition: Foundations and Implications | — |
 | `consciousness_coherence.tex` | Consciousness Coherence: Seven Theorems in the GCD Kernel | — |
 | `awareness_cognition_kernel.tex` | Awareness-Cognition Kernel: Ten Theorems Across Phylogeny | — |
+| `cross_scale_matter.tex` | Cross-Scale Matter: From Quarks to Bulk via Five Phase Boundaries | — |
 | `RCFT_FREEZE_WELD.md` | RCFT Freeze–Weld Identity | — |
 
 All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bib`. Compile: `pdflatex → bibtex → pdflatex → pdflatex`.
@@ -555,7 +556,7 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 7,442 tests (pytest --collect-only | grep "::" | wc -l to verify)
+pytest                                       # 7,875 tests (pytest --collect-only | grep ":" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)

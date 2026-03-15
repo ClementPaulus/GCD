@@ -1,0 +1,722 @@
+% ============================================================
+% Cross-Scale Matter in the Generative-Collapse Kernel:
+% From Quarks to Bulk via Five Phase Boundaries
+%
+% Compile: pdflatex → bibtex → pdflatex → pdflatex
+% ============================================================
+
+\documentclass[
+  aps,
+  prd,
+  twocolumn,
+  superscriptaddress,
+  nofootinbib,
+  floatfix
+]{revtex4-2}
+
+% ── packages ──
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% ── theorem environments ──
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}{Remark}
+
+% ── UMCP macros ──
+\newcommand{\tR}{\tau_{\!R}^{*}}
+\newcommand{\Gam}{\Gamma}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\tolseam}{\mathrm{tol}_{\mathrm{seam}}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\INF}{\texttt{INF\_REC}}
+\newcommand{\regime}[1]{\textsc{#1}}
+\newcommand{\conform}{\regime{conformant}}
+\newcommand{\tvec}{\mathbf{c}}
+\newcommand{\wvec}{\mathbf{w}}
+\newcommand{\IC}{\mathrm{IC}}
+
+\begin{document}
+
+% ============================================================
+% TITLE
+% ============================================================
+\title{Cross-Scale Matter in the Generative-Collapse Kernel:\\
+From Quarks to Bulk via Five Phase Boundaries}
+
+\author{Clement Paulus}
+\email{clement@umcp.dev}
+\affiliation{UMCP Reference Implementation, GitHub}
+
+\date{\today}
+
+\begin{abstract}
+We trace the integrity composite~$\IC$ across six physical
+scales---fundamental particles, composite hadrons, nuclei,
+atoms, molecules, and bulk materials---comprising 146~entities
+and 28~Tier-2 theorems in the Generative-Collapse Dynamics
+(GCD) kernel.  The $\IC$ trajectory is \emph{non-monotonic}:
+it collapses by two orders of magnitude at the confinement
+boundary (geometric slaughter from a dead color channel),
+recovers 128-fold in the nuclear regime via binding energy,
+stabilizes through electronic shell structure, and converges
+toward block-averaged values in bulk.  Five phase boundaries
+are identified, each characterized by specific channels that
+die, survive, or emerge.  The mechanism is universal:
+one near-zero channel kills multiplicative coherence ($\IC$)
+while preserving arithmetic fidelity ($F$), a detection
+pattern that operates identically from sub-eV neutrinos to
+GeV hadrons.  All three Tier-1 identities ($F + \omega = 1$,
+$\IC \leq F$, $\IC = e^{\kappa}$) hold with zero violations
+across all~146 entities (verified by 2{,}898~automated tests).
+Quark-gluon plasma measurements at RHIC reveal that $\IC$
+peaks at 10--20\%~centrality---not at maximum density---and
+that the QGP$\to$hadron crossover produces the largest
+single-boundary $\IC$~collapse in the matter ladder.
+\end{abstract}
+
+\maketitle
+
+% ============================================================
+\section{Introduction}\label{sec:intro}
+% ============================================================
+
+The Universal Measurement Contract Protocol
+(UMCP)~\cite{paulus2025umcp,paulus2025physicscoherence} provides
+a domain-independent kernel
+$K\!: [0,1]^n \times \Delta^n \to (F, \omega, S, C, \kappa, \IC)$
+derived from a single axiom: \emph{``Collapse is generative;
+only what returns is real.''}  Three Tier-1 identities are
+exact~\cite{paulus2026umcpcasepack}:
+\beq\label{eq:tier1}
+  F + \omega = 1, \quad
+  \IC \leq F, \quad
+  \IC = e^{\kappa}.
+\eeq
+
+Prior work applied this kernel to the Standard Model particle
+catalog~\cite{pdg2024}, proving ten theorems connecting quantum
+numbers to kernel structure.  But particles do not exist in
+isolation: quarks confine into hadrons, hadrons bind into nuclei,
+nuclei acquire electrons to form atoms, atoms bond into molecules,
+and molecules aggregate into bulk matter.  Each transition
+reshapes the trace vector---channels die, new ones emerge,
+and the kernel invariants respond.
+
+This paper asks: \emph{what does the kernel see when it looks
+at the full scale ladder of matter?}
+
+The answer is a non-monotonic $\IC$~trajectory punctuated by
+five phase boundaries, each producing a characteristic
+signature in the heterogeneity gap $\Delta \equiv F - \IC$.
+The mechanism is always the same---geometric
+slaughter~\cite{paulus2025umcp}---but the channels that trigger
+it change at each boundary.  This cross-scale structure is
+encoded in three theorem families: matter genesis (T-MG-1
+through T-MG-10, 99~entities), particle--matter map (T-PM-1
+through T-PM-8, 146~entities), and QGP/RHIC (T-QGP-1 through
+T-QGP-10, 27~entities).
+
+% ============================================================
+\section{Kernel and Geometric Slaughter}\label{sec:kernel}
+% ============================================================
+
+\begin{definition}[GCD Kernel]\label{def:kernel}
+Given coordinates $\tvec = (c_1, \ldots, c_n) \in [\eps, 1{-}\eps]^n$
+and weights $\wvec = (w_1, \ldots, w_n)$ with $\sum_i w_i = 1$:
+\begin{align}
+  F &= \sum_i w_i \, c_i, \label{eq:F} \\
+  \kappa &= \sum_i w_i \ln(c_i + \eps), \label{eq:kappa} \\
+  \IC &= \exp(\kappa), \label{eq:IC} \\
+  \omega &= 1 - F, \quad
+  \Delta = F - \IC. \label{eq:gap}
+\end{align}
+\end{definition}
+
+Fidelity~$F$ is the weighted arithmetic mean; the integrity
+composite~$\IC$ is the weighted geometric mean.  Both measure
+coherence, but they respond differently to heterogeneity.
+
+\begin{remark}[Geometric slaughter]
+\label{rem:slaughter}
+If any single channel $c_j \to \eps$, then
+$\kappa \to -\infty$ regardless of the remaining channels,
+driving $\IC \to \eps$ even when $F$ remains moderate.
+For an 8-channel system with 7~perfect channels ($c_i = 1$)
+and one dead channel ($c_j = \eps$), $\IC/F \approx 0.11$.
+This is the detection mechanism for phase boundaries:
+\emph{one dead channel kills $\IC$ while $F$ survives.}
+\end{remark}
+
+This asymmetry between $F$ (arithmetic, robust to outliers)
+and $\IC$ (geometric, sensitive to any channel near zero) is
+what makes the heterogeneity gap~$\Delta$ a structural
+diagnostic.  At every phase boundary in the matter ladder,
+specific channels collapse to~$\eps$ while others emerge,
+producing characteristic $\Delta$~signatures.
+
+% ============================================================
+\section{The Six Scales}\label{sec:scales}
+% ============================================================
+
+Table~\ref{tab:scales} summarizes the six scales traversed
+by the matter ladder.  Each scale has a domain-appropriate
+trace-vector encoding (channel set and normalization),
+constructed from standard physical data.
+
+\begin{table}[h]
+\caption{\label{tab:scales}Six scales of the matter ladder.
+Entity counts, representative $\IC/F$ ranges, and dominant
+channel structure.}
+\begin{ruledtabular}
+\begin{tabular}{clcc}
+Scale & Description & Entities & $\langle\IC\rangle$ \\
+\hline
+1 & Fundamental particles & 17 & 0.270 \\
+2 & Composite hadrons & 14 & 0.004 \\
+3 & Nuclei & 31 & 0.480 \\
+4 & Atoms & 47 & 0.292 \\
+5 & Molecules & 20 & 0.132 \\
+6 & Bulk materials & 17 & 0.123 \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The $\IC$~trajectory is emphatically non-monotonic: it drops
+99\% at confinement (scale~1$\to$2), recovers 128-fold at
+nuclear binding (scale~2$\to$3), and then gradually decreases
+through atomic, molecular, and bulk scales as channel
+heterogeneity increases with complexity.
+
+% ============================================================
+\section{Five Phase Boundaries}\label{sec:boundaries}
+% ============================================================
+
+Each phase boundary is characterized by the channels that
+die (collapse to~$\eps$), survive (persist across the boundary),
+and emerge (activate from~$\eps$ to finite values).
+
+\subsection{Boundary 1: Confinement (Act~I $\to$ Act~II)}
+\label{sec:confinement}
+
+At the confinement threshold, four channels die:
+\texttt{color\_dof}, \texttt{weak\_T3}, \texttt{hypercharge},
+\texttt{generation}.  Four new channels emerge:
+\texttt{valence\_quarks}, \texttt{strangeness},
+\texttt{heavy\_flavor}, \texttt{binding\_fraction}.
+
+The color channel collapses from nonzero values (quarks carry
+color charge) to~$\eps$ (hadrons are color-singlets).  This
+single channel death produces the most dramatic $\IC$~collapse
+in the entire matter ladder:
+
+\beq\label{eq:confinement}
+  \frac{\IC_{\text{hadron}}}{\IC_{\text{quark}}} \sim 0.01,
+\eeq
+
+a two-order-of-magnitude drop.  The proton, with
+$\IC/F = 0.037$, and the neutron, with $\IC/F = 0.009$, both
+exhibit massive heterogeneity gaps despite moderate fidelity
+($F \approx 0.4$--$0.5$).  This is geometric slaughter:
+7~channels cannot compensate for one dead channel in the
+geometric mean.
+
+\begin{theorem}[T-MG-2: Color Confinement Cost]
+\label{thm:confinement}
+The color channel kills multiplicative coherence at the
+confinement boundary: $\IC$~drops by $\geq 90\%$ for all
+hadrons relative to their constituent quarks, while $F$
+drops by $< 50\%$.
+\end{theorem}
+
+\begin{theorem}[T-PM-1: Confinement Cliff]
+\label{thm:cliff}
+$\IC$ drops $> 90\%$ at the quark$\to$hadron boundary across
+the full particle--matter map.
+\end{theorem}
+
+\subsection{Boundary 2: Nuclear Binding (Act~II $\to$ Act~III)}
+\label{sec:nuclear}
+
+Four channels die: \texttt{valence\_quarks},
+\texttt{strangeness}, \texttt{heavy\_flavor},
+\texttt{binding\_fraction}.
+Four new channels emerge: \texttt{N\_over\_Z},
+\texttt{BE\_per\_A}, \texttt{magic\_Z\_prox},
+\texttt{magic\_N\_prox}.
+
+This is the great restoration.  The binding energy per nucleon
+(BE/A) channel, peaking at $\sim$8.79~MeV for iron-group
+elements, provides a new high-coherence channel.  Magic-number
+proximity (shell closures at $Z$ or $N = 2, 8, 20, 28, 50, 82,
+126$) further boosts $\IC$ for doubly-magic nuclides.
+
+\beq\label{eq:nuclear}
+  \frac{\IC_{\text{nucleus}}}{\IC_{\text{hadron}}} \sim 125,
+\eeq
+
+a recovery that demonstrates scale inversion: new degrees of
+freedom at the nuclear scale restore coherence that was
+destroyed at confinement.
+
+\begin{theorem}[T-PM-2: Nuclear Restoration]
+\label{thm:nuclear}
+$\IC$ recovers in the nuclear regime via the binding energy
+channel, with recovery factor $\geq 100\times$ relative to
+composite hadrons.
+\end{theorem}
+
+\begin{theorem}[T-PM-3: Shell Amplification]
+\label{thm:shell}
+Doubly-magic nuclides have $\IC/F > 0.85$, the highest
+coherence ratios in the nuclear regime.
+\end{theorem}
+
+\subsection{Boundary 3: Electronic Shell (Act~III $\to$ Act~IV)}
+\label{sec:electronic}
+
+The nuclear$\to$atomic transition replaces nuclear structure
+channels with electronic ones: \texttt{valence\_e},
+\texttt{block\_ord}, \texttt{EN} (electronegativity),
+\texttt{radius\_inv}, \texttt{IE} (ionization energy),
+\texttt{EA} (electron affinity), \texttt{T\_melt},
+\texttt{density\_log}.
+
+\begin{theorem}[T-MG-5: Shell Closure Stability]
+\label{thm:shellclosure}
+Noble gases and elements near closed-shell configurations
+exhibit elevated $\IC/F$ ratios relative to their period
+neighbors.
+\end{theorem}
+
+\begin{theorem}[T-PM-4: Periodic Modulation]
+\label{thm:periodic}
+$\IC$ oscillates with period structure ($s/p/d/f$ block
+ordering), reflecting the shell filling sequence across
+the periodic table.
+\end{theorem}
+
+The 118-element periodic kernel uses 8~property-based channels
+(atomic number, electronegativity, radius, ionization energy,
+electron affinity, melting point, boiling point, density).
+A complementary 12-channel cross-scale kernel bridges nuclear
+and atomic properties simultaneously, with 4~nuclear channels
+(BE/A, magic proximity, neutron excess, shell filling),
+2~electronic channels (ionization energy, electronegativity),
+and 6~bulk channels (density, melting/boiling points, atomic
+radius, electron affinity, covalent radius).
+
+\subsection{Boundary 4: Chemical Bonding (Act~IV $\to$ Act~V)}
+\label{sec:chemical}
+
+Atomic channels give way to molecular ones:
+\texttt{molecular\_mass}, \texttt{n\_atoms},
+\texttt{bond\_order\_mean}, \texttt{polarity},
+\texttt{symmetry\_order}.
+
+\begin{theorem}[T-PM-5: Molecular Emergence]
+\label{thm:molecular}
+Bond channels restore $\IC$ above the atomic mean for
+polar molecules; symmetric nonpolar molecules show
+suppressed $\IC$ due to the zero-polarity channel.
+\end{theorem}
+
+\begin{theorem}[T-MG-7: Covalent Bond Coherence]
+\label{thm:covalent}
+Covalent bonding restores coherence by introducing bond
+order and polarity as new high-value channels.
+\end{theorem}
+
+\subsection{Boundary 5: Bulk Aggregation (Act~V $\to$ Act~VI)}
+\label{sec:bulk}
+
+Molecular channels yield to bulk-scale thermodynamic
+properties: \texttt{Cp\_bulk}, \texttt{k\_thermal},
+\texttt{T\_boil}, \texttt{conductivity}.
+
+\begin{theorem}[T-PM-6: Bulk Averaging]
+\label{thm:bulk}
+$\IC/F$ converges toward block-averaged values in bulk
+materials: metals cluster with higher $\IC$ than insulators
+or organic polymers.
+\end{theorem}
+
+\begin{theorem}[T-MG-9: Material Property Ladder]
+\label{thm:ladder}
+Bulk material properties inherit kernel structure from
+their constituent atomic and molecular channels: metals
+(high density, high conductivity) form a coherent kernel
+cluster, while insulators scatter.
+\end{theorem}
+
+% ============================================================
+\section{The IC Trajectory}\label{sec:trajectory}
+% ============================================================
+
+The full $\IC$~trajectory across the six scales is:
+
+\beq\label{eq:trajectory}
+  0.270 \xrightarrow{\div 99\%} 0.004
+  \xrightarrow{\times 128} 0.480
+  \xrightarrow{} 0.292
+  \xrightarrow{} 0.132
+  \xrightarrow{} 0.123\,.
+\eeq
+
+\begin{theorem}[T-PM-7: Scale Non-Monotonicity]
+\label{thm:nonmono}
+The $\IC$ trajectory across the six physical scales is
+non-monotonic: it crashes at confinement, recovers at
+nuclear binding, and converges downward through atomic,
+molecular, and bulk scales.
+\end{theorem}
+
+This non-monotonicity is not an artifact of encoding.
+It reflects genuine physics: confinement destroys color as a
+degree of freedom, creating a dead channel; nuclear binding
+introduces new collective degrees of freedom (BE/A, magic
+numbers) that restore coherence; and increasing complexity at
+larger scales introduces channel heterogeneity that gradually
+reduces $\IC/F$.
+
+% ============================================================
+\section{Mass Origins}\label{sec:mass}
+% ============================================================
+
+The matter genesis analysis reveals two distinct mechanisms
+for mass generation:
+
+\begin{theorem}[T-MG-1: Higgs Mass Generation]
+\label{thm:higgs}
+The Higgs mechanism generates \emph{intrinsic} mass for
+fundamental particles through Yukawa coupling, accounting
+for $< 1\%$ of visible-matter mass.
+\end{theorem}
+
+\begin{theorem}[T-MG-3: Binding Mass Deficit]
+\label{thm:binding}
+QCD binding energy generates $\sim 99\%$ of proton mass
+(938~MeV from $\sim$10~MeV quark masses), visible in the
+kernel as the gap between constituent and current quark
+mass channels.
+\end{theorem}
+
+\begin{theorem}[T-MG-8: Mass Hierarchy Bridge]
+\label{thm:hierarchy}
+The mass hierarchy spans 13~orders of magnitude (neutrinos
+at sub-eV to top quark at 173~GeV), compressed by the kernel
+into the bounded interval $F \in [0.37, 0.73]$.  The mapping
+preserves order (Spearman $\rho = 0.77$ for quarks).
+\end{theorem}
+
+The mass budget of visible matter is dominated by QCD:
+the proton derives 99.04\% of its mass from binding energy,
+not from Higgs-generated quark masses.  The human body is
+$\sim$99\% QCD binding by mass.
+
+% ============================================================
+\section{Quark-Gluon Plasma at RHIC}\label{sec:qgp}
+% ============================================================
+
+The QGP/RHIC closure applies the kernel to 27~entities across
+three measurement categories: 8~Beam Energy Scan (BES) points
+from $\sqrt{s_{NN}} = 7.7$ to 200~GeV, 9~centrality bins from
+0--5\% to 70--80\%, and 8~temporal evolution stages from
+pre-collision to kinetic freeze-out.
+
+\subsection{Centrality structure}
+
+\begin{theorem}[T-QGP-1: Perfect Liquid]
+\label{thm:liquid}
+$\IC$ peaks at mid-centrality (10--20\%), not at maximum
+density (0--5\%).  The most central collisions suppress
+elliptic flow ($v_2 \approx 0$), killing a channel that
+mid-central collisions preserve.
+\end{theorem}
+
+This is a direct instance of geometric slaughter applied
+to heavy-ion geometry: the most dense collisions are \emph{not}
+the most coherent.
+
+\begin{theorem}[T-QGP-2: Centrality Ordering]
+\label{thm:centorder}
+$F$ broadly increases with $N_{\text{part}}$ (participating
+nucleons), tracking total energy density.
+\end{theorem}
+
+\subsection{Evolution timeline}
+
+The temporal evolution of $\IC$ through the QGP lifecycle
+reveals the reconfinement transition:
+
+\begin{theorem}[T-QGP-8: Reconfinement Cliff]
+\label{thm:reconf}
+The QGP$\to$hadron crossover at $T_c \approx 155$~MeV
+produces the largest boundary $\IC$~drop in the QGP
+evolution timeline: deconfinement drops from $\sim$1.0
+to $\sim$0.3 at the crossover.
+\end{theorem}
+
+\begin{theorem}[T-QGP-5: Reconfinement Gap Jump]
+\label{thm:gapjump}
+The QGP$\to$hadron transition has the largest heterogeneity
+gap~$\Delta$ jump of all evolution stages.
+\end{theorem}
+
+The evolution stages form a characteristic $\IC$~arc:
+pre-collision ($\IC \approx 0$) $\to$ glasma (0.05) $\to$
+QGP plateau (0.53) $\to$ crossover at $T_c$ (0.46) $\to$
+hadron gas (0.05) $\to$ freeze-out (0.004).  The QGP plateau
+is a high-coherence state; reconfinement destroys it through
+the same geometric-slaughter mechanism seen in the static
+matter ladder.
+
+\subsection{Beam energy scan}
+
+\begin{theorem}[T-QGP-3: BES Energy Ordering]
+\label{thm:bes}
+$F$ increases with $\sqrt{s_{NN}}$ across the Beam Energy
+Scan, tracking increasing energy density and particle
+production.
+\end{theorem}
+
+\begin{theorem}[T-QGP-4: Strangeness Equilibration]
+\label{thm:strange}
+The strangeness equilibration factor $\gamma_s$ correlates
+with $\IC$ across BES energies: higher $\sqrt{s_{NN}}$
+produces more complete strangeness equilibration and higher
+kernel coherence.
+\end{theorem}
+
+% ============================================================
+\section{Nuclear Binding Curve}\label{sec:binding}
+% ============================================================
+
+\begin{theorem}[T-MG-4: Proton-Neutron Duality]
+\label{thm:pndual}
+Proton and neutron have nearly identical $F$ (differing
+by charge channel only) but their $\IC$ ratio reveals
+charge-dependent heterogeneity.
+\end{theorem}
+
+The nuclear binding energy per nucleon (BE/A) from the
+Bethe-Weizs\"acker semi-empirical mass formula
+(SEMF)~\cite{weizsacker1935,bethe1936} peaks at the
+iron-group elements ($Z \in [23, 30]$).  The kernel
+maps this into an anti-correlation between BE/A and the
+heterogeneity gap~$\Delta$: elements near the BE/A peak
+have the smallest gaps (highest multiplicative coherence),
+while light and superheavy nuclei show elevated~$\Delta$.
+
+Magic numbers ($Z$ or $N = 2, 8, 20, 28, 50, 82, 126$)
+appear as kernel-visible fixed points: nuclides near magic
+numbers show elevated $\IC/F$ relative to their mass-number
+neighbors, reflecting the enhanced stability of closed nuclear
+shells.
+
+% ============================================================
+\section{Universal Geometric Slaughter}\label{sec:universal}
+% ============================================================
+
+The central finding is that geometric slaughter---one dead
+channel killing $\IC$ while $F$ survives---operates identically
+at every scale.  The mechanism is the same whether the dead
+channel is:
+
+\begin{itemize}
+  \item \textbf{color} (confinement: quarks $\to$ hadrons),
+  \item \textbf{charge} (neutral particles: $\IC/F$ suppressed
+    50$\times$ relative to charged~\cite{pdg2024}),
+  \item \textbf{magic proximity} (nuclear: non-magic nuclides
+    show 39\% contribution to $\IC$ degradation from this
+    channel),
+  \item \textbf{polarity} (molecular: symmetric nonpolar
+    molecules show suppressed $\IC$),
+  \item \textbf{visibility} (quantum: which-path information
+    kills interference-channel coherence in double-slit
+    experiments),
+  \item \textbf{near-field coupling} (nanoscale: tip-enhanced
+    Raman spectroscopy channels collapse with distance).
+\end{itemize}
+
+This universality is not imposed---it follows from the
+structure of the geometric mean under the integrity bound
+$\IC \leq F$.  The bound is the solvability condition for
+recovering individual channel values: $c_{1,2} = F \pm
+\sqrt{F^2 - \IC^2}$ requires $\IC \leq F$ for real
+solutions.  Channel death ($c_j \to \eps$) pushes $\IC$
+toward $\eps$ regardless of scale.
+
+\begin{theorem}[T-PM-8: Tier-1 Universal]
+\label{thm:tier1}
+The three Tier-1 identities $F + \omega = 1$, $\IC \leq F$,
+and $\IC = e^{\kappa}$ hold with zero violations across all
+146~entities at all six scales.
+\end{theorem}
+
+\begin{theorem}[T-MG-10: Universal Tier-1]
+\label{thm:mg-tier1}
+The Tier-1 identities hold across all 99~entities in the
+matter genesis narrative, spanning 7~acts and 5~phase
+boundaries.
+\end{theorem}
+
+\begin{theorem}[T-QGP-10: Universal Tier-1]
+\label{thm:qgp-tier1}
+The Tier-1 identities hold across all 27~QGP/RHIC entities.
+\end{theorem}
+
+% ============================================================
+\section{Remaining Theorems}\label{sec:remaining}
+% ============================================================
+
+For completeness, we state the remaining theorems from
+the three families.
+
+\begin{theorem}[T-MG-6: Electron Config Order]
+\label{thm:econfig}
+The electron configuration (Aufbau) filling order is
+reflected in the kernel: elements with anomalous configurations
+(e.g.,~Cr, Cu) show $\IC$ deviations from their period
+neighbors.
+\end{theorem}
+
+\begin{theorem}[T-QGP-6: Flow-Opacity Structure]
+\label{thm:flow}
+Elliptic flow $v_2$ and nuclear modification factor $R_{AA}$
+show distinct centrality patterns in the kernel: $v_2$ peaks
+at mid-centrality while $R_{AA}$ increases monotonically
+toward peripheral collisions.
+\end{theorem}
+
+\begin{theorem}[T-QGP-7: Chemical Freeze-out Curve]
+\label{thm:freezeout}
+Chemical freeze-out temperature $T_{\text{ch}}$ and baryon
+chemical potential $\mu_B$ anti-correlate across BES
+energies, tracing the QCD phase boundary.
+\end{theorem}
+
+\begin{theorem}[T-QGP-9: Reference Discrimination]
+\label{thm:refdiscrim}
+The $p{+}p$ baseline differs from Au$+$Au in $\IC$,
+providing a kernel-level discrimination between
+cold-nuclear-matter and QGP effects.
+\end{theorem}
+
+% ============================================================
+\section{Verification}\label{sec:verification}
+% ============================================================
+
+All results are verified by automated tests in the
+UMCP reference implementation~\cite{umcpmetadatarepo}:
+
+\begin{table}[h]
+\caption{\label{tab:tests}Test coverage across the three
+theorem families and supporting closures.}
+\begin{ruledtabular}
+\begin{tabular}{lrc}
+Test file & Tests & Failures \\
+\hline
+\texttt{test\_148\_standard\_model} & 108 & 0 \\
+\texttt{test\_248\_matter\_genesis} & 163 & 0 \\
+\texttt{test\_246\_particle\_matter\_map} & 102 & 0 \\
+\texttt{test\_250\_qgp\_rhic} & 266 & 0 \\
+\texttt{test\_135\_nuclear\_closures} & 76 & 0 \\
+\texttt{test\_190\_atomic\_closures} & 190 & 0 \\
+\texttt{test\_195\_scale\_ladder} & ... & 0 \\
+\texttt{test\_238\_kernel\_structural} & 47 & 0 \\
+19 test files (total) & 2{,}898 & 0 \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The Tier-1 proof script exhaustively verifies
+$F + \omega = 1$, $\IC \leq F$, and $\IC = e^{\kappa}$
+across 10{,}162~directed tests spanning all 18~domains.
+
+The 44~structural identities of the kernel (series E, B, D, N)
+are verified to $< 10^{-16}$ by five diagnostic scripts.
+The seam composition monoid is verified to associativity error
+$5.55 \times 10^{-17}$.
+
+% ============================================================
+\section{Discussion}\label{sec:discussion}
+% ============================================================
+
+The cross-scale $\IC$~trajectory tells a precise story about
+matter.  Quarks have moderate coherence ($\IC \sim 0.27$)
+because their quantum numbers span a heterogeneous range.
+Confinement destroys color as a degree of freedom, creating
+a dead channel that kills $\IC$ via geometric slaughter.
+Nuclear binding introduces collective degrees of freedom
+(binding energy, magic numbers) that restore coherence---this
+is the scale inversion phenomenon identified in the orientation
+script~\cite{paulus2025umcp}.  Atoms inherit nuclear stability
+while adding electronic structure, molecules introduce bonding
+channels, and bulk materials average over macroscopic properties.
+
+The mechanism is always the same: when a channel dies, $\IC$
+collapses; when new channels emerge with high values, $\IC$
+recovers.  The heterogeneity gap $\Delta = F - \IC$ is the
+universal diagnostic: it measures how spread the channel
+values are, and phase boundaries are precisely where $\Delta$
+changes most rapidly.
+
+The QGP results add a dynamic dimension: the static matter
+ladder (quarks $\to$ bulk) is traversed \emph{in reverse}
+during heavy-ion collisions.  The QGP phase represents a
+high-coherence state where deconfined quarks and gluons
+interact as a nearly perfect liquid.  Reconfinement at
+$T_c \approx 155$~MeV produces the same geometric slaughter
+seen in the static ladder, confirming that the mechanism
+is robust under both equilibrium and dynamical conditions.
+
+The non-monotonicity of $\IC$ across scales is a key
+structural finding.  It means that complexity does not
+monotonically degrade coherence.  Instead, each level of
+physical organization introduces new channels that can
+partially or fully compensate for the channels lost at the
+previous boundary.  The kernel measures this compensation
+quantitatively through $\IC/F$.
+
+% ============================================================
+\section{Conclusions}\label{sec:conclusions}
+% ============================================================
+
+We have traced the GCD kernel across six physical scales,
+identifying five phase boundaries where channels die and
+emerge.  The central result is the non-monotonic $\IC$
+trajectory (Eq.~\ref{eq:trajectory}), punctuated by
+geometric slaughter at each boundary.  Twenty-eight theorems
+across three families (matter genesis, particle--matter map,
+QGP/RHIC) formalize these observations.  All 146~entities
+pass all three Tier-1 identities with zero violations
+(2{,}898~automated tests, 0~failures).
+
+The mechanism is universal: one near-zero channel kills
+multiplicative coherence while preserving arithmetic fidelity.
+This operates identically from sub-eV neutrinos to
+170~GeV top quarks.  Confinement, nuclear binding, electronic
+shell structure, chemical bonding, and bulk aggregation each
+produce characteristic kernel signatures that are measurable,
+reproducible, and domain-independent.
+
+\begin{acknowledgments}
+The formal specification, frozen contract, and validator suite
+are maintained in the UMCP reference
+implementation~\cite{umcpmetadatarepo} and described
+in~\cite{paulus2025umcp,paulus2025episteme}.
+\end{acknowledgments}
+
+\bibliography{Bibliography}
+
+\end{document}

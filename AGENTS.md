@@ -84,7 +84,7 @@ python scripts/pre_commit_protocol.py    # Full validation, must exit 0
 | Epistemic weld | `src/umcp/epistemic_weld.py` |
 | Closures (18 domains) | `closures/` |
 | Contracts | `contracts/*.yaml` |
-| Tests (7,442) | `tests/` |
+| Tests (7,875) | `tests/` |
 | Orientation script | `scripts/orientation.py` |
 | Orientation checkpoint | `scripts/orientation_checkpoint.py` |
 | Deep diagnostic | `scripts/deep_diagnostic.py` |
