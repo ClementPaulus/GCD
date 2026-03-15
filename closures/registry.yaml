@@ -960,3 +960,33 @@ registry:
           - "closures/evolution/brain_kernel.py"
           - "closures/dynamic_semiotics/semiotic_kernel.py"
           - "src/umcp/kernel_optimized.py"
+
+    clinical_neuroscience:
+      - name: "neurocognitive_kernel"
+        path: "closures/clinical_neuroscience/neurocognitive_kernel.py"
+        description: "Clinical neuroscience kernel: 35 neurocognitive states × 10 channels → Tier-1 invariants. Maps healthy brains, altered states, disorders of consciousness, neurodegenerative diseases, psychiatric conditions, developmental stages, and TBI through the GCD kernel. 10 theorems (T-CN-1 through T-CN-10) grounded in peer-reviewed clinical literature."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["neurocognitive_state_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "heterogeneity_gap", "regime", "category", "subgroup_means"]
+        channels:
+          - "cortical_complexity"
+          - "default_mode_integrity"
+          - "global_integration"
+          - "oscillatory_hierarchy"
+          - "neuroplasticity_capacity"
+          - "structural_connectivity"
+          - "neurotransmitter_tone"
+          - "metabolic_efficiency"
+          - "autonomic_regulation"
+          - "neuroimmune_status"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 10
+          n_states: 35
+          n_categories: 7
+          n_theorems: 10
+        cross_references:
+          - "closures/consciousness_coherence/coherence_kernel.py"
+          - "closures/awareness_cognition/awareness_kernel.py"
+          - "closures/evolution/brain_kernel.py"
+          - "src/umcp/kernel_optimized.py"
