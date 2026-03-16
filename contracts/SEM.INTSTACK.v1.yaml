@@ -1,0 +1,138 @@
+schema: schemas/contract.schema.json
+contract:
+  id: SEM.INTSTACK.v1
+  version: 1.0.0
+  timezone: UTC
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
+  embedding:
+    interval: [0.0, 1.0]
+    face: pre_clip
+    oor_policy: clip_and_flag
+    epsilon: 1.0e-08
+  tier_1_kernel:
+    reserved_symbols:
+      # === GCD Tier-1 invariants (inherited, frozen) ===
+      - omega
+      - F
+      - S
+      - C
+      - tau_R
+      - kappa
+      - IC
+      - IC_min
+      # === Dynamic Semiotics channel observables (8 channels) ===
+      - sign_repertoire          # Vocabulary size / symbol space richness
+      - interpretant_depth       # Recursion depth of interpretation chains
+      - ground_stability         # Convention persistence (contract frozenness)
+      - translation_fidelity     # Cross-lens Rosetta preservation (F across lenses)
+      - semiotic_density         # Signs per unit of discourse
+      - indexical_coupling       # Connection strength between sign and object
+      - iconic_persistence       # How well the sign resembles its object over time
+      - symbolic_recursion       # Self-referential capacity (language about language)
+    weights_policy: nonnegative_sum_to_one
+    frozen_parameters:
+      # === GCD inherited (frozen) ===
+      p: 3
+      alpha: 1.0
+      lambda: 0.2
+      eta: 0.001
+      alpha_energy: 1.0
+      beta_energy: 0.5
+      tau_0: 10.0
+      C_crit: 0.2
+      # === Dynamic Semiotics domain parameters ===
+      n_semiotic_channels: 8
+    tolerances:
+      tol_seam: 0.005
+      tol_id: 1.0e-09
+      tol_semiotic: 0.05             # 5% tolerance for semiotic estimates
+  axioms:
+    # === GCD Tier-1 inherited ===
+    - id: AX-0
+      statement: Collapse is generative
+      description: |
+        Inherited from GCD Tier-1 (frozen). In semiotics, semiosis IS
+        collapse-return: a sign collapses the space of possible meanings
+        into a specific interpretant, which itself becomes a sign for
+        further interpretation. The chain is generative.
+    - id: AX-1
+      statement: Boundary defines interior
+      description: |
+        Inherited from GCD Tier-1 (frozen). The sign system's ground
+        (Peirce's Representamen boundary) defines what can be signified
+        in the interior. Different grounds (iconic, indexical, symbolic)
+        produce different interior meaning structures.
+    - id: AX-2
+      statement: Entropy measures determinacy
+      description: |
+        Inherited from GCD Tier-1 (frozen). Bernoulli field entropy of the
+        8-channel semiotic trace measures how determined the sign system's
+        meaning profile is. Formal logic = low S; poetry = high S.
+    # === Dynamic Semiotics domain axioms ===
+    - id: AX-DS0
+      statement: Peirce's triad maps to GCD kernel
+      description: |
+        Representamen → sign_repertoire + semiotic_density (what the sign
+        is); Object → indexical_coupling + iconic_persistence (what it
+        points to); Interpretant → interpretant_depth + symbolic_recursion
+        (what it means). Ground_stability and translation_fidelity are
+        cross-cutting coherence channels.
+    - id: AX-DS1
+      statement: Rosetta translation is semiotic collapse-return
+      description: |
+        Cross-domain translation through the Rosetta (6 lenses) is a
+        semiotic collapse-return cycle: meaning collapses from one
+        lens's dialect, passes through the five-word Canon, and returns
+        in another lens's dialect. Translation_fidelity measures the
+        F of this transit.
+  regime_classification:
+    energy:
+      low:
+        threshold: 0.01
+        condition: "E < 0.01"
+      medium:
+        threshold: 0.05
+        condition: "0.01 ≤ E < 0.05"
+      high:
+        threshold: null
+        condition: "E ≥ 0.05"
+    collapse:
+      minimal:
+        threshold: 0.01
+        condition: "Φ_collapse < 0.01"
+      active:
+        threshold: 0.1
+        condition: "0.01 ≤ Φ_collapse < 0.1"
+      critical:
+        threshold: null
+        condition: "Φ_collapse ≥ 0.1"
+    sign_type:
+      symbolic:
+        threshold: null
+        condition: "symbolic_recursion > 0.70"
+      indexical:
+        threshold: null
+        condition: "indexical_coupling > 0.70 AND symbolic_recursion ≤ 0.70"
+      iconic:
+        threshold: null
+        condition: "iconic_persistence > 0.70 AND indexical_coupling ≤ 0.70"
+  mathematical_identities:
+    - name: Fidelity-drift duality
+      formula: "F = 1 - ω"
+      tolerance: 1.0e-09
+    - name: Integrity-collapse relation
+      formula: "IC ≈ exp(κ)"
+      tolerance: 1.0e-06
+    - name: Integrity bound
+      formula: "IC ≤ F"
+      tolerance: 1.0e-09
+  typed_censoring:
+    tau_R_special_values:
+      - INF_REC
+      - UNIDENTIFIABLE
+    run_status_enum:
+      - CONFORMANT
+      - NONCONFORMANT
+      - NON_EVALUABLE
+    no_return_no_credit: true

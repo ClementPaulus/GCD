@@ -1,0 +1,177 @@
+schema: schemas/contract.schema.json
+contract:
+  id: CLIN.INTSTACK.v1
+  version: 1.0.0
+  timezone: UTC
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
+  embedding:
+    interval: [0.0, 1.0]
+    face: pre_clip
+    oor_policy: clip_and_flag
+    epsilon: 1.0e-08
+  tier_1_kernel:
+    reserved_symbols:
+      # === GCD Tier-1 invariants (inherited, frozen) ===
+      - omega
+      - F
+      - S
+      - C
+      - tau_R
+      - kappa
+      - IC
+      - IC_min
+      # === Clinical Neuroscience channel observables (10 channels) ===
+      # Cortical channels (0-3)
+      - cortical_complexity      # PCI / EEG complexity (Casarotto 2016)
+      - default_mode_integrity   # DMN functional connectivity (Raichle 2015)
+      - global_integration       # Long-range neural workspace (Dehaene & Changeux 2011)
+      - oscillatory_hierarchy    # Cross-frequency coupling (Canolty & Knight 2010)
+      # Structural channels (4-5)
+      - neuroplasticity_capacity # Synaptic plasticity / LTP (Pascual-Leone 2005)
+      - structural_connectivity  # DTI fractional anisotropy (Basser & Pierpaoli 1996)
+      # Metabolic channels (6-7)
+      - neurotransmitter_tone    # Monoaminergic/glutamatergic balance (Nutt 2015)
+      - metabolic_efficiency     # CMRglu / CBF (Raichle & Mintun 2006)
+      # Systemic channels (8-9)
+      - autonomic_regulation     # HRV / vagal tone (Thayer & Lane 2009)
+      - neuroimmune_status       # Neuroinflammation level, INVERTED (Dantzer 2008)
+    weights_policy: nonnegative_sum_to_one
+    frozen_parameters:
+      # === GCD inherited (frozen) ===
+      p: 3
+      alpha: 1.0
+      lambda: 0.2
+      eta: 0.001
+      alpha_energy: 1.0
+      beta_energy: 0.5
+      tau_0: 10.0
+      C_crit: 0.2
+      # === Clinical Neuroscience domain parameters ===
+      n_channels: 10
+      n_cortical: 4
+      n_structural: 2
+      n_metabolic: 2
+      n_systemic: 2
+    tolerances:
+      tol_seam: 0.005
+      tol_id: 1.0e-09
+      tol_clinical: 0.05             # 5% tolerance for clinical estimates
+      tol_pci: 0.05                  # 5% for PCI consciousness threshold
+  axioms:
+    # === GCD Tier-1 inherited ===
+    - id: AX-0
+      statement: Collapse is generative
+      description: |
+        Inherited from GCD Tier-1 (frozen). In clinical neuroscience,
+        neural collapse events (seizures, anesthesia, sleep transitions,
+        DOC) generate measurable signatures across cortical, structural,
+        metabolic, and systemic channels. Recovery from collapse is
+        measured by τ_R.
+    - id: AX-1
+      statement: Boundary defines interior
+      description: |
+        Inherited from GCD Tier-1 (frozen). The cortical boundary
+        (thalamocortical system, default mode network) defines the
+        interior of conscious processing. Disruption of the boundary
+        (e.g., in DOC) disrupts the interior.
+    - id: AX-2
+      statement: Entropy measures determinacy
+      description: |
+        Inherited from GCD Tier-1 (frozen). Bernoulli field entropy of the
+        10-channel neurocognitive trace measures how determined the brain
+        state is. Coma = low S (collapsed determinacy); psychedelic =
+        high S (maximum entropy, per Carhart-Harris entropic brain).
+    # === Clinical Neuroscience domain axioms ===
+    - id: AX-CN0
+      statement: PCI orders consciousness gradients
+      description: |
+        Perturbational Complexity Index (Casarotto 2016) correlates with
+        fidelity F across disorders of consciousness (DOC). The F ordering
+        mirrors the clinical hierarchy: Locked-in > MCS > Vegetative >
+        Coma (T-CN-9).
+    - id: AX-CN1
+      statement: DMN disruption is the dominant IC killer
+      description: |
+        The default_mode_integrity channel contributes the largest share
+        to IC collapse across DOC states. When DMN connectivity drops,
+        the geometric mean (IC) drops disproportionately even if other
+        channels remain partially intact (T-CN-2, geometric slaughter).
+    - id: AX-CN2
+      statement: Anesthesia is reversible collapse
+      description: |
+        General anesthesia drives the system to Collapse regime (ω ≥ 0.30)
+        through simultaneous reduction in cortical_complexity, global_
+        integration, and oscillatory_hierarchy. Recovery on emergence
+        demonstrates finite τ_R (T-CN-4).
+  regime_classification:
+    energy:
+      low:
+        threshold: 0.01
+        condition: "E < 0.01"
+      medium:
+        threshold: 0.05
+        condition: "0.01 ≤ E < 0.05"
+      high:
+        threshold: null
+        condition: "E ≥ 0.05"
+    collapse:
+      minimal:
+        threshold: 0.01
+        condition: "Φ_collapse < 0.01"
+      active:
+        threshold: 0.1
+        condition: "0.01 ≤ Φ_collapse < 0.1"
+      critical:
+        threshold: null
+        condition: "Φ_collapse ≥ 0.1"
+    consciousness:
+      aware:
+        threshold: 0.70
+        condition: "F > 0.70 AND cortical_complexity > 0.60"
+      minimally_conscious:
+        threshold: 0.40
+        condition: "0.40 < F ≤ 0.70"
+      unresponsive:
+        threshold: null
+        condition: "F ≤ 0.40"
+  mathematical_identities:
+    - name: Fidelity-drift duality
+      formula: "F = 1 - ω"
+      tolerance: 1.0e-09
+    - name: Integrity-collapse relation
+      formula: "IC ≈ exp(κ)"
+      tolerance: 1.0e-06
+    - name: Integrity bound
+      formula: "IC ≤ F"
+      tolerance: 1.0e-09
+  typed_censoring:
+    tau_R_special_values:
+      - INF_REC
+      - UNIDENTIFIABLE
+    run_status_enum:
+      - CONFORMANT
+      - NONCONFORMANT
+      - NON_EVALUABLE
+    no_return_no_credit: true
+  theorems:
+    - id: T-CN-1
+      name: Consciousness Gradient (PCI orders F across DOC)
+    - id: T-CN-2
+      name: DMN Collapse Signature
+    - id: T-CN-3
+      name: Entropic Brain Prediction (psychedelic = max S)
+    - id: T-CN-4
+      name: Anesthesia as Collapse
+    - id: T-CN-5
+      name: Formal Tier-1 Compliance (35 states)
+    - id: T-CN-6
+      name: Sleep-Wake Regime Cycle
+    - id: T-CN-7
+      name: Healthy Category Supremacy
+    - id: T-CN-8
+      name: Psychiatric Channel Dispersion
+    - id: T-CN-9
+      name: DOC Hierarchy (Locked-in > MCS > Vegetative > Coma)
+    - id: T-CN-10
+      name: Developmental Plasticity

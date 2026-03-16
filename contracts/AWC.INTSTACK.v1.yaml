@@ -1,0 +1,176 @@
+schema: schemas/contract.schema.json
+contract:
+  id: AWC.INTSTACK.v1
+  version: 1.0.0
+  timezone: UTC
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
+  embedding:
+    interval: [0.0, 1.0]
+    face: pre_clip
+    oor_policy: clip_and_flag
+    epsilon: 1.0e-08
+  tier_1_kernel:
+    reserved_symbols:
+      # === GCD Tier-1 invariants (inherited, frozen) ===
+      - omega
+      - F
+      - S
+      - C
+      - tau_R
+      - kappa
+      - IC
+      - IC_min
+      # === Awareness-Cognition channel observables ===
+      # Awareness subspace (channels 0-4)
+      - mirror_recognition       # Self-recognition in mirror test (Gallup 1970)
+      - metacognitive_accuracy   # Confidence calibration / uncertainty monitoring
+      - planning_horizon         # Temporal depth of future-directed behavior
+      - symbolic_depth           # Recursive symbolic / linguistic capacity
+      - social_cognition         # Theory of mind, empathic coordination
+      # Aptitude subspace (channels 5-9)
+      - sensory_acuity           # Peak sensory discrimination (species-optimal)
+      - motor_precision          # Fine motor control relative to body plan
+      - environmental_tolerance  # Range of survivable conditions
+      - reproductive_output      # Reproductive rate (fecundity × viability)
+      - somatic_resilience       # Physical recovery, longevity, stress response
+      # === Derived subspace quantities ===
+      - Aw                       # Awareness mean: mean(channels 0-4)
+      - Ap                       # Aptitude mean: mean(channels 5-9)
+    weights_policy: nonnegative_sum_to_one
+    frozen_parameters:
+      # === GCD inherited (frozen) ===
+      p: 3
+      alpha: 1.0
+      lambda: 0.2
+      eta: 0.001
+      alpha_energy: 1.0
+      beta_energy: 0.5
+      tau_0: 10.0
+      C_crit: 0.2
+      # === Awareness-Cognition domain parameters ===
+      n_channels: 10
+      n_awareness: 5
+      n_aptitude: 5
+    tolerances:
+      tol_seam: 0.005
+      tol_id: 1.0e-09
+      tol_awareness: 0.05            # 5% tolerance for awareness channel estimates
+      tol_aptitude: 0.05             # 5% for aptitude channel estimates
+  axioms:
+    # === GCD Tier-1 inherited ===
+    - id: AX-0
+      statement: Collapse is generative
+      description: |
+        Inherited from GCD Tier-1 (frozen). In awareness-cognition, cognitive
+        collapse (selective attention, perceptual binding, decision-making)
+        is generative: it produces from undifferentiated sensory input a
+        specific, actionable representation.
+    - id: AX-1
+      statement: Boundary defines interior
+      description: |
+        Inherited from GCD Tier-1 (frozen). The organism's sensory-motor
+        boundary defines its cognitive interior. Species with different
+        sensory boundaries (echolocation, electroreception) produce
+        different interior representations from the same environment.
+    - id: AX-2
+      statement: Entropy measures determinacy
+      description: |
+        Inherited from GCD Tier-1 (frozen). Bernoulli field entropy of the
+        10-channel trace measures how determined the organism's cognitive-
+        aptitude profile is. Low S = specialist; high S = generalist.
+    # === Awareness-Cognition domain axioms ===
+    - id: AX-AW0
+      statement: Awareness and aptitude are orthogonal subspaces
+      description: |
+        The 10-channel trace decomposes into two 5-channel subspaces:
+        Awareness (self-model, metacognition, planning, symbols, social)
+        and Aptitude (senses, motor, environment, reproduction, resilience).
+        F = (Aw + Ap) / 2; IC = sqrt(Aw * Ap).
+    - id: AX-AW1
+      statement: Awareness-aptitude inversion is generic
+      description: |
+        Organisms with high awareness (primates) tend to have lower
+        aptitude on ecological channels (environmental_tolerance,
+        reproductive_output). This inversion drives the heterogeneity
+        gap: Δ = F − IC = (Aw + Ap)/2 − sqrt(Aw · Ap).
+  regime_classification:
+    energy:
+      low:
+        threshold: 0.01
+        condition: "E < 0.01"
+      medium:
+        threshold: 0.05
+        condition: "0.01 ≤ E < 0.05"
+      high:
+        threshold: null
+        condition: "E ≥ 0.05"
+    collapse:
+      minimal:
+        threshold: 0.01
+        condition: "Φ_collapse < 0.01"
+      active:
+        threshold: 0.1
+        condition: "0.01 ≤ Φ_collapse < 0.1"
+      critical:
+        threshold: null
+        condition: "Φ_collapse ≥ 0.1"
+    cognitive_profile:
+      awareness_dominant:
+        threshold: null
+        condition: "Aw > Ap"
+      aptitude_dominant:
+        threshold: null
+        condition: "Ap > Aw"
+      balanced:
+        threshold: 0.05
+        condition: "|Aw − Ap| < 0.05"
+  mathematical_identities:
+    - name: Fidelity-drift duality
+      formula: "F = 1 - ω"
+      tolerance: 1.0e-09
+    - name: Integrity-collapse relation
+      formula: "IC ≈ exp(κ)"
+      tolerance: 1.0e-06
+    - name: Integrity bound
+      formula: "IC ≤ F"
+      tolerance: 1.0e-09
+    - name: Subspace fidelity decomposition
+      formula: "F = (Aw + Ap) / 2"
+      tolerance: 1.0e-09
+    - name: Subspace integrity composition
+      formula: "IC = sqrt(Aw · Ap)"
+      tolerance: 1.0e-06
+    - name: Heterogeneity gap
+      formula: "Δ = F − IC = (Aw + Ap)/2 − sqrt(Aw · Ap)"
+      tolerance: 1.0e-06
+  typed_censoring:
+    tau_R_special_values:
+      - INF_REC
+      - UNIDENTIFIABLE
+    run_status_enum:
+      - CONFORMANT
+      - NONCONFORMANT
+      - NON_EVALUABLE
+    no_return_no_credit: true
+  theorems:
+    - id: T-AW-1
+      name: Awareness-Aptitude Inversion
+    - id: T-AW-2
+      name: Universal Instability (0/34 reach Stable)
+    - id: T-AW-3
+      name: Geometric Slaughter Bottleneck
+    - id: T-AW-4
+      name: Sensitivity Formula (dIC/dc_k = IC·w_k/c_k)
+    - id: T-AW-5
+      name: Cross-Domain Isomorphism
+    - id: T-AW-6
+      name: Cost of Awareness
+    - id: T-AW-7
+      name: Human Development Trajectory
+    - id: T-AW-8
+      name: Binding Gate Transition
+    - id: T-AW-9
+      name: Cross-Domain Bridge
+    - id: T-AW-10
+      name: Formal Bounds

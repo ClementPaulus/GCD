@@ -1,0 +1,145 @@
+schema: schemas/contract.schema.json
+contract:
+  id: EVO.INTSTACK.v1
+  version: 1.0.0
+  timezone: UTC
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
+  embedding:
+    interval: [0.0, 1.0]
+    face: pre_clip
+    oor_policy: clip_and_flag
+    epsilon: 1.0e-08
+  tier_1_kernel:
+    reserved_symbols:
+      # === GCD Tier-1 invariants (inherited, frozen) ===
+      - omega
+      - F
+      - S
+      - C
+      - tau_R
+      - kappa
+      - IC
+      - IC_min
+      # === Evolution channel observables (8 channels) ===
+      - genetic_diversity        # Normalized heterozygosity / allelic richness
+      - morphological_fitness    # Body plan complexity and adaptation score
+      - reproductive_success     # Normalized fecundity × offspring survival
+      - metabolic_efficiency     # Energy conversion optimization
+      - immune_competence        # Pathogen resistance breadth / defense systems
+      - environmental_breadth    # Niche width / habitat generalism
+      - behavioral_complexity    # Behavioral repertoire richness
+      - lineage_persistence      # Geological duration normalized to max known
+    weights_policy: nonnegative_sum_to_one
+    frozen_parameters:
+      # === GCD inherited (frozen) ===
+      p: 3
+      alpha: 1.0
+      lambda: 0.2
+      eta: 0.001
+      alpha_energy: 1.0
+      beta_energy: 0.5
+      tau_0: 10.0
+      C_crit: 0.2
+      # === Evolution domain parameters ===
+      n_channels: 8
+    tolerances:
+      tol_seam: 0.005
+      tol_id: 1.0e-09
+      tol_evolution: 0.05            # 5% tolerance for evolutionary estimates
+  axioms:
+    # === GCD Tier-1 inherited ===
+    - id: AX-0
+      statement: Collapse is generative
+      description: |
+        Inherited from GCD Tier-1 (frozen). In evolution, natural selection
+        IS the collapse operator: it collapses genetic variation into
+        differential survival, generating adapted phenotypes. Every
+        extinction IS a generative collapse — it opens niche space for
+        adaptive radiation.
+    - id: AX-1
+      statement: Boundary defines interior
+      description: |
+        Inherited from GCD Tier-1 (frozen). The organism's environmental
+        boundary (habitat, ecological niche, climate envelope) defines its
+        selective interior. Different boundaries select for different
+        trait combinations.
+    - id: AX-2
+      statement: Entropy measures determinacy
+      description: |
+        Inherited from GCD Tier-1 (frozen). Bernoulli field entropy of the
+        8-channel evolution trace measures how determined the organism's
+        fitness profile is. Specialists (extreme on 1-2 channels) have
+        low S; generalists have high S.
+    # === Evolution domain axioms ===
+    - id: AX-EV0
+      statement: Natural selection is the collapse operator
+      description: |
+        Selection collapses allelic variation into frequency changes.
+        Fitness = fidelity (F): what survives selection. Mutation =
+        drift (ω): what departs from the selected state. The duality
+        identity F + ω = 1 encodes the evolutionary budget.
+    - id: AX-EV1
+      statement: Extinction is generative collapse
+      description: |
+        Mass extinctions (ω → 1 for affected lineages) generate
+        ecological vacuums that enable adaptive radiation. The
+        post-extinction recovery is return (τ_R finite). Lineages
+        that never return have τ_R = ∞_rec.
+    - id: AX-EV2
+      statement: Lineage persistence measures return fidelity
+      description: |
+        The lineage_persistence channel (geological duration) is the
+        evolutionary analogue of τ_R. Cyanobacteria (~3.5 Gyr) have
+        the highest return fidelity; ephemeral species have low
+        persistence.
+  regime_classification:
+    energy:
+      low:
+        threshold: 0.01
+        condition: "E < 0.01"
+      medium:
+        threshold: 0.05
+        condition: "0.01 ≤ E < 0.05"
+      high:
+        threshold: null
+        condition: "E ≥ 0.05"
+    collapse:
+      minimal:
+        threshold: 0.01
+        condition: "Φ_collapse < 0.01"
+      active:
+        threshold: 0.1
+        condition: "0.01 ≤ Φ_collapse < 0.1"
+      critical:
+        threshold: null
+        condition: "Φ_collapse ≥ 0.1"
+    evolutionary_strategy:
+      K_selected:
+        threshold: null
+        condition: "lineage_persistence > 0.70 AND reproductive_success < 0.50"
+      r_selected:
+        threshold: null
+        condition: "reproductive_success > 0.70 AND lineage_persistence < 0.50"
+      mixed:
+        threshold: null
+        condition: "neither K nor r dominant"
+  mathematical_identities:
+    - name: Fidelity-drift duality
+      formula: "F = 1 - ω"
+      tolerance: 1.0e-09
+    - name: Integrity-collapse relation
+      formula: "IC ≈ exp(κ)"
+      tolerance: 1.0e-06
+    - name: Integrity bound
+      formula: "IC ≤ F"
+      tolerance: 1.0e-09
+  typed_censoring:
+    tau_R_special_values:
+      - INF_REC
+      - UNIDENTIFIABLE
+    run_status_enum:
+      - CONFORMANT
+      - NONCONFORMANT
+      - NON_EVALUABLE
+    no_return_no_credit: true

@@ -1,0 +1,144 @@
+schema: schemas/contract.schema.json
+contract:
+  id: CT.INTSTACK.v1
+  version: 1.0.0
+  timezone: UTC
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
+  embedding:
+    interval: [0.0, 1.0]
+    face: pre_clip
+    oor_policy: clip_and_flag
+    epsilon: 1.0e-08
+  tier_1_kernel:
+    reserved_symbols:
+      # === GCD Tier-1 invariants (inherited, frozen) ===
+      - omega
+      - F
+      - S
+      - C
+      - tau_R
+      - kappa
+      - IC
+      - IC_min
+      # === Continuity Theory observables ===
+      - continuity               # Per-perturbation continuity capacity c(t; B, V, Π, τ)
+      # === Butzbach protocol parameters ===
+      - B                        # System boundary declaration
+      - V                        # Viability set (what counts as viable)
+      - Pi                       # Standardized perturbation
+      - tau_recovery             # Recovery time window (seconds)
+    weights_policy: nonnegative_sum_to_one
+    frozen_parameters:
+      # === GCD inherited (frozen) ===
+      p: 3
+      alpha: 1.0
+      lambda: 0.2
+      eta: 0.001
+      alpha_energy: 1.0
+      beta_energy: 0.5
+      tau_0: 10.0
+      C_crit: 0.2
+      # === Continuity Theory domain parameters ===
+      n_channels: 1              # Degenerate limit: scalar continuity
+      # Butzbach-GCD correspondence:
+      # When n=1, w₁=1: κ = ln(c), IC = exp(ln(c)) = c
+      # Cascade: C(t+1) = C(t)·c(t), κ_accumulated = Σ ln c(k)
+    tolerances:
+      tol_seam: 0.005
+      tol_id: 1.0e-09
+      tol_continuity: 0.01          # 1% continuity measurement tolerance
+  axioms:
+    # === GCD Tier-1 inherited ===
+    - id: AX-0
+      statement: Collapse is generative
+      description: |
+        Inherited from GCD Tier-1 (frozen). In continuity theory,
+        perturbations ARE collapse events: they test whether the system
+        can return to the viability set V within the recovery window τ.
+        Each perturbation-recovery cycle generates information about the
+        system's continuity capacity.
+    - id: AX-1
+      statement: Boundary defines interior
+      description: |
+        Inherited from GCD Tier-1 (frozen). The Butzbach boundary B
+        defines what is "inside" the system. The viability set V defines
+        the interior states that count as functioning. Together (B, V)
+        form the protocol declaration.
+    - id: AX-2
+      statement: Entropy measures determinacy
+      description: |
+        Inherited from GCD Tier-1 (frozen). In the degenerate n=1 case,
+        Bernoulli field entropy S = −[c ln c + (1−c) ln(1−c)] is fully
+        determined by the scalar continuity c. Maximum S at c = 1/2
+        (equator); S = 0 at c = 0 or c = 1.
+    # === Continuity Theory domain axioms ===
+    - id: AX-CT0
+      statement: Butzbach continuity is the n=1 degenerate limit of GCD
+      description: |
+        When n=1 and w₁=1, the GCD kernel reduces exactly:
+        F = c, ω = 1−c, κ = ln(c), IC = exp(κ) = c, S = h(c),
+        C = 0 (no heterogeneity with one channel).
+        The Butzbach cascade C(t+1) = C(t)·c(t) corresponds to
+        κ_accumulated = Σ_k ln c(k) = ln C(t).
+    - id: AX-CT1
+      statement: Multi-channel decomposition requires GCD
+      description: |
+        Butzbach's scalar c cannot decompose WHY continuity fails.
+        GCD reveals channel-level failures through heterogeneity gap
+        Δ = F − IC (requires n ≥ 2). Continuity theory is what
+        GCD becomes when all channel structure is collapsed into
+        a single measurement.
+  regime_classification:
+    energy:
+      low:
+        threshold: 0.01
+        condition: "E < 0.01"
+      medium:
+        threshold: 0.05
+        condition: "0.01 ≤ E < 0.05"
+      high:
+        threshold: null
+        condition: "E ≥ 0.05"
+    collapse:
+      minimal:
+        threshold: 0.01
+        condition: "Φ_collapse < 0.01"
+      active:
+        threshold: 0.1
+        condition: "0.01 ≤ Φ_collapse < 0.1"
+      critical:
+        threshold: null
+        condition: "Φ_collapse ≥ 0.1"
+    continuity:
+      viable:
+        threshold: 0.70
+        condition: "c > 0.70 (system returns to V within τ)"
+      marginal:
+        threshold: 0.30
+        condition: "0.30 ≤ c ≤ 0.70"
+      failed:
+        threshold: null
+        condition: "c < 0.30 (system does not return)"
+  mathematical_identities:
+    - name: Fidelity-drift duality
+      formula: "F = 1 - ω"
+      tolerance: 1.0e-09
+    - name: Integrity-collapse relation
+      formula: "IC ≈ exp(κ)"
+      tolerance: 1.0e-06
+    - name: Degenerate identity (n=1)
+      formula: "IC = F = c (when n=1)"
+      tolerance: 1.0e-09
+    - name: Butzbach cascade
+      formula: "κ_accumulated = Σ ln c(k)"
+      tolerance: 1.0e-09
+  typed_censoring:
+    tau_R_special_values:
+      - INF_REC
+      - UNIDENTIFIABLE
+    run_status_enum:
+      - CONFORMANT
+      - NONCONFORMANT
+      - NON_EVALUABLE
+    no_return_no_credit: true

@@ -1,0 +1,159 @@
+schema: schemas/contract.schema.json
+contract:
+  id: EVDAY.INTSTACK.v1
+  version: 1.0.0
+  timezone: UTC
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
+  embedding:
+    interval: [0.0, 1.0]
+    face: pre_clip
+    oor_policy: clip_and_flag
+    epsilon: 1.0e-08
+  tier_1_kernel:
+    reserved_symbols:
+      # === GCD Tier-1 invariants (inherited, frozen) ===
+      - omega
+      - F
+      - S
+      - C
+      - tau_R
+      - kappa
+      - IC
+      - IC_min
+      # === Everyday Physics — Thermodynamics channels (6) ===
+      - c_p                      # Specific heat capacity (Cp / Cp_max)
+      - k_th                     # Thermal conductivity (k_th / k_max)
+      - rho                      # Density (ρ / ρ_max)
+      - T_m                      # Melting point (T_m / T_m_max)
+      - T_b                      # Boiling point (T_b / T_b_max)
+      - alpha_th                 # Thermal diffusivity (α_th / α_max)
+      # === Everyday Physics — Optics channels (6) ===
+      - n_refr                   # Refractive index (n_d / n_max)
+      - V_d                      # Abbe number / dispersion (V_d / V_max)
+      - T_vis                    # Visible transmittance [0,1]
+      - R_vis                    # Visible reflectance [0,1]
+      - E_gap                   # Optical band gap (E_gap / E_gap_max)
+      - n_g                      # Group refractive index (n_g / n_g_max)
+    weights_policy: nonnegative_sum_to_one
+    frozen_parameters:
+      # === GCD inherited (frozen) ===
+      p: 3
+      alpha: 1.0
+      lambda: 0.2
+      eta: 0.001
+      alpha_energy: 1.0
+      beta_energy: 0.5
+      tau_0: 10.0
+      C_crit: 0.2
+      # === Thermodynamics normalization maxima ===
+      Cp_max: 4.186                  # J/(g·K) — water
+      k_th_max: 401.0                # W/(m·K) — copper
+      rho_max: 19300.0               # kg/m³ — gold
+      T_m_max: 3695.0                # K — tungsten
+      T_b_max: 5828.0                # K — tungsten
+      alpha_th_max: 157.8            # m²/s — diamond
+      # === Optics normalization maxima ===
+      n_max: 2.8000                  # chalcogenide
+      V_max: 89.0                    # air
+      E_gap_max: 12.0                # eV — air
+      n_g_max: 2.9                   # chalcogenide group index
+      # === Physical constants ===
+      c_light: 299792458.0           # m/s (exact)
+      # === Sub-domain channel counts ===
+      n_thermo_channels: 6
+      n_optics_channels: 6
+    tolerances:
+      tol_seam: 0.005
+      tol_id: 1.0e-09
+      tol_thermal: 0.05              # 5% thermal property tolerance
+      tol_optical: 0.05              # 5% optical property tolerance
+  axioms:
+    # === GCD Tier-1 inherited ===
+    - id: AX-0
+      statement: Collapse is generative
+      description: |
+        Inherited from GCD Tier-1 (frozen). In everyday physics, energy
+        transformations (heating, cooling, optical absorption, wave
+        propagation) are collapse-return cycles. Thermal equilibrium
+        is a collapse attractor; phase transitions are collapse events.
+    - id: AX-1
+      statement: Boundary defines interior
+      description: |
+        Inherited from GCD Tier-1 (frozen). Material boundaries define
+        thermal and optical behavior. Surface properties (reflectance,
+        conductivity) govern how energy crosses the boundary.
+    - id: AX-2
+      statement: Entropy measures determinacy
+      description: |
+        Inherited from GCD Tier-1 (frozen). Bernoulli field entropy of the
+        channel trace measures how determined the material's thermal or
+        optical profile is. Specialized materials (diamond: extreme k_th,
+        low ρ) have low S; ordinary materials have high S.
+    # === Everyday Physics domain axioms ===
+    - id: AX-EP0
+      statement: Each sub-domain is an independent kernel
+      description: |
+        Thermodynamics (6 channels) and Optics (6 channels) operate as
+        independent Tier-2 closures sharing parent GCD contract. Each
+        computes its own kernel (F, ω, S, C, κ, IC) from its own trace.
+    - id: AX-EP1
+      statement: Normalization is max-relative
+      description: |
+        All channels are normalized by dividing by the maximum observed
+        value in the catalog (e.g., Cp_max = 4.186 for water, k_th_max =
+        401.0 for copper). This maps raw measurements to [0,1].
+  regime_classification:
+    energy:
+      low:
+        threshold: 0.01
+        condition: "E < 0.01"
+      medium:
+        threshold: 0.05
+        condition: "0.01 ≤ E < 0.05"
+      high:
+        threshold: null
+        condition: "E ≥ 0.05"
+    collapse:
+      minimal:
+        threshold: 0.01
+        condition: "Φ_collapse < 0.01"
+      active:
+        threshold: 0.1
+        condition: "0.01 ≤ Φ_collapse < 0.1"
+      critical:
+        threshold: null
+        condition: "Φ_collapse ≥ 0.1"
+    thermal_coherence:
+      high:
+        threshold: 0.10
+        condition: "ω < 0.10"
+      moderate:
+        threshold: 0.30
+        condition: "0.10 ≤ ω < 0.30"
+      low:
+        threshold: null
+        condition: "ω ≥ 0.30"
+  mathematical_identities:
+    - name: Fidelity-drift duality
+      formula: "F = 1 - ω"
+      tolerance: 1.0e-09
+    - name: Integrity-collapse relation
+      formula: "IC ≈ exp(κ)"
+      tolerance: 1.0e-06
+    - name: Integrity bound
+      formula: "IC ≤ F"
+      tolerance: 1.0e-09
+    - name: Thermal diffusivity
+      formula: "α = k / (ρ · Cp)"
+      tolerance: 0.01
+      source: "Fourier heat equation"
+  typed_censoring:
+    tau_R_special_values:
+      - INF_REC
+      - UNIDENTIFIABLE
+    run_status_enum:
+      - CONFORMANT
+      - NONCONFORMANT
+      - NON_EVALUABLE
+    no_return_no_credit: true
