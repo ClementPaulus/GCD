@@ -961,6 +961,38 @@ registry:
           - "closures/dynamic_semiotics/semiotic_kernel.py"
           - "src/umcp/kernel_optimized.py"
 
+    spacetime_memory:
+      - name: "spacetime_kernel"
+        path: "closures/spacetime_memory/spacetime_kernel.py"
+        description: "Spacetime memory kernel: 25 entities × 8 channels → Tier-1 invariants. Maps stellar objects, planetary bodies, diffuse media, composite structures, and cognitive memory wells through the GCD budget surface. 10 theorems (T-ST-1 through T-ST-10) derive gravity, time, lensing, and memory wells from Gamma(omega)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["spacetime_entity_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "delta", "regime", "well_depth", "gradient", "tidal", "lensing_morphology", "arrow_asymmetry"]
+        channels:
+          - "coherence_persistence"
+          - "cycle_return_rate"
+          - "well_depth_norm"
+          - "gradient_strength"
+          - "tidal_symmetry"
+          - "trajectory_closure"
+          - "circulation_area"
+          - "heterogeneity_profile"
+        frozen_params:
+          epsilon: 1.0e-8
+          p_exponent: 3
+          alpha: 1.0
+          n_channels: 8
+          n_entities: 25
+          n_categories: 5
+          n_theorems: 10
+        cross_references:
+          - "scripts/gravity_definition.py"
+          - "scripts/memory_wells_and_lensing.py"
+          - "scripts/time_as_vortex.py"
+          - "scripts/budget_surface_geometry.py"
+          - "scripts/unified_geometry.py"
+          - "src/umcp/kernel_optimized.py"
+
     clinical_neuroscience:
       - name: "neurocognitive_kernel"
         path: "closures/clinical_neuroscience/neurocognitive_kernel.py"

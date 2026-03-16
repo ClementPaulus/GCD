@@ -277,3 +277,10 @@ paper/*.run.xml
 paper/*.bcf
 paper/*Notes.bib
 paper/generated_demo.*
+brain_physics.txt
+gravity.txt
+lensing.txt
+neuro_theorems.txt
+time_vortex.txt
+trauma.txt
+unified_geom.txt

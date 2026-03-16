@@ -23,35 +23,47 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
 
 ## Table of Contents
 
-- [Core Concepts](#core-concepts)
-- [At a Glance](#at-a-glance)
-  - [The Spine](#the-spine--every-claim-in-five-stops)
-  - [The Three-Tier Stack](#the-three-tier-stack)
-- [Interactive Dashboard](#interactive-dashboard)
-- [Architecture](#architecture)
-- [Closure Domains (18 Domains)](#closure-domains)
-- [The Kernel](#the-kernel)
-- [Originality & Terminology](#originality--terminology)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [CLI Reference](#cli-reference)
-  - [Startup — From Clone to Running](#startup--from-clone-to-running)
-  - [C++ Accelerator — Build & Verify](#c-accelerator--build--verify)
-  - [Services — API & Dashboard](#services--api--dashboard)
-  - [Development Loop — Edit, Validate, Commit](#development-loop--edit-validate-commit)
-  - [Reset & Clean Slate](#reset--clean-slate)
-  - [Useful Utilities](#useful-utilities)
-- [Validation Pipeline](#validation-pipeline)
-- [Test Suite](#test-suite)
-- [Documentation](#documentation)
-- [Diagrams & Proofs](#diagrams--proofs)
-- [Key Discoveries](#key-discoveries)
-  - [The 44 Structural Identities](#the-44-structural-identities)
-  - [Recent Closure Syntheses](#recent-closure-syntheses)
-- [Papers & Publications](#papers--publications)
-- [Repository Structure](#repository-structure)
-- [Contributing](#contributing)
-- [License](#license)
+<!-- nav: HTML anchors used to avoid false-positive "file not found" diagnostics -->
+<ul>
+<li><a href="#core-concepts">Core Concepts</a></li>
+<li><a href="#at-a-glance">At a Glance</a>
+  <ul>
+  <li><a href="#the-spine--every-claim-in-five-stops">The Spine</a></li>
+  <li><a href="#the-three-tier-stack">The Three-Tier Stack</a></li>
+  </ul>
+</li>
+<li><a href="#interactive-dashboard">Interactive Dashboard</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a href="#closure-domains">Closure Domains (18 Domains)</a></li>
+<li><a href="#the-kernel">The Kernel</a></li>
+<li><a href="#originality--terminology">Originality &amp; Terminology</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#cli-reference">CLI Reference</a>
+  <ul>
+  <li><a href="#startup--from-clone-to-running">Startup — From Clone to Running</a></li>
+  <li><a href="#c-accelerator--build--verify">C++ Accelerator — Build &amp; Verify</a></li>
+  <li><a href="#services--api--dashboard">Services — API &amp; Dashboard</a></li>
+  <li><a href="#development-loop--edit-validate-commit">Development Loop — Edit, Validate, Commit</a></li>
+  <li><a href="#reset--clean-slate">Reset &amp; Clean Slate</a></li>
+  <li><a href="#useful-utilities">Useful Utilities</a></li>
+  </ul>
+</li>
+<li><a href="#validation-pipeline">Validation Pipeline</a></li>
+<li><a href="#test-suite">Test Suite</a></li>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#diagrams--proofs">Diagrams &amp; Proofs</a></li>
+<li><a href="#key-discoveries">Key Discoveries</a>
+  <ul>
+  <li><a href="#the-44-structural-identities">The 44 Structural Identities</a></li>
+  <li><a href="#recent-closure-syntheses">Recent Closure Syntheses</a></li>
+  </ul>
+</li>
+<li><a href="#papers--publications">Papers &amp; Publications</a></li>
+<li><a href="#repository-structure">Repository Structure</a></li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#license">License</a></li>
+</ul>
 
 ---
 
@@ -604,7 +616,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                            # All 8,064 tests
+pytest                            # All 8,193 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
@@ -621,7 +633,7 @@ umcp integrity                  # Verify SHA-256 checksums
 umcp-dashboard                             # Start interactive dashboard on :8501
 ```
 
-See the **[Interactive Dashboard](#interactive-dashboard)** section above for full details, features, and all 50 pages.
+See the <strong><a href="#interactive-dashboard">Interactive Dashboard</a></strong> section above for full details, features, and all 50 pages.
 
 ### Use the kernel in Python
 
