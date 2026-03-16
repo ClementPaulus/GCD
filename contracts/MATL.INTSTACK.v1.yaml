@@ -3,6 +3,8 @@ contract:
   id: MATL.INTSTACK.v1
   version: 1.0.0
   timezone: America/Chicago
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
   domain: Materials Science
   description: >
     Materials science integration stack derived from atomic physics observables
@@ -234,6 +236,57 @@ contract:
         cross_references:
           - closures/materials_science/cohesive_energy.py
           - closures/materials_science/band_structure.py
+
+  axioms:
+    # === GCD Tier-1 inherited ===
+    - id: AX-0
+      statement: Collapse is generative
+      description: |
+        Inherited from GCD Tier-1 (frozen). In materials science, atomic collapse
+        (electron binding, phonon coupling, phase transitions) is generative:
+        microscopic collapses produce macroscopic material properties.
+    - id: AX-1
+      statement: Boundary defines interior
+      description: |
+        Inherited from GCD Tier-1 (frozen). The atomic boundary conditions
+        (electron configuration, interatomic potential) define material
+        properties. Bulk behavior is determined by microscopic structure.
+    - id: AX-2
+      statement: Entropy measures determinacy
+      description: |
+        Inherited from GCD Tier-1 (frozen). Bernoulli field entropy of the
+        material trace measures how determined the properties are. Low S =
+        crystalline order; high S = amorphous/disordered.
+    # === Materials Science domain axiom ===
+    - id: AX-MATL0
+      statement: Material properties emerge as macroscopic return of microscopic collapse
+      description: |
+        Cohesive energy, elastic moduli, band gaps, and thermal properties
+        are the return of atomic-scale collapses through the scale ladder.
+        Each closure maps domain observables to F_eff / omega_eff invariants.
+
+  regime_classification:
+    drift:
+      stable:
+        threshold: 0.038
+        condition: "omega < 0.038"
+      watch:
+        threshold: 0.30
+        condition: "0.038 <= omega < 0.30"
+      collapse:
+        threshold: null
+        condition: "omega >= 0.30"
+
+  mathematical_identities:
+    - name: Fidelity-drift duality
+      formula: "F = 1 - omega"
+      tolerance: 1.0e-09
+    - name: Integrity bound
+      formula: "IC <= F"
+      tolerance: 1.0e-09
+    - name: Log-integrity relation
+      formula: "IC = exp(kappa)"
+      tolerance: 1.0e-06
 
   typed_censoring:
     tau_R_special_values: [INF_REC, UNIDENTIFIABLE]

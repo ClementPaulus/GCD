@@ -3,51 +3,109 @@ contract:
   id: FINANCE.INTSTACK.v1
   version: 1.0.0
   timezone: America/Chicago
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
   embedding:
-    interval:
-    - 0.0
-    - 1.0
+    interval: [0.0, 1.0]
     face: pre_clip
     oor_policy: clip_and_flag
     epsilon: 1.0e-08
   tier_1_kernel:
     reserved_symbols:
-    - "\u03C9"
-    - F
-    - S
-    - C
-    - "\u03C4_R"
-    - "\u03BA"
-    - IC
-    - omega
-    - tau_R
-    - kappa
+      # === GCD Tier-1 invariants (inherited, frozen) ===
+      - omega
+      - F
+      - S
+      - C
+      - tau_R
+      - kappa
+      - IC
+      - IC_min
+      # === Finance channel observables ===
+      - revenue_performance    # Revenue as fraction of target
+      - expense_control        # Budget-to-expense ratio
+      - gross_margin           # Gross margin ratio
+      - cashflow_health        # Operating cash flow vs target
     weights_policy: nonnegative_sum_to_one
     frozen_parameters:
+      # === GCD inherited (frozen) ===
       p: 3
       alpha: 1.0
       lambda: 0.2
       eta: 0.001
+      alpha_energy: 1.0
+      beta_energy: 0.5
+      tau_0: 10.0
+      C_crit: 0.2
+      # === Finance domain parameters ===
+      n_channels: 4
     tolerances:
       tol_seam: 0.005
       tol_id: 1.0e-09
+  axioms:
+    # === GCD Tier-1 inherited ===
+    - id: AX-0
+      statement: Collapse is generative
+      description: |
+        Inherited from GCD Tier-1 (frozen). In finance, business collapse
+        (revenue shortfall, cash crisis, margin compression) is generative:
+        it reveals structural vulnerabilities that monthly return validates.
+    - id: AX-1
+      statement: Boundary defines interior
+      description: |
+        Inherited from GCD Tier-1 (frozen). The contract boundary (targets,
+        budgets, cadence) defines the financial interior. The same revenue
+        figure is Stable or Collapse depending on the frozen targets.
+    - id: AX-2
+      statement: Entropy measures determinacy
+      description: |
+        Inherited from GCD Tier-1 (frozen). Bernoulli field entropy of the
+        4-channel trace measures financial determinacy. Low S = concentrated
+        performance; high S = dispersed uncertainty across metrics.
+    # === Finance domain axiom ===
+    - id: AX-FIN0
+      statement: Only financial health that returns through reporting collapse is real
+      description: |
+        Financial continuity is measured, not asserted. Month-over-month
+        return through the seam validates claims of business health.
+        tau_R = INF_REC means no demonstrated financial return.
+  regime_classification:
+    drift:
+      stable:
+        threshold: 0.038
+        condition: "omega < 0.038"
+      watch:
+        threshold: 0.30
+        condition: "0.038 <= omega < 0.30"
+      collapse:
+        threshold: null
+        condition: "omega >= 0.30"
+  mathematical_identities:
+    - name: Fidelity-drift duality
+      formula: "F = 1 - omega"
+      tolerance: 1.0e-09
+    - name: Integrity bound
+      formula: "IC <= F"
+      tolerance: 1.0e-09
+    - name: Log-integrity relation
+      formula: "IC = exp(kappa)"
+      tolerance: 1.0e-06
   typed_censoring:
     tau_R_special_values:
-    - INF_REC
-    - UNIDENTIFIABLE
+      - INF_REC
+      - UNIDENTIFIABLE
     run_status_enum:
-    - CONFORMANT
-    - NONCONFORMANT
-    - NON_EVALUABLE
+      - CONFORMANT
+      - NONCONFORMANT
+      - NON_EVALUABLE
     no_return_no_credit: true
   notes: >
     FINANCE.INTSTACK.v1 freezes the UMCP contract boundary for business financial
     continuity validation. Financial metrics (revenue performance, expense control,
     gross margin, cash flow health) are embedded as coordinates in [0,1]^4.
-    Regime thresholds are calibrated for monthly business cadence:
-    STABLE = within 5% of targets, WATCH = 5-20% deviation, COLLAPSE = >20%.
-    Seam accounting certifies month-over-month financial continuity.
-    The axiom applies: only financial health that returns through reporting collapse is real.
+    Regime thresholds use standard GCD gates. Seam accounting certifies
+    month-over-month financial continuity. The axiom applies: only financial
+    health that returns through reporting collapse is real.
   extensions:
     domain: finance
     cadence: monthly

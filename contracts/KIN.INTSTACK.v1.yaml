@@ -3,8 +3,8 @@ contract:
   id: KIN.INTSTACK.v1
   version: 1.0.0
   timezone: America/Chicago
-  parent_contract: UMA.INTSTACK.v1
-  tier_level: 1
+  parent_contract: GCD.INTSTACK.v1
+  tier_level: 2
 
   # Kinematics-specific embedding: maps physical quantities to [0,1]
   embedding:
@@ -186,6 +186,17 @@ contract:
         condition: "K_stability < 0.3"
 
   mathematical_identities:
+  # === GCD Tier-1 identities (inherited) ===
+  - name: Fidelity-drift duality
+    formula: "F = 1 - omega"
+    tolerance: 1.0e-09
+  - name: Integrity bound
+    formula: "IC <= F"
+    tolerance: 1.0e-09
+  - name: Log-integrity relation
+    formula: "IC = exp(kappa)"
+    tolerance: 1.0e-06
+  # === Kinematics domain identities ===
   - name: "Newton's Second Law"
     formula: "F_net = m * a"
     tolerance: 1.0e-09

@@ -4,7 +4,7 @@ contract:
   version: 1.0.0
   timezone: UTC
   parent_contract: GCD.INTSTACK.v1
-  tier_level: 1
+  tier_level: 2
   embedding:
     interval:
     - 0.0
