@@ -201,12 +201,28 @@ clinical consequences from pure mathematics.  Each section
 retroactively deepens every previous one.  By the end, the
 subatomic table will mean something it could not have meant
 when it first appeared.
+A methodological caution follows from this structure:
+because each section borrows plausibility from the previous
+ones, the reader should periodically check whether the
+accumulation of pattern-recognition is driven by the data
+or by the narrative momentum.
+Sections~\ref{sec:subatomic} and~\ref{sec:nuclear} establish
+the two-step pattern independently of later sections; the
+compounding begins at Section~\ref{sec:cosmos} and
+intensifies through Sections~\ref{sec:biology}
+and~\ref{sec:memory}.  A reader who finds the later sections
+compelling should verify that the earlier sections would
+remain compelling \emph{in isolation}.
 
-\textbf{Five claims, each falsifiable.}
-This paper makes five structural claims about the accumulation
-pattern.  Each is verified computationally by the theorem suite
-(Sec.~\ref{sec:howto}) and each can be falsified by a single
-counterexample:
+\textbf{Five claims --- three structural, two mathematical.}
+This paper makes five claims about the accumulation pattern.
+Each is verified computationally by the theorem suite
+(Sec.~\ref{sec:howto}).  The first three are
+\emph{structural}: they describe patterns that emerge from
+the encoding and are falsifiable \emph{given a fixed
+encoding scheme} (Remark~\ref{rem:encoding}).  The last two
+are \emph{mathematical}: they follow from the kernel's
+definitions and hold for any valid input.
 \begin{enumerate}
 \item \textbf{Space accumulates as iterated $|\kappa|$}
   (Theorem~\ref{thm:T6}):
@@ -214,6 +230,9 @@ counterexample:
   $\mathrm{depth}(N) = N\,|\Delta\kappa|$.  Mass is
   accumulated well depth from repeated collapse-return
   cycles.
+  \emph{Falsified by}: an entity, under the same encoding,
+  whose well depth does not grow linearly with iteration
+  count.
 \item \textbf{Time emerges from return cost}
   (Definition~\ref{def:temporal}, Theorem~\ref{thm:T4}):
   Effective temporal resolution $\mathcal{T} = c_1/\Gam'$
@@ -221,6 +240,11 @@ counterexample:
   ($\mathcal{T} \approx 0$) to the neutron star ($\mathcal{T}
   \approx 18$), with cost asymmetry producing the arrow of
   time (Theorem~\ref{thm:T8}).
+  \emph{Falsified by}: an entity whose independently
+  established temporal ordering contradicts the
+  $\mathcal{T}$ ranking.  Note that $\mathcal{T}$ is computed
+  from the encoding, so this test requires an external
+  temporal benchmark not derived from the channel values.
 \item \textbf{Memory accumulates as well geometry}
   (Definition~\ref{def:slaughter},
   Theorems~\ref{thm:T6},~\ref{thm:T10}):
@@ -228,18 +252,25 @@ counterexample:
   the trauma cliff ($\IC/F$: $0.982 \to 0.760$) share the
   same dead channels ($c_5$, $c_7$) and the same mechanism.
   Recovery restores dead channels at each phase boundary.
+  \emph{Falsified by}: a phase boundary, under the same
+  encoding, where the $\IC/F$ drop is not explained by
+  dead channels.
 \item \textbf{Budget gradient structures the manifold}
   (Theorem~\ref{thm:T1}):
   $\dd\Gam/\dd\omega > 0$ everywhere --- the budget surface
   is monotonic, always attractive, and determines the cost
   landscape through which all systems evolve.
+  This is a mathematical property of $\Gam(\omega) =
+  \omega^3/(1 - \omega + \eps)$ with $p = 3$; it holds
+  independently of the encoding.
 \item \textbf{Structural consistency across all scales}
   (Theorem~\ref{thm:T10}):
   All 37~entities in 8~categories obey the three kernel
   identities ($F + \omega = 1$, $\IC \leq F$,
-  $\IC = e^{\kappa}$), confirming that the diagnostic
-  framework is self-consistent across the entire
-  scale ladder.
+  $\IC = e^{\kappa}$).  These identities are mathematical
+  theorems that hold for \emph{any} input in $[0,1]^n$ ---
+  they confirm that the implementation is correct, not that
+  the encoding captures something physical.
 \end{enumerate}
 
 
@@ -310,6 +341,29 @@ the accumulation pattern: time does not flow uniformly
 through the system; it accumulates at a rate set by the cost
 of return.
 \end{definition}
+
+\begin{remark}[Why $c_1/\Gam'$ and Not Another Combination]
+\label{rem:temporal_choice}
+The ratio $c_1/\Gam'$ is the simplest combination of
+completed cycles ($c_1$, dimensionless rate) and budget cost
+per unit drift ($\Gam'$, dimensionless cost) with the
+operational meaning ``ticks per unit cost.''
+Alternative combinations produce orderings that contradict
+domain knowledge: the product $c_1 \cdot \Gam'$ would make
+the black hole ($c_1 = 0.50$, $\Gam' = 0.48$) temporally
+\emph{faster} than the neutron star ($c_1 = 0.98$,
+$\Gam' = 0.054$), because the black hole's higher cost
+would count as higher temporal resolution.  The difference
+$c_1 - \Gam'$ lacks scale invariance: adding a constant to
+all costs would change the ordering.  Nevertheless,
+$\mathcal{T}$ is a \emph{diagnostic definition}, not a
+derivation from first principles --- it was selected because
+it produces physically sensible orderings across all
+37~entities, and this circularity should be noted: the
+definition is partly validated by the ordering it produces.
+An independent derivation of temporal resolution from the
+kernel axioms alone remains an open problem.
+\end{remark}
 
 The budget surface
 \beq\label{eq:surface}
@@ -1436,6 +1490,34 @@ channel destroys the geometric mean while the arithmetic
 mean (overall fidelity) remains
 moderate~\cite{ehlers2000cognitive,vanderkolk2014body}.
 
+\begin{remark}[Encoding Sensitivity of the Parallel]
+\label{rem:parallel}
+The proton--PTSD parallel (Table~\ref{tab:parallel})
+depends on two encoding decisions: (i)~that ``trajectory
+closure'' ($c_5$) is a meaningful channel for both quark
+confinement and narrative completion, and (ii)~that both
+receive low values ($c_5 = 0.15$ and $c_5 = 0.10$
+respectively).  If $c_5$ were defined differently --- for
+example, as spatial volume closure for quarks but temporal
+narrative closure for memories --- the mapping would be a
+\emph{conceptual analogy imposed by the encoder}, not a
+structural discovery by the kernel.  Similarly, if the PTSD
+trace vector were encoded with $c_5 = 0.50$ (moderate
+narrative closure rather than severe), the $\IC/F$ drop
+would be $0.982 \to 0.873$ --- a mild depression rather
+than a confinement cliff.  The parallel is
+\emph{encoding-contingent}: it is precise and reproducible
+given the encoding in Table~\ref{tab:channels}, but
+alternative encodings of the same clinical phenomena could
+produce different structural classifications.  What this
+framework offers is a \emph{controlled comparison}: once
+the encoding is fixed, the structural diagnostics are
+determined, and the question becomes whether the same
+encoding scheme, applied consistently across domains,
+produces parallels that domain experts recognize as
+meaningful.
+\end{remark}
+
 The lensing classification confirms the analogy: both the
 proton and PTSD are classified as \emph{thin arc} ---
 moderate asymmetry distorting the well gradient into a
@@ -1723,6 +1805,31 @@ it is the precondition for nuclear binding.  The PTSD well
 is not a permanent state; it is the precondition for
 therapeutic recovery.  \emph{Only what returns is real.}
 
+\begin{remark}[Entity Selection and Coverage]
+\label{rem:selection}
+The 37~entities were selected to span the scale ladder from
+$10^{-15}$\,m to macroscopic scales, with at least three
+entities per category.  This is a \emph{curated catalog},
+not a representative sample: the entities were chosen because
+they are well-studied systems with known physical properties
+that could be encoded in the 8-channel schema.  Systems that
+would challenge the pattern are instructive to consider.
+Glasses and amorphous solids lack periodic collapse-return
+cycles, making the cycle\_return\_rate ($c_1$) ambiguous.
+Turbulent flows have well-defined energy cascades but no
+obvious trajectory closure.  Quantum decoherence events are
+irreversible by definition, yielding $c_1 \approx 0$ and
+$\mathcal{T} \approx 0$ --- these would occupy the same
+structural position as the photon (effectively frozen time)
+rather than contradicting the pattern.  The two-step pattern
+(geometric slaughter followed by recovery) has not been
+tested on systems where the recovery step fails permanently
+--- for example, radioactive decay chains that terminate at
+stable isotopes without restoring dead channels.  Extending
+the catalog to include such boundary cases is necessary
+before the structural claims can be considered robust.
+\end{remark}
+
 \textbf{The compounding itself is a structural consequence.}
 The fact that understanding accumulated through this paper is
 not a rhetorical device --- it is a structural feature of
@@ -1832,15 +1939,20 @@ coherence at the boundary, and new degrees of freedom
 restore it on the other side.
 
 \textbf{What this paper has shown.}
-The introduction made five claims.  We close the loop:
+The introduction made five claims --- three structural, two
+mathematical.  We close the loop:
+
+\emph{Structural claims} (encoding-dependent; falsifiable
+given a fixed encoding scheme):
 
 \begin{enumerate}
 \item \textbf{Space accumulates as iterated $|\kappa|$}
   (Theorem~\ref{thm:T6}).
   Linearity verified: $\mathrm{depth}(2N) = 2\,\mathrm{depth}(N)$
   to $< 10^{-12}$ for all entities.
-  \emph{Falsified by}: an entity whose well depth does not
-  grow linearly with iteration count.  (4/4 sub-tests.)
+  \emph{Falsified by}: an entity, under the same encoding,
+  whose well depth does not grow linearly with iteration
+  count.  (4/4 sub-tests.)
 
 \item \textbf{Time emerges from return cost}
   (Definition~\ref{def:temporal}, Theorems~\ref{thm:T4},
@@ -1848,8 +1960,9 @@ The introduction made five claims.  We close the loop:
   $\mathcal{T} = c_1/\Gam'$ ranks all 37~entities from
   photon ($\approx 0$) to neutron star ($\approx 18$).
   Cost ratio: $\Gam(0.90)/\Gam(0.10) = 6.56 \times 10^{3}$.
-  \emph{Falsified by}: an entity whose independently measured
-  temporal ordering contradicts $\mathcal{T}$.
+  \emph{Falsified by}: an entity whose independently
+  established temporal ordering contradicts $\mathcal{T}$
+  (Remark~\ref{rem:temporal_choice}).
   (3/3 + 3/3 sub-tests.)
 
 \item \textbf{Memory accumulates as well geometry}
@@ -1858,24 +1971,30 @@ The introduction made five claims.  We close the loop:
   Confinement cliff: $\IC/F$ drops $0.957 \to 0.718$ across
   color confinement; trauma cliff: $0.982 \to 0.760$ across
   narrative closure.  Same dead channels ($c_5$, $c_7$), same
-  mechanism.
-  \emph{Falsified by}: a phase boundary where geometric
-  slaughter fails to explain the $\IC/F$ drop.
+  mechanism (Remark~\ref{rem:parallel}).
+  \emph{Falsified by}: a phase boundary, under the same
+  encoding, where the $\IC/F$ drop is not explained by dead
+  channels.
+\end{enumerate}
 
+\emph{Mathematical claims} (hold for any valid input;
+verify implementation correctness):
+
+\begin{enumerate}\setcounter{enumi}{3}
 \item \textbf{Budget gradient structures the manifold}
   (Theorem~\ref{thm:T1}).
   $\dd\Gam/\dd\omega > 0$ at 100~grid points and all
   37~positions; minimum $\Gam'(0.01) = 3.0 \times 10^{-4}$.
-  \emph{Falsified by}: any $\omega$ where
-  $\Gam'(\omega) \leq 0$.  (4/4 sub-tests.)
+  This is a mathematical property of $\Gam$ with $p = 3$.
+  (4/4 sub-tests.)
 
 \item \textbf{Structural consistency across all scales}
   (Theorem~\ref{thm:T10}).
   $F + \omega = 1$ to $< 10^{-12}$; $\IC \leq F$ with zero
   violations; $\IC = e^{\kappa}$ to $< 10^{-10}$.  All
-  8~categories represented.
-  \emph{Falsified by}: a single entity violating any
-  identity.  (6/6 sub-tests.)
+  8~categories represented.  These identities hold for any
+  input in $[0,1]^n$; they verify the implementation, not
+  the encoding.  (6/6 sub-tests.)
 \end{enumerate}
 
 \textbf{The structural parallel.}
