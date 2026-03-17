@@ -146,20 +146,25 @@ deltas = np.array([r["delta"] for r in results])
 ics = np.array([r["IC"] for r in results])
 gs = np.array([r["G"] for r in results])
 
-rho_aw_c, p_aw_c = spearmanr(aws, cs)
-rho_aw_omega, p_aw_omega = spearmanr(aws, omegas)
-rho_aw_delta, p_aw_delta = spearmanr(aws, deltas)
-rho_aw_ic, p_aw_ic = spearmanr(aws, ics)
-rho_c_omega, p_c_omega = spearmanr(cs, omegas)
-rho_aw_G, p_aw_G = spearmanr(aws, gs)
+_res_aw_c = spearmanr(aws, cs)
+_res_aw_omega = spearmanr(aws, omegas)
+_res_aw_delta = spearmanr(aws, deltas)
+_res_aw_ic = spearmanr(aws, ics)
+_res_c_omega = spearmanr(cs, omegas)
+_res_aw_G = spearmanr(aws, gs)
 
-# Cast p-values to float for type checker (spearmanr returns namedtuple)
-p_aw_c = float(p_aw_c)
-p_aw_omega = float(p_aw_omega)
-p_aw_delta = float(p_aw_delta)
-p_aw_ic = float(p_aw_ic)
-p_c_omega = float(p_c_omega)
-p_aw_G = float(p_aw_G)
+rho_aw_c: float = _res_aw_c.statistic  # type: ignore[union-attr]
+p_aw_c: float = _res_aw_c.pvalue  # type: ignore[union-attr]
+rho_aw_omega: float = _res_aw_omega.statistic  # type: ignore[union-attr]
+p_aw_omega: float = _res_aw_omega.pvalue  # type: ignore[union-attr]
+rho_aw_delta: float = _res_aw_delta.statistic  # type: ignore[union-attr]
+p_aw_delta: float = _res_aw_delta.pvalue  # type: ignore[union-attr]
+rho_aw_ic: float = _res_aw_ic.statistic  # type: ignore[union-attr]
+p_aw_ic: float = _res_aw_ic.pvalue  # type: ignore[union-attr]
+rho_c_omega: float = _res_c_omega.statistic  # type: ignore[union-attr]
+p_c_omega: float = _res_c_omega.pvalue  # type: ignore[union-attr]
+rho_aw_G: float = _res_aw_G.statistic  # type: ignore[union-attr]
+p_aw_G: float = _res_aw_G.pvalue  # type: ignore[union-attr]
 
 print(f"  Spearman(Aw, C):      rho = {rho_aw_c:+.4f}  (p = {p_aw_c:.2e})  {'**SIG**' if p_aw_c < 0.01 else ''}")
 print(
