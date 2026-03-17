@@ -1,6 +1,6 @@
 """Tests for consciousness coherence theorem formalism — T-CC-1 through T-CC-7.
 
-Verifies the seven theorems that emerge when Jackson's claims are corrected
+Verifies the ten theorems that emerge when Jackson's claims are corrected
 and grounded in the GCD kernel across 20 consciousness-candidate systems.
 
 Every theorem is:
@@ -40,9 +40,9 @@ from closures.consciousness_coherence.consciousness_theorems import (
 class TestTheoremInfrastructure:
     """Verify theorem infrastructure correctness."""
 
-    def test_seven_theorems_defined(self) -> None:
-        """Exactly 7 theorems."""
-        assert len(ALL_THEOREMS) == 7
+    def test_ten_theorems_defined(self) -> None:
+        """Exactly 10 theorems."""
+        assert len(ALL_THEOREMS) == 10
 
     def test_all_callable(self) -> None:
         """All theorem functions are callable."""
@@ -68,18 +68,18 @@ class TestTheoremInfrastructure:
             assert len(r.correction) > 10
 
     def test_all_7_proven(self) -> None:
-        """All 7/7 theorems PROVEN."""
+        """All 10/10 theorems PROVEN."""
         results = run_all_theorems()
         for r in results:
             assert r.verdict == "PROVEN", f"{r.name}: {r.verdict} ({r.n_passed}/{r.n_tests})"
 
-    def test_38_subtests_pass(self) -> None:
-        """All 38/38 sub-tests pass."""
+    def test_117_subtests_pass(self) -> None:
+        """All 117/117 sub-tests pass."""
         results = run_all_theorems()
         total = sum(r.n_tests for r in results)
         passed = sum(r.n_passed for r in results)
-        assert total == 38
-        assert passed == 38
+        assert total == 117
+        assert passed == 117
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -441,7 +441,7 @@ class TestTCC7HeterogeneityGapOrdering:
 
 
 class TestCrossTheoremConsistency:
-    """Verify cross-theorem consistency across all 7 theorems."""
+    """Verify cross-theorem consistency across all 10 theorems."""
 
     @pytest.fixture(scope="class")
     def theorem_results(self) -> list[TheoremResult]:
@@ -453,12 +453,12 @@ class TestCrossTheoremConsistency:
         assert all(v == "PROVEN" for v in verdicts)
 
     def test_total_subtests(self, theorem_results: list[TheoremResult]) -> None:
-        """Total sub-tests = 38."""
-        assert sum(r.n_tests for r in theorem_results) == 38
+        """Total sub-tests = 117."""
+        assert sum(r.n_tests for r in theorem_results) == 117
 
     def test_total_passed(self, theorem_results: list[TheoremResult]) -> None:
-        """All 38 sub-tests pass."""
-        assert sum(r.n_passed for r in theorem_results) == 38
+        """All 117 sub-tests pass."""
+        assert sum(r.n_passed for r in theorem_results) == 117
 
     def test_zero_failures(self, theorem_results: list[TheoremResult]) -> None:
         """Zero sub-test failures."""

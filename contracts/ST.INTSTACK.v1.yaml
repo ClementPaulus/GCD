@@ -48,6 +48,15 @@ contract:
     tolerances:
       tol_seam: 0.005
       tol_id: 1.0e-09
+  typed_censoring:
+    tau_R_special_values:
+      - INF_REC
+      - UNIDENTIFIABLE
+    run_status_enum:
+      - CONFORMANT
+      - NONCONFORMANT
+      - NON_EVALUABLE
+    no_return_no_credit: true
   axioms:
     - id: AX-ST0
       name: Budget Surface Duality
