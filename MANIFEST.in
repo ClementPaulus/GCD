@@ -1,0 +1,48 @@
+# MANIFEST.in — UMCP v2.2.0
+# Controls which non-Python files are included in source distributions (sdist).
+# Without this, pip install won't ship contracts, schemas, closures, or canon.
+
+# Core documentation
+include README.md LICENSE CHANGELOG.md CONTRIBUTING.md CODE_OF_CONDUCT.md
+include QUICKSTART_TUTORIAL.md AXIOM.md TIER_SYSTEM.md CATALOGUE.md
+include KERNEL_SPECIFICATION.md GLOSSARY.md PROTOCOL_REFERENCE.md
+include KINEMATICS_SPECIFICATION.md KINEMATICS_MATHEMATICS.md
+include pyproject.toml
+
+# Validation artifacts (required for UMCP functionality)
+recursive-include contracts *.yaml
+recursive-include schemas *.schema.json *.json
+recursive-include canon *.yaml
+recursive-include closures *.py *.yaml *.json
+
+# Validator rules
+include validator_rules.yaml
+
+# Data files used by closures
+recursive-include data *.csv *.json *.yaml
+
+# Integrity checksums
+recursive-include integrity *.txt
+
+# Type hints (PEP 561)
+recursive-include src/umcp py.typed
+recursive-include src/umcp/fleet py.typed
+
+# C++ accelerator headers (for development builds)
+recursive-include src/umcp_cpp *.hpp *.h *.cpp
+include src/umcp_cpp/CMakeLists.txt
+
+# Casepacks (example data for validation)
+recursive-include casepacks *.json *.yaml *.csv *.txt
+
+# Exclude build artifacts and caches
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude *.so
+global-exclude .pytest_cache
+global-exclude .mypy_cache
+global-exclude *.egg-info
+prune build
+prune dist
+prune archive
+prune .git
