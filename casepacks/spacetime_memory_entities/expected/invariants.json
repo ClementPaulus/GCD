@@ -1,0 +1,56 @@
+{
+  "schema": "schemas/invariants.schema.json",
+  "format": "tier1_invariants",
+  "contract_id": "ST.INTSTACK.v1",
+  "closure_registry_id": "UMCP.CLOSURES.ST.v1",
+  "canon": {
+    "pre_doi": "10.5281/zenodo.17756705",
+    "post_doi": "10.5281/zenodo.18072852",
+    "weld_id": "W-2026-03-20-ST-ENTITIES",
+    "timezone": "UTC"
+  },
+  "rows": [
+    {
+      "t": 0,
+      "omega": 0.12,
+      "F": 0.88,
+      "S": 0.355,
+      "C": 0.098,
+      "kappa": -0.129,
+      "IC": 0.879,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 1,
+      "omega": 0.826,
+      "F": 0.174,
+      "S": 0.397,
+      "C": 0.269,
+      "kappa": -2.192,
+      "IC": 0.112,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": true
+      }
+    },
+    {
+      "t": 2,
+      "omega": 0.219,
+      "F": 0.781,
+      "S": 0.466,
+      "C": 0.288,
+      "kappa": -0.265,
+      "IC": 0.767,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    }
+  ]
+}

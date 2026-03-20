@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.2.4** · **10,159 tests** · **20 domains** · **193 closure modules** · **46 lemmas** · **44 structural identities** · **46 dashboard pages**
+**UMCP v2.2.4** · **10,586 tests** · **20 domains** · **198 closure modules** · **46 lemmas** · **44 structural identities** · **46 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -442,13 +442,13 @@ closures/
 ├── materials_science/        # Element database (118 elements, 18 fields)
 ├── everyday_physics/         # Thermodynamics, optics, electromagnetism, wave phenomena, fluid dynamics
 ├── evolution/                # 40 organisms, 10-channel brain kernel, 20 species comparative neuroscience
-├── dynamic_semiotics/        # 30 sign systems, 8-channel semiotic kernel, media coherence
-├── consciousness_coherence/  # 20 systems, coherence kernel, 7 theorems, altered states (15 states, 6 theorems)
-├── continuity_theory/        # Continuity law closures, topological persistence (12 spaces, 6 theorems)
+├── dynamic_semiotics/        # 30 sign systems, 8-channel semiotic kernel, media coherence, computational semiotics
+├── consciousness_coherence/  # 20 systems, coherence kernel, 7 theorems, altered states (15 states, 6 theorems), neural correlates
+├── continuity_theory/        # Continuity law closures, topological persistence (12 spaces, 6 theorems), organizational resilience
 ├── awareness_cognition/      # 5+5 channel awareness-aptitude kernel, 10 theorems, attention mechanisms
 ├── standard_model/           # Subatomic kernel (31 particles), 27 proven theorems
-├── clinical_neuroscience/    # 10-channel cortical kernel, neurotransmitter systems (15 entities, 6 theorems)
-└── spacetime_memory/         # 40 entities, budget-surface kernel, gravitational wave memory (12 entities, 6 theorems)
+├── clinical_neuroscience/    # 10-channel cortical kernel, neurotransmitter systems (15 entities, 6 theorems), developmental neuroscience
+└── spacetime_memory/         # 40 entities, budget-surface kernel, gravitational wave memory (12 entities, 6 theorems), cosmological memory
 ```
 
 **Standard Model closures** (`closures/standard_model/`):
@@ -486,10 +486,10 @@ closures/
 **Data artifacts** (not Python — never import these):
 - `contracts/*.yaml` — 21 versioned mathematical contracts (JSON Schema Draft 2020-12)
 - `closures/registry.yaml` — central registry; must list every closure used in a run
-- `casepacks/*/manifest.json` — 24 casepack manifests referencing contract, closures, expected outputs
+- `casepacks/*/manifest.json` — 28 casepack manifests referencing contract, closures, expected outputs
 - `schemas/*.schema.json` — 17 JSON Schema Draft 2020-12 files validating all artifacts
 - `canon/*.yaml` — 21 canonical anchor files (domain-specific reference points)
-- `integrity/sha256.txt` — SHA-256 checksums for 213 tracked files
+- `integrity/sha256.txt` — SHA-256 checksums for 211 tracked files
 - `ledger/return_log.csv` — append-only validation log
 
 ## Standard Model Formalism (27 Theorems)
@@ -559,11 +559,11 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 10,159 tests (pytest --collect-only | grep ":" | wc -l to verify)
+pytest                                       # 10,586 tests (pytest --collect-only | grep ":" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
-umcp integrity                              # Verify SHA-256 checksums (213 tracked files)
+umcp integrity                              # Verify SHA-256 checksums (211 tracked files)
 ```
 
 **⚠️ `python scripts/update_integrity.py` is mandatory** after modifying any `src/umcp/*.py`, `contracts/*.yaml`, `closures/**`, `schemas/**`, or `scripts/*.py` file. It regenerates SHA256 checksums in `integrity/sha256.txt`. CI will fail on mismatch.
@@ -587,7 +587,7 @@ This script mirrors CI exactly and must exit 0 before committing. It runs 11 ste
 5. `git add -A` — stage all changes
 6. Repository health check — drift detection, version sync, freeze verification
 7. Update test count in documentation
-8. Regenerate SHA-256 integrity checksums (213 tracked files)
+8. Regenerate SHA-256 integrity checksums (211 tracked files)
 9. Pytest bounds — collect tests and verify count within bounds (1000–11000)
 10. `umcp validate .` — contract validation (must be CONFORMANT)
 11. Axiom-0 conformance — terminology, symbol capture, frozen params check
@@ -625,12 +625,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**10,159 test cases** across **145 test files** in `tests/` (144 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_273_*`). Single `tests/conftest.py` provides:
+**10,586 test cases** across **150 test files** in `tests/` (149 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_278_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 10,159 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 10,586 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -691,9 +691,14 @@ umcp validate <target>
 | `test_271` | Nuclear reaction channels (12 entities, 6 theorems T-RC-1–T-RC-6) | 82 |
 | `test_272` | Rigid body dynamics (12 entities, 6 theorems T-RB-1–T-RB-6) | 82 |
 | `test_273` | Volatility surface (12 entities, 6 theorems T-VS-1–T-VS-6) | 82 |
+| `test_274` | Computational semiotics (12 entities, 6 theorems T-CS-1–T-CS-6) | 82 |
+| `test_275` | Neural correlates (12 entities, 6 theorems T-NC-1–T-NC-6) | 82 |
+| `test_276` | Organizational resilience (12 entities, 6 theorems T-OR-1–T-OR-6) | 82 |
+| `test_277` | Cosmological memory (12 entities, 6 theorems T-CM-1–T-CM-6) | 82 |
+| `test_278` | Developmental neuroscience (12 entities, 6 theorems T-DN-1–T-DN-6) | 82 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 1,386 |
-| **TOTAL** | | **10,159** |
+| **TOTAL** | | **10,586** |
 
 ## Extension System
 

@@ -1,0 +1,29 @@
+{
+  "schema": "schemas/manifest.schema.json",
+  "casepack": {
+    "id": "spacetime_memory_entities",
+    "version": "1.0.0",
+    "title": "Spacetime Memory — 3 Budget Surface Entities (Tier-2)",
+    "description": "Spacetime memory domain closure demonstrating GCD kernel applied to 3 entities spanning stellar, cognitive, and diffuse categories. 8-channel trace (coherence_persistence, cycle_return_rate, well_depth_norm, gradient_strength, tidal_symmetry, trajectory_closure, circulation_area, heterogeneity_profile) with equal weights. Neutron star (Watch — highest F in catalog, near-homogeneous channels), Healthy memory (Watch — cognitive cross-domain bridge), Intergalactic medium (deep Collapse — diffuse system with dead channels).",
+    "created_utc": "2026-03-20T00:00:00Z",
+    "timezone": "UTC",
+    "authors": ["Clement Paulus"]
+  },
+  "refs": {
+    "canon_anchors": { "path": "canon/st_anchors.yaml" },
+    "contract": { "id": "ST.INTSTACK.v1", "path": "contracts/ST.INTSTACK.v1.yaml" },
+    "closures_registry": { "id": "UMCP.CLOSURES.ST.v1", "path": "closures/registry.yaml" }
+  },
+  "artifacts": {
+    "raw_measurements": {
+      "path": "raw_measurements.csv",
+      "format": "csv"
+    },
+    "expected": {
+      "invariants_json": { "path": "expected/invariants.json" }
+    }
+  },
+  "run_intent": {
+    "notes": "Exercises the spacetime memory closure with 3 entities from the 40-entity, 9-category catalog: Neutron star (stellar — highest F=0.88 in catalog, Watch regime due to S exceeding Stable gate, near-minimal heterogeneity gap Delta=0.0014), Healthy memory (cognitive — demonstrates cross-domain bridge where same budget surface geometry applies to psychological memory wells, Watch regime), Intergalactic medium (diffuse — deep Collapse omega=0.826, dead gradient channel c3=0.01 produces geometric slaughter). No entity in the 40-entity catalog reaches Stable regime — consistent with 87.5% of Fisher space lying outside stability."
+  }
+}

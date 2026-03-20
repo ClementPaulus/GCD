@@ -15,10 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fluid dynamics, electroweak precision, binary star systems, defect physics, topological
   band structures, sleep neurophysiology, molecular evolution, acoustics, nuclear reaction
   channels, rigid body dynamics, volatility surface
+- 5 deepening sub-closures (30 new theorems, 60 entities, all PROVEN):
+  computational semiotics (T-CS-1–6), neural correlates (T-NC-1–6),
+  organizational resilience (T-OR-1–6), cosmological memory (T-CM-1–6),
+  developmental neuroscience (T-DN-1–6)
+- 5 new test files: `test_274` through `test_278` (410 tests, all passing)
+- `casepacks/spacetime_memory_entities/` — casepack for spacetime memory domain (3 entities)
 
 ### Changed
 - Synchronized all instruction/guidance files with ground truth metrics:
-  10,159 tests, 193 closures, 247 theorems, 213 tracked files, 44 identities, 46 lemmas
+  10,586 tests, 198 closures, 277 theorems, 211 tracked files, 44 identities, 46 lemmas
 - Updated `README_PYPI.md` metrics for PyPI page accuracy
 - Version bump 2.2.3 → 2.2.4
 

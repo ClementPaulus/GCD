@@ -4,7 +4,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/LICENSE)
 [![CI](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/actions/workflows/validate.yml/badge.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/actions)
-[![Tests: 10,159](https://img.shields.io/badge/tests-10%2C159-brightgreen.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/tests)
+[![Tests: 10,586](https://img.shields.io/badge/tests-10%2C586-brightgreen.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/tests)
 
 **A contract-first validation framework for reproducible computational workflows.**
 
@@ -23,7 +23,7 @@ Built on **Generative Collapse Dynamics (GCD)**, a measurement theory derived fr
 | **Contract-first validation** | Define mathematical contracts before evidence. Frozen parameters ensure reproducibility. |
 | **Tier-1 kernel** | Six invariants (F, ω, S, C, κ, IC) computed from any bounded trace vector — domain-independent. |
 | **20 scientific domains** | From particle physics and cosmology to neuroscience and finance — all through one kernel. |
-| **10,159 tests** | Comprehensive test suite with 193 closure modules and 247 proven theorems. |
+| **10,586 tests** | Comprehensive test suite with 198 closure modules and 277 proven theorems. |
 | **Three-valued verdicts** | Never boolean. Always CONFORMANT / NONCONFORMANT / NON\_EVALUABLE. |
 | **Interactive dashboard** | 46-page Streamlit dashboard for real-time kernel exploration. |
 | **CLI + Python API** | Full command-line interface and programmatic access. |
