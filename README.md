@@ -7,7 +7,7 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](src/umcp_cpp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![UMCP v2.2.4](https://img.shields.io/badge/UMCP-v2.2.4-orange.svg)](pyproject.toml)
-[![Tests: 10,832](https://img.shields.io/badge/tests-10%2C832-brightgreen.svg)](tests/)
+[![Tests: 11,342](https://img.shields.io/badge/tests-11%2C341-brightgreen.svg)](tests/)
 [![Domains: 20](https://img.shields.io/badge/domains-20-blueviolet.svg)](closures/)
 [![Closures: 201](https://img.shields.io/badge/closures-201-informational.svg)](closures/)
 [![Theorems: 295](https://img.shields.io/badge/theorems-295_proven-ff69b4.svg)](closures/)
@@ -19,7 +19,7 @@
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Python + C++ integration**: The framework is written in Python with **20 domains**, **201 closure modules**, **295 proven theorems**, and **10,832 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
+**Python + C++ integration**: The framework is written in Python with **20 domains**, **201 closure modules**, **295 proven theorems**, and **11,342 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
 
 ---
 
@@ -129,7 +129,7 @@ Every claim, measurement, validation, and narrative in UMCP follows exactly **fi
 
 ### The Three-Tier Stack
 
-Tier-1 (44 structural identities, 46 lemmas, 295 proven theorems) → Tier-0 (10,832 tests, 201 closure modules, C++17 accelerator) → Tier-2 (20 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
+Tier-1 (44 structural identities, 46 lemmas, 295 proven theorems) → Tier-0 (11,342 tests, 201 closure modules, C++17 accelerator) → Tier-2 (20 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
 
 <p align="center">
   <img src="images/10_tier_architecture.png" alt="Three-Tier Architecture: Tier-1 (Kernel) → Tier-0 (Protocol) → Tier-2 (Domains)" width="88%">
@@ -633,7 +633,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                            # All 10,832 tests
+pytest                            # All 11,342 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
@@ -697,7 +697,7 @@ umcp integrity                             # Verify SHA-256 checksums
 umcp validate .                            # Full repo validation → CONFORMANT
 
 # 3. Run the test suite
-pytest -v --tb=short                       # 9,271 tests
+pytest -v --tb=short                       # 11,342 tests
 ```
 
 ### C++ Accelerator — Build & Verify
@@ -815,7 +815,7 @@ umcp validate <target>
 The GitHub Actions workflow (`.github/workflows/validate.yml`) enforces:
 
 1. **Lint** — `ruff format --check` + `ruff check` + `mypy`
-2. **Test** — Full pytest suite (10,832 tests, 153 test files)
+2. **Test** — Full pytest suite (11,342 tests, 164 test files)
 3. **Validate** — Baseline + strict validation (both must return CONFORMANT)
 
 ### Pre-Commit Protocol
@@ -834,7 +834,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 
 ## Test Suite
 
-**10,832 tests** across **153 test files**, organized by tier and domain:
+**11,342 tests** across **164 test files**, organized by tier and domain:
 
 | Test Range | Domain | Tests |
 |------------|--------|------:|
@@ -901,8 +901,19 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 | `test_279` | Gravitational phenomena (spacetime memory, 12 entities, 6 theorems) | 82 |
 | `test_280` | Temporal topology (spacetime memory, 12 entities, 6 theorems) | 82 |
 | `test_281` | Budget geometry (continuity theory, 12 entities, 6 theorems) | 82 |
+| `test_282` | Continuity law closures | 18 |
+| `test_283` | Weld lineage tracking | 23 |
+| `test_284` | Fleet extended (scheduler, worker pool, queue, cache) | 48 |
+| `test_285` | Coverage gaps (kernel, calculator, validator, file refs) | 32 |
+| `test_286` | Insights engine, extensions manager | 59 |
+| `test_287` | Remaining gaps (seam, compute utils, measurement engine) | 59 |
+| `test_288` | Coverage final (fleet cache, scheduler, worker, tenant) | 53 |
+| `test_289` | Coverage push (validator, extensions, universal calculator) | 33 |
+| `test_290` | Final coverage (extension CLI, scheduler, fleet queue) | 18 |
+| `test_291` | Comprehensive coverage (Redis mock, tenant, install, YAML fallback, DLQ, SS1M) | 69 |
+| `test_292` | Coverage push final (closures, logging, seam, queue, tau dynamics) | 97 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
-| Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, API, insights | 1,386 |
+| Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, API, insights | 1,895 |
 
 All tests pass. All validations return CONFORMANT.
 
@@ -976,7 +987,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 ├── schemas/                   # 17 JSON Schema files
 ├── canon/                     # 21 canonical anchor files
 ├── casepacks/                 # 28 reproducible validation bundles
-├── tests/                     # 153 test files, 10,832 tests
+├── tests/                     # 164 test files, 11,342 tests
 ├── paper/                     # 10 LaTeX papers + 2 Markdown papers + Bibliography.bib (159 entries)
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log
