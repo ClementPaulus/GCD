@@ -2,9 +2,14 @@
 
 [![PyPI](https://img.shields.io/pypi/v/umcp)](https://pypi.org/project/umcp/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![C99](https://img.shields.io/badge/C99-orchestration-orange.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/src/umcp_c)
+[![C++17](https://img.shields.io/badge/C%2B%2B17-accelerator-orange.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/src/umcp_cpp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/LICENSE)
 [![CI](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/actions/workflows/validate.yml/badge.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/actions)
-[![Tests: 10,586](https://img.shields.io/badge/tests-10%2C586-brightgreen.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/tests)
+[![Tests: 11,389](https://img.shields.io/badge/tests-11%2C389-brightgreen.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/tests)
+[![Theorems: 252](https://img.shields.io/badge/theorems-252-purple.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CATALOGUE.md)
+[![Domains: 20](https://img.shields.io/badge/domains-20-teal.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/closures)
+[![Production/Stable](https://img.shields.io/badge/status-Production%2FStable-brightgreen.svg)](https://pypi.org/project/umcp/)
 
 **A contract-first validation framework for reproducible computational workflows.**
 
@@ -23,11 +28,13 @@ Built on **Generative Collapse Dynamics (GCD)**, a measurement theory derived fr
 | **Contract-first validation** | Define mathematical contracts before evidence. Frozen parameters ensure reproducibility. |
 | **Tier-1 kernel** | Six invariants (F, ω, S, C, κ, IC) computed from any bounded trace vector — domain-independent. |
 | **20 scientific domains** | From particle physics and cosmology to neuroscience and finance — all through one kernel. |
-| **11,389 tests** | Comprehensive test suite with 181 closure modules and 252 proven theorems. |
+| **252 proven theorems** | 46 lemmas, 44 structural identities, 252 theorems verified to machine precision. |
+| **11,389 tests** | Comprehensive test suite across 164 files with 194 closure modules. |
 | **Three-valued verdicts** | Never boolean. Always CONFORMANT / NONCONFORMANT / NON\_EVALUABLE. |
+| **Three-layer architecture** | C99 orchestration (~1,900 lines) → C++17 accelerator → Python engine. 760 C/C++ assertions. |
 | **Interactive dashboard** | 46-page Streamlit dashboard for real-time kernel exploration. |
 | **CLI + Python API** | Full command-line interface and programmatic access. |
-| **Optional C++17 accelerator** | 50–80× speedup via pybind11. Falls back to NumPy transparently. |
+| **29 casepacks** | Self-contained validation packages with frozen contracts and expected outputs. |
 
 ---
 
@@ -48,6 +55,8 @@ pip install umcp[all]
 ```
 
 **Requires Python ≥ 3.11**. Core dependencies: `numpy`, `scipy`, `pyyaml`, `jsonschema`.
+
+Optional: C99 orchestration core and C++17 accelerator for 50–80× kernel speedup (builds from source, falls back to NumPy transparently).
 
 ---
 
@@ -143,23 +152,28 @@ The kernel maps to three regimes via frozen threshold gates:
 
 Each domain provides closure modules that map real-world data to trace vectors:
 
-| Domain | What It Measures |
-|--------|-----------------|
-| **Standard Model** | 31 particles → 8-channel kernel (27 proven theorems) |
-| **Nuclear Physics** | Binding energy, decay chains, QGP/RHIC confinement |
-| **Quantum Mechanics** | Wavefunction coherence, entanglement, FQHE |
-| **Atomic Physics** | 118 elements through periodic kernel |
-| **Astronomy** | Stellar classification, HR diagram analysis |
-| **Cosmology (Weyl)** | Modified gravity, cosmological coherence |
-| **Materials Science** | 118-element database, crystal structures |
-| **Finance** | Portfolio continuity, market coherence |
-| **Kinematics** | Motion analysis, phase space trajectories |
-| **Evolution** | 40 organisms, 10-channel brain kernel |
-| **Consciousness** | 20 systems, coherence kernel, 7 theorems |
-| **Clinical Neuroscience** | Cortical/structural/metabolic/systemic kernel |
-| **Dynamic Semiotics** | 30 sign systems, 8-channel semiotic kernel |
-| **Spacetime Memory** | 40 entities, budget-surface kernel |
-| ... and 6 more | GCD, RCFT, Security, Everyday Physics, Continuity Theory, Awareness-Cognition |
+| Domain | What It Measures | Proven Theorems |
+|--------|------------------|-----------------:|
+| **Standard Model** | 31 particles → 8-channel kernel | 27 |
+| **Nuclear Physics** | Binding energy, decay chains, QGP/RHIC confinement | 16 |
+| **Quantum Mechanics** | Wavefunction coherence, entanglement, FQHE | 42 |
+| **Atomic Physics** | 118 elements through periodic kernel | 10 |
+| **Astronomy** | Stellar classification, HR diagram, oldest MW stars | 10 |
+| **Cosmology (Weyl)** | Modified gravity, cosmological coherence | 6 |
+| **Materials Science** | 118-element database, crystal/photonic structures | 6 |
+| **Finance** | Portfolio continuity, market microstructure | 6 |
+| **Kinematics** | Motion analysis, phase space trajectories | 6 |
+| **Evolution** | 40 organisms, 10-channel brain kernel | 6 |
+| **Consciousness** | 20 systems, coherence kernel, altered states | 13 |
+| **Clinical Neuroscience** | Cortical, neurotransmitter, developmental kernel | 22 |
+| **Dynamic Semiotics** | 30 sign systems, computational semiotics | 12 |
+| **Spacetime Memory** | Gravitational wave memory, temporal topology | 22 |
+| **Continuity Theory** | Topological persistence, organizational resilience | 12 |
+| **Awareness-Cognition** | 5+5 channel awareness-aptitude, attention | 16 |
+| **Everyday Physics** | Fluids, acoustics, rigid body dynamics | 18 |
+| **Security** | Input validation, audit trails | — |
+| **GCD** | Generative Collapse Dynamics core | — |
+| **RCFT** | Recursive Collapse Field Theory | — |
 
 ---
 
@@ -185,8 +199,27 @@ pip install umcp[api]            # FastAPI REST server
 pip install umcp[communications] # Dashboard + API combined
 pip install umcp[dev]            # pytest, ruff, mypy, pre-commit
 pip install umcp[test]           # pytest + coverage
-pip install umcp[cpp]            # pybind11 for C++ accelerator build
+pip install umcp[cpp]            # pybind11 for C/C++ accelerator build
 pip install umcp[all]            # Everything
+```
+
+---
+
+## C/C++ Stack (Optional)
+
+The optional three-layer C → C++ → Python architecture provides a stable ABI
+and 50–80× kernel speedup. Falls back to NumPy transparently if not built.
+
+```bash
+# C99 orchestration core (standalone — 326 test assertions)
+cd src/umcp_c && mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc)
+./test_umcp_c              # 166 kernel tests
+./test_umcp_orchestration  # 160 orchestration tests
+
+# Integrated C + C++ + pybind11 (760 total assertions)
+cd src/umcp_cpp && mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc)
 ```
 
 ---
@@ -194,20 +227,31 @@ pip install umcp[all]            # Everything
 ## Project Structure
 
 ```
-src/umcp/               # Core validation engine
-├── frozen_contract.py   # Frozen parameters + kernel computation
+src/umcp/               # Core Python validation engine
+├── frozen_contract.py   # Frozen parameters (seam-derived)
 ├── kernel_optimized.py  # Lemma-based kernel with diagnostics
 ├── validator.py         # 16-file casepack validator
 ├── seam_optimized.py    # Seam budget computation
 ├── cli.py               # Full CLI (umcp validate, list, health, ...)
 ├── dashboard/           # 46-page Streamlit dashboard
 ├── fleet/               # Distributed validation (scheduler, workers, queue)
-└── ...
+└── ...                  # 20+ modules total
 
-closures/                # 20 domain closure modules (198 total)
-contracts/               # Versioned mathematical contracts (YAML)
-casepacks/               # 28 self-contained validation packages
-schemas/                 # JSON Schema Draft 2020-12 definitions
+src/umcp_c/             # C99 Orchestration Core (~1,900 lines)
+├── include/umcp_c/      # 9 headers (kernel, contract, regime, trace, ledger, pipeline, ...)
+├── src/                 # 8 source files
+└── tests/               # 326 test assertions (166 kernel + 160 orchestration)
+
+src/umcp_cpp/           # C++17 Accelerator (pybind11)
+├── include/umcp/        # kernel, seam, integrity headers
+├── bindings/            # Zero-copy NumPy bridge
+└── tests/               # 434 Catch2 assertions
+
+closures/                # 20 domain closure modules (194 .py files)
+contracts/               # 23 versioned mathematical contracts (YAML)
+casepacks/               # 29 self-contained validation packages
+schemas/                 # 17 JSON Schema Draft 2020-12 definitions
+canon/                   # 21 canonical anchor files
 ```
 
 ---
@@ -229,7 +273,10 @@ schemas/                 # JSON Schema Draft 2020-12 definitions
 
 - **Repository**: [github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS)
 - **Documentation**: [README (full)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/README.md)
+- **Kernel Specification**: [KERNEL_SPECIFICATION.md](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/KERNEL_SPECIFICATION.md)
+- **Master Catalogue**: [CATALOGUE.md](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CATALOGUE.md) — all 620+ formal objects
 - **Quick Start Tutorial**: [QUICKSTART_TUTORIAL.md](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/QUICKSTART_TUTORIAL.md)
+- **Contributing**: [CONTRIBUTING.md](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CONTRIBUTING.md)
 - **Changelog**: [CHANGELOG.md](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CHANGELOG.md)
 - **Issues**: [GitHub Issues](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/issues)
 - **License**: [MIT](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/LICENSE)

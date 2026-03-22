@@ -1,7 +1,7 @@
 #
 # UMCP runnable + publication-grade repo configuration.
 # - build system (setuptools)
-# - project metadatarun
+# - project metadata
 # - runtime deps (minimal)
 # - dev/test deps
 # - pytest config
@@ -17,7 +17,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "umcp"
 version = "2.2.4"
-description = "Contract-first validation framework for reproducible computational workflows. Six kernel invariants, 20 scientific domains, three-valued verdicts."
+description = "Contract-first validation framework for reproducible computational workflows. Six kernel invariants, 20 scientific domains, 252 proven theorems, three-layer C/C++/Python architecture, three-valued verdicts."
 readme = "README_PYPI.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -39,24 +39,44 @@ keywords = [
   "computational-science",
   "UMCP",
   "GCD",
+  "particle-physics",
+  "neuroscience",
+  "cosmology",
+  "quantum-mechanics",
+  "materials-science",
+  "finance",
+  "three-valued-logic",
+  "mathematical-proof",
+  "collapse-dynamics",
+  "fidelity",
 ]
 
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
   "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: C",
+  "Programming Language :: C++",
   "Typing :: Typed",
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Mathematics",
   "Topic :: Scientific/Engineering :: Physics",
+  "Topic :: Scientific/Engineering :: Chemistry",
+  "Topic :: Scientific/Engineering :: Astronomy",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
   "Topic :: Scientific/Engineering :: Information Analysis",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
   "Topic :: Software Development :: Quality Assurance",
   "Topic :: Software Development :: Testing",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Natural Language :: English",
 ]
 
 # Core runtime dependencies for validation engine
@@ -124,8 +144,9 @@ communications = [
   "numpy>=1.24.0"
 ]
 
-# C++ accelerator build dependencies (optional)
-# Build with: pip install -e ".[cpp]" then cd src/umcp_cpp && mkdir build && cd build && cmake .. && make
+# C/C++ accelerator build dependencies (optional)
+# C99 core: cd src/umcp_c && mkdir build && cd build && cmake .. && make
+# C++ + pybind11: pip install -e ".[cpp]" then cd src/umcp_cpp && mkdir build && cd build && cmake .. && make
 cpp = [
   "pybind11>=2.12.0",
   "numpy>=1.24.0"
@@ -160,6 +181,9 @@ Documentation = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/
 Changelog = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CHANGELOG.md"
 "Quick Start" = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/QUICKSTART_TUTORIAL.md"
 Download = "https://pypi.org/project/umcp/#files"
+"Kernel Specification" = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/KERNEL_SPECIFICATION.md"
+"Catalogue" = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CATALOGUE.md"
+"Contributing" = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CONTRIBUTING.md"
 
 [project.scripts]
 umcp = "umcp.cli:main"
