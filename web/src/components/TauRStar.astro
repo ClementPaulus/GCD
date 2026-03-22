@@ -56,36 +56,35 @@
   <!-- Heatmap -->
   <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
     <h3 class="text-sm font-bold text-kernel-300 mb-3">τ_R* Heatmap (ω × C)</h3>
-    <div class="flex gap-4">
-      <canvas id="tau-canvas" width="400" height="400"
-        class="flex-1 max-w-[400px] cursor-crosshair rounded border border-kernel-600"
-        style="image-rendering: pixelated;">
-      </canvas>
-      <!-- Color legend -->
-      <div class="flex flex-col justify-between text-xs text-kernel-500 w-16">
-        <span>High τ_R*</span>
-        <div class="flex-1 my-2 rounded" id="legend-gradient"></div>
-        <span>Low τ_R*</span>
+    <div class="flex gap-4 items-start">
+      <div class="relative">
+        <canvas id="tau-canvas"
+          class="cursor-crosshair rounded border border-kernel-600"
+          style="width: 460px; height: 420px;">
+        </canvas>
+        <div id="tau-tooltip" class="absolute hidden pointer-events-none text-xs font-mono bg-kernel-900/95 border border-kernel-600 rounded px-2 py-1 text-kernel-200 shadow-lg z-10"></div>
       </div>
-    </div>
-    <div class="flex justify-between text-xs text-kernel-500 mt-1 max-w-[400px]">
-      <span>ω = 0</span>
-      <span>ω →</span>
-      <span>ω = 1</span>
+      <div class="flex flex-col items-center gap-1">
+        <span class="text-xs text-kernel-500">τ_R*</span>
+        <canvas id="tau-colorbar" style="width: 20px; height: 300px;" class="rounded border border-kernel-700"></canvas>
+        <div class="flex flex-col justify-between text-xs text-kernel-500" style="height: 300px;">
+          <span>High</span>
+          <span>Mid</span>
+          <span>Low</span>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Drift cost curve Γ(ω) -->
   <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
     <h3 class="text-sm font-bold text-kernel-300 mb-3">Drift Cost Γ(ω) = ω³/(1−ω+ε)</h3>
-    <canvas id="gamma-canvas" width="600" height="200"
-      class="w-full max-w-[600px] rounded border border-kernel-600">
-    </canvas>
-    <div class="flex justify-between text-xs text-kernel-500 mt-1 max-w-[600px]">
-      <span>ω = 0</span>
-      <span>ω₀ ≈ 0.038</span>
-      <span>ω_trap ≈ 0.318</span>
-      <span>ω = 1</span>
+    <div class="relative">
+      <canvas id="gamma-canvas"
+        class="w-full rounded border border-kernel-600 cursor-crosshair"
+        style="max-width: 720px; height: 280px;">
+      </canvas>
+      <div id="gamma-tooltip" class="absolute hidden pointer-events-none text-xs font-mono bg-kernel-900/95 border border-kernel-600 rounded px-2 py-1 text-kernel-200 shadow-lg z-10"></div>
     </div>
   </div>
 </div>
@@ -94,147 +93,426 @@
   import { computeTauRStar, computeRCritical, gammaOmega, costCurvature, computeSeamBudget } from '../lib/kernel';
   import { EPSILON, P_EXPONENT, ALPHA, OMEGA_TRAP, C_STAR } from '../lib/constants';
 
-  // Elements
   const omegaSlider = document.getElementById('tau-omega') as HTMLInputElement;
   const cSlider = document.getElementById('tau-C') as HTMLInputElement;
   const rSlider = document.getElementById('tau-R') as HTMLInputElement;
   const dkSlider = document.getElementById('tau-dk') as HTMLInputElement;
 
-  // Render τ_R* heatmap
+  function formatV(v: number): string {
+    if (v === 0) return '0';
+    const a = Math.abs(v);
+    if (a >= 1000 || (a < 0.01 && a > 0)) return v.toExponential(1);
+    if (Number.isInteger(v)) return v.toString();
+    return v.toPrecision(3);
+  }
+
+  // τ_R* heatmap — professional rendering with axes
+  let heatmapVals: number[][] = [];
+  let heatmapMaxTau = 1;
+
   function renderHeatmap() {
     const canvas = document.getElementById('tau-canvas') as HTMLCanvasElement;
+    const cssW = 460, cssH = 420;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+
     const ctx = canvas.getContext('2d')!;
-    const res = 200;
-    canvas.width = res;
-    canvas.height = res;
+    ctx.scale(dpr, dpr);
 
-    const imageData = ctx.createImageData(res, res);
+    const m = { top: 20, right: 16, bottom: 48, left: 52 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
 
-    // Find max τ_R* for normalization
-    let maxTau = 0;
-    const vals: number[][] = [];
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Compute values
+    const res = 300;
+    heatmapMaxTau = 0;
+    heatmapVals = [];
+
     for (let py = 0; py < res; py++) {
-      vals[py] = [];
-      const C = 1.0 - py / (res - 1); // top=1, bottom=0
+      heatmapVals[py] = [];
+      const C = 1.0 - py / (res - 1);
       for (let px = 0; px < res; px++) {
         const omega = px / (res - 1);
         const tau = computeTauRStar(omega, C);
-        vals[py][px] = tau;
-        if (isFinite(tau) && tau > maxTau) maxTau = tau;
+        heatmapVals[py][px] = tau;
+        if (isFinite(tau) && tau > heatmapMaxTau) heatmapMaxTau = tau;
       }
     }
 
-    // Render pixels
+    // Render offscreen
+    const offscreen = new OffscreenCanvas(res, res);
+    const octx = offscreen.getContext('2d')!;
+    const imageData = octx.createImageData(res, res);
+
     for (let py = 0; py < res; py++) {
       for (let px = 0; px < res; px++) {
-        const tau = vals[py][px];
-        const norm = isFinite(tau) ? Math.min(tau / maxTau, 1.0) : 0;
-
-        // Color: blue (low) → green (mid) → yellow (high)
+        const tau = heatmapVals[py][px];
+        const norm = isFinite(tau) ? Math.min(tau / heatmapMaxTau, 1.0) : 0;
         const idx = (py * res + px) * 4;
-        if (norm < 0.5) {
-          const t = norm * 2;
-          imageData.data[idx] = Math.floor(10 * (1 - t));
-          imageData.data[idx + 1] = Math.floor(80 * t);
-          imageData.data[idx + 2] = Math.floor(120 * (1 - t) + 40 * t);
+
+        // Deep blue → teal → green → yellow
+        if (norm < 0.25) {
+          const t = norm / 0.25;
+          imageData.data[idx] = Math.floor(8 + t * 5);
+          imageData.data[idx + 1] = Math.floor(15 + t * 50);
+          imageData.data[idx + 2] = Math.floor(60 + t * 60);
+        } else if (norm < 0.5) {
+          const t = (norm - 0.25) / 0.25;
+          imageData.data[idx] = Math.floor(13 - t * 5);
+          imageData.data[idx + 1] = Math.floor(65 + t * 80);
+          imageData.data[idx + 2] = Math.floor(120 - t * 60);
+        } else if (norm < 0.75) {
+          const t = (norm - 0.5) / 0.25;
+          imageData.data[idx] = Math.floor(8 + t * 80);
+          imageData.data[idx + 1] = Math.floor(145 + t * 55);
+          imageData.data[idx + 2] = Math.floor(60 - t * 40);
         } else {
-          const t = (norm - 0.5) * 2;
-          imageData.data[idx] = Math.floor(40 * t + 10);
-          imageData.data[idx + 1] = Math.floor(80 + 120 * t);
-          imageData.data[idx + 2] = Math.floor(40 * (1 - t));
+          const t = (norm - 0.75) / 0.25;
+          imageData.data[idx] = Math.floor(88 + t * 167);
+          imageData.data[idx + 1] = Math.floor(200 + t * 40);
+          imageData.data[idx + 2] = Math.floor(20 + t * 10);
         }
         imageData.data[idx + 3] = 255;
       }
     }
+    octx.putImageData(imageData, 0, 0);
 
-    ctx.putImageData(imageData, 0, 0);
+    // Draw smoothly
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(offscreen, m.left, m.top, plotW, plotH);
 
-    // Draw regime boundary lines
-    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    // Regime boundary lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
     ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
-
-    // ω = 0.038 (stable boundary)
-    const x038 = Math.floor(0.038 * (res - 1));
-    ctx.beginPath(); ctx.moveTo(x038, 0); ctx.lineTo(x038, res); ctx.stroke();
-
-    // ω = 0.30 (collapse boundary)
-    const x030 = Math.floor(0.30 * (res - 1));
-    ctx.beginPath(); ctx.moveTo(x030, 0); ctx.lineTo(x030, res); ctx.stroke();
-
+    ctx.setLineDash([5, 3]);
+    const x038 = m.left + 0.038 * plotW;
+    ctx.beginPath(); ctx.moveTo(x038, m.top); ctx.lineTo(x038, m.top + plotH); ctx.stroke();
+    const x030 = m.left + 0.30 * plotW;
+    ctx.strokeStyle = 'rgba(239,68,68,0.4)';
+    ctx.beginPath(); ctx.moveTo(x030, m.top); ctx.lineTo(x030, m.top + plotH); ctx.stroke();
     ctx.setLineDash([]);
 
-    // Labels
+    // Annotations
+    ctx.fillStyle = 'rgba(52,211,153,0.6)';
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('ω₀', x038 + 2, m.top + 12);
+    ctx.fillStyle = 'rgba(239,68,68,0.6)';
+    ctx.fillText('ω=0.30', x030 + 2, m.top + 12);
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    // Tick labels
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '10px monospace';
-    ctx.fillText('C ↑', 3, 12);
-    ctx.fillText('ω →', res - 30, res - 4);
-  }
-
-  // Render Γ(ω) curve
-  function renderGammaCurve() {
-    const canvas = document.getElementById('gamma-canvas') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d')!;
-    const W = canvas.width;
-    const H = canvas.height;
-
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#0a0a0f';
-    ctx.fillRect(0, 0, W, H);
-
-    // Compute Γ(ω) for ω ∈ [0, 0.999]
-    const points: [number, number][] = [];
-    let maxGamma = 0;
-
-    for (let i = 0; i < W; i++) {
-      const omega = (i / (W - 1)) * 0.999;
-      const gamma = gammaOmega(omega);
-      if (isFinite(gamma)) maxGamma = Math.max(maxGamma, gamma);
-      points.push([omega, gamma]);
+    ctx.font = '11px ui-monospace, monospace';
+    const ticks = 5;
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= ticks; i++) {
+      const val = i / ticks;
+      const x = m.left + (i / ticks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top + plotH); ctx.lineTo(x, m.top + plotH + 4);
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.stroke();
+      ctx.fillText(val.toFixed(1), x, m.top + plotH + 18);
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= ticks; i++) {
+      const val = 1 - i / ticks;
+      const y = m.top + (i / ticks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left - 4, y); ctx.lineTo(m.left, y);
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.stroke();
+      ctx.fillText(val.toFixed(1), m.left - 7, y + 4);
     }
 
-    // Cap for visualization
-    const capGamma = Math.min(maxGamma, 50);
+    // Axis titles
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ω (Drift)', m.left + plotW / 2, cssH - 6);
+    ctx.save();
+    ctx.translate(14, m.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('C (Curvature)', 0, 0);
+    ctx.restore();
 
-    // Draw curve
-    ctx.strokeStyle = '#f59e0b';
-    ctx.lineWidth = 2;
+    // Render color bar
+    renderColorBar();
+
+    // Hover
+    const tooltip = document.getElementById('tau-tooltip')!;
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      if (mx < m.left || mx > m.left + plotW || my < m.top || my > m.top + plotH) {
+        tooltip.classList.add('hidden');
+        return;
+      }
+      const omega = (mx - m.left) / plotW;
+      const C = 1.0 - (my - m.top) / plotH;
+      const tau = computeTauRStar(omega, C);
+      const phase = tau > 10 ? 'Favorable' : tau > 1 ? 'Marginal' : tau > 0.1 ? 'Difficult' : 'Trapped';
+      tooltip.innerHTML = `ω=${omega.toFixed(3)} C=${C.toFixed(3)}<br>τ_R*=${formatV(tau)} (${phase})`;
+      tooltip.style.left = (mx + 14) + 'px';
+      tooltip.style.top = (my - 10) + 'px';
+      tooltip.classList.remove('hidden');
+    });
+    canvas.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
+  }
+
+  function renderColorBar() {
+    const bar = document.getElementById('tau-colorbar') as HTMLCanvasElement;
+    const dpr = window.devicePixelRatio || 1;
+    bar.width = Math.round(20 * dpr);
+    bar.height = Math.round(300 * dpr);
+    const ctx = bar.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    for (let y = 0; y < 300; y++) {
+      const norm = 1 - y / 299;
+      let r: number, g: number, b: number;
+      if (norm < 0.25) {
+        const t = norm / 0.25;
+        r = 8 + t * 5; g = 15 + t * 50; b = 60 + t * 60;
+      } else if (norm < 0.5) {
+        const t = (norm - 0.25) / 0.25;
+        r = 13 - t * 5; g = 65 + t * 80; b = 120 - t * 60;
+      } else if (norm < 0.75) {
+        const t = (norm - 0.5) / 0.25;
+        r = 8 + t * 80; g = 145 + t * 55; b = 60 - t * 40;
+      } else {
+        const t = (norm - 0.75) / 0.25;
+        r = 88 + t * 167; g = 200 + t * 40; b = 20 + t * 10;
+      }
+      ctx.fillStyle = `rgb(${Math.floor(r)},${Math.floor(g)},${Math.floor(b)})`;
+      ctx.fillRect(0, y, 20, 1);
+    }
+  }
+
+  // Γ(ω) curve — professional rendering
+  let gammaData: [number, number][] = [];
+  let gammaCap = 50;
+  let gammaArea: { ctx: CanvasRenderingContext2D; m: any; plotW: number; plotH: number; cssW: number; cssH: number } | null = null;
+
+  function renderGammaCurve(highlightOmega?: number) {
+    const canvas = document.getElementById('gamma-canvas') as HTMLCanvasElement;
+    const container = canvas.parentElement!;
+    const cssW = Math.min(container.clientWidth, 720);
+    const cssH = 280;
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    const m = { top: 24, right: 20, bottom: 48, left: 60 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+    gammaArea = { ctx, m, plotW, plotH, cssW, cssH };
+
+    // Background
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Compute data on first render
+    if (gammaData.length === 0) {
+      const N = 600;
+      let maxG = 0;
+      for (let i = 0; i < N; i++) {
+        const omega = (i / (N - 1)) * 0.999;
+        const g = gammaOmega(omega);
+        if (isFinite(g)) maxG = Math.max(maxG, g);
+        gammaData.push([omega, g]);
+      }
+      gammaCap = Math.min(maxG, 50);
+    }
+
+    const xMax = 1.0;
+    const yMax = gammaCap;
+
+    // Grid
+    const xTicks = 10, yTicks = 5;
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= xTicks; i++) {
+      const x = m.left + (i / xTicks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+    for (let i = 0; i <= yTicks; i++) {
+      const y = m.top + (i / yTicks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left, y); ctx.lineTo(m.left + plotW, y); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1;
     ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
 
-    for (let i = 0; i < points.length; i++) {
-      const [omega, gamma] = points[i];
-      const x = (omega / 0.999) * W;
-      const y = H - (Math.min(gamma, capGamma) / capGamma) * (H - 20);
+    // Tick labels
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '11px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= xTicks; i++) {
+      const val = i / xTicks;
+      const x = m.left + (i / xTicks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top + plotH); ctx.lineTo(x, m.top + plotH + 4);
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.stroke();
+      ctx.fillText(val.toFixed(1), x, m.top + plotH + 18);
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= yTicks; i++) {
+      const val = yMax - (i / yTicks) * yMax;
+      const y = m.top + (i / yTicks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left - 4, y); ctx.lineTo(m.left, y);
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.stroke();
+      ctx.fillText(formatV(val), m.left - 7, y + 4);
+    }
 
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    // Axis titles
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ω', m.left + plotW / 2, cssH - 6);
+    ctx.save();
+    ctx.translate(14, m.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Γ(ω)', 0, 0);
+    ctx.restore();
+
+    const mapPx = (omega: number) => m.left + (omega / xMax) * plotW;
+    const mapPy = (g: number) => m.top + (1 - Math.min(g, yMax) / yMax) * plotH;
+
+    // Clip
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(m.left, m.top, plotW, plotH);
+    ctx.clip();
+
+    // Fill under curve
+    const gradient = ctx.createLinearGradient(0, m.top, 0, m.top + plotH);
+    gradient.addColorStop(0, 'rgba(245,158,11,0.15)');
+    gradient.addColorStop(1, 'rgba(245,158,11,0.01)');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.moveTo(mapPx(gammaData[0][0]), mapPy(0));
+    for (const [omega, g] of gammaData) ctx.lineTo(mapPx(omega), mapPy(g));
+    ctx.lineTo(mapPx(gammaData[gammaData.length - 1][0]), mapPy(0));
+    ctx.closePath();
+    ctx.fill();
+
+    // Main curve
+    ctx.shadowColor = 'rgba(245,158,11,0.4)';
+    ctx.shadowBlur = 5;
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < gammaData.length; i++) {
+      const px = mapPx(gammaData[i][0]);
+      const py = mapPy(gammaData[i][1]);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
     }
     ctx.stroke();
+    ctx.shadowBlur = 0;
 
-    // Mark ω = 0.038 (stable boundary)
-    ctx.strokeStyle = 'rgba(52, 211, 153, 0.5)';
-    ctx.setLineDash([4, 4]);
-    const x038 = (0.038 / 0.999) * W;
-    ctx.beginPath(); ctx.moveTo(x038, 0); ctx.lineTo(x038, H); ctx.stroke();
+    ctx.restore();
 
-    // Mark ω_trap ≈ 0.318
-    ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
-    const xTrap = (OMEGA_TRAP / 0.999) * W;
-    ctx.beginPath(); ctx.moveTo(xTrap, 0); ctx.lineTo(xTrap, H); ctx.stroke();
+    // Regime markers
+    // ω₀ = 0.038
+    ctx.strokeStyle = 'rgba(52,211,153,0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(mapPx(0.038), m.top); ctx.lineTo(mapPx(0.038), m.top + plotH); ctx.stroke();
+    // ω_trap
+    ctx.strokeStyle = 'rgba(239,68,68,0.5)';
+    ctx.beginPath(); ctx.moveTo(mapPx(OMEGA_TRAP), m.top); ctx.lineTo(mapPx(OMEGA_TRAP), m.top + plotH); ctx.stroke();
+    // ω = 0.30
+    ctx.strokeStyle = 'rgba(251,191,36,0.4)';
+    ctx.beginPath(); ctx.moveTo(mapPx(0.30), m.top); ctx.lineTo(mapPx(0.30), m.top + plotH); ctx.stroke();
     ctx.setLineDash([]);
 
-    // Axis labels
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.font = '10px monospace';
-    ctx.fillText('Γ(ω)', 5, 12);
-    ctx.fillText(`max ≈ ${capGamma.toFixed(1)}`, W - 80, 12);
+    // Marker labels
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(52,211,153,0.7)';
+    ctx.fillText('ω₀=0.038', mapPx(0.038) + 3, m.top + plotH - 4);
+    ctx.fillStyle = 'rgba(251,191,36,0.7)';
+    ctx.fillText('ω=0.30', mapPx(0.30) + 3, m.top + plotH - 4);
+    ctx.fillStyle = 'rgba(239,68,68,0.7)';
+    ctx.fillText('ω_trap', mapPx(OMEGA_TRAP) + 3, m.top + plotH - 4);
+
+    // Marker dots on curve
+    const gammaAt038 = gammaOmega(0.038);
+    ctx.beginPath(); ctx.arc(mapPx(0.038), mapPy(gammaAt038), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#34d399'; ctx.fill();
+
+    const gammaAtTrap = gammaOmega(OMEGA_TRAP);
+    ctx.beginPath(); ctx.arc(mapPx(OMEGA_TRAP), mapPy(gammaAtTrap), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ef4444'; ctx.fill();
+
+    // Highlight crosshair
+    if (highlightOmega !== undefined) {
+      const g = gammaOmega(highlightOmega);
+      const px = mapPx(highlightOmega);
+      const py = mapPy(g);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(px, m.top); ctx.lineTo(px, m.top + plotH); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(m.left, py); ctx.lineTo(m.left + plotW, py); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(245,158,11,0.3)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(px, py, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#f59e0b'; ctx.fill();
+    }
   }
 
-  // Render color legend
-  function renderLegend() {
-    const legend = document.getElementById('legend-gradient')!;
-    legend.style.background = 'linear-gradient(to bottom, #30c840, #105028, #0a0a78)';
-  }
+  // Hover on Γ(ω) chart
+  const gammaCanvas = document.getElementById('gamma-canvas') as HTMLCanvasElement;
+  const gammaTooltip = document.getElementById('gamma-tooltip')!;
+
+  gammaCanvas.addEventListener('mousemove', (e) => {
+    if (!gammaArea) return;
+    const rect = gammaCanvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const { m, plotW, plotH } = gammaArea;
+    if (mx < m.left || mx > m.left + plotW || my < m.top || my > m.top + plotH) {
+      gammaTooltip.classList.add('hidden');
+      renderGammaCurve();
+      return;
+    }
+    const omega = (mx - m.left) / plotW;
+    const g = gammaOmega(omega);
+    renderGammaCurve(omega);
+    gammaTooltip.innerHTML = `ω = ${omega.toFixed(4)}<br>Γ = ${formatV(g)}`;
+    gammaTooltip.style.left = (mx + 14) + 'px';
+    gammaTooltip.style.top = (my - 10) + 'px';
+    gammaTooltip.classList.remove('hidden');
+  });
+  gammaCanvas.addEventListener('mouseleave', () => {
+    gammaTooltip.classList.add('hidden');
+    renderGammaCurve();
+  });
 
   // Update single-point display
   function updatePoint() {
@@ -284,6 +562,5 @@
   // Initialize
   renderHeatmap();
   renderGammaCurve();
-  renderLegend();
   updatePoint();
 </script>

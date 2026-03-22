@@ -28,7 +28,11 @@ const base = import.meta.env.BASE_URL;
     <!-- Scale ladder visual -->
     <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6">
       <h2 class="text-lg font-bold text-kernel-200 mb-4">The Ladder</h2>
-      <div class="relative" id="ladder-visual"></div>
+      <div class="relative">
+        <canvas id="ladder-canvas" class="cursor-crosshair" style="max-width: 720px; height: 360px; width: 100%;"></canvas>
+        <div id="ladder-tooltip" class="hidden absolute text-xs font-mono bg-kernel-800/95 border border-kernel-600 text-kernel-200 px-2 py-1 rounded shadow-lg pointer-events-none z-10 whitespace-nowrap"></div>
+      </div>
+      <div class="grid grid-cols-5 gap-2 mt-4" id="ladder-stats"></div>
     </div>
 
     <!-- Phase boundary analysis -->
@@ -67,11 +71,7 @@ const base = import.meta.env.BASE_URL;
       </div>
       <div id="slaughter-results" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
       <div class="mt-3">
-        <div class="text-xs text-kernel-400 mb-1">IC/F Ratio</div>
-        <div class="h-8 bg-kernel-800 rounded-lg overflow-hidden relative">
-          <div id="explorer-bar" class="h-full bg-green-500 transition-all duration-300 rounded-lg"></div>
-          <div class="absolute inset-0 flex items-center justify-center text-xs font-mono text-white font-bold" id="explorer-bar-label"></div>
-        </div>
+        <canvas id="slaughter-canvas" style="max-width: 720px; height: 120px; width: 100%;"></canvas>
       </div>
     </div>
 
@@ -98,35 +98,35 @@ const base = import.meta.env.BASE_URL;
       subtitle: 'Fundamental fermions',
       channels: [0.63, 0.50, 0.33, 1.00, 0.50, 0.00, 0.33, 0.33],
       channelNames: ['mass_log', 'spin', 'charge', 'color', 'isospin', 'lepton', 'baryon', 'generation'],
-      color: 'blue',
+      color: '#3b82f6',
     },
     {
       name: 'Hadrons',
       subtitle: 'Composite (confinement)',
       channels: [0.55, 0.50, 0.50, EPSILON, 0.50, 0.00, 1.00, 0.33],
       channelNames: ['mass_log', 'spin', 'charge', 'color_confined', 'isospin', 'lepton', 'baryon', 'generation'],
-      color: 'red',
+      color: '#ef4444',
     },
     {
       name: 'Nuclei',
       subtitle: 'Nuclear binding',
       channels: [0.60, 0.50, 0.45, EPSILON, 0.40, 0.00, 1.00, 0.50],
       channelNames: ['mass_log', 'spin', 'charge', 'color_confined', 'isospin', 'lepton', 'baryon', 'shell'],
-      color: 'amber',
+      color: '#f59e0b',
     },
     {
       name: 'Atoms',
       subtitle: 'Electronic restoration',
       channels: [0.65, 0.50, 0.80, 0.75, 0.70, 0.80, 0.85, 0.90],
       channelNames: ['mass', 'spin', 'ionization', 'electronegativity', 'radius', 'affinity', 'melting_pt', 'density'],
-      color: 'green',
+      color: '#22c55e',
     },
     {
       name: 'Molecules',
       subtitle: 'Chemical bonding',
       channels: [0.70, 0.60, 0.85, 0.80, 0.75, 0.65, 0.78, 0.82],
       channelNames: ['bond_energy', 'symmetry', 'polarity', 'reactivity', 'stability', 'flexibility', 'dipole', 'orbital_overlap'],
-      color: 'cyan',
+      color: '#06b6d4',
     },
   ];
 
@@ -138,45 +138,163 @@ const base = import.meta.env.BASE_URL;
     return { ...s, result, regime, icf: result.F > 0 ? result.IC / result.F : 0 };
   });
 
-  // ── Ladder Visual ──
-  const ladderEl = document.getElementById('ladder-visual')!;
-  ladderEl.innerHTML = `
-    <div class="flex items-end gap-1 justify-center mb-4" style="height: 200px;">
-      ${scaleResults.map((s, i) => {
-        const pct = Math.max(5, s.icf * 100);
-        const barColor = s.icf > 0.7 ? 'bg-green-500' : s.icf > 0.3 ? 'bg-amber-500' : 'bg-red-500';
-        return `
-          <div class="flex flex-col items-center flex-1 max-w-[120px]">
-            <div class="text-xs font-mono text-kernel-400 mb-1">${s.icf.toFixed(3)}</div>
-            <div class="w-full ${barColor} rounded-t transition-all" style="height: ${pct * 2}px;"></div>
-            <div class="text-xs text-kernel-300 font-bold mt-2">${s.name}</div>
-            <div class="text-[10px] text-kernel-500">${s.subtitle}</div>
-          </div>
-          ${i < scaleResults.length - 1 ? `
-            <div class="flex flex-col items-center mx-1 self-center">
-              <div class="text-xs text-kernel-600">→</div>
-              <div class="text-[10px] text-kernel-600 mt-1">${
-                scaleResults[i+1].icf > s.icf ? '↑ restore' : '↓ slaughter'
-              }</div>
-            </div>
-          ` : ''}`;
-      }).join('')}
-    </div>
-    <div class="grid grid-cols-5 gap-2 mt-4">
-      ${scaleResults.map(s => {
-        const regimeColor = s.regime.regime === 'STABLE' ? 'text-green-400' : s.regime.regime === 'WATCH' ? 'text-amber-400' : 'text-red-400';
-        return `
-          <div class="bg-kernel-800 rounded p-2 text-center text-xs">
-            <div class="text-kernel-500">F</div>
-            <div class="font-mono text-kernel-300">${s.result.F.toFixed(3)}</div>
-            <div class="text-kernel-500 mt-1">IC</div>
-            <div class="font-mono text-kernel-300">${s.result.IC.toFixed(3)}</div>
-            <div class="text-kernel-500 mt-1">Δ</div>
-            <div class="font-mono text-kernel-300">${s.result.delta.toFixed(3)}</div>
-            <div class="${regimeColor} font-bold mt-1">${s.regime.regime}</div>
-          </div>`;
-      }).join('')}
-    </div>`;
+  // ── Ladder Bar Chart (Canvas) ──
+  function renderLadder() {
+    const canvas = document.getElementById('ladder-canvas') as HTMLCanvasElement;
+    const container = canvas.parentElement!;
+    const cssW = Math.min(container.clientWidth, 720);
+    const cssH = 360;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    const m = { top: 24, right: 32, bottom: 56, left: 56 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+    const n = scaleResults.length;
+    const barW = Math.min(plotW / n * 0.55, 80);
+    const gap = (plotW - barW * n) / (n + 1);
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 10; i++) {
+      const y = m.top + (1 - i / 10) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left, y); ctx.lineTo(m.left + plotW, y); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    // Y-axis ticks & labels
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '11px ui-monospace, monospace';
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 5; i++) {
+      const val = i / 5;
+      const y = m.top + (1 - val) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left - 4, y); ctx.lineTo(m.left, y);
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.stroke();
+      ctx.fillText(val.toFixed(1), m.left - 8, y + 4);
+    }
+
+    // Y-axis title
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.save();
+    ctx.translate(14, m.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText('IC / F', 0, 0);
+    ctx.restore();
+
+    // Draw bars
+    const barPositions: { x: number; w: number; i: number }[] = [];
+    for (let i = 0; i < n; i++) {
+      const s = scaleResults[i];
+      const x = m.left + gap + i * (barW + gap);
+      const barH = Math.max(2, s.icf * plotH);
+      const y = m.top + plotH - barH;
+
+      // Gradient fill
+      const grad = ctx.createLinearGradient(x, y, x, m.top + plotH);
+      grad.addColorStop(0, s.color);
+      grad.addColorStop(1, s.color + '30');
+      ctx.fillStyle = grad;
+
+      // Rounded top corners via path
+      const r = Math.min(4, barW / 4);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + barW - r, y);
+      ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
+      ctx.lineTo(x + barW, m.top + plotH);
+      ctx.lineTo(x, m.top + plotH);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.fill();
+
+      // Glow outline
+      ctx.shadowColor = s.color;
+      ctx.shadowBlur = 6;
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Value label above bar
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = 'bold 11px ui-monospace, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(s.icf.toFixed(3), x + barW / 2, y - 8);
+
+      // Scale name below axis
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.font = 'bold 11px ui-sans-serif, system-ui, sans-serif';
+      ctx.fillText(s.name, x + barW / 2, m.top + plotH + 16);
+      ctx.font = '9px ui-sans-serif, system-ui, sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.fillText(s.subtitle, x + barW / 2, m.top + plotH + 30);
+
+      barPositions.push({ x, w: barW, i });
+
+      // Arrow between bars
+      if (i < n - 1) {
+        const next = scaleResults[i + 1];
+        const isSlaughter = next.icf < s.icf - 0.1;
+        const arrowX = x + barW + gap / 2;
+        const arrowY = m.top + plotH / 2;
+        ctx.fillStyle = isSlaughter ? 'rgba(239,68,68,0.5)' : 'rgba(52,211,153,0.5)';
+        ctx.font = '16px ui-sans-serif, system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('→', arrowX, arrowY);
+        ctx.font = '8px ui-sans-serif, system-ui, sans-serif';
+        ctx.fillText(isSlaughter ? 'slaughter' : 'restore', arrowX, arrowY + 14);
+      }
+    }
+
+    // Hover
+    const tooltip = document.getElementById('ladder-tooltip')!;
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const hit = barPositions.find(b => mx >= b.x && mx <= b.x + b.w && my >= m.top && my <= m.top + plotH);
+      if (!hit) { tooltip.classList.add('hidden'); return; }
+      const s = scaleResults[hit.i];
+      tooltip.innerHTML = `<b>${s.name}</b><br>F=${s.result.F.toFixed(4)} IC=${s.result.IC.toFixed(4)}<br>Δ=${s.result.delta.toFixed(4)} ω=${s.result.omega.toFixed(4)}<br>IC/F=${s.icf.toFixed(4)} · ${s.regime.regime}`;
+      tooltip.style.left = (mx + 14) + 'px';
+      tooltip.style.top = (my - 10) + 'px';
+      tooltip.classList.remove('hidden');
+    });
+    canvas.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
+  }
+
+  // ── Ladder stats grid below chart ──
+  document.getElementById('ladder-stats')!.innerHTML = scaleResults.map(s => {
+    const regimeColor = s.regime.regime === 'STABLE' ? 'text-green-400' : s.regime.regime === 'WATCH' ? 'text-amber-400' : 'text-red-400';
+    return `
+      <div class="bg-kernel-800 rounded p-2 text-center text-xs">
+        <div class="text-kernel-500">F</div>
+        <div class="font-mono text-kernel-300">${s.result.F.toFixed(3)}</div>
+        <div class="text-kernel-500 mt-1">IC</div>
+        <div class="font-mono text-kernel-300">${s.result.IC.toFixed(3)}</div>
+        <div class="text-kernel-500 mt-1">Δ</div>
+        <div class="font-mono text-kernel-300">${s.result.delta.toFixed(3)}</div>
+        <div class="${regimeColor} font-bold mt-1">${s.regime.regime}</div>
+      </div>`;
+  }).join('');
 
   // ── Phase Boundaries ──
   const boundaries = [
@@ -226,10 +344,118 @@ const base = import.meta.env.BASE_URL;
       </div>`;
   }).join('');
 
-  // ── Slaughter Explorer ──
+  // ── Slaughter Explorer (Canvas-based) ──
   const nChannelsEl = document.getElementById('n-channels') as HTMLInputElement;
   const nDeadEl = document.getElementById('n-dead') as HTMLInputElement;
   const healthyValEl = document.getElementById('healthy-val') as HTMLInputElement;
+
+  function renderSlaughterChart(result: any, regime: any, n: number, dead: number, healthy: number) {
+    const canvas = document.getElementById('slaughter-canvas') as HTMLCanvasElement;
+    const container = canvas.parentElement!;
+    const cssW = Math.min(container.clientWidth, 720);
+    const cssH = 120;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    const m = { top: 14, right: 16, bottom: 32, left: 40 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    // Background grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 10; i++) {
+      const x = m.left + (i / 10) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    // X-axis ticks
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 5; i++) {
+      const val = i / 5;
+      const x = m.left + val * plotW;
+      ctx.fillText(val.toFixed(1), x, m.top + plotH + 14);
+    }
+    ctx.fillText('IC/F Ratio', m.left + plotW / 2, cssH - 4);
+
+    const icf = result.F > 0 ? result.IC / result.F : 0;
+    const barH = plotH * 0.55;
+    const barY = m.top + (plotH - barH) / 2;
+
+    // F bar (background)
+    const fWidth = Math.min(result.F, 1) * plotW;
+    ctx.fillStyle = 'rgba(59,130,246,0.15)';
+    ctx.fillRect(m.left, barY - barH * 0.3, fWidth, barH * 0.25);
+    ctx.fillStyle = 'rgba(59,130,246,0.6)';
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`F=${result.F.toFixed(4)}`, m.left + fWidth + 4, barY - barH * 0.15);
+
+    // IC bar
+    const icWidth = Math.min(result.IC, 1) * plotW;
+    const icColor = icf > 0.7 ? '#22c55e' : icf > 0.3 ? '#f59e0b' : '#ef4444';
+    const icGrad = ctx.createLinearGradient(m.left, 0, m.left + icWidth, 0);
+    icGrad.addColorStop(0, icColor + '40');
+    icGrad.addColorStop(1, icColor);
+    ctx.fillStyle = icGrad;
+    ctx.beginPath();
+    const r = Math.min(4, barH / 4);
+    ctx.roundRect(m.left, barY, Math.max(icWidth, 2), barH, [0, r, r, 0]);
+    ctx.fill();
+
+    // IC glow
+    ctx.shadowColor = icColor;
+    ctx.shadowBlur = 8;
+    ctx.strokeStyle = icColor;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Value labels on bar
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 12px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    const labelX = Math.max(m.left + icWidth / 2, m.left + 40);
+    ctx.fillText(`IC/F = ${icf.toFixed(4)}`, labelX, barY + barH / 2 + 5);
+
+    // IC value label
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`IC=${result.IC.toFixed(6)}`, m.left + icWidth + 4, barY + barH + 4);
+
+    // Y label
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '10px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('F', m.left - 6, barY - barH * 0.12);
+    ctx.fillText('IC', m.left - 6, barY + barH / 2 + 4);
+
+    // Regime marker line at IC/F position
+    const markerX = m.left + icf * plotW;
+    ctx.strokeStyle = icColor + '80';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(markerX, m.top); ctx.lineTo(markerX, m.top + plotH); ctx.stroke();
+    ctx.setLineDash([]);
+  }
 
   function updateExplorer() {
     const n = parseInt(nChannelsEl.value);
@@ -262,14 +488,13 @@ const base = import.meta.env.BASE_URL;
       </div>
     `).join('');
 
-    const pct = Math.max(0, Math.min(100, icf * 100));
-    const bar = document.getElementById('explorer-bar') as HTMLDivElement;
-    bar.style.width = `${pct}%`;
-    bar.className = `h-full transition-all duration-300 rounded-lg ${pct > 70 ? 'bg-green-500' : pct > 40 ? 'bg-amber-500' : 'bg-red-500'}`;
-    document.getElementById('explorer-bar-label')!.textContent = `IC/F = ${icf.toFixed(4)}`;
+    renderSlaughterChart(result, regime, n, dead, healthy);
   }
 
   [nChannelsEl, nDeadEl, healthyValEl].forEach(el => el.addEventListener('input', updateExplorer));
+
+  // Initialize
+  renderLadder();
   updateExplorer();
 
   // ── Domain Examples ──

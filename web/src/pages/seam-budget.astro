@@ -87,11 +87,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         Γ(ω) = ω³ / (1 − ω + ε). Monotone increasing with a pole at ω = 1.
         The frozen exponent p = 3 yields ω_trap = 0.6823 (Cardano root of x³ + x − 1 = 0).
       </p>
-      <div class="relative bg-kernel-800 rounded-lg overflow-hidden" style="height: 240px;" id="gamma-chart"></div>
-      <div class="flex justify-between text-[10px] text-kernel-600 mt-1">
-        <span>ω = 0</span>
-        <span>ω = 0.5</span>
-        <span>ω = 1</span>
+      <div class="relative">
+        <canvas id="gamma-canvas" class="cursor-crosshair" style="max-width: 720px; height: 280px; width: 100%;"></canvas>
+        <div id="gamma-tooltip" class="hidden absolute text-xs font-mono bg-kernel-800/95 border border-kernel-600 text-kernel-200 px-2 py-1 rounded shadow-lg pointer-events-none z-10 whitespace-nowrap"></div>
       </div>
     </div>
 
@@ -145,6 +143,206 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     });
   });
 
+  function fmtV(v: number): string {
+    if (v === 0) return '0';
+    if (!isFinite(v)) return '∞';
+    const a = Math.abs(v);
+    if (a >= 1000) return v.toExponential(2);
+    if (a < 0.01 && a > 0) return v.toExponential(2);
+    return v.toFixed(4);
+  }
+
+  // ── Γ(ω) canvas rendering ──
+  let gammaData: [number, number][] = [];
+  let gammaCap = 10;
+
+  function renderGammaChart(currentOmega: number) {
+    const canvas = document.getElementById('gamma-canvas') as HTMLCanvasElement;
+    const container = canvas.parentElement!;
+    const cssW = Math.min(container.clientWidth, 720);
+    const cssH = 280;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    const m = { top: 24, right: 20, bottom: 48, left: 60 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Compute once
+    if (gammaData.length === 0) {
+      let maxG = 0;
+      for (let i = 0; i < 600; i++) {
+        const omega = (i / 599) * 0.999;
+        const g = gammaOmega(omega);
+        if (isFinite(g)) maxG = Math.max(maxG, g);
+        gammaData.push([omega, g]);
+      }
+      gammaCap = Math.min(maxG, 10);
+    }
+
+    const xMax = 1.0, yMax = gammaCap;
+    const mapX = (omega: number) => m.left + (omega / xMax) * plotW;
+    const mapY = (g: number) => m.top + (1 - Math.min(g, yMax) / yMax) * plotH;
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 10; i++) {
+      const x = m.left + (i / 10) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+    for (let i = 0; i <= 5; i++) {
+      const y = m.top + (i / 5) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left, y); ctx.lineTo(m.left + plotW, y); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    // Tick labels
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '11px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 10; i++) {
+      const val = i / 10;
+      const x = m.left + (i / 10) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top + plotH); ctx.lineTo(x, m.top + plotH + 4);
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.stroke();
+      if (i % 2 === 0) ctx.fillText(val.toFixed(1), x, m.top + plotH + 18);
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 5; i++) {
+      const val = yMax - (i / 5) * yMax;
+      const y = m.top + (i / 5) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left - 4, y); ctx.lineTo(m.left, y);
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.stroke();
+      ctx.fillText(fmtV(val), m.left - 7, y + 4);
+    }
+
+    // Titles
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ω', m.left + plotW / 2, cssH - 6);
+    ctx.save(); ctx.translate(14, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Γ(ω)', 0, 0); ctx.restore();
+
+    // Clip area
+    ctx.save();
+    ctx.beginPath(); ctx.rect(m.left, m.top, plotW, plotH); ctx.clip();
+
+    // Gradient fill
+    const grad = ctx.createLinearGradient(0, m.top, 0, m.top + plotH);
+    grad.addColorStop(0, 'rgba(239,68,68,0.12)');
+    grad.addColorStop(1, 'rgba(239,68,68,0.01)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(mapX(gammaData[0][0]), mapY(0));
+    for (const [w, g] of gammaData) ctx.lineTo(mapX(w), mapY(g));
+    ctx.lineTo(mapX(gammaData[gammaData.length - 1][0]), mapY(0));
+    ctx.closePath(); ctx.fill();
+
+    // Main curve
+    ctx.shadowColor = 'rgba(239,68,68,0.4)';
+    ctx.shadowBlur = 5;
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < gammaData.length; i++) {
+      const px = mapX(gammaData[i][0]);
+      const py = mapY(gammaData[i][1]);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.restore();
+
+    // Regime boundary markers
+    ctx.setLineDash([4, 3]);
+    ctx.lineWidth = 1;
+
+    // ω₀ = 0.038
+    ctx.strokeStyle = 'rgba(52,211,153,0.5)';
+    ctx.beginPath(); ctx.moveTo(mapX(0.038), m.top); ctx.lineTo(mapX(0.038), m.top + plotH); ctx.stroke();
+    // ω = 0.30
+    ctx.strokeStyle = 'rgba(251,191,36,0.4)';
+    ctx.beginPath(); ctx.moveTo(mapX(0.30), m.top); ctx.lineTo(mapX(0.30), m.top + plotH); ctx.stroke();
+    // ω_trap
+    ctx.strokeStyle = 'rgba(168,85,247,0.5)';
+    ctx.beginPath(); ctx.moveTo(mapX(OMEGA_TRAP), m.top); ctx.lineTo(mapX(OMEGA_TRAP), m.top + plotH); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Labels
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(52,211,153,0.7)';
+    ctx.fillText('ω₀', mapX(0.038) + 2, m.top + 12);
+    ctx.fillStyle = 'rgba(251,191,36,0.7)';
+    ctx.fillText('ω=0.30', mapX(0.30) + 2, m.top + 12);
+    ctx.fillStyle = 'rgba(168,85,247,0.7)';
+    ctx.fillText('ω_trap', mapX(OMEGA_TRAP) + 2, m.top + 24);
+
+    // Dots on curve
+    ctx.beginPath(); ctx.arc(mapX(0.038), mapY(gammaOmega(0.038)), 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#34d399'; ctx.fill();
+    ctx.beginPath(); ctx.arc(mapX(OMEGA_TRAP), mapY(gammaOmega(OMEGA_TRAP)), 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#a855f7'; ctx.fill();
+
+    // Current position marker
+    const g = gammaOmega(currentOmega);
+    const cx = mapX(currentOmega), cy = mapY(g);
+
+    ctx.strokeStyle = 'rgba(245,158,11,0.3)';
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(cx, m.top); ctx.lineTo(cx, m.top + plotH); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(m.left, cy); ctx.lineTo(m.left + plotW, cy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(245,158,11,0.25)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#f59e0b'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 0.5;
+    ctx.stroke();
+
+    // Value label
+    ctx.fillStyle = 'rgba(245,158,11,0.9)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Γ(${currentOmega.toFixed(3)}) = ${fmtV(g)}`, cx + 8, cy - 6);
+  }
+
+  // Hover on gamma canvas
+  const gammaCanvas = document.getElementById('gamma-canvas') as HTMLCanvasElement;
+  const gammaTooltip = document.getElementById('gamma-tooltip')!;
+  gammaCanvas.addEventListener('mousemove', (e) => {
+    const rect = gammaCanvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const mm = { top: 24, right: 20, bottom: 48, left: 60 };
+    const plotW = parseInt(gammaCanvas.style.width) - mm.left - mm.right;
+    if (mx < mm.left || mx > mm.left + plotW) { gammaTooltip.classList.add('hidden'); return; }
+    const omega = (mx - mm.left) / plotW;
+    const g = gammaOmega(omega);
+    gammaTooltip.innerHTML = `ω = ${omega.toFixed(4)}<br>Γ = ${fmtV(g)}`;
+    gammaTooltip.style.left = (mx + 14) + 'px';
+    gammaTooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+    gammaTooltip.classList.remove('hidden');
+  });
+  gammaCanvas.addEventListener('mouseleave', () => gammaTooltip.classList.add('hidden'));
+
   function update() {
     const omega = parseFloat(els.omega.value);
     const C = parseFloat(els.curvature.value);
@@ -152,7 +350,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const tauR = els.infRec.checked ? Infinity : parseInt(els.tauR.value);
     const kappaLedger = parseFloat(els.kappaLedger.value);
 
-    // labels
     document.getElementById('omega-label')!.textContent = omega.toFixed(3);
     document.getElementById('curvature-label')!.textContent = C.toFixed(2);
     document.getElementById('R-label')!.textContent = R.toFixed(2);
@@ -165,12 +362,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const D_C = budget.D_C;
     const credit = els.infRec.checked ? 0 : R * tauR;
 
-    // Results cards
     const metrics = [
-      { l: 'Γ(ω)', v: gamma > 1000 ? gamma.toExponential(2) : gamma.toFixed(4), c: 'text-red-400' },
-      { l: 'D_C = α·C', v: D_C.toFixed(4), c: 'text-amber-400' },
-      { l: 'Credit R·τ_R', v: els.infRec.checked ? '0 (∞_rec)' : credit.toFixed(4), c: credit > 0 ? 'text-green-400' : 'text-kernel-500' },
-      { l: 'Δκ (budget)', v: budget.deltaKappa > 1000 ? budget.deltaKappa.toExponential(2) : budget.deltaKappa.toFixed(4), c: budget.pass ? 'text-green-400' : 'text-red-400' },
+      { l: 'Γ(ω)', v: fmtV(gamma), c: 'text-red-400' },
+      { l: 'D_C = α·C', v: fmtV(D_C), c: 'text-amber-400' },
+      { l: 'Credit R·τ_R', v: els.infRec.checked ? '0 (∞_rec)' : fmtV(credit), c: credit > 0 ? 'text-green-400' : 'text-kernel-500' },
+      { l: 'Δκ (budget)', v: fmtV(budget.deltaKappa), c: budget.pass ? 'text-green-400' : 'text-red-400' },
     ];
 
     document.getElementById('budget-results')!.innerHTML = metrics.map(m => `
@@ -180,35 +376,35 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     `).join('');
 
-    // Budget bar visualization
+    // Budget bars
     const debit = D_omega + D_C;
     const maxScale = Math.max(debit, credit, 0.01);
 
     document.getElementById('budget-bars')!.innerHTML = `
-      <div class="space-y-2">
+      <div class="space-y-3">
         <div>
           <div class="flex justify-between text-xs text-kernel-500 mb-1">
-            <span>Debits: D_ω + D_C = ${debit.toFixed(4)}</span>
+            <span>Debits: D_ω + D_C = ${fmtV(debit)}</span>
             <span class="text-red-400">Cost</span>
           </div>
-          <div class="h-6 bg-kernel-800 rounded overflow-hidden flex">
-            <div class="h-full bg-red-600" style="width: ${Math.min(100, (D_omega / maxScale) * 100)}%;"
-                 title="Γ(ω) = ${D_omega.toFixed(4)}"></div>
-            <div class="h-full bg-amber-600" style="width: ${Math.min(100, (D_C / maxScale) * 100)}%;"
-                 title="D_C = ${D_C.toFixed(4)}"></div>
+          <div class="h-8 bg-kernel-800 rounded-lg overflow-hidden flex shadow-inner">
+            <div class="h-full bg-gradient-to-r from-red-800 to-red-500 transition-all duration-300" style="width: ${Math.min(100, (D_omega / maxScale) * 100)}%;"
+                 title="Γ(ω) = ${fmtV(D_omega)}"></div>
+            <div class="h-full bg-gradient-to-r from-amber-800 to-amber-500 transition-all duration-300" style="width: ${Math.min(100, (D_C / maxScale) * 100)}%;"
+                 title="D_C = ${fmtV(D_C)}"></div>
           </div>
-          <div class="flex text-[10px] text-kernel-600 mt-0.5 gap-3">
-            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-red-600 rounded-sm inline-block"></span> Γ(ω)</span>
-            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-amber-600 rounded-sm inline-block"></span> D_C</span>
+          <div class="flex text-[10px] text-kernel-600 mt-1 gap-4">
+            <span class="flex items-center gap-1"><span class="w-3 h-2 rounded-sm inline-block bg-gradient-to-r from-red-800 to-red-500"></span> Γ(ω) = ${fmtV(D_omega)}</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-2 rounded-sm inline-block bg-gradient-to-r from-amber-800 to-amber-500"></span> D_C = ${fmtV(D_C)}</span>
           </div>
         </div>
         <div>
           <div class="flex justify-between text-xs text-kernel-500 mb-1">
-            <span>Credit: R·τ_R = ${els.infRec.checked ? '0' : credit.toFixed(4)}</span>
+            <span>Credit: R·τ_R = ${els.infRec.checked ? '0 (∞_rec)' : fmtV(credit)}</span>
             <span class="text-green-400">Return</span>
           </div>
-          <div class="h-6 bg-kernel-800 rounded overflow-hidden">
-            <div class="h-full bg-green-600" style="width: ${els.infRec.checked ? 0 : Math.min(100, (credit / maxScale) * 100)}%;"></div>
+          <div class="h-8 bg-kernel-800 rounded-lg overflow-hidden shadow-inner">
+            <div class="h-full bg-gradient-to-r from-green-800 to-green-500 transition-all duration-300 rounded-r-lg" style="width: ${els.infRec.checked ? 0 : Math.min(100, (credit / maxScale) * 100)}%;"></div>
           </div>
         </div>
       </div>`;
@@ -220,70 +416,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <span class="px-3 py-1 rounded text-sm font-bold ${pass ? 'bg-green-900/60 text-green-400 border border-green-700' : 'bg-red-900/60 text-red-400 border border-red-700'}">
         ${pass ? 'SEAM PASS' : 'SEAM FAIL'}
       </span>
-      <span class="text-xs text-kernel-500">|residual| = ${absRes > 1000 ? absRes.toExponential(2) : absRes.toFixed(6)} ${pass ? '≤' : '>'} tol = ${TOL_SEAM}</span>
+      <span class="text-xs text-kernel-500">|residual| = ${fmtV(absRes)} ${pass ? '≤' : '>'} tol = ${TOL_SEAM}</span>
       ${els.infRec.checked ? '<span class="text-xs text-kernel-600 italic ml-2">(Gesture — τ_R = ∞_rec, no credit)</span>' : ''}`;
 
-    // Gamma chart
     renderGammaChart(omega);
-  }
-
-  function renderGammaChart(currentOmega: number) {
-    const chart = document.getElementById('gamma-chart')!;
-    const steps = 200;
-    const maxDisplay = 10; // cap display at Γ=10
-
-    let svg = `<svg viewBox="0 0 ${steps} 100" preserveAspectRatio="none" class="w-full h-full">`;
-
-    // grid lines
-    for (let g = 1; g <= maxDisplay; g += 1) {
-      const y = 100 - (g / maxDisplay) * 100;
-      svg += `<line x1="0" y1="${y}" x2="${steps}" y2="${y}" stroke="#334155" stroke-width="0.3" />`;
-    }
-
-    // curve
-    let path = 'M';
-    for (let i = 0; i <= steps; i++) {
-      const omega = i / steps;
-      const g = gammaOmega(omega);
-      const y = 100 - Math.min(g / maxDisplay, 1) * 100;
-      path += `${i},${y} `;
-    }
-    svg += `<path d="${path}" fill="none" stroke="#ef4444" stroke-width="1.5" />`;
-
-    // current position marker
-    const cx = currentOmega * steps;
-    const cy = 100 - Math.min(gammaOmega(currentOmega) / maxDisplay, 1) * 100;
-    svg += `<circle cx="${cx}" cy="${cy}" r="3" fill="#f59e0b" stroke="#fff" stroke-width="0.5" />`;
-    svg += `<line x1="${cx}" y1="0" x2="${cx}" y2="100" stroke="#f59e0b" stroke-width="0.5" stroke-dasharray="2,2" />`;
-
-    // ω_trap marker
-    const trapX = OMEGA_TRAP * steps;
-    const trapY = 100 - Math.min(gammaOmega(OMEGA_TRAP) / maxDisplay, 1) * 100;
-    svg += `<line x1="${trapX}" y1="0" x2="${trapX}" y2="100" stroke="#a855f7" stroke-width="0.5" stroke-dasharray="3,3" />`;
-    svg += `<circle cx="${trapX}" cy="${trapY}" r="2" fill="#a855f7" />`;
-
-    // regime boundaries
-    const watchX = 0.038 * steps;
-    const collapseX = 0.30 * steps;
-    svg += `<line x1="${watchX}" y1="0" x2="${watchX}" y2="100" stroke="#22c55e" stroke-width="0.3" stroke-dasharray="4,4" />`;
-    svg += `<line x1="${collapseX}" y1="0" x2="${collapseX}" y2="100" stroke="#ef4444" stroke-width="0.3" stroke-dasharray="4,4" />`;
-
-    svg += '</svg>';
-
-    // Y-axis labels
-    chart.innerHTML = `
-      <div class="absolute left-0 top-0 bottom-0 w-6 text-[9px] text-kernel-600 flex flex-col justify-between pr-1">
-        <span>${maxDisplay}</span>
-        <span>${maxDisplay / 2}</span>
-        <span>0</span>
-      </div>
-      <div class="ml-6 h-full">${svg}</div>
-      <div class="absolute text-[9px] text-amber-400 font-mono" style="left: ${cx / steps * 95 + 5}%; top: 4px;">
-        Γ(${currentOmega.toFixed(3)}) = ${gammaOmega(currentOmega).toFixed(4)}
-      </div>
-      <div class="absolute text-[9px] text-purple-400 font-mono" style="left: ${OMEGA_TRAP * 95 + 5}%; bottom: 4px;">
-        ω_trap = ${OMEGA_TRAP}
-      </div>`;
   }
 
   // Cost anatomy cards

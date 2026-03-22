@@ -21,16 +21,16 @@
   <!-- S + κ curve -->
   <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
     <h3 class="text-sm font-bold text-kernel-300 mb-3">f(c) = S(c) + κ(c) — The One Function</h3>
-    <canvas id="sk-canvas" width="600" height="300"
-      class="w-full max-w-[600px] rounded border border-kernel-600">
-    </canvas>
-    <div class="grid grid-cols-3 gap-2 mt-2 text-xs text-kernel-500 max-w-[600px]">
-      <span class="text-amber-400">S(c) — Bernoulli field entropy</span>
-      <span class="text-blue-400">κ(c) — Log-integrity</span>
-      <span class="text-green-400">f(c) = S + κ — Combined</span>
+    <div class="relative">
+      <canvas id="sk-canvas" class="w-full rounded border border-kernel-600 cursor-crosshair"
+        style="max-width: 720px; height: 340px;"></canvas>
+      <div id="sk-tooltip" class="absolute hidden pointer-events-none text-xs font-mono bg-kernel-900/95 border border-kernel-600 rounded px-2 py-1 text-kernel-200 shadow-lg z-10"></div>
     </div>
-    <div class="mt-2 text-xs text-kernel-500">
-      Note: f(1/2) = 0 exactly — the equator is a zero of the combined function.
+    <div class="flex items-center gap-4 mt-2 text-xs max-w-[720px]">
+      <span class="flex items-center gap-1"><span class="w-4 h-0.5 bg-amber-400 inline-block rounded"></span><span class="text-amber-400">S(c)</span></span>
+      <span class="flex items-center gap-1"><span class="w-4 h-0.5 bg-blue-400 inline-block rounded"></span><span class="text-blue-400">κ(c)</span></span>
+      <span class="flex items-center gap-1"><span class="w-4 h-0.5 bg-green-400 inline-block rounded"></span><span class="text-green-400">f = S + κ</span></span>
+      <span class="text-kernel-600 ml-auto">f(1/2) = 0 exactly</span>
     </div>
   </div>
 
@@ -41,15 +41,21 @@
       For n = 2 channels with equal weights, scan c₁ × c₂ and verify IC ≤ F everywhere.
       The gap Δ = F − IC measures channel heterogeneity.
     </p>
-    <canvas id="icf-canvas" width="300" height="300"
-      class="max-w-[300px] rounded border border-kernel-600 cursor-crosshair"
-      style="image-rendering: pixelated;">
-    </canvas>
-    <div class="grid grid-cols-2 gap-2 mt-2 text-xs max-w-[300px]">
-      <span class="text-kernel-500">x-axis: c₁ (0 → 1)</span>
-      <span class="text-kernel-500">y-axis: c₂ (0 → 1)</span>
+    <div class="flex flex-wrap gap-4 items-start">
+      <div class="relative">
+        <canvas id="icf-canvas" class="rounded border border-kernel-600 cursor-crosshair"
+          style="width: 400px; height: 400px;"></canvas>
+        <div id="icf-tooltip" class="absolute hidden pointer-events-none text-xs font-mono bg-kernel-900/95 border border-kernel-600 rounded px-2 py-1 text-kernel-200 shadow-lg z-10"></div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <div class="text-xs text-kernel-500 mb-1">Δ = F − IC color scale</div>
+        <canvas id="icf-colorbar" width="20" height="200" class="rounded border border-kernel-700" style="width: 20px; height: 200px;"></canvas>
+        <div class="flex justify-between text-xs text-kernel-500" style="width: 60px;">
+          <span>0</span><span>0.5</span>
+        </div>
+      </div>
     </div>
-    <div id="icf-hover" class="text-xs text-kernel-400 font-mono mt-1"></div>
+    <div id="icf-hover" class="text-xs text-kernel-400 font-mono mt-2 h-4"></div>
   </div>
 
   <!-- Key geometric facts -->
@@ -65,148 +71,428 @@
 
   // Bernoulli entropy for single channel
   function singleS(c: number): number {
-    const eps = EPSILON;
-    const cc = Math.max(eps, Math.min(1 - eps, c));
+    const cc = Math.max(EPSILON, Math.min(1 - EPSILON, c));
     return -(cc * Math.log(cc) + (1 - cc) * Math.log(1 - cc));
   }
 
   // Log-integrity for single channel
   function singleKappa(c: number): number {
-    const eps = EPSILON;
-    return Math.log(Math.max(c, eps));
+    return Math.log(Math.max(c, EPSILON));
   }
 
-  // S + κ curve
-  function renderSKCurve() {
+  function formatTick(v: number): string {
+    if (v === 0) return '0';
+    const a = Math.abs(v);
+    if (a >= 1000 || (a < 0.01 && a > 0)) return v.toExponential(1);
+    if (Number.isInteger(v)) return v.toString();
+    return v.toPrecision(3);
+  }
+
+  // S + κ curve — professional rendering
+  let skData: { sVals: number[]; kVals: number[]; fVals: number[]; cVals: number[]; minY: number; maxY: number } | null = null;
+  let skArea: { ctx: CanvasRenderingContext2D; cssW: number; cssH: number; m: any; plotW: number; plotH: number } | null = null;
+
+  function renderSKCurve(highlightC?: number) {
     const canvas = document.getElementById('sk-canvas') as HTMLCanvasElement;
+    const container = canvas.parentElement!;
+    const cssW = Math.min(container.clientWidth, 720);
+    const cssH = 340;
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+
     const ctx = canvas.getContext('2d')!;
-    const W = canvas.width;
-    const H = canvas.height;
+    ctx.scale(dpr, dpr);
 
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#0a0a0f';
-    ctx.fillRect(0, 0, W, H);
+    const m = { top: 24, right: 20, bottom: 48, left: 60 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+    skArea = { ctx, cssW, cssH, m, plotW, plotH };
 
-    const N = 500;
-    const sVals: number[] = [];
-    const kVals: number[] = [];
-    const fVals: number[] = [];
-
-    for (let i = 0; i < N; i++) {
-      const c = 0.001 + (0.998) * (i / (N - 1));
-      const s = singleS(c);
-      const k = singleKappa(c);
-      sVals.push(s);
-      kVals.push(k);
-      fVals.push(s + k);
+    // Compute data on first render
+    if (!skData) {
+      const N = 600;
+      const sVals: number[] = [], kVals: number[] = [], fVals: number[] = [], cVals: number[] = [];
+      for (let i = 0; i < N; i++) {
+        const c = 0.001 + 0.998 * (i / (N - 1));
+        cVals.push(c);
+        const s = singleS(c);
+        const k = singleKappa(c);
+        sVals.push(s);
+        kVals.push(k);
+        fVals.push(s + k);
+      }
+      const all = [...sVals, ...kVals, ...fVals];
+      skData = { sVals, kVals, fVals, cVals, minY: Math.min(...all) - 0.15, maxY: Math.max(...all) + 0.15 };
     }
 
-    // Find range
-    const allVals = [...sVals, ...kVals, ...fVals];
-    const minY = Math.min(...allVals) - 0.1;
-    const maxY = Math.max(...allVals) + 0.1;
+    const { sVals, kVals, fVals, cVals, minY, maxY } = skData;
+    const N = cVals.length;
+    const cMin = cVals[0], cMax = cVals[N - 1];
 
-    // Mapping
-    const mapX = (i: number) => (i / (N - 1)) * W;
-    const mapY = (v: number) => H - ((v - minY) / (maxY - minY)) * H;
+    // Background
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Grid
+    const xTicks = 10, yTicks = 8;
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= xTicks; i++) {
+      const x = m.left + (i / xTicks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+    for (let i = 0; i <= yTicks; i++) {
+      const y = m.top + (i / yTicks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left, y); ctx.lineTo(m.left + plotW, y); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    // Tick labels
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '11px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= xTicks; i++) {
+      const val = cMin + (i / xTicks) * (cMax - cMin);
+      const x = m.left + (i / xTicks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top + plotH); ctx.lineTo(x, m.top + plotH + 4); ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.stroke();
+      ctx.fillText(val.toFixed(1), x, m.top + plotH + 17);
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= yTicks; i++) {
+      const val = maxY - (i / yTicks) * (maxY - minY);
+      const y = m.top + (i / yTicks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left - 4, y); ctx.lineTo(m.left, y); ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.stroke();
+      ctx.fillText(formatTick(val), m.left - 7, y + 4);
+    }
+
+    // Axis titles
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('c (channel coherence)', m.left + plotW / 2, cssH - 6);
+    ctx.save();
+    ctx.translate(14, m.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('value', 0, 0);
+    ctx.restore();
+
+    const mapX = (c: number) => m.left + ((c - cMin) / (cMax - cMin)) * plotW;
+    const mapY = (v: number) => m.top + (1 - (v - minY) / (maxY - minY)) * plotH;
 
     // Zero line
     const y0 = mapY(0);
-    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y0); ctx.stroke();
-
-    // c=1/2 line
-    const x_half = mapX(Math.floor((0.5 - 0.001) / 0.998 * (N - 1)));
     ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
-    ctx.beginPath(); ctx.moveTo(x_half, 0); ctx.lineTo(x_half, H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(m.left, y0); ctx.lineTo(m.left + plotW, y0); ctx.stroke();
     ctx.setLineDash([]);
 
-    // Draw curves
-    function drawCurve(vals: number[], color: string, width: number) {
+    // c=1/2 marker
+    const xHalf = mapX(0.5);
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(xHalf, m.top); ctx.lineTo(xHalf, m.top + plotH); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // c* marker
+    const xStar = mapX(C_STAR);
+    ctx.strokeStyle = 'rgba(168,85,247,0.25)';
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(xStar, m.top); ctx.lineTo(xStar, m.top + plotH); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Clip to plot area
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(m.left, m.top, plotW, plotH);
+    ctx.clip();
+
+    // Draw curves with glow
+    function drawCurve(vals: number[], color: string, shadowColor: string, width: number) {
+      ctx.shadowColor = shadowColor;
+      ctx.shadowBlur = 4;
       ctx.strokeStyle = color;
       ctx.lineWidth = width;
       ctx.beginPath();
       for (let i = 0; i < vals.length; i++) {
-        const x = mapX(i);
+        const x = mapX(cVals[i]);
         const y = mapY(vals[i]);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       }
       ctx.stroke();
+      ctx.shadowBlur = 0;
     }
 
-    drawCurve(sVals, '#f59e0b', 2);  // S — amber
-    drawCurve(kVals, '#3b82f6', 2);   // κ — blue
-    drawCurve(fVals, '#34d399', 2.5); // f — green
+    drawCurve(sVals, '#f59e0b', 'rgba(245,158,11,0.3)', 2);     // S — amber
+    drawCurve(kVals, '#3b82f6', 'rgba(59,130,246,0.3)', 2);      // κ — blue
+    drawCurve(fVals, '#34d399', 'rgba(52,211,153,0.4)', 2.5);    // f — green
 
-    // Labels
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '10px monospace';
-    ctx.fillText('c = 0', 5, H - 5);
-    ctx.fillText('c = 1', W - 35, H - 5);
-    ctx.fillText('c = 1/2', x_half + 4, 12);
-    ctx.fillText('f(1/2) = 0', x_half + 4, 24);
+    ctx.restore();
+
+    // Annotations
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.fillText('c = ½', xHalf + 3, m.top + 14);
+    ctx.fillStyle = 'rgba(168,85,247,0.5)';
+    ctx.fillText('c*', xStar + 3, m.top + 14);
+
+    // Equator marker
+    ctx.beginPath();
+    ctx.arc(xHalf, y0, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#34d399';
+    ctx.fill();
+    ctx.strokeStyle = '#06060c';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Highlight crosshair
+    if (highlightC !== undefined) {
+      const idx = Math.round((highlightC - cMin) / (cMax - cMin) * (N - 1));
+      if (idx >= 0 && idx < N) {
+        const cx = mapX(cVals[idx]);
+
+        // Vertical crosshair
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(cx, m.top); ctx.lineTo(cx, m.top + plotH); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Points on each curve
+        const pts = [
+          { y: sVals[idx], color: '#f59e0b', label: 'S' },
+          { y: kVals[idx], color: '#3b82f6', label: 'κ' },
+          { y: fVals[idx], color: '#34d399', label: 'f' },
+        ];
+        for (const p of pts) {
+          const py = mapY(p.y);
+          ctx.beginPath(); ctx.arc(cx, py, 4, 0, Math.PI * 2);
+          ctx.fillStyle = p.color; ctx.fill();
+        }
+      }
+    }
   }
 
-  // IC ≤ F heatmap
+  // IC ≤ F heatmap — high-resolution with proper axes
   function renderICFHeatmap() {
     const canvas = document.getElementById('icf-canvas') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d')!;
-    const res = 200;
-    canvas.width = res;
-    canvas.height = res;
+    const cssW = 400, cssH = 400;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
 
-    const imageData = ctx.createImageData(res, res);
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    const m = { top: 16, right: 12, bottom: 44, left: 48 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    // Background
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Render heatmap into plot area
+    const res = 300;
+    const offscreen = new OffscreenCanvas(res, res);
+    const octx = offscreen.getContext('2d')!;
+    const imageData = octx.createImageData(res, res);
 
     for (let py = 0; py < res; py++) {
-      const c2 = 1.0 - py / (res - 1); // top = 1
+      const c2 = 1.0 - py / (res - 1);
       for (let px = 0; px < res; px++) {
         const c1 = px / (res - 1);
-        const w = [0.5, 0.5];
-        const result = computeKernel([c1, c2], w);
+        const result = computeKernel([c1, c2], [0.5, 0.5]);
         const delta = result.F - result.IC;
+        const norm = Math.min(delta / 0.5, 1.0);
 
         const idx = (py * res + px) * 4;
-        // Color by Δ: small gap = green, large gap = red
-        const norm = Math.min(delta / 0.5, 1.0);
-        imageData.data[idx] = Math.floor(norm * 200);
-        imageData.data[idx + 1] = Math.floor((1 - norm) * 150);
-        imageData.data[idx + 2] = 30;
+        // Deep blue → teal → amber gradient
+        if (norm < 0.33) {
+          const t = norm / 0.33;
+          imageData.data[idx] = Math.floor(t * 20);
+          imageData.data[idx + 1] = Math.floor(40 + t * 80);
+          imageData.data[idx + 2] = Math.floor(80 + t * 40);
+        } else if (norm < 0.66) {
+          const t = (norm - 0.33) / 0.33;
+          imageData.data[idx] = Math.floor(20 + t * 180);
+          imageData.data[idx + 1] = Math.floor(120 + t * 30);
+          imageData.data[idx + 2] = Math.floor(120 - t * 80);
+        } else {
+          const t = (norm - 0.66) / 0.34;
+          imageData.data[idx] = Math.floor(200 + t * 55);
+          imageData.data[idx + 1] = Math.floor(150 - t * 100);
+          imageData.data[idx + 2] = Math.floor(40 - t * 30);
+        }
         imageData.data[idx + 3] = 255;
       }
     }
+    octx.putImageData(imageData, 0, 0);
 
-    ctx.putImageData(imageData, 0, 0);
+    // Draw heatmap smoothly
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(offscreen, m.left, m.top, plotW, plotH);
 
     // Diagonal line (c1 = c2 → Δ = 0)
-    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
-    ctx.moveTo(0, res - 1);
-    ctx.lineTo(res - 1, 0);
+    ctx.moveTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Hover listener
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    // Tick labels
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '11px ui-monospace, monospace';
+    const ticks = 5;
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= ticks; i++) {
+      const val = i / ticks;
+      const x = m.left + (i / ticks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top + plotH); ctx.lineTo(x, m.top + plotH + 4); ctx.stroke();
+      ctx.fillText(val.toFixed(1), x, m.top + plotH + 17);
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= ticks; i++) {
+      const val = 1 - i / ticks;
+      const y = m.top + (i / ticks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left - 4, y); ctx.lineTo(m.left, y); ctx.stroke();
+      ctx.fillText(val.toFixed(1), m.left - 7, y + 4);
+    }
+
+    // Axis titles
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('c₁', m.left + plotW / 2, cssH - 6);
+    ctx.save();
+    ctx.translate(14, m.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('c₂', 0, 0);
+    ctx.restore();
+
+    // Annotation on diagonal
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.save();
+    ctx.translate(m.left + plotW * 0.65, m.top + plotH * 0.3);
+    ctx.rotate(-Math.PI / 4);
+    ctx.fillText('c₁ = c₂ → Δ = 0', 0, 0);
+    ctx.restore();
+
+    // Render color bar
+    renderColorBar();
+
+    // Hover
+    const tooltip = document.getElementById('icf-tooltip')!;
     canvas.addEventListener('mousemove', (e) => {
       const rect = canvas.getBoundingClientRect();
-      const scaleX = res / rect.width;
-      const scaleY = res / rect.height;
-      const px = (e.clientX - rect.left) * scaleX;
-      const py = (e.clientY - rect.top) * scaleY;
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      if (mx < m.left || mx > m.left + plotW || my < m.top || my > m.top + plotH) {
+        tooltip.classList.add('hidden');
+        return;
+      }
 
-      const c1 = px / (res - 1);
-      const c2 = 1.0 - py / (res - 1);
-      if (c1 < 0 || c1 > 1 || c2 < 0 || c2 > 1) return;
-
+      const c1 = (mx - m.left) / plotW;
+      const c2 = 1.0 - (my - m.top) / plotH;
       const result = computeKernel([c1, c2], [0.5, 0.5]);
       const el = document.getElementById('icf-hover')!;
-      el.textContent = `c₁=${c1.toFixed(3)} c₂=${c2.toFixed(3)} | F=${result.F.toFixed(4)} IC=${result.IC.toFixed(4)} Δ=${result.delta.toFixed(4)} IC≤F: ${result.IC <= result.F + 1e-15 ? '✓' : '✗'}`;
+      el.textContent = `c₁=${c1.toFixed(3)} c₂=${c2.toFixed(3)} │ F=${result.F.toFixed(4)} IC=${result.IC.toFixed(4)} Δ=${result.delta.toFixed(4)} │ IC≤F: ${result.IC <= result.F + 1e-15 ? '✓' : '✗'}`;
+
+      tooltip.innerHTML = `c₁=${c1.toFixed(3)}, c₂=${c2.toFixed(3)}<br>Δ = ${result.delta.toFixed(4)}`;
+      tooltip.style.left = (mx + 14) + 'px';
+      tooltip.style.top = (my - 10) + 'px';
+      tooltip.classList.remove('hidden');
     });
+    canvas.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
   }
+
+  function renderColorBar() {
+    const bar = document.getElementById('icf-colorbar') as HTMLCanvasElement;
+    const dpr = window.devicePixelRatio || 1;
+    bar.width = Math.round(20 * dpr);
+    bar.height = Math.round(200 * dpr);
+    const ctx = bar.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    for (let y = 0; y < 200; y++) {
+      const norm = y / 199;
+      if (norm < 0.33) {
+        const t = norm / 0.33;
+        ctx.fillStyle = `rgb(${Math.floor(t * 20)},${Math.floor(40 + t * 80)},${Math.floor(80 + t * 40)})`;
+      } else if (norm < 0.66) {
+        const t = (norm - 0.33) / 0.33;
+        ctx.fillStyle = `rgb(${Math.floor(20 + t * 180)},${Math.floor(120 + t * 30)},${Math.floor(120 - t * 80)})`;
+      } else {
+        const t = (norm - 0.66) / 0.34;
+        ctx.fillStyle = `rgb(${Math.floor(200 + t * 55)},${Math.floor(150 - t * 100)},${Math.floor(40 - t * 30)})`;
+      }
+      ctx.fillRect(0, 199 - y, 20, 1);
+    }
+  }
+
+  // S+κ hover
+  const skCanvas = document.getElementById('sk-canvas') as HTMLCanvasElement;
+  const skTooltip = document.getElementById('sk-tooltip')!;
+
+  skCanvas.addEventListener('mousemove', (e) => {
+    if (!skData || !skArea) return;
+    const rect = skCanvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const { m, plotW, plotH } = skArea;
+
+    if (mx < m.left || mx > m.left + plotW || my < m.top || my > m.top + plotH) {
+      skTooltip.classList.add('hidden');
+      renderSKCurve();
+      return;
+    }
+
+    const { cVals } = skData;
+    const cMin = cVals[0], cMax = cVals[cVals.length - 1];
+    const dataC = cMin + ((mx - m.left) / plotW) * (cMax - cMin);
+
+    // Find nearest index
+    const idx = Math.round((dataC - cMin) / (cMax - cMin) * (cVals.length - 1));
+    const ci = Math.max(0, Math.min(cVals.length - 1, idx));
+
+    renderSKCurve(cVals[ci]);
+
+    skTooltip.innerHTML = `c = ${cVals[ci].toFixed(4)}<br>S = ${skData.sVals[ci].toFixed(5)}<br>κ = ${skData.kVals[ci].toFixed(5)}<br>f = ${skData.fVals[ci].toFixed(5)}`;
+    skTooltip.style.left = (mx + 14) + 'px';
+    skTooltip.style.top = (my - 10) + 'px';
+    skTooltip.classList.remove('hidden');
+  });
+
+  skCanvas.addEventListener('mouseleave', () => {
+    skTooltip.classList.add('hidden');
+    renderSKCurve();
+  });
 
   // Geometric facts
   function renderFacts() {

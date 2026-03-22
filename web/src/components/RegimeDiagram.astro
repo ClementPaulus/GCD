@@ -57,10 +57,13 @@
 
   <!-- Canvas -->
   <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
-    <canvas id="phase-canvas" width="600" height="600"
-      class="w-full max-w-[600px] mx-auto cursor-crosshair rounded border border-kernel-600"
-      style="image-rendering: pixelated;">
-    </canvas>
+    <div class="relative" style="max-width: 560px;">
+      <canvas id="phase-canvas"
+        class="w-full cursor-crosshair rounded border border-kernel-600"
+        style="height: 520px;">
+      </canvas>
+      <div id="phase-tooltip" class="absolute hidden pointer-events-none text-xs font-mono bg-kernel-900/95 border border-kernel-600 rounded px-2 py-1 text-kernel-200 shadow-lg z-10 whitespace-nowrap"></div>
+    </div>
   </div>
 
   <!-- Hover info -->
@@ -97,40 +100,57 @@
   import type { KernelResult } from '../lib/kernel';
 
   const canvas = document.getElementById('phase-canvas') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d')!;
   const hoverInfo = document.getElementById('hover-info')!;
   const hoverValues = document.getElementById('hover-values')!;
+  const tooltip = document.getElementById('phase-tooltip')!;
 
   const COLORS = {
-    STABLE: [6, 95, 70],      // green
-    WATCH: [120, 53, 15],     // amber
-    COLLAPSE: [127, 29, 29],  // red
+    STABLE: [14, 140, 100],
+    WATCH: [180, 120, 30],
+    COLLAPSE: [180, 50, 50],
   };
+  const CRITICAL_TINT = [120, 50, 180];
 
-  const CRITICAL_TINT = [88, 28, 135]; // purple overlay
-
-  let currentImageData: ImageData | null = null;
   let currentResults: (KernelResult | null)[][] = [];
+  let phaseArea: { m: any; plotW: number; plotH: number; cssW: number; cssH: number } | null = null;
 
   function renderPhaseDiagram() {
     const res = parseInt((document.getElementById('regime-res') as HTMLSelectElement).value);
     const nChannels = parseInt((document.getElementById('regime-n') as HTMLInputElement).value);
 
-    canvas.width = res;
-    canvas.height = res;
+    const container = canvas.parentElement!;
+    const cssW = Math.min(container.clientWidth, 560);
+    const cssH = 520;
+    const dpr = window.devicePixelRatio || 1;
 
-    const imageData = ctx.createImageData(res, res);
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    const m = { top: 20, right: 16, bottom: 48, left: 52 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+    phaseArea = { m, plotW, plotH, cssW, cssH };
+
+    // Background
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Render phase diagram as offscreen then draw smoothly
+    const offscreen = new OffscreenCanvas(res, res);
+    const octx = offscreen.getContext('2d')!;
+    const imageData = octx.createImageData(res, res);
     currentResults = [];
 
-    // Build grid: x = c1 (0→1), y = c2 (0→1), other channels fixed at 0.5
     for (let py = 0; py < res; py++) {
       const row: (KernelResult | null)[] = [];
-      const c2 = 1.0 - (py / (res - 1)); // y-axis top=1, bottom=0
-
+      const c2 = 1.0 - (py / (res - 1));
       for (let px = 0; px < res; px++) {
-        const c1 = px / (res - 1); // x-axis left=0, right=1
-
-        // Build trace vector: [c1, c2, 0.5, 0.5, ...]
+        const c1 = px / (res - 1);
         const c = Array(nChannels).fill(0.5);
         c[0] = c1;
         c[1] = c2;
@@ -141,12 +161,10 @@
 
         const color = COLORS[regime];
         const idx = (py * res + px) * 4;
-
         if (isCritical) {
-          // Blend with purple
-          imageData.data[idx] = Math.floor((color[0] + CRITICAL_TINT[0]) / 2);
-          imageData.data[idx + 1] = Math.floor((color[1] + CRITICAL_TINT[1]) / 2);
-          imageData.data[idx + 2] = Math.floor((color[2] + CRITICAL_TINT[2]) / 2);
+          imageData.data[idx] = Math.floor((color[0] * 0.6 + CRITICAL_TINT[0] * 0.4));
+          imageData.data[idx + 1] = Math.floor((color[1] * 0.6 + CRITICAL_TINT[1] * 0.4));
+          imageData.data[idx + 2] = Math.floor((color[2] * 0.6 + CRITICAL_TINT[2] * 0.4));
         } else {
           imageData.data[idx] = color[0];
           imageData.data[idx + 1] = color[1];
@@ -156,64 +174,105 @@
       }
       currentResults.push(row);
     }
+    octx.putImageData(imageData, 0, 0);
 
-    ctx.putImageData(imageData, 0, 0);
-    currentImageData = imageData;
+    // Draw smooth-scaled into plot area
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(offscreen, m.left, m.top, plotW, plotH);
 
-    // Draw regime boundary lines (ω = 0.038 and ω = 0.30)
-    // These are approximate and depend on trace structure, so we overlay grid lines
-    drawGridLines(res);
-  }
-
-  function drawGridLines(res: number) {
-    ctx.save();
-    ctx.globalAlpha = 0.3;
-    ctx.strokeStyle = '#fff';
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
     ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
 
-    // Grid at 0.25 intervals
-    for (let v = 0.25; v < 1; v += 0.25) {
-      const px_x = Math.floor(v * (res - 1));
-      const px_y = Math.floor((1 - v) * (res - 1));
+    // Grid + tick labels
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '11px ui-monospace, monospace';
+    const ticks = 4;
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 0.5;
 
-      ctx.beginPath();
-      ctx.moveTo(px_x, 0);
-      ctx.lineTo(px_x, res);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(0, px_y);
-      ctx.lineTo(res, px_y);
-      ctx.stroke();
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= ticks; i++) {
+      const val = i / ticks;
+      const x = m.left + (i / ticks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+      ctx.beginPath(); ctx.moveTo(x, m.top + plotH); ctx.lineTo(x, m.top + plotH + 5); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.fillText(val.toFixed(2), x, m.top + plotH + 18);
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= ticks; i++) {
+      const val = 1 - i / ticks;
+      const y = m.top + (i / ticks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left, y); ctx.lineTo(m.left + plotW, y); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+      ctx.beginPath(); ctx.moveTo(m.left - 5, y); ctx.lineTo(m.left, y); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.fillText(val.toFixed(2), m.left - 8, y + 4);
     }
 
-    // Labels
-    ctx.globalAlpha = 0.6;
-    ctx.fillStyle = '#fff';
-    ctx.font = `${Math.max(10, res / 30)}px monospace`;
-    ctx.fillText('c₁ →', 5, res - 5);
+    // Axis titles
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('c₁ (channel 1)', m.left + plotW / 2, cssH - 6);
     ctx.save();
-    ctx.translate(12, res - 20);
+    ctx.translate(14, m.top + plotH / 2);
     ctx.rotate(-Math.PI / 2);
-    ctx.fillText('c₂ →', 0, 0);
+    ctx.fillText('c₂ (channel 2)', 0, 0);
     ctx.restore();
 
-    // Corner labels
-    ctx.fillText('0', 2, res - 2);
-    ctx.fillText('1', res - 12, res - 2);
+    // Legend
+    const legX = m.left + plotW - 130;
+    const legY = m.top + 8;
+    ctx.fillStyle = 'rgba(6,6,12,0.85)';
+    ctx.fillRect(legX - 4, legY - 2, 134, 72);
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.strokeRect(legX - 4, legY - 2, 134, 72);
+    const legend: [string, number[], string][] = [
+      ['Stable (12.5%)', COLORS.STABLE, '#34d399'],
+      ['Watch (24.4%)', COLORS.WATCH, '#fbbf24'],
+      ['Collapse (63.1%)', COLORS.COLLAPSE, '#f87171'],
+      ['Critical overlay', CRITICAL_TINT, '#a78bfa'],
+    ];
+    ctx.font = '10px ui-sans-serif, system-ui, sans-serif';
+    legend.forEach(([label, _, textColor], i) => {
+      ctx.fillStyle = `rgb(${_[0]},${_[1]},${_[2]})`;
+      ctx.fillRect(legX, legY + i * 16, 12, 12);
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'left';
+      ctx.fillText(label, legX + 16, legY + i * 16 + 10);
+    });
 
-    ctx.restore();
+    // Info line
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`n=${nChannels} channels · ${res}×${res} grid`, m.left + 4, m.top + 14);
   }
 
   // Hover handler
   canvas.addEventListener('mousemove', (e) => {
+    if (!phaseArea) return;
     const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const px = Math.floor((e.clientX - rect.left) * scaleX);
-    const py = Math.floor((e.clientY - rect.top) * scaleY);
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const { m, plotW, plotH } = phaseArea;
 
-    if (px < 0 || px >= canvas.width || py < 0 || py >= canvas.height) return;
+    if (mx < m.left || mx > m.left + plotW || my < m.top || my > m.top + plotH) {
+      hoverInfo.classList.add('hidden');
+      tooltip.classList.add('hidden');
+      return;
+    }
+
+    const res = currentResults.length;
+    const px = Math.floor(((mx - m.left) / plotW) * (res - 1));
+    const py = Math.floor(((my - m.top) / plotH) * (res - 1));
+    if (px < 0 || px >= res || py < 0 || py >= res) return;
 
     const result = currentResults[py]?.[px];
     if (!result) return;
@@ -240,17 +299,22 @@
         </span>
       </div>
     `;
+
+    const regColor = regime === 'STABLE' ? '#34d399' : regime === 'WATCH' ? '#fbbf24' : '#f87171';
+    tooltip.innerHTML = `<span style="color:${regColor}">${regime}</span> F=${result.F.toFixed(3)} ω=${result.omega.toFixed(3)}`;
+    tooltip.style.left = (mx + 14) + 'px';
+    tooltip.style.top = (my - 10) + 'px';
+    tooltip.classList.remove('hidden');
   });
 
   canvas.addEventListener('mouseleave', () => {
     hoverInfo.classList.add('hidden');
+    tooltip.classList.add('hidden');
   });
 
-  // Re-render on control changes
   ['regime-res', 'regime-n', 'regime-x', 'regime-y'].forEach(id => {
     document.getElementById(id)!.addEventListener('change', renderPhaseDiagram);
   });
 
-  // Initial render
   renderPhaseDiagram();
 </script>

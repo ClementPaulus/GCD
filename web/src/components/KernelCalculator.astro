@@ -64,6 +64,15 @@
     <!-- Regime badge -->
     <div id="regime-badge" class="text-center py-3 rounded-lg font-bold text-lg"></div>
 
+    <!-- Radar chart -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 flex flex-col items-center">
+      <h3 class="text-sm font-bold text-kernel-300 mb-2 self-start">Kernel Radar</h3>
+      <div class="relative w-full" style="max-width:420px;">
+        <canvas id="radar-canvas" style="max-width:420px;cursor:crosshair;"></canvas>
+        <div id="radar-tooltip" class="hidden absolute pointer-events-none text-xs bg-kernel-900/95 border border-kernel-600 rounded px-2 py-1 text-kernel-200 font-mono shadow-lg z-10"></div>
+      </div>
+    </div>
+
     <!-- Six invariants -->
     <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="invariants-grid">
       <!-- Populated by script -->
@@ -262,6 +271,10 @@
       { key: 'kappa', value: result.kappa, sym: symbols.kappa },
       { key: 'IC', value: result.IC, sym: symbols.IC },
     ];
+
+    // Render radar
+    renderRadar(result, regime, isCritical);
+
     grid.innerHTML = entries.map(e => `
       <div class="bg-kernel-800 rounded-lg p-3 border border-kernel-700">
         <div class="text-xs text-kernel-500">${e.sym.name} (${e.sym.symbol})</div>
@@ -335,6 +348,159 @@
         Seam ${seam.pass ? 'PASS' : 'FAIL'} — |s| = ${Math.abs(seam.residual).toFixed(6)} ${seam.pass ? '≤' : '>'} tol=${0.005}
       </div>
     `;
+  }
+
+  function renderRadar(result: KernelResult, regime: string, isCritical: boolean) {
+    const canvas = document.getElementById('radar-canvas') as HTMLCanvasElement;
+    const tooltip = document.getElementById('radar-tooltip')!;
+    const container = canvas.parentElement!;
+    const cssW = Math.min(container.clientWidth, 420);
+    const cssH = cssW; // square
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    const cx = cssW / 2, cy = cssH / 2;
+    const radius = Math.min(cssW, cssH) / 2 - 40;
+
+    // Axes: 6 invariants, each normalized to [0,1] for display
+    const axes = [
+      { label: 'F', value: result.F, max: 1 },
+      { label: 'ω', value: result.omega, max: 1 },
+      { label: 'S', value: result.S, max: Math.log(2) + 0.01 },
+      { label: 'C', value: result.C, max: 1 },
+      { label: 'κ', value: Math.abs(result.kappa), max: Math.max(Math.abs(result.kappa), 5) },
+      { label: 'IC', value: result.IC, max: 1 },
+    ];
+    const n = axes.length;
+
+    function angle(i: number) { return (Math.PI * 2 * i) / n - Math.PI / 2; }
+
+    // Concentric rings (grid)
+    for (let r = 1; r <= 5; r++) {
+      const rr = (r / 5) * radius;
+      ctx.beginPath();
+      for (let i = 0; i <= n; i++) {
+        const a = angle(i % n);
+        const px = cx + rr * Math.cos(a);
+        const py = cy + rr * Math.sin(a);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = r === 5 ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = r === 5 ? 0.8 : 0.5;
+      ctx.stroke();
+    }
+
+    // Spoke lines
+    for (let i = 0; i < n; i++) {
+      const a = angle(i);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + radius * Math.cos(a), cy + radius * Math.sin(a));
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // Axis labels
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < n; i++) {
+      const a = angle(i);
+      const lx = cx + (radius + 22) * Math.cos(a);
+      const ly = cy + (radius + 22) * Math.sin(a);
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillText(axes[i].label, lx, ly);
+      // Value below label
+      ctx.font = '9px ui-monospace, monospace';
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      const nv = axes[i].label === 'κ' ? result.kappa.toFixed(3) : axes[i].value.toFixed(3);
+      ctx.fillText(nv, lx, ly + 14);
+      ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    }
+
+    // Data polygon
+    const dataPoints: [number, number][] = [];
+    for (let i = 0; i < n; i++) {
+      const norm = Math.min(axes[i].value / axes[i].max, 1);
+      const a = angle(i);
+      dataPoints.push([cx + norm * radius * Math.cos(a), cy + norm * radius * Math.sin(a)]);
+    }
+
+    // Fill
+    const regimeColor = isCritical
+      ? 'rgba(168,85,247,' : regime === 'STABLE'
+      ? 'rgba(34,197,94,' : regime === 'WATCH'
+      ? 'rgba(245,158,11,' : 'rgba(239,68,68,';
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const [px, py] = dataPoints[i % n];
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = regimeColor + '0.12)';
+    ctx.fill();
+
+    // Glow stroke
+    ctx.shadowColor = regimeColor + '0.5)';
+    ctx.shadowBlur = 8;
+    ctx.strokeStyle = regimeColor + '0.8)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Data points
+    for (let i = 0; i < n; i++) {
+      const [px, py] = dataPoints[i];
+      ctx.beginPath();
+      ctx.arc(px, py, 4, 0, Math.PI * 2);
+      ctx.fillStyle = regimeColor + '0.9)';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // Centre dot
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fill();
+
+    // Hover handling
+    const handler = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      let closest = -1, minD = 20;
+      for (let i = 0; i < n; i++) {
+        const dx = mx - dataPoints[i][0];
+        const dy = my - dataPoints[i][1];
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < minD) { minD = d; closest = i; }
+      }
+      if (closest >= 0) {
+        const ax = axes[closest];
+        const displayVal = ax.label === 'κ' ? result.kappa.toFixed(6) : ax.value.toFixed(6);
+        tooltip.innerHTML = `${ax.label} = ${displayVal}`;
+        tooltip.style.left = (mx + 12) + 'px';
+        tooltip.style.top = (my - 10) + 'px';
+        tooltip.classList.remove('hidden');
+      } else {
+        tooltip.classList.add('hidden');
+      }
+    };
+    canvas.onmousemove = handler;
+    canvas.onmouseleave = () => tooltip.classList.add('hidden');
   }
 
   // Initialize on DOM ready

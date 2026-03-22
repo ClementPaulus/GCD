@@ -77,9 +77,13 @@
         </button>
       </div>
     </div>
-    <canvas id="sweep-canvas" width="600" height="200"
-      class="w-full max-w-[600px] rounded border border-kernel-600 hidden">
-    </canvas>
+    <div class="relative">
+      <canvas id="sweep-canvas"
+        class="w-full rounded border border-kernel-600 hidden cursor-crosshair"
+        style="max-width: 720px; height: 320px;">
+      </canvas>
+      <div id="sweep-tooltip" class="absolute hidden pointer-events-none text-xs font-mono bg-kernel-900/95 border border-kernel-600 rounded px-2 py-1 text-kernel-200 shadow-lg"></div>
+    </div>
   </div>
 </div>
 
@@ -214,34 +218,187 @@
     });
   }
 
-  // Sweep
+  // Sweep — professional chart with HiDPI, axes, grids, hover
+  let sweepPoints: [number, number][] = [];
+  let sweepXRange: [number, number] = [0, 1];
+  let sweepYRange: [number, number] = [0, 1];
+  let sweepArea: any = null;
+  let sweepVarName = '';
+
+  function renderSweepChart(
+    canvas: HTMLCanvasElement,
+    points: [number, number][],
+    xMin: number, xMax: number, yMin: number, yMax: number,
+    varName: string, expr: string
+  ) {
+    const container = canvas.parentElement!;
+    const cssW = Math.min(container.clientWidth, 720);
+    const cssH = 320;
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    const m = { top: 28, right: 24, bottom: 48, left: 64 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    // Background
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Store for hover
+    sweepArea = { ctx, cssW, cssH, m, plotW, plotH };
+    sweepXRange = [xMin, xMax];
+    sweepYRange = [yMin, yMax];
+    sweepPoints = points;
+    sweepVarName = varName;
+
+    // Grid
+    const xTicks = 8, yTicks = 6;
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= xTicks; i++) {
+      const x = m.left + (i / xTicks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+    for (let i = 0; i <= yTicks; i++) {
+      const y = m.top + (i / yTicks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left, y); ctx.lineTo(m.left + plotW, y); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    // Tick labels
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '11px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= xTicks; i++) {
+      const val = xMin + (i / xTicks) * (xMax - xMin);
+      const x = m.left + (i / xTicks) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top + plotH); ctx.lineTo(x, m.top + plotH + 5); ctx.stroke();
+      ctx.fillText(formatTickLabel(val), x, m.top + plotH + 18);
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= yTicks; i++) {
+      const val = yMax - (i / yTicks) * (yMax - yMin);
+      const y = m.top + (i / yTicks) * plotH;
+      ctx.beginPath(); ctx.moveTo(m.left - 5, y); ctx.lineTo(m.left, y); ctx.stroke();
+      ctx.fillText(formatTickLabel(val), m.left - 8, y + 4);
+    }
+
+    // Axis titles
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(varName, m.left + plotW / 2, cssH - 6);
+    ctx.save();
+    ctx.translate(14, m.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('f(' + varName + ')', 0, 0);
+    ctx.restore();
+
+    // Zero line
+    if (yMin < 0 && yMax > 0) {
+      const zeroY = m.top + (1 - (0 - yMin) / (yMax - yMin)) * plotH;
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(m.left, zeroY); ctx.lineTo(m.left + plotW, zeroY); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Clip to plot area
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(m.left, m.top, plotW, plotH);
+    ctx.clip();
+
+    // Fill under curve
+    if (points.length > 1) {
+      const mapPx = (x: number) => m.left + ((x - xMin) / (xMax - xMin)) * plotW;
+      const mapPy = (y: number) => m.top + (1 - (y - yMin) / (yMax - yMin)) * plotH;
+      const baseY = mapPy(Math.max(yMin, 0));
+
+      const gradient = ctx.createLinearGradient(0, m.top, 0, m.top + plotH);
+      gradient.addColorStop(0, 'rgba(245,158,11,0.18)');
+      gradient.addColorStop(1, 'rgba(245,158,11,0.02)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.moveTo(mapPx(points[0][0]), baseY);
+      for (const [x, y] of points) ctx.lineTo(mapPx(x), mapPy(y));
+      ctx.lineTo(mapPx(points[points.length - 1][0]), baseY);
+      ctx.closePath();
+      ctx.fill();
+
+      // Main curve with glow
+      ctx.shadowColor = 'rgba(245,158,11,0.4)';
+      ctx.shadowBlur = 6;
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i < points.length; i++) {
+        const px = mapPx(points[i][0]);
+        const py = mapPy(points[i][1]);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+    ctx.restore();
+
+    // Title
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.font = '11px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    const titleExpr = expr.length > 50 ? expr.slice(0, 47) + '...' : expr;
+    ctx.fillText(`f(${varName}) = ${titleExpr}`, m.left + 8, m.top + 16);
+
+    // Stats badge
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '10px ui-monospace, monospace';
+    const minVal = Math.min(...points.map(p => p[1]));
+    const maxVal = Math.max(...points.map(p => p[1]));
+    ctx.fillText(`min: ${formatTickLabel(minVal)}  max: ${formatTickLabel(maxVal)}  n: ${points.length}`, m.left + plotW - 4, m.top + 16);
+  }
+
+  function formatTickLabel(v: number): string {
+    if (v === 0) return '0';
+    const a = Math.abs(v);
+    if (a >= 1000 || a < 0.01) return v.toExponential(1);
+    if (Number.isInteger(v)) return v.toString();
+    return v.toPrecision(3);
+  }
+
   document.getElementById('sweep-run')!.addEventListener('click', () => {
     const expr = (document.getElementById('formula-input') as HTMLInputElement).value;
     const sweepVar = (document.getElementById('sweep-var') as HTMLSelectElement).value;
     const from = parseFloat((document.getElementById('sweep-from') as HTMLInputElement).value);
     const to = parseFloat((document.getElementById('sweep-to') as HTMLInputElement).value);
     const canvas = document.getElementById('sweep-canvas') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d')!;
 
     canvas.classList.remove('hidden');
-    const W = canvas.width;
-    const H = canvas.height;
 
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#0a0a0f';
-    ctx.fillRect(0, 0, W, H);
-
+    const N = 500;
     const points: [number, number][] = [];
     let minY = Infinity, maxY = -Infinity;
 
-    for (let i = 0; i <= 200; i++) {
-      const x = from + (to - from) * (i / 200);
+    for (let i = 0; i <= N; i++) {
+      const x = from + (to - from) * (i / N);
       const localVars = { ...varValues, [sweepVar]: x };
-
-      // Also update omega when F changes and vice versa (for duality)
       if (sweepVar === 'F') localVars['omega'] = 1 - x;
       if (sweepVar === 'omega') localVars['F'] = 1 - x;
-
       try {
         const y = safeEvaluate(expr, localVars);
         if (isFinite(y)) {
@@ -249,34 +406,80 @@
           if (y < minY) minY = y;
           if (y > maxY) maxY = y;
         }
-      } catch { /* skip invalid points */ }
+      } catch { /* skip */ }
     }
 
     if (points.length < 2 || maxY === minY) return;
 
-    const pad = (maxY - minY) * 0.1 || 0.1;
-    const yMin = minY - pad;
-    const yMax = maxY + pad;
+    const pad = (maxY - minY) * 0.08 || 0.1;
+    renderSweepChart(canvas, points, from, to, minY - pad, maxY + pad, sweepVar, expr);
+  });
 
-    // Draw curve
-    ctx.strokeStyle = '#f59e0b';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
+  // Hover crosshair on sweep chart
+  const sweepCanvas = document.getElementById('sweep-canvas') as HTMLCanvasElement;
+  const sweepTooltip = document.getElementById('sweep-tooltip')!;
 
-    for (let i = 0; i < points.length; i++) {
-      const [x, y] = points[i];
-      const px = ((x - from) / (to - from)) * W;
-      const py = H - ((y - yMin) / (yMax - yMin)) * H;
-      if (i === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
+  sweepCanvas.addEventListener('mousemove', (e) => {
+    if (!sweepArea || sweepPoints.length < 2) return;
+    const rect = sweepCanvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const { m, plotW, plotH } = sweepArea;
+    const [xMin, xMax] = sweepXRange;
+    const [yMin, yMax] = sweepYRange;
+
+    if (mx < m.left || mx > m.left + plotW || my < m.top || my > m.top + plotH) {
+      sweepTooltip.classList.add('hidden');
+      return;
     }
-    ctx.stroke();
 
-    // Axis labels
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.font = '10px monospace';
-    ctx.fillText(`${sweepVar}: ${from} → ${to}`, 5, H - 5);
-    ctx.fillText(`y: [${minY.toPrecision(4)}, ${maxY.toPrecision(4)}]`, 5, 12);
+    const dataX = xMin + ((mx - m.left) / plotW) * (xMax - xMin);
+    // Find nearest point
+    let closest = sweepPoints[0], bestDist = Infinity;
+    for (const p of sweepPoints) {
+      const d = Math.abs(p[0] - dataX);
+      if (d < bestDist) { bestDist = d; closest = p; }
+    }
+
+    // Redraw chart then overlay crosshair
+    const expr = (document.getElementById('formula-input') as HTMLInputElement).value;
+    renderSweepChart(sweepCanvas, sweepPoints, xMin, xMax, yMin, yMax, sweepVarName, expr);
+
+    const { ctx } = sweepArea;
+    const px = m.left + ((closest[0] - xMin) / (xMax - xMin)) * plotW;
+    const py = m.top + (1 - (closest[1] - yMin) / (yMax - yMin)) * plotH;
+
+    // Crosshair lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(px, m.top); ctx.lineTo(px, m.top + plotH); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(m.left, py); ctx.lineTo(m.left + plotW, py); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Highlight point
+    ctx.beginPath();
+    ctx.arc(px, py, 5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(245,158,11,0.3)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(px, py, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fill();
+
+    // Tooltip
+    sweepTooltip.innerHTML = `${sweepVarName} = ${closest[0].toPrecision(5)}<br>f = ${closest[1].toPrecision(6)}`;
+    sweepTooltip.style.left = (mx + 14) + 'px';
+    sweepTooltip.style.top = (my - 10) + 'px';
+    sweepTooltip.classList.remove('hidden');
+  });
+
+  sweepCanvas.addEventListener('mouseleave', () => {
+    sweepTooltip.classList.add('hidden');
+    if (sweepArea && sweepPoints.length >= 2) {
+      const expr = (document.getElementById('formula-input') as HTMLInputElement).value;
+      renderSweepChart(sweepCanvas, sweepPoints, ...sweepXRange, ...sweepYRange, sweepVarName, expr);
+    }
   });
 
   // Eval button
