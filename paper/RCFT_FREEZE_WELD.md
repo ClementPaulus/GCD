@@ -228,7 +228,7 @@ Using the five words of the prose interface:
 | "Collapse dominance" $D = \|\vartheta\|^2/|v|$ | Regime gates on $(\omega, F, S, C)$ with frozen thresholds | From continuous ratio to discrete classification |
 | "Recursive reentry" (qualitative) | $\tau_R$ computation with typed outcomes | From intuition to computable machinery |
 | "Symbolic attractors" (glyphs) | Attractor basin analysis with Lyapunov-like metrics | From narrative to geometry |
-| 7 assumptions, 0 tests | 46 lemmas, 24+ theorems, 3,618 tests | From assertion to proof |
+| 7 assumptions, 0 tests | 47 lemmas, 24+ theorems, 3,618 tests | From assertion to proof |
 | Single undifferentiated theory | Three-tier architecture (Tier-1/0/2) | From monolith to governed structure |
 
 #### Fidelity (*fidelitas*) — What Persisted
@@ -257,7 +257,7 @@ These structures survived the collapse from gesture to weld:
 
 4. **The glyph problem.** "Glyphs" as "metastable symbolic attractors" were evocative but unformalizable in the original framework. The refined system replaces them with attractor basin analysis (basin strength, convergence rate, Lyapunov-like metrics) and collapse grammar (transfer matrix, entropy rate, complexity classification).
 
-5. **The proof gap.** The original "proofs" (Theorem 3.2, Proposition 3.3, Theorem 3.5) were qualitative arguments, not mathematical proofs. The refined system has 46 lemmas with exact bounds, verified computationally across thousands of tests. This was the largest source of roughness — transitioning from narrative proof to computational proof.
+5. **The proof gap.** The original "proofs" (Theorem 3.2, Proposition 3.3, Theorem 3.5) were qualitative arguments, not mathematical proofs. The refined system has 47 lemmas with exact bounds, verified computationally across thousands of tests. This was the largest source of roughness — transitioning from narrative proof to computational proof.
 
 #### Return (*reditus*) — How It Came Back
 
@@ -282,7 +282,7 @@ The original paper returns through three demonstrated mechanisms:
 | Tier-1 identities | $F + \omega = 1$ exact, $IC \leq F$ 100%, $IC = \exp(\kappa)$ 98.6% | Structural skeleton holds |
 | Test suite | 3,618 tests, all passing | Computational verification complete |
 | Domain coverage | 15 domains, 121 closures | Recursive universality demonstrated |
-| Theorem inventory | 46 lemmas + 24 theorems | Mathematical infrastructure proven |
+| Theorem inventory | 47 lemmas + 24 theorems | Mathematical infrastructure proven |
 | Seam width | $\text{tol}_{\text{seam}} = 0.005$ | Seam closes across all domains |
 | Validation | CONFORMANT (standard + strict) | Protocol verdict: admissible |
 | Empirical contact | Particle physics (PDG data), active matter (Antonov et al.), elements (118), nuclear binding, CKM mixing, running couplings | Real data, not synthetic |

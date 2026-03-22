@@ -23,7 +23,7 @@ Cross-references:
     Paper:    paper/confinement_kernel.tex
     Kernel:   closures/standard_model/subatomic_kernel.py
     Contract: contracts/SM.INTSTACK.v1.yaml
-    Spec:     KERNEL_SPECIFICATION.md (Lemmas 1-34)
+    Spec:     KERNEL_SPECIFICATION.md (Lemmas 1-47)
 """
 
 from __future__ import annotations

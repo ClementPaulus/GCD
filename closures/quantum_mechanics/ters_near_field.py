@@ -64,7 +64,7 @@ Cross-references:
     Epistemic weld:      src/umcp/epistemic_weld.py
     τ_R* thermodynamics: src/umcp/tau_r_star.py (T9: measurement cost)
     Axiom:               AXIOM.md (AX-0: collapse is generative)
-    Kernel spec:         KERNEL_SPECIFICATION.md (Lemmas 1-34)
+    Kernel spec:         KERNEL_SPECIFICATION.md (Lemmas 1-47)
     Wavefunction:        closures/quantum_mechanics/wavefunction_collapse.py
 
 Reference:

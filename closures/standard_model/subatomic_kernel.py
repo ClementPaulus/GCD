@@ -42,7 +42,7 @@ Cross-references:
     Contract:  contracts/SM.INTSTACK.v1.yaml
     Elements:  closures/atomic_physics/periodic_kernel.py (analogous for atoms)
     Proof:     closures/atomic_physics/tier1_proof.py (identity verification)
-    Spec:      KERNEL_SPECIFICATION.md (Tier-1 identities, Lemmas 1-34)
+    Spec:      KERNEL_SPECIFICATION.md (Tier-1 identities, Lemmas 1-47)
     Axiom:     AXIOM.md (Axiom-0: collapse is generative)
 """
 

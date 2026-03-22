@@ -40,7 +40,7 @@ Cross-references:
     Tier-1 proof:  closures/atomic_physics/tier1_proof.py
     Elements:      closures/materials_science/element_database.py
     Formalism:     closures/standard_model/particle_physics_formalism.py
-    Spec:          KERNEL_SPECIFICATION.md (Lemmas 1-34)
+    Spec:          KERNEL_SPECIFICATION.md (Lemmas 1-47)
     Axiom:         AXIOM.md (Axiom-0: collapse is generative)
 """
 

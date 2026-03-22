@@ -35,7 +35,7 @@ Cross-references:
     Kernel:     src/umcp/kernel_optimized.py (compute_kernel_outputs)
     Database:   closures/materials_science/element_database.py (Element, ELEMENTS)
     Gap-capture: closures/materials_science/gap_capture_ss1m.py (SS1M)
-    Spec:       KERNEL_SPECIFICATION.md (Tier-1 identities, Lemmas 1-34)
+    Spec:       KERNEL_SPECIFICATION.md (Tier-1 identities, Lemmas 1-47)
 """
 
 from __future__ import annotations

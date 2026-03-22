@@ -13,7 +13,7 @@ The **UMCP tier system** has exactly three tiers. No half-tiers. No confusion.
 
 | Tier | Name | Role |
 |------|------|------|
-| **1** | **The Kernel** | The mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC), its six definitions, their provable identities (F + ω = 1, IC ≤ F, IC = exp(κ), S ≈ f(F,C)), and the 46 lemmas, 44 structural identities, and 5 structural constants that follow. 3 effective degrees of freedom (F, κ, C). Domain-independent. Immutable. |
+| **1** | **The Kernel** | The mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC), its six definitions, their provable identities (F + ω = 1, IC ≤ F, IC = exp(κ), S ≈ f(F,C)), and the 47 lemmas, 44 structural identities, and 5 structural constants that follow. 3 effective degrees of freedom (F, κ, C). Domain-independent. Immutable. |
 | **0** | **Protocol** | The operational machinery that implements and interprets the Tier-1 kernel: embedding raw data into [0,1]ⁿ, computing the kernel function, applying regime gates, running seam calculus, enforcing contracts/schemas/SHA-256 integrity, and issuing three-valued verdicts. |
 | **2** | **Expansion Space** | Domain closures that choose which real-world quantities become the trace vector c ∈ [0,1]ⁿ and weights w ∈ Δⁿ. Channel selection, entity catalogs, normalization, and domain-specific theorems. Validated through Tier-0 against Tier-1. |
 
@@ -50,7 +50,7 @@ Tier-1   THE KERNEL (mathematical object)
          │   S ≈ f(F, C) [statistical, tightens with n]     │
          │   corr(C, S) → −1 as n → ∞ (CLT)                │
          │                                                  │
-         │ 46 LEMMAS · 44 IDENTITIES · 8 EQUATIONS         │
+         │ 47 LEMMAS · 44 IDENTITIES · 8 EQUATIONS         │
          │ (all properties of this one function)            │
          └─────────────────────────────────────────────────┘
          Immutable. Domain-independent. Mathematically complete.
@@ -95,7 +95,7 @@ Tier-2   EXPANSION SPACE (domain closures)
 
 ## Tier-1: The Kernel
 
-**What it is**: The kernel is the mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC). It takes a trace vector c ∈ [0,1]ⁿ and a weight vector w ∈ Δⁿ (the probability simplex) and produces six invariants. The six formulas define the function. The identities are theorems about it. The 46 lemmas, 44 structural identities, 8 equations, and 5 structural constants are all properties of this one mathematical object.
+**What it is**: The kernel is the mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC). It takes a trace vector c ∈ [0,1]ⁿ and a weight vector w ∈ Δⁿ (the probability simplex) and produces six invariants. The six formulas define the function. The identities are theorems about it. The 47 lemmas, 44 structural identities, 8 equations, and 5 structural constants are all properties of this one mathematical object.
 
 Tier-1 is the kernel function *and everything provable about it*. The identities are not separate objects floating above the kernel — they are consequences of the definitions. F + ω = 1 is a theorem about F(c,w) = Σ wᵢcᵢ and ω = 1 − F. IC ≤ F is a theorem about the relationship between the weighted geometric and arithmetic means. They cannot exist without the definitions that produce them.
 
@@ -217,7 +217,7 @@ The three agents are not imposed from outside. They are the structural reading o
 
 - **IS the kernel function**: Four primitive formulas (F, κ, S, C) and two derived values (ω = 1−F, IC = exp(κ)) define K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC). All six outputs, and all provable properties, are Tier-1.
 - **IS the identities**: F + ω = 1, IC ≤ F, IC = exp(κ) are theorems *about* the kernel function. They are part of Tier-1 because they cannot exist without the definitions that produce them.
-- **IS the lemmas and structural constants**: The 46 lemmas, 44 identities, c* = 0.7822, c_trap = 0.3178 — all properties of the same function.
+- **IS the lemmas and structural constants**: The 47 lemmas, 44 identities, c* = 0.7822, c_trap = 0.3178 — all properties of the same function.
 - **IS internally structured**: The 4 primitives are independently *computed* (each has its own formula); 2 values are algebraically derived (ω, IC); and 1 statistical constraint (S ≈ f(F,C)) reduces the effective degrees of freedom to 3. The rank-3 structure is not a tier distinction — it is the internal dependency structure of the kernel function itself, proven invariant to input dimensionality (n = 4..64).
 - **NOT diagnostics**: ω and IC are derived from primitives but are NOT diagnostics. Diagnostics (heterogeneity regime labels, Stable/Watch/Collapse classification, seam PASS/FAIL) are Tier-0 *interpretations*. ω and IC are Tier-1 *outputs* that appear in the immutable identities.
 - **NOT computation**: The *code* that evaluates the formulas is Tier-0. The *formulas themselves* are Tier-1. `kernel_optimized.py` is a Tier-0 implementation of the Tier-1 function.
@@ -560,7 +560,7 @@ Across all 20 domains, Bernoulli field entropy S appears in only 1 of 13 theorem
   - 4 primitive equations (F, κ, S, C) + 2 derived values (ω = 1−F, IC = exp(κ)) — defining K: [0,1]ⁿ × Δⁿ → ℝ⁶
   - 3 effective degrees of freedom (F, κ, C) — rank invariant to input dimensionality (n = 4..64)
   - 3 algebraic identities + 1 statistical constraint — verified across 10,162 tests in 18 domains
-  - 46 lemmas, 44 structural identities, 5 structural constants (c*, c_trap, ε, p, tol_seam)
+  - 47 lemmas, 44 structural identities, 5 structural constants (c*, c_trap, ε, p, tol_seam)
   - Reserved symbols: F, ω, S, C, κ, IC, τ_R (all six outputs + τ_R are Tier-1)
   - Three-agent structural reading: Measuring (ω), Archive (F), Unknown (Γ(ω))
 

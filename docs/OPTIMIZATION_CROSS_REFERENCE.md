@@ -1,7 +1,7 @@
 # Optimization Cross-Reference Map
 
-**Status**: Integration roadmap for computational optimizations  
-**Created**: 2026-01-24  
+**Status**: Integration roadmap for computational optimizations
+**Created**: 2026-01-24
 **Purpose**: Document where and how to integrate the new optimization modules
 
 ---
@@ -83,7 +83,7 @@ if outputs.heterogeneity_gap > tolerance:
 __all__ = [
     ...
     "OptimizedKernelComputer",
-    "SeamChainAccumulator", 
+    "SeamChainAccumulator",
     "compute_utils",
 ]
 
@@ -235,6 +235,6 @@ tau_R_optimized:
 ## References
 
 - [COMPUTATIONAL_OPTIMIZATIONS.md](COMPUTATIONAL_OPTIMIZATIONS.md): Full optimization catalog (21 items)
-- [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md): Formal lemmas (1-34)
+- [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md): Formal lemmas (1-47)
 - [OPTIMIZATION_INTEGRATION_GUIDE.md](OPTIMIZATION_INTEGRATION_GUIDE.md): Usage examples
 - [tests/test_computational_optimizations.py](tests/test_computational_optimizations.py): Test suite (27 tests)

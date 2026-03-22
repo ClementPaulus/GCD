@@ -28,7 +28,7 @@ Built on **Generative Collapse Dynamics (GCD)**, a measurement theory derived fr
 | **Contract-first validation** | Define mathematical contracts before evidence. Frozen parameters ensure reproducibility. |
 | **Tier-1 kernel** | Six invariants (F, ω, S, C, κ, IC) computed from any bounded trace vector — domain-independent. |
 | **20 scientific domains** | From particle physics and cosmology to neuroscience and finance — all through one kernel. |
-| **252 proven theorems** | 46 lemmas, 44 structural identities, 252 theorems verified to machine precision. |
+| **252 proven theorems** | 47 lemmas, 44 structural identities, 252 theorems verified to machine precision. |
 | **11,389 tests** | Comprehensive test suite across 164 files with 194 closure modules. |
 | **Three-valued verdicts** | Never boolean. Always CONFORMANT / NONCONFORMANT / NON\_EVALUABLE. |
 | **Three-layer architecture** | C99 orchestration (~1,900 lines) → C++17 accelerator → Python engine. 760 C/C++ assertions. |

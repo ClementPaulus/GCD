@@ -1,6 +1,6 @@
 # Computational Optimizations from Lemma Analysis
 
-**Status**: Derived computational strategies from KERNEL_SPECIFICATION.md (34 lemmas)
+**Status**: Derived computational strategies from KERNEL_SPECIFICATION.md (47 lemmas)
 **Purpose**: Extract algorithmic insights, numerical optimizations, and early-stopping conditions from formal lemmas
 **Last Updated**: 2026-01-24
 
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document analyzes all 34 lemmas in [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md) to extract **actionable computational improvements**. Each optimization is tied to specific lemmas and includes implementation guidance.
+This document analyzes all 47 lemmas in [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md) to extract **actionable computational improvements**. Each optimization is tied to specific lemmas and includes implementation guidance.
 
 ---
 
@@ -653,7 +653,7 @@ These optimizations should be integrated into:
 
 ## References
 
-- [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md): Source of all 34 lemmas
+- [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md): Source of all 47 lemmas
 - [AXIOM.md](../AXIOM.md): Return axiom operational meaning
 - [PERFORMANCE_EXTENSIONS.md](PERFORMANCE_EXTENSIONS.md): Additional performance notes
 

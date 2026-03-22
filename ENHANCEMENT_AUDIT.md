@@ -1,6 +1,6 @@
 # Enhancement Audit — Structural Findings and Solidification Plan
 
-**Audit Date**: Systematic review of KERNEL_SPECIFICATION.md (46 lemmas),
+**Audit Date**: Systematic review of KERNEL_SPECIFICATION.md (47 lemmas),
 AXIOM.md, TIER_SYSTEM.md, orientation.py, all test files, copilot-instructions,
 frozen_contract.py, seam_optimized.py, kernel_optimized.py, information_geometry.py,
 and SYMBOL_INDEX.md.
@@ -103,7 +103,7 @@ mention it either.
 
 Line 1290: `**Current Version**: UMCP v2.0.0 (as of UMCP Manuscript v1.0.0, §8)`
 
-The repository is v2.2.4. The spec's version line is out of date.
+The repository is v2.2.5. The spec's version line has been updated.
 
 ### 3b. Debugging Section References "Lemmas 1-34" Instead of 1-46
 
@@ -120,8 +120,8 @@ integrated.
 
 ### Fix Plan
 
-- [ ] Update KERNEL_SPECIFICATION.md version to v2.2.4
-- [ ] Change "Lemmas 1-34" to "Lemmas 1-46" on line 1269
+- [x] Update KERNEL_SPECIFICATION.md version to v2.2.5
+- [x] Change "Lemmas 1-34" to "Lemmas 1-46" on line 1269
 - [ ] Consider merging synthesis sections or cross-referencing them
 
 ---
@@ -257,8 +257,8 @@ No fix needed but worth documenting explicitly that "minimum" means
 5. Add tests for Lemma 32 (temporal coarse-graining)
 
 ### Priority 3 (Document Consistency)
-6. Update KERNEL_SPECIFICATION.md version to v2.2.4
-7. Update "Lemmas 1-34" → "Lemmas 1-46" in debugging section
+6. ~~Update KERNEL_SPECIFICATION.md version to v2.2.5~~ (done)
+7. ~~Update "Lemmas 1-34" → "Lemmas 1-46" in debugging section~~ (done — now Lemmas 1-47)
 8. Rationalize SYMBOL_INDEX.md "Tier 1.5" designations
 
 ### Priority 4 (Enhancement)

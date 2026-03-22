@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.2.5** · **11,389 tests** · **20 domains** · **181 closure modules** · **46 lemmas** · **44 structural identities** · **46 dashboard pages**
+**UMCP v2.2.5** · **11,389 tests** · **20 domains** · **181 closure modules** · **47 lemmas** · **44 structural identities** · **46 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -282,7 +282,7 @@ The UMCP tier system has exactly three tiers. No half-tiers. No confusion. Every
 
 | Tier | Name | Role | Mutable? |
 |------|------|------|----------|
-| **1** | **The Kernel** | The mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC). Four primitive equations (F, κ, S, C) and two derived values (ω = 1−F, IC = exp(κ)), with 3 effective degrees of freedom (F, κ, C) — S is asymptotically determined by F and C. Provable identities (F + ω = 1, IC ≤ F, IC = exp(κ), S ≈ f(F,C)), 46 lemmas, 44 structural identities, and 5 structural constants. Domain-independent. | NEVER within a run. Promotion only through seam weld across runs. |
+| **1** | **The Kernel** | The mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC). Four primitive equations (F, κ, S, C) and two derived values (ω = 1−F, IC = exp(κ)), with 3 effective degrees of freedom (F, κ, C) — S is asymptotically determined by F and C. Provable identities (F + ω = 1, IC ≤ F, IC = exp(κ), S ≈ f(F,C)), 47 lemmas, 44 structural identities, and 5 structural constants. Domain-independent. | NEVER within a run. Promotion only through seam weld across runs. |
 | **0** | **Protocol** | Operational machinery: embedding raw data into [0,1]ⁿ, computing the Tier-1 kernel (code implements formulas), regime gates, seam calculus, contracts, schemas, SHA-256, three-valued verdicts. The code is Tier-0; what it computes is Tier-1. | Configuration frozen per run. |
 | **2** | **Expansion Space** | Domain closures that choose which real-world quantities become the trace vector c and weights w. Channel selection, entity catalogs, normalization, domain-specific theorems. Validated through Tier-0 against Tier-1. | Freely extensible; validated before trust. |
 
@@ -290,7 +290,7 @@ The UMCP tier system has exactly three tiers. No half-tiers. No confusion. Every
 
 ### Tier-1 Reserved Symbols (IMMUTABLE — The Kernel Function)
 
-The kernel K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) has four primitive equations and two derived values, but only **3 effective degrees of freedom** (F, κ, C). S is asymptotically determined by F and C (corr(C,S) → −1 as n → ∞). All six outputs are Tier-1. The 3 algebraic identities (F + ω = 1, IC ≤ F, IC = exp(κ)) and 1 statistical constraint (S ≈ f(F,C)) are theorems about this function. The 46 lemmas, 44 identities, and structural constants (c* = 0.7822, c_trap = 0.3178) are further properties of the same mathematical object.
+The kernel K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) has four primitive equations and two derived values, but only **3 effective degrees of freedom** (F, κ, C). S is asymptotically determined by F and C (corr(C,S) → −1 as n → ∞). All six outputs are Tier-1. The 3 algebraic identities (F + ω = 1, IC ≤ F, IC = exp(κ)) and 1 statistical constraint (S ≈ f(F,C)) are theorems about this function. The 47 lemmas, 44 identities, and structural constants (c* = 0.7822, c_trap = 0.3178) are further properties of the same mathematical object.
 
 | Symbol | Name | Formula | Range | Status | Structural Role |
 |--------|------|---------|-------|--------|-----------------|

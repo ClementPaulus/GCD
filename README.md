@@ -130,7 +130,7 @@ Every claim, measurement, validation, and narrative in UMCP follows exactly **fi
 
 ### The Three-Tier Stack
 
-Tier-1 (44 structural identities, 46 lemmas, 252 proven theorems) → Tier-0 (11,389 tests, 181 closure modules, C++17 accelerator) → Tier-2 (20 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
+Tier-1 (44 structural identities, 47 lemmas, 252 proven theorems) → Tier-0 (11,389 tests, 181 closure modules, C++17 accelerator) → Tier-2 (20 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
 
 <p align="center">
   <img src="images/10_tier_architecture.png" alt="Three-Tier Architecture: Tier-1 (Kernel) → Tier-0 (Protocol) → Tier-2 (Domains)" width="88%">
@@ -1047,7 +1047,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 | [LIBER_COLLAPSUS.tex](LIBER_COLLAPSUS.tex) | *Liber Universalis de Collapsus Mathematica* — the Tier-1 Latin foundation text |
 | [MANIFESTUM_LATINUM.md](MANIFESTUM_LATINUM.md) | Latin manifesto: complete lexicon, seven verbs, eight typed patterns, twenty maxims |
 | [TIER_SYSTEM.md](TIER_SYSTEM.md) | The three-tier architecture: Immutable Invariants → Protocol → Expansion Space |
-| [KERNEL_SPECIFICATION.md](KERNEL_SPECIFICATION.md) | Complete kernel mathematics, 46 lemmas, and degenerate-limit proofs |
+| [KERNEL_SPECIFICATION.md](KERNEL_SPECIFICATION.md) | Complete kernel mathematics, 47 lemmas, and degenerate-limit proofs |
 | [QUICKSTART_TUTORIAL.md](QUICKSTART_TUTORIAL.md) | Getting started: first validation in 5 minutes |
 | [CATALOGUE.md](CATALOGUE.md) | **Master index**: all ~620 tagged formal objects — symbols, lemmas, identities, theorems, classes — organized by tier with full definitions and lineage |
 

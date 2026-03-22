@@ -1770,7 +1770,7 @@ def plot_tier_architecture() -> None:
             GREEN,
             "K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC)\n\n"
             "F + ω = 1  │  IC ≤ F  │  IC = exp(κ)\n"
-            "44 structural identities  │  46 lemmas  │  5 frozen constants\n"
+            "44 structural identities  │  47 lemmas  │  5 frozen constants\n"
             "76 proven theorems across 18 domains  │  0 violations",
         ),
         (

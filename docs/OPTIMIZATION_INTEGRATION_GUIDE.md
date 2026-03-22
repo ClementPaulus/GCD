@@ -1,7 +1,7 @@
 # Optimization Integration Guide
 
-**Status**: Practical guide for using computational optimizations  
-**Purpose**: Show how to integrate OPT-1 through OPT-21 into existing workflows  
+**Status**: Practical guide for using computational optimizations
+**Purpose**: Show how to integrate OPT-1 through OPT-21 into existing workflows
 **Prerequisites**: [COMPUTATIONAL_OPTIMIZATIONS.md](COMPUTATIONAL_OPTIMIZATIONS.md), [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md)
 
 ---
@@ -238,9 +238,9 @@ from umcp.seam_optimized import SeamChainAccumulator
 
 def validate_long_chain(kappa_trace, tau_R_trace, budget_params):
     \"\"\"Validate seam chain with early failure detection.\"\"\"
-    
+
     chain = SeamChainAccumulator(alpha=0.05)
-    
+
     for k in range(len(kappa_trace) - 1):
         try:
             # OPT-11: Automatic growth detection
@@ -264,7 +264,7 @@ def validate_long_chain(kappa_trace, tau_R_trace, budget_params):
                 'growth_exponent': metrics.growth_exponent,
                 'cumulative_residual': metrics.cumulative_abs_residual
             }
-    
+
     # Success - check final metrics
     metrics = chain.get_metrics()
     return {
@@ -314,11 +314,11 @@ def classify_new(outputs):
 # Validation
 for c_t in trace:
     outputs = computer.compute(c_t, w)
-    
+
     # Both methods should agree
     old_label = classify_old(outputs)
     new_label = classify_new(outputs)
-    
+
     # New method is faster (1 computation vs 3 comparisons)
     print(f"Θ={coherence.compute_coherence_proxy(outputs.omega, outputs.S):.2f} → {new_label}")
 ```
@@ -338,11 +338,11 @@ import pstats
 def profile_kernel_computation(trace, weights):
     profiler = cProfile.Profile()
     profiler.enable()
-    
+
     # Your current kernel code
     for c_t in trace:
         outputs = compute_kernel_old(c_t, weights)
-    
+
     profiler.disable()
     stats = pstats.Stats(profiler)
     stats.sort_stats('cumulative')
@@ -410,7 +410,7 @@ from umcp.kernel_optimized import OptimizedKernelComputer
 
 def compute_with_pruning(c, w, epsilon=1e-6):
     \"\"\"OPT-17: Prune zero-weight coordinates before computation.\"\"\"
-    
+
     # Prune zero weights
     active_mask = w > 1e-15
     if not np.all(active_mask):
@@ -419,7 +419,7 @@ def compute_with_pruning(c, w, epsilon=1e-6):
         w_active /= w_active.sum()
     else:
         c_active, w_active = c, w
-    
+
     # OPT-1: Homogeneity detection happens inside
     computer = OptimizedKernelComputer(epsilon=epsilon)
     return computer.compute(c_active, w_active)
@@ -456,7 +456,7 @@ print(f"Effective dimensions: {np.sum(w_sparse > 0)}")
 
 ### "F out of range" errors
 
-**Cause**: Coordinates not in [ε, 1-ε] domain.  
+**Cause**: Coordinates not in [ε, 1-ε] domain.
 **Fix**: Apply clipping before kernel computation:
 ```python
 c_clipped = np.clip(c, epsilon, 1 - epsilon)
@@ -465,7 +465,7 @@ outputs = computer.compute(c_clipped, w)
 
 ### "Weights do not sum to 1.0"
 
-**Cause**: Weight normalization issue.  
+**Cause**: Weight normalization issue.
 **Fix**: Normalize before passing:
 ```python
 w_normalized = w / w.sum()
@@ -474,7 +474,7 @@ outputs = computer.compute(c, w_normalized)
 
 ### "Residual accumulation failure detected"
 
-**Cause**: Budget model incorrect or system non-returning.  
+**Cause**: Budget model incorrect or system non-returning.
 **Fix**: Check budget parameters or disable auto-failure:
 ```python
 # Create chain without auto-raising for investigation
@@ -506,7 +506,7 @@ if not metrics.is_returning:
 ## References
 
 - [COMPUTATIONAL_OPTIMIZATIONS.md](COMPUTATIONAL_OPTIMIZATIONS.md): Full optimization catalog
-- [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md): Formal lemmas (1-34)
+- [KERNEL_SPECIFICATION.md](../KERNEL_SPECIFICATION.md): Formal lemmas (1-47)
 - [tests/test_computational_optimizations.py](tests/test_computational_optimizations.py): Test suite (27 tests)
 - [src/umcp/kernel_optimized.py](src/umcp/kernel_optimized.py): Optimized kernel (OPT-1,2,3,4,12,14,15)
 - [src/umcp/seam_optimized.py](src/umcp/seam_optimized.py): Optimized seam accounting (OPT-10,11)
@@ -515,6 +515,6 @@ if not metrics.is_returning:
 
 ---
 
-**Document Status**: Practical integration guide for computational optimizations  
-**Last Updated**: 2026-01-24  
+**Document Status**: Practical integration guide for computational optimizations
+**Last Updated**: 2026-01-24
 **Next Review**: After production deployment feedback

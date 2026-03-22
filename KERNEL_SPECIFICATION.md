@@ -201,7 +201,7 @@ Any failure is typed so the reason for non-weldability is explicit.
 
 ## 4. Fundamental Bounds and Sensitivity Facts
 
-**Purpose**: These 34 lemmas are **guardrails, stability theorems, and operational foundations**. They prevent common implementation errors, enforce well-posedness on the clipped domain, provide simple sanity checks for debugging, and formalize the connection between kernel outputs, return dynamics, seam accounting, and the return axiom. If a computed run violates these bounds, the run is almost certainly nonconformant (wrong clipping, wrong weights, wrong normalization, or a changed convention).
+**Purpose**: These 47 lemmas are **guardrails, stability theorems, and operational foundations**. They prevent common implementation errors, enforce well-posedness on the clipped domain, provide simple sanity checks for debugging, and formalize the connection between kernel outputs, return dynamics, seam accounting, and the return axiom. If a computed run violates these bounds, the run is almost certainly nonconformant (wrong clipping, wrong weights, wrong normalization, or a changed convention).
 
 ---
 

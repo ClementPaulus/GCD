@@ -99,7 +99,7 @@ Cross-references:
     Seam accounting:     src/umcp/seam_optimized.py
     τ_R* thermodynamics: src/umcp/tau_r_star.py
     Axiom:               AXIOM.md (AX-0: collapse is generative)
-    Kernel spec:         KERNEL_SPECIFICATION.md (Lemmas 1-34)
+    Kernel spec:         KERNEL_SPECIFICATION.md (Lemmas 1-47)
 
 Reference:
     Donnelly, M. B.; Chung, Y.; Garreis, R.; Plugge, S.; Pye, J.;

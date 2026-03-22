@@ -35,7 +35,7 @@ If ANY test fails, the kernel implementation has a bug. The math cannot fail.
 
 Cross-references:
     AXIOM.md                                — Axiom-0 statement
-    KERNEL_SPECIFICATION.md                 — Formal definitions, Lemmas 1-34
+    KERNEL_SPECIFICATION.md                 — Formal definitions, Lemmas 1-47
     src/umcp/kernel_optimized.py            — Implementation under test
     closures/atomic_physics/periodic_kernel.py — 118-element application
 """

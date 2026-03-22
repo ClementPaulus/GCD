@@ -41,7 +41,7 @@ Cross-references:
     Couplings:     closures/standard_model/coupling_constants.py
     Higgs:         closures/standard_model/symmetry_breaking.py
     Elements:      closures/materials_science/element_database.py
-    Spec:          KERNEL_SPECIFICATION.md (Lemmas 1-34)
+    Spec:          KERNEL_SPECIFICATION.md (Lemmas 1-47)
     Axiom:         AXIOM.md (Axiom-0: collapse is generative)
 """
 
