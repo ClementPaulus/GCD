@@ -31,11 +31,11 @@
   "theorem_count": 0,
   "entity_count": 5,
   "casepack_count": 1,
-  "ledger_total": 9671,
-  "ledger_conformant": 9671,
+  "ledger_total": 9700,
+  "ledger_conformant": 9700,
   "metadata": {
     "domain_count": 20,
-    "total_ledger_rows": 9671,
-    "conformant_count": 9671
+    "total_ledger_rows": 9700,
+    "conformant_count": 9700
   }
 }

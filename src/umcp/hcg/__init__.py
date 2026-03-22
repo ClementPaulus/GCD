@@ -15,6 +15,8 @@ Architecture:
     domain_config  — routes TARGET_DOMAIN env var to the correct closure subset
     webhook        — fires rebuild triggers on CONFORMANT weld events
     builder        — orchestrates extract → generate → emit static content
+    isolator       — scaffolds standalone Astro projects per domain (fleet mode)
+    trigger        — bridges validation pipeline → webhook orchestrator
 
 Usage:
     from umcp.hcg import build_site, extract_domain_data, SiteData
@@ -35,15 +37,23 @@ from umcp.hcg.extractor import (
     scan_closure_entities,
     scan_closure_theorems,
 )
+from umcp.hcg.isolator import IsolatedSite, isolate_all, isolate_domain
+from umcp.hcg.trigger import LedgerWatcher, TriggerEvent, ValidationTrigger
 
 __all__ = [
     "DomainConfig",
     "EntityInfo",
+    "IsolatedSite",
+    "LedgerWatcher",
     "SiteData",
     "TheoremInfo",
+    "TriggerEvent",
+    "ValidationTrigger",
     "build_site",
     "extract_domain_data",
     "get_domain_config",
+    "isolate_all",
+    "isolate_domain",
     "list_domains",
     "scan_closure_entities",
     "scan_closure_theorems",
