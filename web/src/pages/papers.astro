@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+
+const papers = [
+  {
+    title: 'Particle Physics in the GCD Kernel: Ten Tier-2 Theorems',
+    file: 'standard_model_kernel.tex',
+    status: 'Published',
+    pages: 5,
+    desc: 'Maps 31 Standard Model particles (17 fundamental + 14 composite) through an 8-channel GCD kernel. Proves 10 theorems: spin-statistics separation, generation monotonicity, confinement as IC collapse, mass-kernel log mapping, charge quantization via IC, cross-scale universality, symmetry breaking amplification, CKM unitarity, running coupling flow, and nuclear binding curve.',
+    domains: ['standard_model', 'nuclear_physics'],
+  },
+  {
+    title: 'RCFT Second Edition: Foundations and Implications',
+    file: 'rcft_second_edition.tex',
+    status: 'Published',
+    desc: 'Recursive Collapse Field Theory — the theoretical framework extending GCD into recursive field structures. Establishes the Freeze-Weld identity and recursive collapse operators.',
+    domains: ['rcft', 'gcd'],
+  },
+  {
+    title: 'τ_R* Dynamics',
+    file: 'tau_r_star_dynamics.tex',
+    status: 'Published',
+    desc: 'Formalizes the τ_R* thermodynamic diagnostic: return time computation, phase diagram classification, and the arrow-of-time constraint on collapse trajectories.',
+    domains: ['gcd'],
+  },
+  {
+    title: 'Confinement Kernel Analysis',
+    file: 'confinement_kernel.tex',
+    status: 'Published',
+    desc: 'Detailed analysis of IC collapse at the quark→hadron phase boundary. Demonstrates that confinement is visible as geometric slaughter: one dead channel (color→0) kills multiplicative coherence.',
+    domains: ['standard_model', 'nuclear_physics'],
+  },
+  {
+    title: 'Measurement Substrate Theory',
+    file: 'measurement_substrate.tex',
+    status: 'Published',
+    desc: 'The GCD kernel as a universal measurement substrate. Establishes that the kernel function provides a domain-independent measurement layer for reproducible computational workflows.',
+    domains: ['gcd'],
+  },
+  {
+    title: 'Consciousness Coherence: Seven Theorems in the GCD Kernel',
+    file: 'consciousness_coherence.tex',
+    status: 'Published',
+    desc: 'Maps 20 consciousness systems through a coherence kernel. Seven theorems connecting awareness, integration, and collapse dynamics to measurable kernel invariants.',
+    domains: ['consciousness_coherence'],
+  },
+  {
+    title: 'Awareness-Cognition Kernel: Ten Theorems Across Phylogeny',
+    file: 'awareness_cognition_kernel.tex',
+    status: 'Published',
+    desc: 'A 5+5 channel awareness-aptitude kernel applied across 34 organisms. Ten theorems on attention mechanisms, cognitive scaling, and phylogenetic awareness gradients.',
+    domains: ['awareness_cognition', 'evolution'],
+  },
+  {
+    title: 'Cross-Scale Matter: Quarks to Bulk via Five Phase Boundaries',
+    file: 'cross_scale_matter.tex',
+    status: 'Published',
+    desc: 'Traces IC/F oscillation across five phase boundaries: quark→hadron→nucleus→atom→molecule→bulk. Each boundary is a collapse-return cycle measurable in the kernel.',
+    domains: ['standard_model', 'atomic_physics', 'materials_science'],
+  },
+  {
+    title: 'RCFT Freeze-Weld Identity',
+    file: 'RCFT_FREEZE_WELD.md',
+    status: 'Technical Note',
+    desc: 'Formal specification of the Freeze-Weld identity: the mechanism by which recursive collapse fields preserve continuity across parameter changes.',
+    domains: ['rcft'],
+  },
+];
+
+const statusColors: Record<string, string> = {
+  'Published': 'text-green-400 border-green-700',
+  'Technical Note': 'text-blue-400 border-blue-700',
+  'Draft': 'text-yellow-400 border-yellow-700',
+};
+---
+
+<BaseLayout title="Papers — GCD Kernel" description="Published research papers and technical notes.">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-10">
+      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Papers</h1>
+      <p class="text-kernel-400">
+        Published research and technical notes. All papers use RevTeX4-2 and share a
+        unified bibliography of 159 entries.
+      </p>
+    </div>
+
+    <!-- Overview -->
+    <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 mb-8">
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div>
+          <div class="text-2xl font-bold text-amber-400">{papers.length}</div>
+          <div class="text-xs text-kernel-500">Papers</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-amber-400">159</div>
+          <div class="text-xs text-kernel-500">Bibliography entries</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-amber-400">RevTeX4-2</div>
+          <div class="text-xs text-kernel-500">Document class</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paper list -->
+    <div class="space-y-4">
+      {papers.map((p, i) => (
+        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-5 hover:border-kernel-700 transition">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-kernel-100 mb-1">{p.title}</h3>
+              <p class="text-sm text-kernel-400 mb-3">{p.desc}</p>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class={`text-xs px-2 py-0.5 rounded border ${statusColors[p.status] || 'text-kernel-400 border-kernel-700'}`}>
+                  {p.status}
+                </span>
+                {p.pages && (
+                  <span class="text-xs text-kernel-500">{p.pages} pages</span>
+                )}
+                {p.domains.map(d => (
+                  <a href={`${base}${d}/`}
+                     class="text-xs text-kernel-500 hover:text-kernel-300 bg-kernel-800 px-2 py-0.5 rounded transition">
+                    {d}
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div class="flex-shrink-0 text-right">
+              <div class="text-xs text-kernel-500 font-mono">{p.file}</div>
+              <div class="text-xs text-kernel-600 mt-1">paper/</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Build instructions -->
+    <div class="mt-10 bg-kernel-900 border border-kernel-800 rounded-lg p-5">
+      <h2 class="text-lg font-bold text-kernel-100 mb-3">Compilation</h2>
+      <p class="text-sm text-kernel-400 mb-3">
+        All LaTeX papers compile with the standard sequence:
+      </p>
+      <pre class="text-xs text-kernel-400 font-mono bg-kernel-950 rounded p-3 overflow-x-auto">pdflatex paper.tex
+bibtex paper
+pdflatex paper.tex
+pdflatex paper.tex</pre>
+      <p class="text-xs text-kernel-500 mt-3">
+        Shared bibliography: <span class="font-mono">paper/Bibliography.bib</span> (159 entries, PDG 2024 → Kramers 1940)
+      </p>
+    </div>
+
+    <div class="mt-8 text-center text-kernel-600 text-xs italic">
+      Sine receptu, gestus est; cum receptu, sutura est.
+    </div>
+  </div>
+</BaseLayout>

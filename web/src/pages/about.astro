@@ -1,0 +1,236 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="About — GCD Kernel" description="What is Generative Collapse Dynamics? The axiom, the kernel, the spine.">
+  <div class="max-w-4xl mx-auto">
+    <!-- Hero -->
+    <div class="text-center mb-16">
+      <h1 class="text-4xl font-bold text-kernel-100 mb-4">Generative Collapse Dynamics</h1>
+      <p class="text-xl text-kernel-300 italic">
+        "Collapse is generative; only what returns is real."
+      </p>
+      <p class="text-sm text-kernel-500 mt-2">
+        Collapsus generativus est; solum quod redit, reale est.
+      </p>
+    </div>
+
+    <!-- What is GCD? -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">What is GCD?</h2>
+      <div class="space-y-4 text-kernel-300">
+        <p>
+          <strong class="text-kernel-100">Generative Collapse Dynamics</strong> is a
+          mathematical framework that measures what survives collapse and what returns.
+          It begins from a single axiom — <em>Axiom-0</em> — and derives a complete
+          measurement protocol that works identically across 20 scientific domains,
+          from particle physics to consciousness studies.
+        </p>
+        <p>
+          The framework is implemented as <strong class="text-kernel-100">UMCP</strong>
+          (Universal Measurement Contract Protocol), a reproducible validation system
+          with 11,489 tests, 47 lemmas, 44 structural identities, and frozen parameters
+          that are seam-derived — discovered by the mathematics, not chosen by convention.
+        </p>
+      </div>
+    </section>
+
+    <!-- The Kernel -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">The Kernel</h2>
+      <p class="text-kernel-300 mb-6">
+        The kernel function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) maps any trace vector
+        to six invariants with only <strong class="text-kernel-100">3 effective degrees of freedom</strong>.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
+          <div class="text-2xl font-mono text-amber-400 mb-1">F</div>
+          <div class="text-sm text-kernel-300"><strong>Fidelity</strong> — what survives collapse</div>
+          <div class="text-xs text-kernel-500 mt-1 font-mono">F = Σ wᵢcᵢ</div>
+        </div>
+        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
+          <div class="text-2xl font-mono text-amber-400 mb-1">ω</div>
+          <div class="text-sm text-kernel-300"><strong>Drift</strong> — what is lost</div>
+          <div class="text-xs text-kernel-500 mt-1 font-mono">ω = 1 − F</div>
+        </div>
+        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
+          <div class="text-2xl font-mono text-amber-400 mb-1">S</div>
+          <div class="text-sm text-kernel-300"><strong>Entropy</strong> — field uncertainty</div>
+          <div class="text-xs text-kernel-500 mt-1 font-mono">S = −Σ wᵢ[cᵢ ln cᵢ + (1−cᵢ) ln(1−cᵢ)]</div>
+        </div>
+        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
+          <div class="text-2xl font-mono text-amber-400 mb-1">C</div>
+          <div class="text-sm text-kernel-300"><strong>Curvature</strong> — coupling to uncontrolled DOF</div>
+          <div class="text-xs text-kernel-500 mt-1 font-mono">C = stddev(cᵢ) / 0.5</div>
+        </div>
+        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
+          <div class="text-2xl font-mono text-amber-400 mb-1">κ</div>
+          <div class="text-sm text-kernel-300"><strong>Log-integrity</strong> — logarithmic sensitivity</div>
+          <div class="text-xs text-kernel-500 mt-1 font-mono">κ = Σ wᵢ ln(cᵢ,ε)</div>
+        </div>
+        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
+          <div class="text-2xl font-mono text-amber-400 mb-1">IC</div>
+          <div class="text-sm text-kernel-300"><strong>Integrity</strong> — multiplicative coherence</div>
+          <div class="text-xs text-kernel-500 mt-1 font-mono">IC = exp(κ)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Spine -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">The Spine</h2>
+      <p class="text-kernel-300 mb-6">
+        Every claim, validation, and discourse follows a fixed five-stop spine.
+        This is both a validation pipeline and a grammatical structure.
+      </p>
+      <div class="flex flex-col md:flex-row items-stretch gap-2">
+        {[
+          { name: 'Contract', role: 'Freeze rules before evidence', color: 'border-blue-500' },
+          { name: 'Canon', role: 'Tell with five words', color: 'border-green-500' },
+          { name: 'Closures', role: 'Publish thresholds', color: 'border-yellow-500' },
+          { name: 'Ledger', role: 'Debit/credit must balance', color: 'border-orange-500' },
+          { name: 'Stance', role: 'Derived verdict', color: 'border-red-500' },
+        ].map((stop, i) => (
+          <div class={`flex-1 bg-kernel-900 border-t-2 ${stop.color} rounded-lg p-4 text-center`}>
+            <div class="text-xs text-kernel-500 mb-1">Stop {i + 1}</div>
+            <div class="text-lg font-bold text-kernel-100">{stop.name}</div>
+            <div class="text-xs text-kernel-400 mt-1">{stop.role}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Three Regimes -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">Three Regimes</h2>
+      <p class="text-kernel-300 mb-4">
+        Regime classification is derived from gates on (ω, F, S, C) — never asserted.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-kernel-900 border border-green-700 rounded-lg p-4">
+          <div class="text-lg font-bold text-green-400 mb-1">Stable</div>
+          <div class="text-xs text-kernel-400">ω &lt; 0.038 ∧ F &gt; 0.90 ∧ S &lt; 0.15 ∧ C &lt; 0.14</div>
+          <div class="text-sm text-kernel-500 mt-2">12.5% of Fisher space</div>
+        </div>
+        <div class="bg-kernel-900 border border-yellow-700 rounded-lg p-4">
+          <div class="text-lg font-bold text-yellow-400 mb-1">Watch</div>
+          <div class="text-xs text-kernel-400">0.038 ≤ ω &lt; 0.30 (or Stable gates not all met)</div>
+          <div class="text-sm text-kernel-500 mt-2">24.4% of Fisher space</div>
+        </div>
+        <div class="bg-kernel-900 border border-red-700 rounded-lg p-4">
+          <div class="text-lg font-bold text-red-400 mb-1">Collapse</div>
+          <div class="text-xs text-kernel-400">ω ≥ 0.30</div>
+          <div class="text-sm text-kernel-500 mt-2">63.1% of Fisher space</div>
+        </div>
+      </div>
+      <p class="text-kernel-500 text-sm mt-3 italic">
+        Stability is rare — 87.5% of the manifold lies outside it.
+        Return from collapse to stability is what the axiom measures.
+      </p>
+    </section>
+
+    <!-- Five Words -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">The Five Words</h2>
+      <p class="text-kernel-300 mb-4">
+        The minimal prose vocabulary for telling the story of any collapse-return cycle:
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        {[
+          { word: 'Drift', latin: 'derivatio', role: 'What moved' },
+          { word: 'Fidelity', latin: 'fidelitas', role: 'What persisted' },
+          { word: 'Roughness', latin: 'curvatura', role: 'Where it was bumpy' },
+          { word: 'Return', latin: 'reditus', role: 'Credible re-entry' },
+          { word: 'Integrity', latin: 'integritas', role: 'Does it hold together' },
+        ].map(w => (
+          <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 text-center">
+            <div class="text-lg font-bold text-kernel-100">{w.word}</div>
+            <div class="text-xs text-kernel-500 italic">{w.latin}</div>
+            <div class="text-xs text-kernel-400 mt-1">{w.role}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">Architecture</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+          <div class="text-xs text-kernel-500 mb-1">Tier 1</div>
+          <div class="text-lg font-bold text-kernel-100 mb-2">The Kernel</div>
+          <div class="text-sm text-kernel-400">
+            The mathematical function and its provable identities.
+            47 lemmas, 44 structural identities, 5 frozen constants.
+            Domain-independent. Immutable within a run.
+          </div>
+        </div>
+        <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+          <div class="text-xs text-kernel-500 mb-1">Tier 0</div>
+          <div class="text-lg font-bold text-kernel-100 mb-2">Protocol</div>
+          <div class="text-sm text-kernel-400">
+            Operational machinery: embedding, kernel computation,
+            regime gates, seam calculus, contracts, validation.
+            Implemented in Python, C99, and C++.
+          </div>
+        </div>
+        <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+          <div class="text-xs text-kernel-500 mb-1">Tier 2</div>
+          <div class="text-lg font-bold text-kernel-100 mb-2">Expansion</div>
+          <div class="text-sm text-kernel-400">
+            20 domain closures choosing which real-world quantities
+            become trace vectors. From particle physics to
+            consciousness studies. Freely extensible.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick links -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">Explore</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { name: 'Calculator', href: `${base}calculator/`, desc: 'Compute kernel live' },
+          { name: 'Rosetta', href: `${base}rosetta/`, desc: 'Cross-domain lenses' },
+          { name: 'Identities', href: `${base}identities/`, desc: '44 structural identities' },
+          { name: 'Scale Ladder', href: `${base}scale-ladder/`, desc: 'Quarks → bulk matter' },
+          { name: 'Formulas', href: `${base}formulas/`, desc: 'Build expressions' },
+          { name: 'Geometry', href: `${base}geometry/`, desc: 'Fisher manifold' },
+          { name: 'Seam Budget', href: `${base}seam-budget/`, desc: 'Γ(ω), D_C, Δκ' },
+          { name: 'Papers', href: `${base}papers/`, desc: 'Published research' },
+        ].map(link => (
+          <a href={link.href}
+             class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 hover:border-kernel-600 transition group">
+            <div class="text-sm font-bold text-kernel-100 group-hover:text-amber-400 transition">{link.name}</div>
+            <div class="text-xs text-kernel-500">{link.desc}</div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="bg-kernel-900 border border-kernel-800 rounded-lg p-6 mb-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+        {[
+          { n: '11,489', label: 'Tests' },
+          { n: '20', label: 'Domains' },
+          { n: '44', label: 'Identities' },
+          { n: '47', label: 'Lemmas' },
+          { n: '181', label: 'Closures' },
+        ].map(s => (
+          <div>
+            <div class="text-2xl font-bold text-amber-400">{s.n}</div>
+            <div class="text-xs text-kernel-500">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <div class="text-center text-kernel-600 text-xs">
+      <p>UMCP v2.2.5 · MIT License</p>
+      <p class="mt-1 italic">Continuitas non narratur: mensuratur.</p>
+    </div>
+  </div>
+</BaseLayout>
