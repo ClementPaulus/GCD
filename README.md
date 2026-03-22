@@ -633,7 +633,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                            # All 11,342 tests
+pytest                            # All 11,389 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
