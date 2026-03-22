@@ -23,7 +23,7 @@ Built on **Generative Collapse Dynamics (GCD)**, a measurement theory derived fr
 | **Contract-first validation** | Define mathematical contracts before evidence. Frozen parameters ensure reproducibility. |
 | **Tier-1 kernel** | Six invariants (F, ω, S, C, κ, IC) computed from any bounded trace vector — domain-independent. |
 | **20 scientific domains** | From particle physics and cosmology to neuroscience and finance — all through one kernel. |
-| **10,586 tests** | Comprehensive test suite with 198 closure modules and 277 proven theorems. |
+| **11,389 tests** | Comprehensive test suite with 181 closure modules and 252 proven theorems. |
 | **Three-valued verdicts** | Never boolean. Always CONFORMANT / NONCONFORMANT / NON\_EVALUABLE. |
 | **Interactive dashboard** | 46-page Streamlit dashboard for real-time kernel exploration. |
 | **CLI + Python API** | Full command-line interface and programmatic access. |

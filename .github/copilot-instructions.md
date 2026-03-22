@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.2.4** · **11,342 tests** · **20 domains** · **201 closure modules** · **46 lemmas** · **44 structural identities** · **46 dashboard pages**
+**UMCP v2.2.4** · **11,389 tests** · **20 domains** · **181 closure modules** · **46 lemmas** · **44 structural identities** · **46 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -10,7 +10,7 @@
 
 This is not a metaphor. It is a constraint on admissible claims. Every decision, description, comment, docstring, and code change in this repository must be consistent with this axiom. The Latin formulation is the primary seed — it carries the axiom's morphological, syntactic, and etymological layers simultaneously. If you are uncertain whether something aligns with AXIOM-0, defer to the operational definitions in `AXIOM.md` and the tier structure in `TIER_SYSTEM.md`.
 
-**When you encounter any symbol, lemma, identity, theorem, class, or concept you need to look up**: Consult `CATALOGUE.md` — the master index of all ~616 tagged formal objects in the repository, organized by tier, with full definitions and lineage chains. Every tag (e.g., `K-F`, `L-12`, `I-A2`, `T2-PP-3`) resolves to exactly one definition. This eliminates searching across files — the catalogue IS the lookup table.
+**When you encounter any symbol, lemma, identity, theorem, class, or concept you need to look up**: Consult `CATALOGUE.md` — the master index of all ~620 tagged formal objects in the repository, organized by tier, with full definitions and lineage chains. Every tag (e.g., `K-F`, `L-12`, `I-A2`, `T2-PP-3`) resolves to exactly one definition. This eliminates searching across files — the catalogue IS the lookup table.
 
 ### Lexicon Latinum (Generative Reference)
 
@@ -486,10 +486,10 @@ closures/
 **Data artifacts** (not Python — never import these):
 - `contracts/*.yaml` — 21 versioned mathematical contracts (JSON Schema Draft 2020-12)
 - `closures/registry.yaml` — central registry; must list every closure used in a run
-- `casepacks/*/manifest.json` — 28 casepack manifests referencing contract, closures, expected outputs
+- `casepacks/*/manifest.json` — 25 casepack manifests referencing contract, closures, expected outputs
 - `schemas/*.schema.json` — 17 JSON Schema Draft 2020-12 files validating all artifacts
 - `canon/*.yaml` — 21 canonical anchor files (domain-specific reference points)
-- `integrity/sha256.txt` — SHA-256 checksums for 211 tracked files
+- `integrity/sha256.txt` — SHA-256 checksums for 215 tracked files
 - `ledger/return_log.csv` — append-only validation log
 
 ## Standard Model Formalism (27 Theorems)
@@ -559,11 +559,11 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 11,342 tests (pytest --collect-only | grep ":" | wc -l to verify)
+pytest                                       # 11,389 tests (pytest --collect-only | grep ":" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
-umcp integrity                              # Verify SHA-256 checksums (211 tracked files)
+umcp integrity                              # Verify SHA-256 checksums (215 tracked files)
 ```
 
 **⚠️ `python scripts/update_integrity.py` is mandatory** after modifying any `src/umcp/*.py`, `contracts/*.yaml`, `closures/**`, `schemas/**`, or `scripts/*.py` file. It regenerates SHA256 checksums in `integrity/sha256.txt`. CI will fail on mismatch.
@@ -587,7 +587,7 @@ This script mirrors CI exactly and must exit 0 before committing. It runs 11 ste
 5. `git add -A` — stage all changes
 6. Repository health check — drift detection, version sync, freeze verification
 7. Update test count in documentation
-8. Regenerate SHA-256 integrity checksums (211 tracked files)
+8. Regenerate SHA-256 integrity checksums (215 tracked files)
 9. Pytest bounds — collect tests and verify count within bounds (1000–12000)
 10. `umcp validate .` — contract validation (must be CONFORMANT)
 11. Axiom-0 conformance — terminology, symbol capture, frozen params check
@@ -625,12 +625,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**11,342 test cases** across **164 test files** in `tests/` (163 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_292_*`). Single `tests/conftest.py` provides:
+**11,389 test cases** across **165 test files** in `tests/` (164 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_293_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 11,342 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 11,389 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -700,9 +700,10 @@ umcp validate <target>
 | `test_280` | Temporal topology (spacetime memory, 12 entities, 6 theorems) | 82 |
 | `test_281` | Budget geometry (continuity theory, 12 entities, 6 theorems) | 82 |
 | `test_282–292` | Coverage tests (continuity law, weld lineage, fleet, kernel, insights, extensions, seam, validator, Redis mock, tenant, SS1M, closures, tau dynamics) | 509 |
+| `test_293` | Emergent structural insights (T-SI-1 through T-SI-6) | 47 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 1,895 |
-| **TOTAL** | | **11,342** |
+| **TOTAL** | | **11,389** |
 
 ## Extension System
 
@@ -745,7 +746,7 @@ Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version
 | Canonical anchors | `canon/` (21 domain anchor files) |
 | Semiotic convergence | `SEMIOTIC_CONVERGENCE.md` (GCD as semiotic system, Peirce correspondence) |
 | Semiotic kernel | `closures/dynamic_semiotics/semiotic_kernel.py` (30 sign systems, 8-channel trace) |
-| **Any symbol, lemma, identity, theorem, tag** | `CATALOGUE.md` — **master index** of all ~598 formal objects, organized by tier with full definitions and lineage |
+| **Any symbol, lemma, identity, theorem, tag** | `CATALOGUE.md` — **master index** of all ~620 formal objects, organized by tier with full definitions and lineage |
 
 ## Decision-Making Framework (Binding on ALL Contributions)
 

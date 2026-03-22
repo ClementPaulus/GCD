@@ -84,7 +84,7 @@ python scripts/pre_commit_protocol.py    # Full validation, must exit 0
 | Epistemic weld | `src/umcp/epistemic_weld.py` |
 | Closures (20 domains) | `closures/` |
 | Contracts | `contracts/*.yaml` |
-| Tests (11,342) | `tests/` |
+| Tests (11,389) | `tests/` |
 | Orientation script | `scripts/orientation.py` |
 | Orientation checkpoint | `scripts/orientation_checkpoint.py` |
 | Deep diagnostic | `scripts/deep_diagnostic.py` |
@@ -92,7 +92,7 @@ python scripts/pre_commit_protocol.py    # Full validation, must exit 0
 | Cross-domain phase 2 | `scripts/cross_domain_bridge_phase2.py` |
 | Latin manifesto | `MANIFESTUM_LATINUM.md` |
 | Semiotic convergence | `SEMIOTIC_CONVERGENCE.md` |
-| **Master catalogue (all tags)** | `CATALOGUE.md` — **~616 tagged objects**: every symbol, lemma, identity, theorem, class, with tier + lineage |
+| **Master catalogue (all tags)** | `CATALOGUE.md` — **~620 tagged objects**: every symbol, lemma, identity, theorem, class, with tier + lineage |
 | Full AI instructions | `.github/copilot-instructions.md` |
 
 ## The Spine (Every Claim Follows This)
