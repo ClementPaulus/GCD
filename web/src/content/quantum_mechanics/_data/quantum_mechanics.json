@@ -1,0 +1,40 @@
+{
+  "domain": "quantum_mechanics",
+  "display_name": "Quantum Mechanics",
+  "kernel": {
+    "F": 0.99999999,
+    "omega": 1e-08,
+    "S": 1.9e-07,
+    "C": 0.0,
+    "kappa": -1e-08,
+    "IC": 0.99999999,
+    "regime": "STABLE",
+    "heterogeneity_gap": 0.0
+  },
+  "closure_modules": [
+    "atom_dot_mi_transition",
+    "double_slit_interference",
+    "entanglement",
+    "fqhe_bilayer_graphene",
+    "harmonic_oscillator",
+    "muon_laser_decay",
+    "photonic_confinement",
+    "quantum_dimer_model",
+    "spin_measurement",
+    "ters_near_field",
+    "topological_band_structures",
+    "tunneling",
+    "uncertainty_principle",
+    "wavefunction_collapse"
+  ],
+  "theorem_count": 84,
+  "entity_count": 10,
+  "casepack_count": 1,
+  "ledger_total": 9625,
+  "ledger_conformant": 9625,
+  "metadata": {
+    "domain_count": 20,
+    "total_ledger_rows": 9625,
+    "conformant_count": 9625
+  }
+}

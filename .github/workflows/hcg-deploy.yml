@@ -1,0 +1,145 @@
+# Headless Contract Gateway — Autonomous Site Deployment
+#
+# Triggers:
+#   1. Push to main (validates + rebuilds all domain sites)
+#   2. repository_dispatch from api_umcp.py webhook (rebuilds specific domain)
+#   3. Manual dispatch (workflow_dispatch)
+#
+# Flow:
+#   Python validates → HCG extracts → Rosetta generates markdown → Astro builds → Deploy
+
+name: HCG Deploy
+
+on:
+  # Rebuild when validation data changes
+  push:
+    branches: [main]
+    paths:
+      - 'ledger/**'
+      - 'canon/**'
+      - 'closures/**'
+      - 'contracts/**'
+      - 'casepacks/**'
+      - 'src/umcp/hcg/**'
+      - 'web/**'
+
+  # Webhook trigger from api_umcp.py
+  repository_dispatch:
+    types:
+      - hcg-rebuild-*
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: 'Domain to rebuild (empty = all)'
+        required: false
+        default: ''
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install UMCP
+        run: pip install -e ".[all]"
+
+      - name: Determine domain
+        id: domain
+        run: |
+          # From repository_dispatch
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            DOMAIN=$(echo "${{ github.event.action }}" | sed 's/hcg-rebuild-//')
+            echo "domain=${DOMAIN}" >> "$GITHUB_OUTPUT"
+            echo "build_all=false" >> "$GITHUB_OUTPUT"
+          # From workflow_dispatch
+          elif [ -n "${{ github.event.inputs.domain }}" ]; then
+            echo "domain=${{ github.event.inputs.domain }}" >> "$GITHUB_OUTPUT"
+            echo "build_all=false" >> "$GITHUB_OUTPUT"
+          # Default: all
+          else
+            echo "domain=" >> "$GITHUB_OUTPUT"
+            echo "build_all=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate site content
+        run: |
+          if [ "${{ steps.domain.outputs.build_all }}" = "true" ]; then
+            python scripts/generate_site_markdown.py --all --output web/src/content -v
+          else
+            python scripts/generate_site_markdown.py \
+              --domain "${{ steps.domain.outputs.domain }}" \
+              --output web/src/content -v
+          fi
+
+      - name: Upload generated content
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-content
+          path: web/src/content/
+
+  build:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download generated content
+        uses: actions/download-artifact@v4
+        with:
+          name: site-content
+          path: web/src/content/
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: web
+        run: npm install
+
+      - name: Build Astro site
+        working-directory: web
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-build
+          path: web/dist/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-build
+          path: ./dist
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

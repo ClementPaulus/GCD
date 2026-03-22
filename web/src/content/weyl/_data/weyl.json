@@ -1,0 +1,33 @@
+{
+  "domain": "weyl",
+  "display_name": "WEYL Cosmology",
+  "kernel": {
+    "F": 0.99999999,
+    "omega": 1e-08,
+    "S": 1.9e-07,
+    "C": 0.0,
+    "kappa": -1e-08,
+    "IC": 0.99999999,
+    "regime": "STABLE",
+    "heterogeneity_gap": 0.0
+  },
+  "closure_modules": [
+    "beyond_limber",
+    "boost_factor",
+    "cosmology_background",
+    "limber_integral",
+    "sigma_evolution",
+    "weyl_theorems",
+    "weyl_transfer"
+  ],
+  "theorem_count": 20,
+  "entity_count": 0,
+  "casepack_count": 1,
+  "ledger_total": 9625,
+  "ledger_conformant": 9625,
+  "metadata": {
+    "domain_count": 20,
+    "total_ledger_rows": 9625,
+    "conformant_count": 9625
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "domain": "clinical_neuroscience",
+  "display_name": "Clinical Neuroscience",
+  "kernel": {
+    "F": 0.99999999,
+    "omega": 1e-08,
+    "S": 1.9e-07,
+    "C": 0.0,
+    "kappa": -1e-08,
+    "IC": 0.99999999,
+    "regime": "STABLE",
+    "heterogeneity_gap": 0.0
+  },
+  "closure_modules": [
+    "developmental_neuroscience",
+    "neurocognitive_kernel",
+    "neurocognitive_theorems",
+    "neurotransmitter_systems",
+    "sleep_neurophysiology"
+  ],
+  "theorem_count": 56,
+  "entity_count": 21,
+  "casepack_count": 0,
+  "ledger_total": 9625,
+  "ledger_conformant": 9625,
+  "metadata": {
+    "domain_count": 20,
+    "total_ledger_rows": 9625,
+    "conformant_count": 9625
+  }
+}

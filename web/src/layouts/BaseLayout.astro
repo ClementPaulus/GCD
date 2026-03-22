@@ -1,0 +1,75 @@
+---
+/**
+ * Base HTML layout for all GCD domain sites.
+ * Renders the navigation, domain header, and page content.
+ */
+export interface Props {
+  title: string;
+  description?: string;
+  primaryColor?: string;
+  accentColor?: string;
+}
+
+const { title, description = '', primaryColor = '#0f172a', accentColor = '#f59e0b' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} — GCD Kernel</title>
+    <style define:vars={{ primaryColor, accentColor }}>
+      :root {
+        --color-primary: var(--primaryColor);
+        --color-accent: var(--accentColor);
+      }
+    </style>
+  </head>
+  <body class="bg-kernel-950 text-kernel-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="border-b border-kernel-800 px-6 py-3">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <a href="/" class="text-lg font-bold tracking-tight">
+          GCD<span class="text-kernel-400">·</span>Kernel
+        </a>
+        <div class="flex gap-4 text-sm text-kernel-400">
+          <a href="/" class="hover:text-kernel-100 transition">Network</a>
+          <a href="/gcd/" class="hover:text-kernel-100 transition">Axiom</a>
+          <a
+            href="https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS"
+            class="hover:text-kernel-100 transition"
+            target="_blank"
+            rel="noopener"
+          >
+            GitHub
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="max-w-4xl mx-auto px-6 py-10">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-kernel-800 px-6 py-6 mt-20">
+      <div class="max-w-6xl mx-auto text-center text-xs text-kernel-500">
+        <p><em>Collapsus generativus est; solum quod redit, reale est.</em></p>
+        <p class="mt-1">
+          Headless Contract Gateway · UMCP v2.2.5 ·
+          <a
+            href="https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS"
+            class="underline hover:text-kernel-300"
+            target="_blank"
+            rel="noopener"
+          >
+            Source
+          </a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

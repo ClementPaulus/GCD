@@ -1,0 +1,39 @@
+{
+  "domain": "standard_model",
+  "display_name": "Standard Model",
+  "kernel": {
+    "F": 0.99999999,
+    "omega": 1e-08,
+    "S": 1.9e-07,
+    "C": 0.0,
+    "kappa": -1e-08,
+    "IC": 0.99999999,
+    "regime": "STABLE",
+    "heterogeneity_gap": 0.0
+  },
+  "closure_modules": [
+    "ckm_mixing",
+    "coupling_constants",
+    "cross_sections",
+    "electroweak_precision",
+    "matter_genesis",
+    "neutrino_oscillation",
+    "particle_catalog",
+    "particle_matter_map",
+    "particle_physics_formalism",
+    "pmns_mixing",
+    "sm_extended_theorems",
+    "subatomic_kernel",
+    "symmetry_breaking"
+  ],
+  "theorem_count": 87,
+  "entity_count": 47,
+  "casepack_count": 0,
+  "ledger_total": 9625,
+  "ledger_conformant": 9625,
+  "metadata": {
+    "domain_count": 20,
+    "total_ledger_rows": 9625,
+    "conformant_count": 9625
+  }
+}

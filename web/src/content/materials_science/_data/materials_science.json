@@ -1,0 +1,43 @@
+{
+  "domain": "materials_science",
+  "display_name": "Materials Science",
+  "kernel": {
+    "F": 0.99999999,
+    "omega": 1e-08,
+    "S": 1.9e-07,
+    "C": 0.0,
+    "kappa": -1e-08,
+    "IC": 0.99999999,
+    "regime": "STABLE",
+    "heterogeneity_gap": 0.0
+  },
+  "closure_modules": [
+    "band_structure",
+    "bcs_superconductivity",
+    "bioactive_compounds_database",
+    "cohesive_energy",
+    "crystal_morphology_database",
+    "debye_thermal",
+    "defect_physics",
+    "elastic_moduli",
+    "element_database",
+    "gap_capture_ss1m",
+    "magnetic_properties",
+    "materials_theorems",
+    "opoly26_polymer_dataset",
+    "particle_detector_database",
+    "phase_transition",
+    "photonic_materials_database",
+    "surface_catalysis"
+  ],
+  "theorem_count": 32,
+  "entity_count": 21,
+  "casepack_count": 1,
+  "ledger_total": 9625,
+  "ledger_conformant": 9625,
+  "metadata": {
+    "domain_count": 20,
+    "total_ledger_rows": 9625,
+    "conformant_count": 9625
+  }
+}

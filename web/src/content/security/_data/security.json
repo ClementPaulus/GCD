@@ -1,0 +1,41 @@
+{
+  "domain": "security",
+  "display_name": "Security & Audit",
+  "kernel": {
+    "F": 0.99999999,
+    "omega": 1e-08,
+    "S": 1.9e-07,
+    "C": 0.0,
+    "kappa": -1e-08,
+    "IC": 0.99999999,
+    "regime": "STABLE",
+    "heterogeneity_gap": 0.0
+  },
+  "closure_modules": [
+    "anomaly_return",
+    "behavior_profiler",
+    "demo_daemon",
+    "device_daemon",
+    "device_network_viz",
+    "how_it_sees",
+    "privacy_auditor",
+    "reputation_analyzer",
+    "response_engine",
+    "security_daemon",
+    "security_entropy",
+    "security_validator",
+    "threat_classifier",
+    "trust_fidelity",
+    "trust_integrity"
+  ],
+  "theorem_count": 0,
+  "entity_count": 5,
+  "casepack_count": 1,
+  "ledger_total": 9625,
+  "ledger_conformant": 9625,
+  "metadata": {
+    "domain_count": 20,
+    "total_ledger_rows": 9625,
+    "conformant_count": 9625
+  }
+}

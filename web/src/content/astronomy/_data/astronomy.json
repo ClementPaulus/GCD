@@ -1,0 +1,37 @@
+{
+  "domain": "astronomy",
+  "display_name": "Astronomy",
+  "kernel": {
+    "F": 0.99999999,
+    "omega": 1e-08,
+    "S": 1.9e-07,
+    "C": 0.0,
+    "kappa": -1e-08,
+    "IC": 0.99999999,
+    "regime": "STABLE",
+    "heterogeneity_gap": 0.0
+  },
+  "closure_modules": [
+    "astronomy_theorems",
+    "binary_star_systems",
+    "cosmology",
+    "distance_ladder",
+    "gravitational_dynamics",
+    "long_period_radio_transients",
+    "orbital_mechanics",
+    "spectral_analysis",
+    "stellar_ages_cosmology",
+    "stellar_evolution",
+    "stellar_luminosity"
+  ],
+  "theorem_count": 73,
+  "entity_count": 35,
+  "casepack_count": 1,
+  "ledger_total": 9625,
+  "ledger_conformant": 9625,
+  "metadata": {
+    "domain_count": 20,
+    "total_ledger_rows": 9625,
+    "conformant_count": 9625
+  }
+}

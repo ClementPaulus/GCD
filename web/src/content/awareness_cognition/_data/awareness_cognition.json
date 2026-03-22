@@ -1,0 +1,29 @@
+{
+  "domain": "awareness_cognition",
+  "display_name": "Awareness & Cognition",
+  "kernel": {
+    "F": 0.99999999,
+    "omega": 1e-08,
+    "S": 1.9e-07,
+    "C": 0.0,
+    "kappa": -1e-08,
+    "IC": 0.99999999,
+    "regime": "STABLE",
+    "heterogeneity_gap": 0.0
+  },
+  "closure_modules": [
+    "attention_mechanisms",
+    "awareness_kernel",
+    "awareness_theorems"
+  ],
+  "theorem_count": 32,
+  "entity_count": 7,
+  "casepack_count": 1,
+  "ledger_total": 9625,
+  "ledger_conformant": 9625,
+  "metadata": {
+    "domain_count": 20,
+    "total_ledger_rows": 9625,
+    "conformant_count": 9625
+  }
+}
