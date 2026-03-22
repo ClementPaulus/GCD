@@ -7,7 +7,7 @@
 [![C99](https://img.shields.io/badge/C-99-blue.svg)](src/umcp_c/)
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](src/umcp_cpp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![UMCP v2.2.4](https://img.shields.io/badge/UMCP-v2.2.4-orange.svg)](pyproject.toml)
+[![UMCP v2.2.5](https://img.shields.io/badge/UMCP-v2.2.5-orange.svg)](pyproject.toml)
 [![Tests: 11,389](https://img.shields.io/badge/tests-11%2C389-brightgreen.svg)](tests/)
 [![Domains: 20](https://img.shields.io/badge/domains-20-blueviolet.svg)](closures/)
 [![Closures: 181](https://img.shields.io/badge/closures-181-informational.svg)](closures/)

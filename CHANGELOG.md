@@ -5,6 +5,40 @@ All notable changes to the UMCP validator and repository will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.5] - 2026-03-22
+
+### Added
+- **C99 orchestration core** (`src/umcp_c/`): Full Tier-0 protocol in portable C99 (~1,900 lines)
+  — frozen contract, regime gates, trace management, integrity ledger, and the complete
+  validation spine. No heap allocation in the hot path. Stable `extern "C"` ABI.
+  9 headers, 8 source files, 326 test assertions (166 kernel + 160 orchestration).
+- C orchestration test executables: `test_umcp_c` (kernel/seam/SHA-256) and
+  `test_umcp_orchestration` (types/contract/regime/trace/ledger/pipeline)
+- Three-layer sandwich architecture: C99 → C++17 → Python (760 total C/C++ assertions)
+- `scripts/orientation.py` §11: C Orchestration section for agent re-entry
+- `src/umcp_c/README.md`: Full documentation for the C99 layer
+
+### Changed
+- **Development Status**: `4 - Beta` → `5 - Production/Stable` (PyPI classifier)
+- **PyPI metadata overhaul** (`pyproject.toml`):
+  Keywords 12 → 22, classifiers expanded (C, C++, Education, Chemistry, Astronomy,
+  Bio-Informatics, AI), project URLs 7 → 10 (Kernel Specification, Catalogue, Contributing)
+- **`README_PYPI.md` rewrite**: 10 badges (C99, C++17, Theorems, Domains, Production/Stable),
+  all 20 domains listed with per-domain theorem counts, new C/C++ build section,
+  project structure includes `umcp_c/`/`umcp_cpp/`, expanded links
+- `README.md`: C99 badge, architecture tree includes C layer, build instructions
+- `.github/copilot-instructions.md`: C layer in architecture tree, key files table,
+  three-layer sandwich description
+- `AGENTS.md`, `CLAUDE.md`: C layer key paths and Tier-0 description updated
+- Ruff config: excluded build directories (`build`, `build_*`, `src/umcp_c/build*`,
+  `src/umcp_cpp/build*`)
+- `.gitignore`: added CMake build artifacts
+- Version bump 2.2.4 → 2.2.5
+
+### Fixed
+- `scripts/orientation.py`: removed unused `total_files` variable (ruff lint)
+- `pyproject.toml`: fixed typo in header comment ("metadatarun" → "metadata")
+
 ## [2.2.4] - 2026-03-19
 
 ### Added
