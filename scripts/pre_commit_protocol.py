@@ -453,13 +453,23 @@ def step_update_test_count(ctx: RepoContext) -> StepResult:
             test_count = int(m.group(1))
             break
 
-    # Re-stage documentation files
-    readme = ctx.root / "README.md"
-    copilot_inst = ctx.root / ".github" / "copilot-instructions.md"
-    if readme.exists():
-        _run(["git", "add", str(readme)], cwd=ctx.root)
-    if copilot_inst.exists():
-        _run(["git", "add", str(copilot_inst)], cwd=ctx.root)
+    # Re-stage all documentation files that may have been updated
+    files_to_stage = [
+        ctx.root / "README.md",
+        ctx.root / "README_PYPI.md",
+        ctx.root / ".github" / "copilot-instructions.md",
+        ctx.root / "AGENTS.md",
+        ctx.root / "CLAUDE.md",
+        ctx.root / "CONTRIBUTING.md",
+        ctx.root / "COMMIT_PROTOCOL.md",
+        ctx.root / "QUICKSTART_TUTORIAL.md",
+        ctx.root / "web" / "src" / "pages" / "about.astro",
+        ctx.root / "web" / "src" / "layouts" / "IndexLayout.astro",
+        ctx.root / "scripts" / "test_count.txt",
+    ]
+    for f in files_to_stage:
+        if f.exists():
+            _run(["git", "add", str(f)], cwd=ctx.root)
 
     passed = result.returncode == 0
     msg = f"{test_count} tests counted" if passed and test_count > 0 else "Test count updated"
