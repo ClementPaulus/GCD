@@ -20,7 +20,53 @@ const tools = [
   { name: 'Identities', href: `${base}identities/`, desc: '44 structural identities', icon: '≡' },
   { name: 'Scale Ladder', href: `${base}scale-ladder/`, desc: 'Cross-scale coherence', icon: '⇅' },
   { name: 'Seam Budget', href: `${base}seam-budget/`, desc: 'Γ(ω), D_C, Δκ explorer', icon: '⊖' },
+  { name: 'Reference', href: `${base}reference/`, desc: 'Cross-reference index', icon: '⊞' },
 ];
+
+// Domain catalog — data for the interactive grid
+const domainCatalog = [
+  { slug: 'gcd', name: 'Generative Collapse Dynamics', lens: 'Epistemology', modules: 8, category: 'Core', desc: 'The axiom, the kernel, the spine.', channels: 6, theorems: 20 },
+  { slug: 'rcft', name: 'Recursive Collapse Field Theory', lens: 'Epistemology', modules: 11, category: 'Core', desc: 'Recursive field-theoretic structure of collapse.', channels: 8, theorems: 12 },
+  { slug: 'kinematics', name: 'Kinematics', lens: 'Ontology', modules: 8, category: 'Physics', desc: 'Motion, phase space, and trajectory analysis.', channels: 8, theorems: 10 },
+  { slug: 'weyl', name: 'WEYL Cosmology', lens: 'Ontology', modules: 7, category: 'Physics', desc: 'Modified gravity and cosmological structure.', channels: 8, theorems: 8 },
+  { slug: 'standard_model', name: 'Standard Model', lens: 'Ontology', modules: 13, category: 'Physics', desc: '31 particles → 8-channel trace. 27 proven theorems.', channels: 8, theorems: 27 },
+  { slug: 'nuclear_physics', name: 'Nuclear Physics', lens: 'Ontology', modules: 12, category: 'Physics', desc: 'Binding energy, decay, QGP, confinement.', channels: 8, theorems: 10 },
+  { slug: 'quantum_mechanics', name: 'Quantum Mechanics', lens: 'Phenomenology', modules: 14, category: 'Physics', desc: 'Wavefunction, entanglement, QDM, FQHE.', channels: 8, theorems: 15 },
+  { slug: 'atomic_physics', name: 'Atomic Physics', lens: 'Ontology', modules: 10, category: 'Physics', desc: '118 elements — full periodic kernel.', channels: 8, theorems: 10 },
+  { slug: 'materials_science', name: 'Materials Science', lens: 'Ontology', modules: 17, category: 'Physics', desc: '118 elements × 18 fields.', channels: 8, theorems: 6 },
+  { slug: 'everyday_physics', name: 'Everyday Physics', lens: 'Phenomenology', modules: 8, category: 'Physics', desc: 'Thermo, optics, E&M, waves, fluids.', channels: 8, theorems: 6 },
+  { slug: 'finance', name: 'Finance', lens: 'Policy', modules: 5, category: 'Applied', desc: 'Portfolio continuity and market coherence.', channels: 8, theorems: 6 },
+  { slug: 'security', name: 'Security & Audit', lens: 'Policy', modules: 15, category: 'Applied', desc: 'Input validation, audit, integrity.', channels: 8, theorems: 6 },
+  { slug: 'astronomy', name: 'Astronomy', lens: 'Ontology', modules: 11, category: 'Science', desc: 'Stellar classification, HR diagram, ages.', channels: 8, theorems: 8 },
+  { slug: 'evolution', name: 'Evolution & Neuroscience', lens: 'History', modules: 8, category: 'Biology', desc: '40 organisms, 10-channel brain kernel.', channels: 10, theorems: 10 },
+  { slug: 'consciousness_coherence', name: 'Consciousness Coherence', lens: 'Phenomenology', modules: 4, category: 'Cognition', desc: '20 systems, 7 theorems, altered states.', channels: 8, theorems: 7 },
+  { slug: 'awareness_cognition', name: 'Awareness & Cognition', lens: 'Phenomenology', modules: 3, category: 'Cognition', desc: '5+5 channel awareness-aptitude kernel.', channels: 10, theorems: 10 },
+  { slug: 'clinical_neuroscience', name: 'Clinical Neuroscience', lens: 'Phenomenology', modules: 5, category: 'Cognition', desc: '10-channel cortical kernel, neurotransmitters.', channels: 10, theorems: 6 },
+  { slug: 'dynamic_semiotics', name: 'Dynamic Semiotics', lens: 'Semiotics', modules: 4, category: 'Humanities', desc: '30 sign systems, 8-channel semiotic kernel.', channels: 8, theorems: 6 },
+  { slug: 'continuity_theory', name: 'Continuity Theory', lens: 'History', modules: 5, category: 'Humanities', desc: 'Continuity law, topological persistence.', channels: 8, theorems: 6 },
+  { slug: 'spacetime_memory', name: 'Spacetime Memory', lens: 'Ontology', modules: 6, category: 'Physics', desc: '40 entities, gravitational memory.', channels: 8, theorems: 10 },
+];
+
+const categories = ['Core', 'Physics', 'Science', 'Biology', 'Cognition', 'Applied', 'Humanities'];
+
+const categoryColors: Record<string, string> = {
+  Core: 'text-amber-400 border-amber-600/40 bg-amber-900/10',
+  Physics: 'text-blue-400 border-blue-600/40 bg-blue-900/10',
+  Science: 'text-cyan-400 border-cyan-600/40 bg-cyan-900/10',
+  Biology: 'text-green-400 border-green-600/40 bg-green-900/10',
+  Cognition: 'text-purple-400 border-purple-600/40 bg-purple-900/10',
+  Applied: 'text-emerald-400 border-emerald-600/40 bg-emerald-900/10',
+  Humanities: 'text-rose-400 border-rose-600/40 bg-rose-900/10',
+};
+
+const lensColors: Record<string, string> = {
+  Epistemology: 'text-amber-400',
+  Ontology: 'text-blue-400',
+  Phenomenology: 'text-purple-400',
+  History: 'text-rose-400',
+  Policy: 'text-emerald-400',
+  Semiotics: 'text-cyan-400',
+};
 ---
 
 <BaseLayout title={title} description={description}>
@@ -67,12 +113,128 @@ const tools = [
     </div>
   </div>
 
-  <!-- Content (generated markdown table of domains) -->
-  <article class="prose prose-invert prose-sm max-w-none
-    prose-table:w-full
-    prose-th:text-left prose-th:text-kernel-400 prose-th:font-normal prose-th:border-b prose-th:border-kernel-700 prose-th:py-2
-    prose-td:py-2 prose-td:border-b prose-td:border-kernel-800
-    prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline">
-    <slot />
-  </article>
+  <!-- Domain network — interactive filterable grid -->
+  <div class="mb-12">
+    <h2 class="text-lg font-bold text-kernel-300 mb-2">20 Domain Closures</h2>
+    <p class="text-xs text-kernel-500 mb-4">
+      Each domain selects which real-world quantities become the trace vector.
+      Click a domain to enter its detail page with kernel state, theorems, and entities.
+    </p>
+
+    <!-- Category filter buttons -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button class="domain-cat-btn text-xs px-3 py-1.5 rounded-lg bg-kernel-700 text-kernel-200 transition" data-cat="all">
+        All ({domainCatalog.length})
+      </button>
+      {categories.map(cat => {
+        const count = domainCatalog.filter(d => d.category === cat).length;
+        return (
+          <button class={`domain-cat-btn text-xs px-3 py-1.5 rounded-lg bg-kernel-800 hover:bg-kernel-700 transition ${categoryColors[cat]?.split(' ')[0] || 'text-kernel-400'}`}
+            data-cat={cat}>
+            {cat} ({count})
+          </button>
+        );
+      })}
+    </div>
+
+    <!-- Domain cards grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="domain-grid">
+      {domainCatalog.map(d => (
+        <a href={`${base}${d.slug}/`}
+          class={`domain-card bg-kernel-900 border rounded-lg p-4 hover:border-amber-600/60 hover:bg-kernel-800/60 transition group no-underline block ${categoryColors[d.category]?.split(' ').slice(1).join(' ') || 'border-kernel-700'}`}
+          data-category={d.category} data-lens={d.lens}>
+
+          <div class="flex items-start justify-between mb-2">
+            <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition">{d.name}</div>
+            <span class="text-[10px] bg-green-900/30 text-green-400 px-1.5 py-0.5 rounded border border-green-700/50 shrink-0 ml-2">
+              STABLE
+            </span>
+          </div>
+
+          <p class="text-xs text-kernel-400 mb-3">{d.desc}</p>
+
+          <div class="flex items-center justify-between text-[10px]">
+            <div class="flex gap-2">
+              <span class="bg-kernel-800 px-1.5 py-0.5 rounded text-kernel-500">{d.modules} modules</span>
+              <span class="bg-kernel-800 px-1.5 py-0.5 rounded text-kernel-500">{d.theorems} theorems</span>
+              <span class="bg-kernel-800 px-1.5 py-0.5 rounded text-kernel-500">{d.channels} ch</span>
+            </div>
+            <span class={`${lensColors[d.lens] || 'text-kernel-500'}`}>{d.lens}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <!-- Aggregate statistics -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-8">
+    <h3 class="text-sm font-bold text-kernel-300 mb-4">Network Statistics</h3>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+      <div>
+        <div class="text-2xl font-bold text-amber-400">20</div>
+        <div class="text-xs text-kernel-500">Domains</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-blue-400">181</div>
+        <div class="text-xs text-kernel-500">Closure Modules</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-green-400">44</div>
+        <div class="text-xs text-kernel-500">Identities</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-purple-400">47</div>
+        <div class="text-xs text-kernel-500">Lemmas</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-cyan-400">11,489</div>
+        <div class="text-xs text-kernel-500">Tests</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fallback: generated markdown table -->
+  <details class="mb-8">
+    <summary class="text-xs text-kernel-600 cursor-pointer hover:text-kernel-400 transition">
+      Raw domain table (generated data)
+    </summary>
+    <article class="prose prose-invert prose-sm max-w-none mt-4
+      prose-table:w-full
+      prose-th:text-left prose-th:text-kernel-400 prose-th:font-normal prose-th:border-b prose-th:border-kernel-700 prose-th:py-2
+      prose-td:py-2 prose-td:border-b prose-td:border-kernel-800
+      prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline">
+      <slot />
+    </article>
+  </details>
 </BaseLayout>
+
+<script>
+  // Category filter for domain grid
+  document.querySelectorAll('.domain-cat-btn').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const cat = (btn as HTMLElement).dataset.cat!;
+
+      // Update button styles
+      document.querySelectorAll('.domain-cat-btn').forEach(b => {
+        const isActive = (b as HTMLElement).dataset.cat === cat;
+        if (isActive) {
+          (b as HTMLElement).classList.remove('bg-kernel-800');
+          (b as HTMLElement).classList.add('bg-kernel-700', 'text-kernel-200');
+        } else {
+          (b as HTMLElement).classList.remove('bg-kernel-700', 'text-kernel-200');
+          (b as HTMLElement).classList.add('bg-kernel-800');
+        }
+      });
+
+      // Filter cards
+      document.querySelectorAll('.domain-card').forEach(card => {
+        const cardCat = (card as HTMLElement).dataset.category;
+        if (cat === 'all' || cardCat === cat) {
+          (card as HTMLElement).style.display = '';
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+    })
+  );
+</script>

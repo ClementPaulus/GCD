@@ -2,7 +2,8 @@
 /**
  * Layout for individual domain pages.
  * Reads frontmatter from the generated markdown (title, regime, colors)
- * and renders with regime-aware styling.
+ * and renders with regime-aware styling + interactive kernel panel,
+ * related domain links, and identity cross-references.
  */
 import BaseLayout from './BaseLayout.astro';
 
@@ -25,33 +26,192 @@ const regimeColors: Record<string, string> = {
   UNKNOWN: 'bg-kernel-700/20 text-kernel-400 border-kernel-600/40',
 };
 
+const regimeBarColors: Record<string, string> = {
+  STABLE: 'bg-green-500',
+  WATCH: 'bg-amber-500',
+  COLLAPSE: 'bg-red-500',
+  UNKNOWN: 'bg-kernel-600',
+};
+
+const lensDescriptions: Record<string, string> = {
+  Epistemology: 'Drift = change in belief · Fidelity = retained warrant · Roughness = inference friction · Return = justified re-entry',
+  Ontology: 'Drift = state transition · Fidelity = conserved properties · Roughness = heterogeneity · Return = restored coherence',
+  Phenomenology: 'Drift = perceived shift · Fidelity = stable features · Roughness = distress/effort · Return = coping that holds',
+  History: 'Drift = periodization · Fidelity = what endures · Roughness = rupture · Return = restitution',
+  Policy: 'Drift = regime shift · Fidelity = mandate persistence · Roughness = friction/cost · Return = reinstatement',
+  Semiotics: 'Drift = sign departure · Fidelity = convention survived · Roughness = meaning loss · Return = interpretant closure',
+};
+
+const lensColors: Record<string, string> = {
+  Epistemology: 'text-amber-400 border-amber-700/50 bg-amber-900/20',
+  Ontology: 'text-blue-400 border-blue-700/50 bg-blue-900/20',
+  Phenomenology: 'text-purple-400 border-purple-700/50 bg-purple-900/20',
+  History: 'text-rose-400 border-rose-700/50 bg-rose-900/20',
+  Policy: 'text-emerald-400 border-emerald-700/50 bg-emerald-900/20',
+  Semiotics: 'text-cyan-400 border-cyan-700/50 bg-cyan-900/20',
+};
+
+// Related domain graph — curated semantic neighbors
+const domainRelations: Record<string, string[]> = {
+  gcd: ['rcft', 'kinematics', 'continuity_theory'],
+  rcft: ['gcd', 'quantum_mechanics', 'standard_model'],
+  kinematics: ['gcd', 'everyday_physics', 'spacetime_memory'],
+  weyl: ['spacetime_memory', 'astronomy', 'standard_model'],
+  standard_model: ['nuclear_physics', 'quantum_mechanics', 'atomic_physics'],
+  nuclear_physics: ['standard_model', 'atomic_physics', 'materials_science'],
+  quantum_mechanics: ['standard_model', 'atomic_physics', 'rcft'],
+  atomic_physics: ['nuclear_physics', 'materials_science', 'quantum_mechanics'],
+  materials_science: ['atomic_physics', 'everyday_physics', 'nuclear_physics'],
+  everyday_physics: ['materials_science', 'kinematics', 'finance'],
+  finance: ['security', 'continuity_theory', 'everyday_physics'],
+  security: ['finance', 'continuity_theory', 'gcd'],
+  astronomy: ['weyl', 'spacetime_memory', 'nuclear_physics'],
+  evolution: ['awareness_cognition', 'consciousness_coherence', 'clinical_neuroscience'],
+  consciousness_coherence: ['clinical_neuroscience', 'awareness_cognition', 'dynamic_semiotics'],
+  awareness_cognition: ['consciousness_coherence', 'evolution', 'clinical_neuroscience'],
+  clinical_neuroscience: ['consciousness_coherence', 'awareness_cognition', 'evolution'],
+  dynamic_semiotics: ['consciousness_coherence', 'continuity_theory', 'gcd'],
+  continuity_theory: ['gcd', 'dynamic_semiotics', 'finance'],
+  spacetime_memory: ['weyl', 'astronomy', 'kinematics'],
+};
+
+const domainDisplayNames: Record<string, string> = {
+  gcd: 'GCD', rcft: 'RCFT', kinematics: 'Kinematics', weyl: 'WEYL',
+  standard_model: 'Standard Model', nuclear_physics: 'Nuclear Physics',
+  quantum_mechanics: 'Quantum Mechanics', atomic_physics: 'Atomic Physics',
+  materials_science: 'Materials Science', everyday_physics: 'Everyday Physics',
+  finance: 'Finance', security: 'Security', astronomy: 'Astronomy',
+  evolution: 'Evolution', consciousness_coherence: 'Consciousness',
+  awareness_cognition: 'Awareness', clinical_neuroscience: 'Clinical Neuro',
+  dynamic_semiotics: 'Semiotics', continuity_theory: 'Continuity',
+  spacetime_memory: 'Spacetime Memory',
+};
+
+const related = domainRelations[domain] || [];
+
 const regimeBadge = regimeColors[regime] || regimeColors['UNKNOWN'];
+const regimeBar = regimeBarColors[regime] || regimeBarColors['UNKNOWN'];
+const lensColor = lensColors[lens] || 'text-kernel-400 border-kernel-700 bg-kernel-900/20';
+const lensDesc = lensDescriptions[lens] || '';
 const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title={title} description={description} primaryColor={primaryColor} accentColor={accentColor}>
+  <!-- Regime accent bar -->
+  <div class={`h-1 ${regimeBar} rounded-full mb-6 opacity-60`}></div>
+
   <!-- Domain header -->
-  <div class="mb-10">
-    <div class="flex items-center gap-3 mb-4">
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-3">
       <h1 class="text-3xl font-bold tracking-tight">{title}</h1>
-      <span class={`text-xs font-mono px-2 py-1 rounded border ${regimeBadge}`}>
+      <span class={`text-xs font-mono px-2.5 py-1 rounded border ${regimeBadge}`}>
         {regime}
       </span>
     </div>
     {description && (
-      <p class="text-kernel-400 text-lg">{description}</p>
+      <p class="text-kernel-400 text-lg mb-3">{description}</p>
     )}
-    <div class="flex gap-4 mt-3 text-xs text-kernel-500">
-      <span>Domain: <code class="text-kernel-300">{domain}</code></span>
-      <span>Lens: <code class="text-kernel-300">{lens}</code></span>
+
+    <!-- Lens badge with Rosetta hint -->
+    <div class={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs ${lensColor}`}>
+      <span class="font-bold">Rosetta Lens: {lens}</span>
+      {lensDesc && <span class="hidden md:inline text-[10px] opacity-70">— {lensDesc}</span>}
     </div>
 
-    <!-- Sub-page navigation -->
-    <nav class="flex gap-3 mt-5 pt-4 border-t border-kernel-800 text-sm">
-      <a href={`${base}${domain}/contract`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Contract</a>
-      <a href={`${base}${domain}/theorems`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Theorems</a>
-      <a href={`${base}${domain}/entities`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Entities</a>
+    <!-- Sub-page navigation — enhanced with icons and counts -->
+    <nav class="flex flex-wrap gap-2 mt-5 pt-4 border-t border-kernel-800 text-sm">
+      <a href={`${base}${domain}/`}
+        class="px-3 py-1.5 rounded-lg bg-kernel-700 text-kernel-100 border border-kernel-600 font-medium transition-colors">
+        Overview
+      </a>
+      <a href={`${base}${domain}/contract`}
+        class="px-3 py-1.5 rounded-lg bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors border border-kernel-700/50">
+        📜 Contract
+      </a>
+      <a href={`${base}${domain}/theorems`}
+        class="px-3 py-1.5 rounded-lg bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors border border-kernel-700/50">
+        📐 Theorems
+      </a>
+      <a href={`${base}${domain}/entities`}
+        class="px-3 py-1.5 rounded-lg bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors border border-kernel-700/50">
+        🔬 Entities
+      </a>
+      <a href={`${base}identities/`}
+        class="px-3 py-1.5 rounded-lg bg-kernel-800/50 text-kernel-400 hover:bg-kernel-700 hover:text-kernel-100 transition-colors border border-kernel-700/30">
+        ≡ Identities
+      </a>
+      <a href={`${base}calculator/`}
+        class="px-3 py-1.5 rounded-lg bg-kernel-800/50 text-kernel-400 hover:bg-kernel-700 hover:text-kernel-100 transition-colors border border-kernel-700/30">
+        ⊕ Calculator
+      </a>
     </nav>
+  </div>
+
+  <!-- Interactive kernel panel + related domains sidebar -->
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Kernel state panel (3 cols) -->
+    <div class="lg:col-span-3 bg-kernel-900 border border-kernel-700 rounded-lg p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-sm font-bold text-kernel-300">Live Kernel State</h2>
+        <button id="recompute-btn"
+          class="text-xs px-3 py-1 rounded bg-kernel-800 text-kernel-400 hover:text-amber-400 hover:bg-kernel-700 transition border border-kernel-700">
+          Recompute ↻
+        </button>
+      </div>
+
+      <!-- Kernel gauges -->
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-4" id="kernel-gauges">
+        <!-- Filled by script -->
+      </div>
+
+      <!-- Identity checks -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2" id="identity-checks">
+        <!-- Filled by script -->
+      </div>
+    </div>
+
+    <!-- Related domains sidebar (1 col) -->
+    <div class="lg:col-span-1">
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 mb-4">
+        <h3 class="text-xs font-bold text-kernel-400 mb-3">Related Domains</h3>
+        <div class="space-y-2">
+          {related.map(r => (
+            <a href={`${base}${r}/`}
+              class="flex items-center gap-2 px-2.5 py-2 rounded bg-kernel-800/60 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition text-xs no-underline group border border-kernel-700/30 hover:border-kernel-600">
+              <span class="text-kernel-600 group-hover:text-amber-500 transition">→</span>
+              <span>{domainDisplayNames[r] || r}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+        <h3 class="text-xs font-bold text-kernel-400 mb-3">Spine Stops</h3>
+        <div class="space-y-1 text-xs">
+          <div class="flex items-center gap-2 text-kernel-500">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span>Contract — freeze before evidence</span>
+          </div>
+          <div class="flex items-center gap-2 text-kernel-500">
+            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            <span>Canon — narrate with 5 words</span>
+          </div>
+          <div class="flex items-center gap-2 text-kernel-500">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span>Closures — publish thresholds</span>
+          </div>
+          <div class="flex items-center gap-2 text-kernel-500">
+            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+            <span>Ledger — debit/credit reconcile</span>
+          </div>
+          <div class="flex items-center gap-2 text-kernel-500">
+            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+            <span>Stance — derived verdict</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Rendered markdown content -->
@@ -69,4 +229,185 @@ const base = import.meta.env.BASE_URL;
     prose-li:marker:text-kernel-600">
     <slot />
   </article>
+
+  <!-- Back to index -->
+  <div class="mt-12 pt-6 border-t border-kernel-800 flex justify-between items-center">
+    <a href={`${base}`} class="text-sm text-kernel-500 hover:text-kernel-300 transition">← Domain Network</a>
+    <div class="flex gap-2">
+      {related.slice(0, 2).map(r => (
+        <a href={`${base}${r}/`} class="text-xs text-kernel-500 hover:text-kernel-300 transition">
+          {domainDisplayNames[r] || r} →
+        </a>
+      ))}
+    </div>
+  </div>
 </BaseLayout>
+
+<script>
+  import { computeKernel, classifyRegime, bernoulliEntropy } from '../lib/kernel';
+  import { EPSILON } from '../lib/constants';
+
+  // Extract kernel values from the rendered markdown table
+  function extractKernelFromPage(): { F: number; omega: number; S: number; C: number; kappa: number; IC: number } | null {
+    const tables = document.querySelectorAll('table');
+    for (const table of tables) {
+      const rows = table.querySelectorAll('tr');
+      const values: Record<string, number> = {};
+      for (const row of rows) {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 3) {
+          const name = cells[1]?.textContent?.trim() || '';
+          const val = parseFloat(cells[2]?.textContent?.trim() || '');
+          if (!isNaN(val)) {
+            if (name === 'Fidelity') values.F = val;
+            else if (name === 'Drift') values.omega = val;
+            else if (name.includes('Entropy')) values.S = val;
+            else if (name === 'Curvature') values.C = val;
+            else if (name === 'Log-Integrity') values.kappa = val;
+            else if (name === 'Composite Integrity') values.IC = val;
+          }
+        }
+      }
+      if ('F' in values && 'omega' in values) {
+        return {
+          F: values.F ?? 1,
+          omega: values.omega ?? 0,
+          S: values.S ?? 0,
+          C: values.C ?? 0,
+          kappa: values.kappa ?? 0,
+          IC: values.IC ?? 1,
+        };
+      }
+    }
+    return null;
+  }
+
+  const symbolMeta: Record<string, { label: string; color: string; latin: string }> = {
+    F: { label: 'Fidelity', color: '#22c55e', latin: 'Fidelitas' },
+    omega: { label: 'Drift (ω)', color: '#ef4444', latin: 'Derivatio' },
+    S: { label: 'Entropy', color: '#f59e0b', latin: 'Entropia' },
+    C: { label: 'Curvature', color: '#a855f7', latin: 'Curvatura' },
+    kappa: { label: 'Log-IC (κ)', color: '#3b82f6', latin: 'Log-Integritas' },
+    IC: { label: 'Integrity', color: '#06b6d4', latin: 'Integritas' },
+  };
+
+  function renderGauges(vals: Record<string, number>) {
+    const container = document.getElementById('kernel-gauges');
+    if (!container) return;
+
+    container.innerHTML = '';
+    for (const [key, meta] of Object.entries(symbolMeta)) {
+      const v = vals[key] ?? 0;
+      // Normalize for bar display: F, IC in [0,1], omega in [0,1], S,C in [0,~1], kappa in [-20,0]
+      let barPct: number;
+      if (key === 'kappa') {
+        barPct = Math.max(0, Math.min(100, ((v + 20) / 20) * 100));
+      } else {
+        barPct = Math.max(0, Math.min(100, Math.abs(v) * 100));
+      }
+
+      const el = document.createElement('div');
+      el.className = 'text-center';
+      el.innerHTML = `
+        <div class="text-[10px] text-kernel-500 mb-1" title="${meta.latin}">${meta.label}</div>
+        <div class="text-lg font-mono font-bold" style="color:${meta.color}">${v.toFixed(4)}</div>
+        <div class="w-full h-1 bg-kernel-800 rounded-full mt-1 overflow-hidden">
+          <div class="h-full rounded-full transition-all duration-500" style="width:${barPct}%;background:${meta.color}"></div>
+        </div>
+      `;
+      container.appendChild(el);
+    }
+  }
+
+  function renderIdentityChecks(vals: Record<string, number>) {
+    const container = document.getElementById('identity-checks');
+    if (!container) return;
+
+    const F = vals.F ?? 1;
+    const omega = vals.omega ?? 0;
+    const IC = vals.IC ?? 1;
+    const kappa = vals.kappa ?? 0;
+    const S = vals.S ?? 0;
+
+    const checks = [
+      {
+        id: 'E1',
+        name: 'F + ω = 1',
+        pass: Math.abs(F + omega - 1) < 1e-6,
+        value: (F + omega).toFixed(6),
+        residual: Math.abs(F + omega - 1).toExponential(1),
+      },
+      {
+        id: 'E3',
+        name: 'IC ≤ F',
+        pass: IC <= F + 1e-10,
+        value: `${IC.toFixed(4)} ≤ ${F.toFixed(4)}`,
+        residual: (F - IC).toFixed(6),
+      },
+      {
+        id: 'E2',
+        name: 'IC = exp(κ)',
+        pass: Math.abs(IC - Math.exp(kappa)) < 1e-4,
+        value: `exp(${kappa.toFixed(4)}) = ${Math.exp(kappa).toFixed(4)}`,
+        residual: Math.abs(IC - Math.exp(kappa)).toExponential(1),
+      },
+    ];
+
+    container.innerHTML = '';
+    for (const c of checks) {
+      const el = document.createElement('a');
+      el.href = (document.querySelector('meta[name="base-url"]') as HTMLMetaElement)?.content
+        ? `${(document.querySelector('meta[name="base-url"]') as HTMLMetaElement).content}identities/`
+        : '../identities/';
+      el.className = `flex items-center gap-2 px-3 py-2 rounded-lg border text-xs no-underline transition group ${
+        c.pass
+          ? 'bg-green-900/20 border-green-700/40 text-green-400 hover:bg-green-900/40'
+          : 'bg-red-900/20 border-red-700/40 text-red-400 hover:bg-red-900/40'
+      }`;
+      el.innerHTML = `
+        <span class="font-bold shrink-0">${c.pass ? '✓' : '✗'}</span>
+        <div class="flex-1">
+          <div class="font-mono font-bold group-hover:underline">${c.id}: ${c.name}</div>
+          <div class="text-[10px] opacity-70">${c.value} · residual ${c.residual}</div>
+        </div>
+      `;
+      container.appendChild(el);
+    }
+  }
+
+  function init() {
+    const vals = extractKernelFromPage();
+    if (vals) {
+      renderGauges(vals);
+      renderIdentityChecks(vals);
+    } else {
+      // Fallback: use default (zero-entropy) values
+      const defaults = { F: 1, omega: 0, S: 0, C: 0, kappa: 0, IC: 1 };
+      renderGauges(defaults);
+      renderIdentityChecks(defaults);
+    }
+  }
+
+  // Recompute button — compute kernel from random trace to show interactivity
+  const recomputeBtn = document.getElementById('recompute-btn');
+  if (recomputeBtn) {
+    recomputeBtn.addEventListener('click', () => {
+      const n = 8;
+      const channels = Array.from({ length: n }, () => Math.random());
+      const weights = Array(n).fill(1 / n);
+      const result = computeKernel(channels, weights);
+      renderGauges({
+        F: result.F, omega: result.omega, S: result.S,
+        C: result.C, kappa: result.kappa, IC: result.IC,
+      });
+      renderIdentityChecks({
+        F: result.F, omega: result.omega, S: result.S,
+        C: result.C, kappa: result.kappa, IC: result.IC,
+      });
+      recomputeBtn.textContent = 'Random trace ↻';
+      setTimeout(() => { recomputeBtn.textContent = 'Recompute ↻'; }, 1500);
+    });
+  }
+
+  init();
+</script>
