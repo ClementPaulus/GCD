@@ -1,38 +1,52 @@
+# yaml-language-server: $schema=../../../schemas/embedding.schema.json
+schema: "schemas/embedding.schema.json"
+
 embedding:
-  description: >
-    Linear-affine normalization of PGS effects (logit coefficients and
-    correlations) into [0,1] channel coordinates. Raw values from
-    Conley & Domingue 2016 Tables 2-5.
+  id: "bell_curve_pgs.embedding"
+  version: "1.0.0"
   source_space:
+    description: >
+      Linear-affine normalization of PGS effects (logit coefficients and
+      correlations) into [0,1] channel coordinates. Raw values from
+      Conley & Domingue 2016 Tables 2-5.
     channels:
       - name: hs_completion
         label: "PGS effect on high school completion"
-        units: logit_coefficient
+        unit: logit_coefficient
         physical_range: [-0.05, 0.15]
       - name: college_attendance
         label: "PGS effect on college attendance"
-        units: logit_coefficient
+        unit: logit_coefficient
         physical_range: [-0.05, 0.15]
       - name: college_completion
         label: "PGS effect on college completion"
-        units: logit_coefficient
+        unit: logit_coefficient
         physical_range: [-0.05, 0.15]
       - name: graduate_school
         label: "PGS effect on graduate school attendance"
-        units: logit_coefficient
+        unit: logit_coefficient
         physical_range: [-0.05, 0.15]
       - name: assortative_mating
         label: "Spousal PGS correlation"
-        units: correlation
+        unit: correlation
         physical_range: [0.0, 0.5]
       - name: fertility
         label: "PGS effect on number of children"
-        units: regression_coefficient
+        unit: regression_coefficient
         physical_range: [-0.05, 0.10]
   target_space:
+    description: "Unit hypercube channel coordinates"
     interval: [0.0, 1.0]
+    coordinates: ["c_1", "c_2", "c_3", "c_4", "c_5", "c_6"]
   transform:
     method: linear_affine
-    description: >
-      c_k = (x_k - a_k) / (b_k - a_k) clamped to [epsilon, 1 - epsilon].
-      Each channel has its own physical range (a_k, b_k) from the source space.
+    formula: "c_k = (x_k - a_k) / (b_k - a_k) clamped to [epsilon, 1 - epsilon]"
+    parameters:
+      a: -0.05
+      b: 0.15
+    face: "pre_clip"
+    epsilon: 1.0e-8
+  oor_policy:
+    method: "clip_and_flag"
+    description: "Values outside source range clipped to [epsilon, 1-epsilon] and flagged"
+  notes: "Each channel has its own physical range (a_k, b_k) from the source space. Channels 1-4 share [-0.05, 0.15]; channel 5 uses [0.0, 0.5]; channel 6 uses [-0.05, 0.10]."

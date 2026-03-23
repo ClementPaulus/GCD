@@ -1,14 +1,27 @@
+# yaml-language-server: $schema=../../../schemas/return.schema.json
+schema: "schemas/return.schema.json"
+
 return:
-  norm: L2
+  id: "bell_curve_pgs.return"
+  version: "1.0.0"
+  return_norm:
+    id: "l2_eta1e-3"
+    method: "L2"
+    formula: "||Psi(t) - Psi(u)||_2"
+    threshold_eta: 1.0e-3
+    description: "Euclidean distance in channel space"
   return_domain:
-    description: "Prior cohort observations in the HRS dataset"
-    source: "Health and Retirement Study, N=8,865 non-Hispanic whites"
-  return_horizon: INF
+    generator_id: "D_theta"
+    method: "trivial"
+    description: "Prior cohort observations in the HRS dataset (N=8,865 non-Hispanic whites)"
+  return_horizon:
+    H_rec: "INF"
+    description: "Infinite horizon — no demonstrated return from Collapse regime"
   typing:
-    INF_REC: "No demonstrated return from Collapse regime"
-    OOR: "PGS effect outside calibrated physical range"
+    tau_R_finite: "finite_return_time"
+    tau_R_infinite: "INF_REC"
+    rule: "R*tau_R = 0 when tau_R = INF_REC"
   credit_rule:
-    description: >
-      Return credit requires tau_R < INF. Since all three cohorts occupy
-      Collapse regime (omega >= 0.30) with no demonstrated re-entry to
-      Stable, tau_R = INF_REC for all rows. Zero budget credit.
+    no_return_no_credit: true
+    formula: "R*tau_R = 0 iff tau_R in {INF_REC, UNIDENTIFIABLE}"
+  notes: "All three cohorts occupy Collapse regime (omega >= 0.30) with no demonstrated re-entry to Stable. tau_R = INF_REC for all rows. Zero budget credit."

@@ -1,5 +1,10 @@
+# yaml-language-server: $schema=../../../schemas/weights.schema.json
+schema: "schemas/weights.schema.json"
+
 weights:
-  policy: equal
+  id: "bell_curve_pgs.weights"
+  version: "1.0.0"
+  policy: nonnegative_sum_to_one
   channels:
     - name: hs_completion
       label: "HS completion PGS effect"
@@ -19,7 +24,7 @@ weights:
     - name: fertility
       label: "Fertility PGS effect"
       weight: 0.166667
-  total: 1.000002
-  note: >
-    Equal weights — no a priori reason to privilege one educational transition
-    or genetic pathway over another. Six channels, w_i = 1/6 each.
+  validation:
+    sum: 1.0
+    tolerance: 1.0e-4
+  notes: "Equal weights across 6 channels. w_i = 1/6 each. No a priori reason to privilege one educational transition or genetic pathway over another."
