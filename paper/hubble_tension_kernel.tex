@@ -314,17 +314,17 @@ the early, late, and full ensembles yields:
 early-universe, late-universe, and combined ensembles.
 $\hetgap = \Fid - \IC$ is the heterogeneity gap.}
 \begin{ruledtabular}
-\begin{tabular}{lcccc}
-Ensemble & $\Fid$ & $\IC$ & $\hetgap$ & Ratio \\
+\begin{tabular}{lccccccc}
+Ensemble & $\Fid$ & $\Drft$ & $\IC$ & $\Logint$ & $\Ent$ & $\Curv$ & $\hetgap$ \\
 \hline
-Early (CMB + BAO) & 0.724 & 0.682 & 0.042 & $1\times$ \\
-Late (ladder + \ldots) & 0.592 & 0.338 & 0.254 & $6.0\times$ \\
-Combined (all)  & 0.658 & 0.610 & 0.048 & --- \\
+Early (CMB + BAO) & 0.724 & 0.276 & 0.682 & $-$0.383 & 0.450 & 0.456 & 0.042 \\
+Late (other) & 0.592 & 0.408 & 0.338 & $-$1.086 & 0.386 & 0.691 & 0.254 \\
+Combined (all) & 0.658 & 0.342 & 0.610 & $-$0.494 & 0.505 & 0.473 & 0.048 \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
 
-The $6\times$ ratio is the paper's central result.
+The ratio $\hetgap_{\mathrm{late}}/\hetgap_{\mathrm{early}} = 0.254/0.042 = 6.0$ is the paper's central result.
 Early-universe measurements converge tightly: Planck, ACT DR6,
 WMAP+ACT, and DESI BAO all cluster near $H_0 \approx 68$, and
 their quality channels (precision, systematics, cross-validation)
@@ -338,6 +338,71 @@ Channel heterogeneity across value, precision, sky coverage,
 model dependence, and cross-validation produces
 $\hetgap_{\mathrm{late}} = 0.254$ --- geometric slaughter
 from methodological incoherence.
+
+Table~\ref{tab:individual} shows the full per-measurement
+kernel results. Note that all CMB and BAO measurements have
+$\hetgap < 0.09$, while every distance-ladder/time-delay
+measurement has $\hetgap > 0.27$.
+The \regime{critical} overlay ($\IC < 0.30$) applies to
+TRGB ($\IC = 0.288$), JAGB ($\IC = 0.245$), TDCOSMO
+($\IC = 0.277$), and stellar ages ($\IC = 0.140$).
+
+\begin{table*}[t]
+\caption{\label{tab:individual}Per-measurement kernel invariants.
+All 12 measurements from Table~\ref{tab:measurements} passed through
+the GCD kernel with 8-channel trace vectors and equal weights
+$w_i = 1/8$. The heterogeneity gap $\hetgap = \Fid - \IC$ increases
+with methodological scatter in the quality channels.
+$^*$Projected measurements.}
+\begin{ruledtabular}
+\begin{tabular}{lcccccccc}
+Measurement & Method & $\Fid$ & $\Drft$ & $\IC$ & $\Logint$ & $\Ent$ &
+$\Curv$ & $\hetgap$ \\
+\hline
+Planck 2018 & CMB & 0.7703 & 0.2297 & 0.7073 & $-$0.346 & 0.331 & 0.534 & 0.063 \\
+ACT + DESI DR1 & CMB & 0.7270 & 0.2730 & 0.6788 & $-$0.388 & 0.402 & 0.502 & 0.048 \\
+ACT + DESI DR2 & CMB & 0.7309 & 0.2691 & 0.6829 & $-$0.382 & 0.395 & 0.503 & 0.048 \\
+WMAP + ACT & CMB & 0.7700 & 0.2300 & 0.7117 & $-$0.340 & 0.353 & 0.509 & 0.058 \\
+DESI DR2 & BAO & 0.6228 & 0.3772 & 0.5389 & $-$0.618 & 0.464 & 0.574 & 0.084 \\
+\hline
+SH0ES & Ladder & 0.6385 & 0.3615 & 0.3673 & $-$1.001 & 0.330 & 0.722 & 0.271 \\
+TRGB & Ladder & 0.6028 & 0.3972 & 0.2880 & $-$1.245 & 0.350 & 0.722 & 0.315 \\
+JAGB & Ladder & 0.5719 & 0.4281 & 0.2450 & $-$1.406 & 0.367 & 0.715 & 0.327 \\
+TDCOSMO & Delay & 0.6095 & 0.3905 & 0.2768 & $-$1.285 & 0.405 & 0.654 & 0.333 \\
+Stellar ages & Ages & 0.5370 & 0.4630 & 0.1397 & $-$1.968 & 0.377 & 0.706 & 0.397 \\
+\hline
+VENUS Athena$^*$ & Lensed SN & 0.5667 & 0.4333 & 0.2379 & $-$1.436 & 0.384 & 0.696 & 0.329 \\
+VENUS Ares$^*$ & Lensed SN & 0.5622 & 0.4378 & 0.2425 & $-$1.417 & 0.351 & 0.728 & 0.320 \\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
+
+Table~\ref{tab:tensions} lists the eight key tension pairs.
+The Planck--SH0ES pair at $4.89\sigma$ is the canonical
+tension, but the intra-ladder pair JAGB--SH0ES at $2.39\sigma$
+is structurally significant: it contributes to
+$\hetgap_{\mathrm{late}}$ even though both are
+``distance-ladder'' measurements.
+
+\begin{table}[h]
+\caption{\label{tab:tensions}Tension pairs between key $H_0$
+measurements, ordered by $\sigma$-tension. $\Delta H_0$ is the
+absolute difference in km/s/Mpc.}
+\begin{ruledtabular}
+\begin{tabular}{llcc}
+Measurement A & Measurement B & $\Delta H_0$ & $\sigma$ \\
+\hline
+Planck 2018 & SH0ES & 5.64 & 4.89 \\
+ACT + DESI DR2 & SH0ES & 4.61 & 4.29 \\
+Planck 2018 & TDCOSMO & 6.80 & 4.06 \\
+JAGB & SH0ES & 5.08 & 2.39 \\
+ACT + DESI DR2 & Planck 2018 & 1.03 & 1.81 \\
+TRGB & SH0ES & 3.24 & 1.63 \\
+Planck 2018 & TRGB & 2.40 & 1.35 \\
+ACT + DESI DR2 & TRGB & 1.37 & 0.80 \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
 
 \subsection{Reinterpretation}
 
@@ -441,7 +506,7 @@ SN~Athena (behind MACS~J0417.5$-$1154) offers a
 
 \subsection{T-HT-5: Extended Model Closure}
 
-\begin{theorem}[No ΛCDM Extension Resolves the Tension]\label{thm:T5}
+\begin{theorem}[No $\Lambda$CDM Extension Resolves the Tension]\label{thm:T5}
 Of 12 extended $\Lambda$CDM models tested by
 ACT DR6~\cite{calabrese2025act_ext}, none is statistically
 favored over standard $\Lambda$CDM, and none resolves
