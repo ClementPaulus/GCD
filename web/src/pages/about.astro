@@ -271,6 +271,240 @@ const base = import.meta.env.BASE_URL;
       </div>
     </section>
 
+    <!-- ═══ Test Count — Compounding Structure ═══ -->
+    <section class="mb-16" id="tests-section">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">14,362 Tests</h2>
+      <p class="text-kernel-300 mb-6">
+        Not 14,362 separate assertions — <strong class="text-kernel-100">compounding parametrized sweeps</strong> across 20 domains.
+        <span class="text-kernel-500">~800 base test functions expand 18× through domain × entity × configuration parametrization.</span>
+      </p>
+
+      <!-- How compounding works -->
+      <div class="bg-kernel-900 border border-kernel-800 rounded-xl p-5 mb-6">
+        <h3 class="text-sm font-bold text-kernel-400 uppercase tracking-wider mb-4">How Test Compounding Works</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="text-center p-4 bg-kernel-950 rounded-lg">
+            <div class="text-3xl font-bold text-amber-400 mb-1">~800</div>
+            <div class="text-xs text-kernel-400">Base test functions</div>
+            <div class="text-[10px] text-kernel-600 mt-1">Written once per pattern</div>
+          </div>
+          <div class="text-center p-4 bg-kernel-950 rounded-lg relative">
+            <div class="absolute -left-3 top-1/2 -translate-y-1/2 text-kernel-600 hidden md:block">×</div>
+            <div class="text-3xl font-bold text-blue-400 mb-1">~18×</div>
+            <div class="text-xs text-kernel-400">Parametrization factor</div>
+            <div class="text-[10px] text-kernel-600 mt-1">Domain × entity × config</div>
+          </div>
+          <div class="text-center p-4 bg-kernel-950 rounded-lg relative">
+            <div class="absolute -left-3 top-1/2 -translate-y-1/2 text-kernel-600 hidden md:block">=</div>
+            <div class="text-3xl font-bold text-green-400 mb-1">14,362</div>
+            <div class="text-xs text-kernel-400">Collected test items</div>
+            <div class="text-[10px] text-kernel-600 mt-1">Every invariant, every domain</div>
+          </div>
+        </div>
+
+        <!-- Visual example -->
+        <div class="bg-kernel-950 rounded-lg p-4">
+          <p class="text-xs text-kernel-500 mb-3 font-medium uppercase tracking-wider">Example: One Tier-1 identity test compounds across 20 domains</p>
+          <div class="font-mono text-xs space-y-1">
+            <div class="text-kernel-500"># One parametrized test function:</div>
+            <div class="text-amber-400">@pytest.mark.parametrize("domain", ALL_20_DOMAINS)</div>
+            <div class="text-kernel-300">def test_duality_identity(domain):</div>
+            <div class="text-kernel-400 pl-4">traces = domain.get_all_entities()  <span class="text-kernel-600"># 12–118 entities each</span></div>
+            <div class="text-kernel-400 pl-4">for trace in traces:</div>
+            <div class="text-kernel-400 pl-8">F, ω = kernel(trace)</div>
+            <div class="text-green-400 pl-8">assert abs(F + ω - 1) == 0.0  <span class="text-kernel-600"># Exact to 0.0e+00</span></div>
+          </div>
+          <div class="mt-3 flex items-center gap-2 text-[10px]">
+            <span class="text-kernel-500">→ 1 function</span>
+            <span class="text-kernel-600">×</span>
+            <span class="text-kernel-500">20 domains</span>
+            <span class="text-kernel-600">×</span>
+            <span class="text-kernel-500">12–118 entities</span>
+            <span class="text-kernel-600">=</span>
+            <span class="text-amber-400 font-bold">hundreds of assertions from one test</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain breakdown -->
+      <div class="bg-kernel-900 border border-kernel-800 rounded-xl p-5">
+        <h3 class="text-sm font-bold text-kernel-400 uppercase tracking-wider mb-4">Test Distribution by Domain</h3>
+        <p class="text-kernel-500 text-xs mb-4">Click a tier to see its test domains.</p>
+        <div class="flex gap-2 mb-4" id="test-tier-tabs">
+          <button data-tier="protocol" class="test-tier-tab px-3 py-1.5 bg-blue-900/30 border border-blue-700 hover:border-blue-500 text-blue-400 rounded-lg text-xs font-medium transition cursor-pointer">Tier-0 Protocol</button>
+          <button data-tier="core" class="test-tier-tab px-3 py-1.5 bg-amber-900/30 border border-amber-700 hover:border-amber-500 text-amber-400 rounded-lg text-xs font-medium transition cursor-pointer">Tier-1 Core</button>
+          <button data-tier="domains" class="test-tier-tab px-3 py-1.5 bg-green-900/30 border border-green-700 hover:border-green-500 text-green-400 rounded-lg text-xs font-medium transition cursor-pointer">Tier-2 Domains</button>
+        </div>
+        <div id="test-tier-content" class="space-y-2"></div>
+        <!-- Bar chart -->
+        <div class="mt-4 pt-4 border-t border-kernel-800">
+          <p class="text-xs text-kernel-500 mb-2">172 test files, numbered <span class="font-mono text-kernel-400">test_000</span> through <span class="font-mono text-kernel-400">test_293</span></p>
+          <div class="h-4 rounded-full overflow-hidden flex">
+            <div class="bg-blue-600 flex items-center justify-center text-[8px] text-white font-bold" style="width:15%">Proto</div>
+            <div class="bg-amber-600 flex items-center justify-center text-[8px] text-white font-bold" style="width:25%">Core</div>
+            <div class="bg-green-600 flex items-center justify-center text-[8px] text-white font-bold" style="width:60%">Domains</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 44 Structural Identities ═══ -->
+    <section class="mb-16" id="identities-section">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">44 Structural Identities</h2>
+      <p class="text-kernel-300 mb-6">
+        All derived from Axiom-0 and verified to <strong class="text-amber-400">machine precision</strong>.
+        They fall into four series. <span class="text-kernel-500">Click a series to see its identities and what they prove.</span>
+      </p>
+
+      <!-- Series cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" id="identity-series-cards">
+        <!-- Populated by script -->
+      </div>
+
+      <!-- Identity detail panel -->
+      <div id="identity-series-detail" class="hidden bg-kernel-900 border border-kernel-700 rounded-xl overflow-hidden transition-all duration-300">
+        <div class="p-5 border-b border-kernel-800">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold text-kernel-100" id="identity-series-title"></h3>
+            <button id="identity-series-close" class="text-kernel-500 hover:text-kernel-300 transition text-xl leading-none cursor-pointer">&times;</button>
+          </div>
+        </div>
+        <div class="p-5" id="identity-series-body"></div>
+      </div>
+
+      <!-- Connection Clusters -->
+      <div class="mt-6 bg-kernel-900 border border-kernel-800 rounded-xl p-5">
+        <h3 class="text-sm font-bold text-kernel-400 uppercase tracking-wider mb-4">6 Connection Clusters</h3>
+        <p class="text-xs text-kernel-500 mb-4">The 44 identities form a connected network. These clusters reveal the deep structure.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="cluster-grid">
+          <!-- Populated by script -->
+        </div>
+      </div>
+
+      <!-- Link to full page -->
+      <div class="mt-4 text-center">
+        <a href={`${base}identities/`} class="text-sm text-amber-400 hover:text-amber-300 transition font-medium">
+          Explore all 44 identities in detail &rarr;
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══ Three Languages ═══ -->
+    <section class="mb-16" id="languages-section">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">Three Languages, One Kernel</h2>
+      <p class="text-kernel-300 mb-6">
+        The same kernel function <span class="font-mono text-kernel-400">K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC)</span> is implemented in three languages —
+        each serving a distinct architectural role. <span class="text-kernel-500">Click to explore each layer.</span>
+      </p>
+
+      <!-- Language cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <button class="lang-card bg-kernel-900 border-2 border-yellow-700 hover:border-yellow-500 rounded-xl p-5 text-left transition group cursor-pointer" data-lang="c">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-2xl font-bold text-yellow-400 font-mono">C99</span>
+            <span class="text-xs px-2 py-1 bg-yellow-900/50 text-yellow-400 rounded-full">Foundation</span>
+          </div>
+          <div class="text-sm text-kernel-300 mb-2">The spine in portable C99</div>
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div><div class="text-lg font-bold text-kernel-200">~1,900</div><div class="text-[10px] text-kernel-500">Lines</div></div>
+            <div><div class="text-lg font-bold text-kernel-200">326</div><div class="text-[10px] text-kernel-500">Assertions</div></div>
+          </div>
+          <div class="text-[10px] text-kernel-600 mt-3 group-hover:text-kernel-400 transition">Click for details &rarr;</div>
+        </button>
+        <button class="lang-card bg-kernel-900 border-2 border-cyan-700 hover:border-cyan-500 rounded-xl p-5 text-left transition group cursor-pointer" data-lang="cpp">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-2xl font-bold text-cyan-400 font-mono">C++17</span>
+            <span class="text-xs px-2 py-1 bg-cyan-900/50 text-cyan-400 rounded-full">Accelerator</span>
+          </div>
+          <div class="text-sm text-kernel-300 mb-2">Vectorized speed + pybind11</div>
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div><div class="text-lg font-bold text-kernel-200">~50×</div><div class="text-[10px] text-kernel-500">Speedup</div></div>
+            <div><div class="text-lg font-bold text-kernel-200">434</div><div class="text-[10px] text-kernel-500">Assertions</div></div>
+          </div>
+          <div class="text-[10px] text-kernel-600 mt-3 group-hover:text-kernel-400 transition">Click for details &rarr;</div>
+        </button>
+        <button class="lang-card bg-kernel-900 border-2 border-emerald-700 hover:border-emerald-500 rounded-xl p-5 text-left transition group cursor-pointer" data-lang="python">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-2xl font-bold text-emerald-400 font-mono">Python</span>
+            <span class="text-xs px-2 py-1 bg-emerald-900/50 text-emerald-400 rounded-full">Orchestration</span>
+          </div>
+          <div class="text-sm text-kernel-300 mb-2">Closures, validation, dashboard</div>
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div><div class="text-lg font-bold text-kernel-200">32+</div><div class="text-[10px] text-kernel-500">Modules</div></div>
+            <div><div class="text-lg font-bold text-kernel-200">14,362</div><div class="text-[10px] text-kernel-500">Tests</div></div>
+          </div>
+          <div class="text-[10px] text-kernel-600 mt-3 group-hover:text-kernel-400 transition">Click for details &rarr;</div>
+        </button>
+      </div>
+
+      <!-- Language detail panel -->
+      <div id="lang-detail" class="hidden bg-kernel-900 border border-kernel-700 rounded-xl p-5 transition-all duration-300">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg font-bold text-kernel-100" id="lang-detail-title"></h3>
+          <button id="lang-detail-close" class="text-kernel-500 hover:text-kernel-300 transition text-xl leading-none cursor-pointer">&times;</button>
+        </div>
+        <div id="lang-detail-body" class="text-sm text-kernel-300 space-y-3"></div>
+      </div>
+
+      <!-- Sandwich diagram -->
+      <div class="mt-6 bg-kernel-900 border border-kernel-800 rounded-xl p-5 text-center">
+        <p class="text-xs text-kernel-500 mb-3 uppercase tracking-wider font-medium">Three-Layer Sandwich Architecture</p>
+        <div class="inline-flex flex-col gap-0 items-center">
+          <div class="w-72 px-4 py-3 bg-emerald-900/30 border border-emerald-700 rounded-t-xl">
+            <span class="text-emerald-400 font-bold text-sm">Python</span>
+            <span class="text-kernel-500 text-[10px] block">Domain closures · CLI · Dashboard · Fleet</span>
+          </div>
+          <div class="w-64 px-4 py-3 bg-cyan-900/30 border-x border-cyan-700">
+            <span class="text-cyan-400 font-bold text-sm">C++17</span>
+            <span class="text-kernel-500 text-[10px] block">Types · Validation · pybind11 zero-copy</span>
+          </div>
+          <div class="w-56 px-4 py-3 bg-yellow-900/30 border border-yellow-700 rounded-b-xl">
+            <span class="text-yellow-400 font-bold text-sm">C99</span>
+            <span class="text-kernel-500 text-[10px] block">Raw math · Kernel · Seam · Pipeline</span>
+          </div>
+        </div>
+        <p class="text-[10px] text-kernel-600 mt-3 italic">Same formulas, same frozen parameters — three layers of the same truth</p>
+      </div>
+    </section>
+
+    <!-- ═══ 47 Lemmas ═══ -->
+    <section class="mb-16" id="lemmas-section">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">47 Lemmas</h2>
+      <p class="text-kernel-300 mb-6">
+        The formal foundation beneath the kernel. Each lemma proves a property used by the implementation —
+        tagged as <span class="font-mono text-amber-400">OPT-*</span> in the code.
+        <span class="text-kernel-500">Click a category to explore.</span>
+      </p>
+
+      <!-- Lemma category cards -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4" id="lemma-category-cards">
+        <!-- Populated by script -->
+      </div>
+
+      <!-- Lemma detail panel -->
+      <div id="lemma-detail" class="hidden bg-kernel-900 border border-kernel-700 rounded-xl p-5 transition-all duration-300">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg font-bold text-kernel-100" id="lemma-detail-title"></h3>
+          <button id="lemma-detail-close" class="text-kernel-500 hover:text-kernel-300 transition text-xl leading-none cursor-pointer">&times;</button>
+        </div>
+        <div id="lemma-detail-body" class="text-sm text-kernel-300 space-y-3"></div>
+      </div>
+
+      <!-- Code connection -->
+      <div class="mt-6 bg-kernel-900 border border-kernel-800 rounded-xl p-5">
+        <h3 class="text-sm font-bold text-kernel-400 uppercase tracking-wider mb-3">Lemmas in Code</h3>
+        <p class="text-xs text-kernel-500 mb-3">Every optimization in the kernel references its proving lemma via OPT-* tags:</p>
+        <div class="bg-kernel-950 rounded-lg p-4 font-mono text-xs space-y-1.5">
+          <div><span class="text-kernel-600"># OPT-1 (Lemmas 4, 10, 15):</span> <span class="text-kernel-300">Homogeneity fast path — </span><span class="text-green-400">40% speedup</span></div>
+          <div><span class="text-kernel-600"># OPT-2 (Lemma 1):</span> <span class="text-kernel-300">Range validation — </span><span class="text-green-400">instant bug detection</span></div>
+          <div><span class="text-kernel-600"># OPT-3 (Lemmas 4, 34):</span> <span class="text-kernel-300">Heterogeneity gap analysis</span></div>
+          <div><span class="text-kernel-600"># OPT-4 (Lemmas 2, 3):</span> <span class="text-kernel-300">Log-space κ computation — </span><span class="text-green-400">10% speedup + stability</span></div>
+          <div><span class="text-kernel-600"># OPT-12 (Lemmas 23, 30):</span> <span class="text-kernel-300">Lipschitz error propagation</span></div>
+        </div>
+        <p class="text-[10px] text-kernel-600 mt-3 italic">Every speedup has a proof. Every optimization has a lemma number. Nothing is ad hoc.</p>
+      </div>
+    </section>
+
     <!-- ═══ Quick links ═══ -->
     <section class="mb-12">
       <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">Explore</h2>
@@ -932,6 +1166,411 @@ const base = import.meta.env.BASE_URL;
     document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('ring-2', 'ring-kernel-500'));
   });
 
+  // ── Test Compounding ────────────────────────────
+
+  interface TestTierData {
+    label: string;
+    color: string;
+    items: { range: string; domain: string; tests: string }[];
+  }
+
+  const testTiers: Record<string, TestTierData> = {
+    protocol: {
+      label: 'Tier-0 Protocol', color: 'text-blue-400',
+      items: [
+        { range: 'test_000–001', domain: 'Manifold bounds, invariant separation', tests: '91' },
+        { range: 'test_00', domain: 'Schema validation', tests: '3' },
+        { range: 'test_10–25', domain: 'Canon, contract, casepack, semantic rules, CLI', tests: '20' },
+        { range: 'test_30–51', domain: 'Semantic rules, casepack validation, CLI diff', tests: '10' },
+        { range: 'test_70–97', domain: 'Contract closures, benchmarks, edge cases, logging', tests: '66' },
+        { range: 'test_170–178', domain: 'CLI subcommands, batch validate, finance, public API', tests: '204' },
+        { range: 'test_282–292', domain: 'Coverage (fleet, kernel, insights, tau dynamics)', tests: '509' },
+      ]
+    },
+    core: {
+      label: 'Tier-1 Core', color: 'text-amber-400',
+      items: [
+        { range: 'test_100–102', domain: 'GCD, RCFT, Kinematics closures', tests: '52 + 97 + 55' },
+        { range: 'test_135–140', domain: 'Nuclear physics, Weyl cosmology', tests: '76 + 43' },
+        { range: 'test_145–147', domain: 'τ_R* diagnostics, dashboard, dynamics', tests: '280' },
+        { range: 'test_148–149', domain: 'Standard Model (subatomic kernel, 27 theorems)', tests: '108' },
+        { range: 'test_150–159', domain: 'Measurement engine, advanced QM (TERS, FQHE)', tests: '1,135' },
+        { range: 'test_238', domain: 'Kernel structural theorems (T-KS-1 through T-KS-7)', tests: '47' },
+        { range: 'test_293', domain: 'Emergent structural insights', tests: '47' },
+      ]
+    },
+    domains: {
+      label: 'Tier-2 Domains', color: 'text-green-400',
+      items: [
+        { range: 'test_180–195', domain: 'Materials science, atomic physics, scale ladder', tests: '809' },
+        { range: 'test_200–237', domain: 'Cross-domain, fleet, registry sweep, domain unit tests', tests: '882' },
+        { range: 'test_239–248', domain: 'Semiotics, consciousness, QDM, FQHE, matter genesis', tests: '1,501' },
+        { range: 'test_249–255', domain: 'Stellar ages, QGP/RHIC, awareness, clinical neuro', tests: '1,456' },
+        { range: 'test_256–269', domain: 'Neurotransmitters, altered states, gravitational waves...', tests: '1,148' },
+        { range: 'test_270–281', domain: 'Acoustics, nuclear channels, rigid body, cosmological memory', tests: '984' },
+        { range: 'closures/', domain: 'Closure-specific tests (kinematics phase)', tests: '27' },
+      ]
+    },
+  };
+
+  function renderTestTiers() {
+    const content = document.getElementById('test-tier-content')!;
+    // Show protocol by default
+    showTestTier('protocol');
+
+    document.querySelectorAll('.test-tier-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tier = (tab as HTMLElement).dataset.tier!;
+        showTestTier(tier);
+      });
+    });
+  }
+
+  function showTestTier(tier: string) {
+    const data = testTiers[tier];
+    const content = document.getElementById('test-tier-content')!;
+
+    document.querySelectorAll('.test-tier-tab').forEach(tab => {
+      const t = (tab as HTMLElement).dataset.tier!;
+      if (t === tier) tab.classList.add('ring-1', 'ring-kernel-500');
+      else tab.classList.remove('ring-1', 'ring-kernel-500');
+    });
+
+    content.innerHTML = data.items.map(item => `
+      <div class="flex items-center gap-3 bg-kernel-950 rounded-lg px-3 py-2">
+        <span class="font-mono text-[10px] text-kernel-500 w-24 shrink-0">${item.range}</span>
+        <span class="text-xs text-kernel-300 flex-1">${item.domain}</span>
+        <span class="text-xs font-bold ${data.color} shrink-0">${item.tests}</span>
+      </div>
+    `).join('');
+  }
+
+  // ── Identity Series ────────────────────────────
+
+  interface IdentitySeries {
+    letter: string;
+    name: string;
+    count: number;
+    color: string;
+    borderColor: string;
+    description: string;
+    keyResults: string;
+  }
+
+  const identitySeries: IdentitySeries[] = [
+    {
+      letter: 'E', name: 'Equator', count: 8, color: 'text-purple-400', borderColor: 'border-purple-700 hover:border-purple-500',
+      description: 'Exact identities centered on the equator point c = 1/2, where the Bernoulli field has maximal symmetry.',
+      keyResults: `
+        <div class="space-y-2">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-purple-400 text-xs">E1</span> <span class="text-xs text-kernel-300">F + ω = 1 — duality identity, exact to 0.0e+00</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-purple-400 text-xs">E2</span> <span class="text-xs text-kernel-300">IC = exp(κ) — log-integrity relation</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-purple-400 text-xs">E3</span> <span class="text-xs text-kernel-300">IC ≤ F — the integrity bound (solvability condition)</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-purple-400 text-xs">E4</span> <span class="text-xs text-kernel-300">S + κ = 0 at c = 1/2 — four-way convergence at equator</span></div>
+          <div class="text-[10px] text-kernel-600 mt-2">+ 4 more: Fisher metric g_F(θ) = 1, one-function theorem f(θ) = 2cos²θ·ln(tan θ)...</div>
+        </div>`
+    },
+    {
+      letter: 'B', name: 'Bound', count: 12, color: 'text-orange-400', borderColor: 'border-orange-700 hover:border-orange-500',
+      description: 'Bounds and inequalities that sandwich the kernel outputs between known limits.',
+      keyResults: `
+        <div class="space-y-2">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-orange-400 text-xs">B1–B4</span> <span class="text-xs text-kernel-300">IC ≤ F below, S ≤ h(F) above — kernel sandwiched</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-orange-400 text-xs">B7–B8</span> <span class="text-xs text-kernel-300">Spectral moments: all polynomial moments of f = S + κ have closed forms with harmonic numbers</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-orange-400 text-xs">B10</span> <span class="text-xs text-kernel-300">c = 1/2 is quintuple fixed point — equator convergence</span></div>
+          <div class="text-[10px] text-kernel-600 mt-2">+ 9 more: entropy envelopes, Taylor perturbation corrections −C²/(8F²)...</div>
+        </div>`
+    },
+    {
+      letter: 'D', name: 'Duality', count: 8, color: 'text-teal-400', borderColor: 'border-teal-700 hover:border-teal-500',
+      description: 'Duality identities and composition laws governing how kernel outputs combine.',
+      keyResults: `
+        <div class="space-y-2">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-teal-400 text-xs">D1–D3</span> <span class="text-xs text-kernel-300">Fixed-Point Triangle: c = 1/2, c* = 0.7822, c_trap = 0.3178</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-teal-400 text-xs">D6</span> <span class="text-xs text-kernel-300">Reflection formula: S(c) = S(1−c) — equator symmetry</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-teal-400 text-xs">D8–D9</span> <span class="text-xs text-kernel-300">Composition: IC geometric (IC₁₂ = √(IC₁·IC₂)), F arithmetic (F₁₂ = (F₁+F₂)/2)</span></div>
+          <div class="text-[10px] text-kernel-600 mt-2">+ 5 more: gap composition Δ₁₂ with Hellinger-like correction, homogeneity invariance...</div>
+        </div>`
+    },
+    {
+      letter: 'N', name: 'Network', count: 16, color: 'text-pink-400', borderColor: 'border-pink-700 hover:border-pink-500',
+      description: 'Cross-series connections and correlation patterns linking identities across series.',
+      keyResults: `
+        <div class="space-y-2">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-pink-400 text-xs">N1–N6</span> <span class="text-xs text-kernel-300">Perturbation chain: A6→B3→A2 — integrity bound from Taylor structure</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-pink-400 text-xs">N7–N10</span> <span class="text-xs text-kernel-300">Spectral family: ∫g_F·S dc = π²/3 = 2ζ(2) — Riemann zeta connection</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-pink-400 text-xs">N11–N16</span> <span class="text-xs text-kernel-300">Dimension reduction: 5 closure diagnostics → 4 effective dimensions (PCA)</span></div>
+          <div class="text-[10px] text-kernel-600 mt-2">The Network series shows the identities are not isolated — they form a connected graph.</div>
+        </div>`
+    },
+  ];
+
+  const identityCardsContainer = document.getElementById('identity-series-cards')!;
+  const identityDetailPanel = document.getElementById('identity-series-detail')!;
+
+  function renderIdentitySeries() {
+    identityCardsContainer.innerHTML = '';
+    identitySeries.forEach((s, i) => {
+      const btn = document.createElement('button');
+      btn.className = `identity-card bg-kernel-900 border-2 ${s.borderColor} rounded-xl p-4 text-center cursor-pointer transition group`;
+      btn.dataset.index = String(i);
+      btn.innerHTML = `
+        <div class="text-3xl font-bold font-mono ${s.color} mb-1">${s.letter}</div>
+        <div class="text-sm font-bold text-kernel-200">${s.name}</div>
+        <div class="text-2xl font-bold text-kernel-400 mt-1">${s.count}</div>
+        <div class="text-[10px] text-kernel-600 group-hover:text-kernel-400 transition mt-1">Click to explore &rarr;</div>
+      `;
+      btn.addEventListener('click', () => showIdentitySeriesDetail(i));
+      identityCardsContainer.appendChild(btn);
+    });
+  }
+
+  function showIdentitySeriesDetail(index: number) {
+    const s = identitySeries[index];
+    document.getElementById('identity-series-title')!.innerHTML = `<span class="${s.color}">Series ${s.letter}: ${s.name}</span> — ${s.count} identities`;
+    document.getElementById('identity-series-body')!.innerHTML = `
+      <p class="mb-3">${s.description}</p>
+      <h4 class="text-xs font-bold text-kernel-400 uppercase tracking-wider mb-2">Key Results</h4>
+      ${s.keyResults}
+    `;
+    identityDetailPanel.classList.remove('hidden');
+
+    document.querySelectorAll('.identity-card').forEach((c, i) => {
+      if (i === index) c.classList.add('ring-2', 'ring-kernel-500');
+      else c.classList.remove('ring-2', 'ring-kernel-500');
+    });
+
+    identityDetailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('identity-series-close')!.addEventListener('click', () => {
+    identityDetailPanel.classList.add('hidden');
+    document.querySelectorAll('.identity-card').forEach(c => c.classList.remove('ring-2', 'ring-kernel-500'));
+  });
+
+  // Connection clusters
+  interface ClusterData { name: string; ids: string; description: string; color: string; }
+  const clusters: ClusterData[] = [
+    { name: 'Equator Web', ids: 'C1, B10, C2, D6', description: 'c = 1/2 is a quintuple fixed point — entropy, log-integrity, curvature, and composition all converge here.', color: 'text-purple-400' },
+    { name: 'Dual Bounds', ids: 'A2, B4', description: 'The kernel is sandwiched: IC ≤ F below (integrity bound), S ≤ h(F) above (entropy ceiling).', color: 'text-orange-400' },
+    { name: 'Perturbation Chain', ids: 'A6 → B3 → A2', description: 'The integrity bound follows from the kernel\'s own Taylor structure. Correction term −C²/(8F²) is always negative.', color: 'text-red-400' },
+    { name: 'Composition Algebra', ids: 'D8, D9, C8', description: 'Gap composition: Δ₁₂ = (Δ₁+Δ₂)/2 + (√IC₁ − √IC₂)²/2. Hellinger-like correction term.', color: 'text-teal-400' },
+    { name: 'Fixed-Point Triangle', ids: 'D1, D2, B10', description: 'Three canonical points form the manifold skeleton: equator (c = 1/2), logistic dual (c* = 0.7822), trap (c_trap = 0.3178).', color: 'text-blue-400' },
+    { name: 'Spectral Family', ids: 'A7, B7, B8, C10', description: 'f = S + κ is spectrally complete — all polynomial moments have closed forms. ∫g_F·S dc = π²/3 = 2ζ(2).', color: 'text-pink-400' },
+  ];
+
+  function renderClusters() {
+    const grid = document.getElementById('cluster-grid')!;
+    grid.innerHTML = clusters.map(c => `
+      <div class="bg-kernel-950 rounded-lg p-3">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-sm font-bold ${c.color}">${c.name}</span>
+          <span class="text-[10px] text-kernel-600 font-mono">${c.ids}</span>
+        </div>
+        <p class="text-xs text-kernel-400">${c.description}</p>
+      </div>
+    `).join('');
+  }
+
+  // ── Language Detail ─────────────────────────────
+
+  interface LangData { name: string; color: string; detail: string; }
+
+  const languages: Record<string, LangData> = {
+    c: {
+      name: 'C99 — The Foundation', color: 'text-yellow-400',
+      detail: `
+        <p>The <strong>entire Tier-0 protocol</strong> formalized in portable C99 — frozen contract, regime gates, trace management, integrity ledger, and the full five-stop validation spine.</p>
+        <div class="grid grid-cols-2 gap-3 my-3">
+          <div class="bg-kernel-950 rounded-lg p-3">
+            <p class="text-xs text-kernel-400 mb-1 font-medium">Headers (9)</p>
+            <p class="text-[10px] text-kernel-500">types.h · kernel.h · contract.h · regime.h · trace.h · ledger.h · pipeline.h · seam.h · sha256.h</p>
+          </div>
+          <div class="bg-kernel-950 rounded-lg p-3">
+            <p class="text-xs text-kernel-400 mb-1 font-medium">Sources (8)</p>
+            <p class="text-[10px] text-kernel-500">kernel.c · contract.c · regime.c · trace.c · ledger.c · pipeline.c · seam.c · sha256.c</p>
+          </div>
+        </div>
+        <p class="text-xs"><strong class="text-yellow-400">Why C99?</strong> No heap allocation in the hot path. Stable <code>extern "C"</code> ABI callable from any language. Portable FIPS 180-4 SHA-256. Maximum runtime performance for the foundational protocol layer — the math runs as fast as hardware allows.</p>
+        <div class="bg-kernel-950 rounded-lg p-3 mt-3 font-mono text-[10px]">
+          <div class="text-kernel-500">// pipeline.c — the spine in 145 lines:</div>
+          <div class="text-kernel-400">contract_freeze() → trace_embed() → kernel_compute() → ledger_reconcile() → stance_derive()</div>
+        </div>`
+    },
+    cpp: {
+      name: 'C++17 — The Accelerator', color: 'text-cyan-400',
+      detail: `
+        <p>Links against the C99 core via CMake. Provides <strong>vectorized kernel/seam computation</strong> with pybind11 zero-copy NumPy bridge.</p>
+        <div class="grid grid-cols-3 gap-3 my-3">
+          <div class="bg-kernel-950 rounded-lg p-3 text-center">
+            <div class="text-lg font-bold text-cyan-400">~50×</div>
+            <div class="text-[10px] text-kernel-500">Kernel speedup</div>
+          </div>
+          <div class="bg-kernel-950 rounded-lg p-3 text-center">
+            <div class="text-lg font-bold text-cyan-400">~80×</div>
+            <div class="text-[10px] text-kernel-500">Seam speedup</div>
+          </div>
+          <div class="bg-kernel-950 rounded-lg p-3 text-center">
+            <div class="text-lg font-bold text-cyan-400">~5×</div>
+            <div class="text-[10px] text-kernel-500">SHA-256 speedup</div>
+          </div>
+        </div>
+        <p class="text-xs"><strong class="text-cyan-400">Why C++?</strong> The pybind11 bridge enables zero-copy NumPy array processing — Python passes arrays directly to C++ without serialization. The <code>accel.py</code> module auto-detects the compiled extension; if unavailable, all operations fall back to NumPy transparently. Same formulas, same frozen parameters.</p>
+        <p class="text-[10px] text-kernel-500 mt-2">434 Catch2 assertions verify identity preservation across 10K random Tier-1 sweeps.</p>`
+    },
+    python: {
+      name: 'Python — The Orchestrator', color: 'text-emerald-400',
+      detail: `
+        <p>The <strong>high-level layer</strong> that brings everything together: 20 domain closures, the validation CLI, 46-page Streamlit dashboard, distributed fleet, and the entire test suite.</p>
+        <div class="grid grid-cols-2 gap-3 my-3">
+          <div class="bg-kernel-950 rounded-lg p-3">
+            <p class="text-xs text-kernel-400 mb-1 font-medium">Core Modules</p>
+            <p class="text-[10px] text-kernel-500">kernel_optimized · seam_optimized · validator · measurement_engine · cli · frozen_contract · tau_r_star · epistemic_weld · closures · insights · uncertainty</p>
+          </div>
+          <div class="bg-kernel-950 rounded-lg p-3">
+            <p class="text-xs text-kernel-400 mb-1 font-medium">Infrastructure</p>
+            <p class="text-[10px] text-kernel-500">fleet/ (scheduler, worker, queue, cache, tenant) · dashboard/ (46 pages) · accel.py (C++ bridge) · api_umcp.py (FastAPI)</p>
+          </div>
+        </div>
+        <p class="text-xs"><strong class="text-emerald-400">Why Python?</strong> Domain closures require expressiveness — mapping 31 Standard Model particles or 118 periodic table elements to 8-channel traces is naturally expressed in Python. The CLI validates casepacks, the dashboard visualizes results, and pytest's parametrize decorator powers the 14,362-test compounding structure.</p>
+        <p class="text-[10px] text-kernel-500 mt-2">Every source file starts with <code>from __future__ import annotations</code> (PEP 563).</p>`
+    },
+  };
+
+  document.querySelectorAll('.lang-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const lang = (card as HTMLElement).dataset.lang!;
+      const data = languages[lang];
+      const panel = document.getElementById('lang-detail')!;
+
+      document.getElementById('lang-detail-title')!.innerHTML = `<span class="${data.color}">${data.name}</span>`;
+      document.getElementById('lang-detail-body')!.innerHTML = data.detail;
+      panel.classList.remove('hidden');
+
+      document.querySelectorAll('.lang-card').forEach(c => {
+        if ((c as HTMLElement).dataset.lang === lang) c.classList.add('ring-2', 'ring-kernel-500');
+        else c.classList.remove('ring-2', 'ring-kernel-500');
+      });
+
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  document.getElementById('lang-detail-close')!.addEventListener('click', () => {
+    document.getElementById('lang-detail')!.classList.add('hidden');
+    document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('ring-2', 'ring-kernel-500'));
+  });
+
+  // ── Lemma Categories ────────────────────────────
+
+  interface LemmaCategory {
+    range: string;
+    name: string;
+    count: number;
+    color: string;
+    borderColor: string;
+    description: string;
+    keyLemmas: string;
+  }
+
+  const lemmaCategories: LemmaCategory[] = [
+    {
+      range: 'L1–L9', name: 'Core Invariants', count: 9, color: 'text-amber-400', borderColor: 'border-amber-700 hover:border-amber-500',
+      description: 'Range bounds, geometric means, ε-control, well-posedness. These establish that the kernel function is well-defined and its outputs land in the expected ranges.',
+      keyLemmas: `
+        <div class="space-y-1.5">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-amber-400 text-[10px]">L1</span> <span class="text-xs text-kernel-300">Range bounds: F, ω, S, C, IC all bounded in their declared ranges</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-amber-400 text-[10px]">L2</span> <span class="text-xs text-kernel-300">IC is the weighted geometric mean of ε-clamped channels</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-amber-400 text-[10px]">L4</span> <span class="text-xs text-kernel-300">IC ≤ F — the integrity bound (solvability condition for trace recovery)</span></div>
+          <div class="text-[10px] text-kernel-600 mt-1">+ L3 (ε-control), L5–L9 (guard band, weight normalization, monotonicity)</div>
+        </div>`
+    },
+    {
+      range: 'L10–L18', name: 'Stability', count: 9, color: 'text-blue-400', borderColor: 'border-blue-700 hover:border-blue-500',
+      description: 'Lipschitz bounds, monotonicity, and closure perturbation analysis. These guarantee that small input changes produce small output changes.',
+      keyLemmas: `
+        <div class="space-y-1.5">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-blue-400 text-[10px]">L10</span> <span class="text-xs text-kernel-300">Curvature proxy bounded by 1 — C ∈ [0, 1] always</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-blue-400 text-[10px]">L15</span> <span class="text-xs text-kernel-300">Homogeneity detection: if all channels equal, IC = F and C = 0</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-blue-400 text-[10px]">L18</span> <span class="text-xs text-kernel-300">Closure perturbation: small threshold change → bounded stance change</span></div>
+          <div class="text-[10px] text-kernel-600 mt-1">+ L11–L14, L16–L17 (Lipschitz constants, monotone maps, variance bounds)</div>
+        </div>`
+    },
+    {
+      range: 'L19–L25', name: 'Seam & Weld', count: 7, color: 'text-green-400', borderColor: 'border-green-700 hover:border-green-500',
+      description: 'Residual sensitivity, composition law, and return stability. These prove that the seam budget is well-behaved and composable.',
+      keyLemmas: `
+        <div class="space-y-1.5">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-green-400 text-[10px]">L20</span> <span class="text-xs text-kernel-300">Seam composition law — multi-seam chains accumulate in O(1)</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-green-400 text-[10px]">L23</span> <span class="text-xs text-kernel-300">Kernel Lipschitz continuity on ε-clipped domain</span></div>
+          <div class="text-[10px] text-kernel-600 mt-1">+ L19, L21–L22, L24–L25 (residual bounds, weld pre/post tests, return topology)</div>
+        </div>`
+    },
+    {
+      range: 'L26–L34', name: 'Applied', count: 9, color: 'text-orange-400', borderColor: 'border-orange-700 hover:border-orange-500',
+      description: 'Coherence bounds, entropy–drift relations, and threshold calibration. These connect the pure mathematics to the regime classification system.',
+      keyLemmas: `
+        <div class="space-y-1.5">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-orange-400 text-[10px]">L30</span> <span class="text-xs text-kernel-300">Entropy–drift bound: S is constrained by ω through CLT asymptotics</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-orange-400 text-[10px]">L34</span> <span class="text-xs text-kernel-300">Drift threshold calibration via the heterogeneity gap</span></div>
+          <div class="text-[10px] text-kernel-600 mt-1">+ L26–L29, L31–L33 (coherence bounds, IC sensitivity, regime gate sharpness)</div>
+        </div>`
+    },
+    {
+      range: 'L35–L47', name: 'Advanced', count: 13, color: 'text-red-400', borderColor: 'border-red-700 hover:border-red-500',
+      description: 'Return-collapse duality, generative flux, phase transitions, and the geometric slaughter theorem. Cross-domain structural results.',
+      keyLemmas: `
+        <div class="space-y-1.5">
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-red-400 text-[10px]">L42</span> <span class="text-xs text-kernel-300">Phase boundary detection: IC/F ratio cliff at confinement transition</span></div>
+          <div class="bg-kernel-950 rounded p-2"><span class="font-mono text-red-400 text-[10px]">L47</span> <span class="text-xs text-kernel-300">Geometric Slaughter — one dead channel kills IC regardless of other channels</span></div>
+          <div class="text-[10px] text-kernel-600 mt-1">+ L35–L41, L43–L46 (return-collapse duality, generative flux, scale invariance, composition)</div>
+        </div>`
+    },
+  ];
+
+  const lemmaCardsContainer = document.getElementById('lemma-category-cards')!;
+  const lemmaDetailPanel = document.getElementById('lemma-detail')!;
+
+  function renderLemmaCategories() {
+    lemmaCardsContainer.innerHTML = '';
+    lemmaCategories.forEach((cat, i) => {
+      const btn = document.createElement('button');
+      btn.className = `lemma-card bg-kernel-900 border-2 ${cat.borderColor} rounded-xl p-3 text-center cursor-pointer transition group`;
+      btn.dataset.index = String(i);
+      btn.innerHTML = `
+        <div class="text-xs font-mono text-kernel-500 mb-1">${cat.range}</div>
+        <div class="text-sm font-bold ${cat.color}">${cat.name}</div>
+        <div class="text-lg font-bold text-kernel-400 mt-1">${cat.count}</div>
+        <div class="text-[10px] text-kernel-600 group-hover:text-kernel-400 transition mt-1">Click &rarr;</div>
+      `;
+      btn.addEventListener('click', () => showLemmaDetail(i));
+      lemmaCardsContainer.appendChild(btn);
+    });
+  }
+
+  function showLemmaDetail(index: number) {
+    const cat = lemmaCategories[index];
+    document.getElementById('lemma-detail-title')!.innerHTML = `<span class="${cat.color}">${cat.range}: ${cat.name}</span> — ${cat.count} lemmas`;
+    document.getElementById('lemma-detail-body')!.innerHTML = `
+      <p class="mb-3">${cat.description}</p>
+      <h4 class="text-xs font-bold text-kernel-400 uppercase tracking-wider mb-2">Key Lemmas</h4>
+      ${cat.keyLemmas}
+    `;
+    lemmaDetailPanel.classList.remove('hidden');
+
+    document.querySelectorAll('.lemma-card').forEach((c, i) => {
+      if (i === index) c.classList.add('ring-2', 'ring-kernel-500');
+      else c.classList.remove('ring-2', 'ring-kernel-500');
+    });
+
+    lemmaDetailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('lemma-detail-close')!.addEventListener('click', () => {
+    lemmaDetailPanel.classList.add('hidden');
+    document.querySelectorAll('.lemma-card').forEach(c => c.classList.remove('ring-2', 'ring-kernel-500'));
+  });
+
   // ── Initialize everything ──────────────────────
 
   renderCards();
@@ -939,4 +1578,8 @@ const base = import.meta.env.BASE_URL;
   renderSpine();
   renderFiveWords();
   renderTiers();
+  renderTestTiers();
+  renderIdentitySeries();
+  renderClusters();
+  renderLemmaCategories();
 </script>
