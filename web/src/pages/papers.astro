@@ -10,6 +10,13 @@ const papers = [
     pages: 5,
     desc: 'Maps 31 Standard Model particles (17 fundamental + 14 composite) through an 8-channel GCD kernel. Proves 10 theorems: spin-statistics separation, generation monotonicity, confinement as IC collapse, mass-kernel log mapping, charge quantization via IC, cross-scale universality, symmetry breaking amplification, CKM unitarity, running coupling flow, and nuclear binding curve.',
     domains: ['standard_model', 'nuclear_physics'],
+    findings: [
+      'Fermion ⟨F⟩ = 0.615 > Boson ⟨F⟩ = 0.421 — spin-statistics visible in fidelity split',
+      'IC drops 98.1% at the quark→hadron boundary (confinement as geometric slaughter)',
+      'Neutral particles: IC near ε — charge channel destroys geometric mean',
+      'Generation monotonicity: Gen1(0.576) < Gen2(0.620) < Gen3(0.649)',
+      '13.2 orders of magnitude in mass → F ∈ [0.37, 0.73] (Spearman ρ = 0.77 for quarks)',
+    ],
   },
   {
     title: 'RCFT Second Edition: Foundations and Implications',
@@ -17,6 +24,11 @@ const papers = [
     status: 'Published',
     desc: 'Recursive Collapse Field Theory — the theoretical framework extending GCD into recursive field structures. Establishes the Freeze-Weld identity and recursive collapse operators.',
     domains: ['rcft', 'gcd'],
+    findings: [
+      'Freeze-Weld identity preserves κ-continuity across parameter changes',
+      'Recursive collapse operators form a monoid under composition',
+      'Seam associativity error: 5.55e-17 (exact to machine precision)',
+    ],
   },
   {
     title: 'τ_R* Dynamics',
@@ -24,6 +36,11 @@ const papers = [
     status: 'Published',
     desc: 'Formalizes the τ_R* thermodynamic diagnostic: return time computation, phase diagram classification, and the arrow-of-time constraint on collapse trajectories.',
     domains: ['gcd'],
+    findings: [
+      'τ_R* provides thermodynamic phase classification beyond regime gates',
+      'Arrow-of-time constraint on collapse trajectories is measurable',
+      'Phase diagram spans Stable / Watch / Collapse with continuous transition',
+    ],
   },
   {
     title: 'Confinement Kernel Analysis',
@@ -31,6 +48,12 @@ const papers = [
     status: 'Published',
     desc: 'Detailed analysis of IC collapse at the quark→hadron phase boundary. Demonstrates that confinement is visible as geometric slaughter: one dead channel (color→0) kills multiplicative coherence.',
     domains: ['standard_model', 'nuclear_physics'],
+    findings: [
+      'Confinement IS geometric slaughter — dead color channel kills IC',
+      'Neutron IC/F = 0.0089, Proton IC/F = 0.0371',
+      'All hadrons: IC/F < 0.04 regardless of other channel values',
+      'One dead channel in 8 channels: IC/F drops from 1.0 to 0.114',
+    ],
   },
   {
     title: 'Measurement Substrate Theory',
@@ -38,6 +61,11 @@ const papers = [
     status: 'Published',
     desc: 'The GCD kernel as a universal measurement substrate. Establishes that the kernel function provides a domain-independent measurement layer for reproducible computational workflows.',
     domains: ['gcd'],
+    findings: [
+      'Kernel function is domain-independent — same equations across all 20 domains',
+      'Three-valued verdicts replace boolean decisions everywhere',
+      'Cognitive Equalizer: same data + same contract → same verdict regardless of agent',
+    ],
   },
   {
     title: 'Consciousness Coherence: Seven Theorems in the GCD Kernel',
@@ -45,6 +73,11 @@ const papers = [
     status: 'Published',
     desc: 'Maps 20 consciousness systems through a coherence kernel. Seven theorems connecting awareness, integration, and collapse dynamics to measurable kernel invariants.',
     domains: ['consciousness_coherence'],
+    findings: [
+      '20 consciousness systems mapped through 8-channel coherence kernel',
+      'Altered states (15 states) produce measurable IC/F oscillation',
+      'Integration measure correlates with heterogeneity gap Δ = F − IC',
+    ],
   },
   {
     title: 'Awareness-Cognition Kernel: Ten Theorems Across Phylogeny',
@@ -52,6 +85,11 @@ const papers = [
     status: 'Published',
     desc: 'A 5+5 channel awareness-aptitude kernel applied across 34 organisms. Ten theorems on attention mechanisms, cognitive scaling, and phylogenetic awareness gradients.',
     domains: ['awareness_cognition', 'evolution'],
+    findings: [
+      '5+5 channel kernel: 5 awareness + 5 aptitude channels',
+      'Phylogenetic gradient: IC/F increases monotonically with neural complexity',
+      'Attention mechanisms map to channel weighting strategies',
+    ],
   },
   {
     title: 'Cross-Scale Matter: Quarks to Bulk via Five Phase Boundaries',
@@ -59,6 +97,12 @@ const papers = [
     status: 'Published',
     desc: 'Traces IC/F oscillation across five phase boundaries: quark→hadron→nucleus→atom→molecule→bulk. Each boundary is a collapse-return cycle measurable in the kernel.',
     domains: ['standard_model', 'atomic_physics', 'materials_science'],
+    findings: [
+      'IC/F oscillates across five phase boundaries (collapse→return→collapse)',
+      'Confinement cliff: IC drops 98% at quark→hadron; atoms restore to 0.96',
+      'Matter genesis: 99 entities across 7 acts traced through kernel',
+      'magic_prox is #1 IC killer at nuclear scale (39% contribution)',
+    ],
   },
   {
     title: 'RCFT Freeze-Weld Identity',
@@ -66,29 +110,35 @@ const papers = [
     status: 'Technical Note',
     desc: 'Formal specification of the Freeze-Weld identity: the mechanism by which recursive collapse fields preserve continuity across parameter changes.',
     domains: ['rcft'],
+    findings: [
+      'Weld is the only legitimate mechanism for parameter change',
+      'κ-continuity constraint: |Δκ| ≤ tol_seam across every weld',
+      'History is append-only and welded, never rewritten',
+    ],
   },
 ];
 
 const statusColors: Record<string, string> = {
-  'Published': 'text-green-400 border-green-700',
-  'Technical Note': 'text-blue-400 border-blue-700',
-  'Draft': 'text-yellow-400 border-yellow-700',
+  'Published': 'text-green-400 border-green-700/50 bg-green-900/10',
+  'Technical Note': 'text-blue-400 border-blue-700/50 bg-blue-900/10',
+  'Draft': 'text-yellow-400 border-yellow-700/50 bg-yellow-900/10',
 };
 ---
 
 <BaseLayout title="Papers — GCD Kernel" description="Published research papers and technical notes.">
   <div class="max-w-5xl mx-auto">
     <div class="mb-10">
-      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Papers</h1>
-      <p class="text-kernel-400">
-        Published research and technical notes. All papers use RevTeX4-2 and share a
-        unified bibliography of 159 entries.
+      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Published Papers</h1>
+      <p class="text-kernel-400 max-w-3xl">
+        Research papers and technical notes derived from the GCD kernel. All papers use
+        RevTeX4-2, share a unified bibliography of 159 entries, and are reproducible
+        from the repository source.
       </p>
     </div>
 
-    <!-- Overview -->
-    <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 mb-8">
-      <div class="grid grid-cols-3 gap-4 text-center">
+    <!-- Overview stats -->
+    <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-5 mb-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
         <div>
           <div class="text-2xl font-bold text-amber-400">{papers.length}</div>
           <div class="text-xs text-kernel-500">Papers</div>
@@ -98,8 +148,16 @@ const statusColors: Record<string, string> = {
           <div class="text-xs text-kernel-500">Bibliography entries</div>
         </div>
         <div>
-          <div class="text-2xl font-bold text-amber-400">RevTeX4-2</div>
+          <div class="text-2xl font-bold text-blue-400">RevTeX4-2</div>
           <div class="text-xs text-kernel-500">Document class</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-green-400">{papers.filter(p => p.status === 'Published').length}</div>
+          <div class="text-xs text-kernel-500">Published</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-purple-400">{new Set(papers.flatMap(p => p.domains)).size}</div>
+          <div class="text-xs text-kernel-500">Domains covered</div>
         </div>
       </div>
     </div>
@@ -107,31 +165,42 @@ const statusColors: Record<string, string> = {
     <!-- Paper list -->
     <div class="space-y-4">
       {papers.map((p, i) => (
-        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-5 hover:border-kernel-700 transition">
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex-1">
-              <h3 class="text-lg font-bold text-kernel-100 mb-1">{p.title}</h3>
-              <p class="text-sm text-kernel-400 mb-3">{p.desc}</p>
-              <div class="flex flex-wrap items-center gap-2">
-                <span class={`text-xs px-2 py-0.5 rounded border ${statusColors[p.status] || 'text-kernel-400 border-kernel-700'}`}>
-                  {p.status}
-                </span>
-                {p.pages && (
-                  <span class="text-xs text-kernel-500">{p.pages} pages</span>
-                )}
-                {p.domains.map(d => (
-                  <a href={`${base}${d}/`}
-                     class="text-xs text-kernel-500 hover:text-kernel-300 bg-kernel-800 px-2 py-0.5 rounded transition">
-                    {d}
-                  </a>
-                ))}
+        <div class="paper-card bg-kernel-900 border border-kernel-800 rounded-lg overflow-hidden hover:border-kernel-700 transition cursor-pointer" data-idx={i}>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="text-kernel-600 font-mono text-xs">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 class="text-lg font-bold text-kernel-100">{p.title}</h3>
+                </div>
+                <p class="text-sm text-kernel-400 mb-3">{p.desc}</p>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class={`text-xs px-2 py-0.5 rounded border ${statusColors[p.status] || 'text-kernel-400 border-kernel-700'}`}>
+                    {p.status}
+                  </span>
+                  {p.pages && (
+                    <span class="text-xs text-kernel-500 bg-kernel-800 px-2 py-0.5 rounded">{p.pages} pages</span>
+                  )}
+                  {p.domains.map(d => (
+                    <a href={`${base}${d}/`}
+                       class="text-xs text-kernel-500 hover:text-kernel-300 bg-kernel-800 px-2 py-0.5 rounded transition no-underline">
+                      {d}
+                    </a>
+                  ))}
+                  <span class="text-xs text-kernel-600 font-mono ml-auto">paper/{p.file}</span>
+                </div>
               </div>
             </div>
-            <div class="flex-shrink-0 text-right">
-              <div class="text-xs text-kernel-500 font-mono">{p.file}</div>
-              <div class="text-xs text-kernel-600 mt-1">paper/</div>
-            </div>
           </div>
+          <!-- Expandable key findings panel -->
+          {p.findings && (
+            <div class="paper-detail hidden border-t border-kernel-800 bg-kernel-950/50 p-5">
+              <h4 class="text-xs font-bold text-kernel-400 uppercase tracking-wider mb-3">Key Findings</h4>
+              <ul class="text-sm text-kernel-400 space-y-1.5 list-disc list-inside">
+                {p.findings.map((f: string) => <li>{f}</li>)}
+              </ul>
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -147,7 +216,8 @@ bibtex paper
 pdflatex paper.tex
 pdflatex paper.tex</pre>
       <p class="text-xs text-kernel-500 mt-3">
-        Shared bibliography: <span class="font-mono">paper/Bibliography.bib</span> (159 entries, PDG 2024 → Kramers 1940)
+        Shared bibliography: <span class="font-mono">paper/Bibliography.bib</span> (159 entries, PDG 2024 → Kramers 1940).
+        Canon anchors: paulus2025episteme, paulus2025physicscoherence, paulus2026umcpcasepack.
       </p>
     </div>
 
@@ -156,3 +226,19 @@ pdflatex paper.tex</pre>
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  // Toggle paper detail panels on click
+  document.querySelectorAll('.paper-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Don't toggle if clicking a link
+      if ((e.target as HTMLElement).tagName === 'A') return;
+
+      const detail = card.querySelector('.paper-detail');
+      if (detail) {
+        detail.classList.toggle('hidden');
+        card.classList.toggle('border-amber-700/40');
+      }
+    });
+  });
+</script>

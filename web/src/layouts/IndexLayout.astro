@@ -1,30 +1,71 @@
 ---
 /**
- * Root index layout — the domain network overview.
+ * Root index layout — GCD front page and navigation hub.
+ * Introduces newcomers, explains the architecture, and guides exploration.
  */
 import BaseLayout from './BaseLayout.astro';
 
 const { frontmatter } = Astro.props;
-const { title = 'GCD Kernel', description = '' } = frontmatter || {};
+const { title = 'Generative Collapse Dynamics', description = 'A single-axiom mathematical framework that measures what survives collapse and what returns — across 20 scientific domains.' } = frontmatter || {};
 const base = import.meta.env.BASE_URL;
 
-const tools = [
-  { name: 'Calculator', href: `${base}calculator/`, desc: 'Interactive kernel computation', icon: '⊕' },
-  { name: 'Regime', href: `${base}regime/`, desc: 'Phase diagram visualization', icon: '◉' },
-  { name: 'τ_R*', href: `${base}diagnostics/`, desc: 'Thermodynamic diagnostic', icon: '∇' },
-  { name: 'Precision', href: `${base}precision/`, desc: 'Identity verification', icon: '✓' },
-  { name: 'Mapper', href: `${base}mapper/`, desc: 'Physical signature identification', icon: '⚛' },
-  { name: 'Formulas', href: `${base}formulas/`, desc: 'Expression builder + sweep', icon: 'ƒ' },
-  { name: 'Geometry', href: `${base}geometry/`, desc: 'Manifold explorer', icon: 'Σ' },
-  { name: 'Rosetta', href: `${base}rosetta/`, desc: 'Cross-lens translation', icon: '⟷' },
-  { name: 'Ledger', href: `${base}ledger/`, desc: 'Domain overview + metrics', icon: '☰' },
-  { name: 'Identities', href: `${base}identities/`, desc: '44 structural identities', icon: '≡' },
-  { name: 'Scale Ladder', href: `${base}scale-ladder/`, desc: 'Cross-scale coherence', icon: '⇅' },
-  { name: 'Seam Budget', href: `${base}seam-budget/`, desc: 'Γ(ω), D_C, Δκ explorer', icon: '⊖' },
-  { name: 'Reference', href: `${base}reference/`, desc: 'Cross-reference index', icon: '⊞' },
+/* ── Tool categories ────────────────────────────────── */
+const toolCategories = [
+  {
+    name: 'Compute',
+    color: 'text-amber-400',
+    border: 'border-amber-800/40',
+    tools: [
+      { name: 'Calculator', href: `${base}calculator/`, desc: 'Kernel invariants from any trace vector', icon: '⊕' },
+      { name: 'Formulas', href: `${base}formulas/`, desc: 'Build & sweep mathematical expressions', icon: 'ƒ' },
+      { name: 'Mapper', href: `${base}mapper/`, desc: 'Map kernel signatures to real physics', icon: '⚛' },
+    ],
+  },
+  {
+    name: 'Visualize',
+    color: 'text-blue-400',
+    border: 'border-blue-800/40',
+    tools: [
+      { name: 'Regime', href: `${base}regime/`, desc: 'Phase diagram: Stable / Watch / Collapse', icon: '◉' },
+      { name: 'τ_R*', href: `${base}diagnostics/`, desc: 'Thermodynamic return diagnostic heatmap', icon: '∇' },
+      { name: 'Seam Budget', href: `${base}seam-budget/`, desc: 'Explore Γ(ω), D_C, and Δκ budget', icon: '⊖' },
+    ],
+  },
+  {
+    name: 'Verify',
+    color: 'text-green-400',
+    border: 'border-green-800/40',
+    tools: [
+      { name: 'Precision', href: `${base}precision/`, desc: '15-decimal identity verification sweep', icon: '✓' },
+      { name: 'Identities', href: `${base}identities/`, desc: '44 structural identities with proofs', icon: '≡' },
+      { name: 'Scale Ladder', href: `${base}scale-ladder/`, desc: 'Cross-scale IC/F coherence oscillation', icon: '⇅' },
+    ],
+  },
+  {
+    name: 'Reference',
+    color: 'text-purple-400',
+    border: 'border-purple-800/40',
+    tools: [
+      { name: 'Mathematics', href: `${base}mathematics/`, desc: 'Full algebra, calculus, convergence', icon: '∫' },
+      { name: 'Geometry', href: `${base}geometry/`, desc: 'Flat manifold, Fisher metric, proofs', icon: 'Σ' },
+      { name: 'Rosetta', href: `${base}rosetta/`, desc: 'Cross-domain 6-lens translation', icon: '⟷' },
+      { name: 'Ledger', href: `${base}ledger/`, desc: 'Domain overview with kernel metrics', icon: '☰' },
+      { name: 'Index', href: `${base}reference/`, desc: 'Searchable cross-reference', icon: '⊞' },
+    ],
+  },
 ];
 
-// Domain catalog — data for the interactive grid
+/* ── Corpus: deep reading pages ─────────────────────── */
+const corpus = [
+  { title: 'Grammar of Return', desc: 'Five words, one spine, discourse structure — how every claim is told, checked, and connected.', href: `${base}grammar/`, latin: 'Quinque Verba', icon: '§' },
+  { title: 'Epistemology of Return', desc: 'Observation cost (Theorem T9), positional illusion, cognitive equalizer, reproducibility.', href: `${base}epistemology/`, latin: 'Episteme Reditus', icon: '⊙' },
+  { title: 'Philosophy of Collapse', desc: 'Camus, Nietzsche, Jung, Sartre — philosophical parallels computed through the kernel.', href: `${base}philosophy/`, latin: 'Philosophia Collapsus', icon: '∞' },
+  { title: 'Mathematics', desc: 'Full algebra, calculus, 9 convergence moments, classical limits, seam calculus, rank theory.', href: `${base}mathematics/`, latin: 'Mathematica Collapsus', icon: '∫' },
+  { title: 'Geometry', desc: 'The flat Bernoulli manifold, Fisher metric, composition algebra, geometric proofs.', href: `${base}geometry/`, latin: 'Geometria Manifoldum', icon: 'Σ' },
+  { title: 'Orientation', desc: 'Ten computational re-derivations. Understanding is not read; it is computed.', href: `${base}orientation/`, latin: 'Intellectus Computatur', icon: '◈' },
+];
+
+/* ── Domain catalog: 20 closure domains ─────────────── */
 const domainCatalog = [
   { slug: 'gcd', name: 'Generative Collapse Dynamics', lens: 'Epistemology', modules: 8, category: 'Core', desc: 'The axiom, the kernel, the spine.', channels: 6, theorems: 20 },
   { slug: 'rcft', name: 'Recursive Collapse Field Theory', lens: 'Epistemology', modules: 11, category: 'Core', desc: 'Recursive field-theoretic structure of collapse.', channels: 8, theorems: 12 },
@@ -68,69 +109,340 @@ const lensColors: Record<string, string> = {
   Policy: 'text-emerald-400',
   Semiotics: 'text-cyan-400',
 };
+
+const totalTheorems = domainCatalog.reduce((s, d) => s + d.theorems, 0);
+const totalModules = domainCatalog.reduce((s, d) => s + d.modules, 0);
 ---
 
 <BaseLayout title={title} description={description}>
-  <!-- Hero -->
-  <div class="text-center mb-16 mt-8">
-    <h1 class="text-5xl font-bold tracking-tight mb-4">
-      GCD<span class="text-kernel-500">·</span>Kernel
-    </h1>
-    <p class="text-xl text-kernel-400 mb-2">
-      <em>Collapse is generative; only what returns is real.</em>
-    </p>
-    <p class="text-sm text-kernel-500">
-      20 autonomous domain sites · Headless Contract Gateway · UMCP v2.2.5
-    </p>
 
-    <!-- Spine visualization -->
-    <div class="mt-8 flex items-center justify-center gap-2 text-xs font-mono text-kernel-500">
-      <span class="px-2 py-1 bg-kernel-800 rounded">CONTRACT</span>
-      <span>→</span>
-      <span class="px-2 py-1 bg-kernel-800 rounded">CANON</span>
-      <span>→</span>
-      <span class="px-2 py-1 bg-kernel-800 rounded">CLOSURES</span>
-      <span>→</span>
-      <span class="px-2 py-1 bg-kernel-800 rounded">LEDGER</span>
-      <span>→</span>
-      <span class="px-2 py-1 bg-kernel-800 rounded">STANCE</span>
-      <span>→</span>
-      <span class="px-2 py-1 bg-blue-900/50 text-blue-400 rounded border border-blue-800">PUBLISH</span>
+  <!-- ═══════ §1  HERO ═══════ -->
+  <section class="text-center mb-20 mt-10 relative" id="hero">
+    <div class="absolute inset-0 -z-10 overflow-hidden">
+      <canvas id="hero-canvas" class="w-full h-full opacity-20"></canvas>
     </div>
-  </div>
 
-  <!-- Interactive tools grid -->
-  <div class="mb-12">
-    <h2 class="text-lg font-bold text-kernel-300 mb-4">Interactive Tools</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {tools.map(t => (
-        <a href={t.href}
-          class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 hover:border-amber-600 hover:bg-kernel-800 transition group">
-          <div class="text-2xl mb-2 opacity-60 group-hover:opacity-100 transition">{t.icon}</div>
-          <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition">{t.name}</div>
-          <div class="text-xs text-kernel-500 mt-1">{t.desc}</div>
+    <p class="text-sm font-mono text-kernel-500 tracking-widest uppercase mb-4">Single-Axiom Mathematical Framework</p>
+
+    <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-6">
+      Generative Collapse<br class="hidden md:block" />
+      <span class="text-amber-400">Dynamics</span>
+    </h1>
+
+    <blockquote class="text-xl text-kernel-300 italic mb-2 max-w-2xl mx-auto">
+      "Collapse is generative; only what returns is real."
+    </blockquote>
+    <p class="text-sm text-kernel-500 font-mono italic mb-8">
+      Collapsus generativus est; solum quod redit, reale est.
+    </p>
+
+    <p class="text-kernel-400 max-w-3xl mx-auto mb-8 leading-relaxed">
+      A mathematical framework built from a single axiom that measures what survives collapse,
+      what returns, and why — verified across <strong class="text-kernel-200">20 scientific domains</strong>,
+      <strong class="text-kernel-200">{totalTheorems}+ theorems</strong>,
+      and <strong class="text-kernel-200">44 structural identities</strong> to machine precision.
+    </p>
+
+    <!-- CTA buttons -->
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href={`${base}calculator/`}
+         class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-kernel-950 font-bold rounded-lg transition text-sm">
+        Start Computing
+      </a>
+      <a href={`${base}mathematics/`}
+         class="px-6 py-3 bg-kernel-800 hover:bg-kernel-700 text-kernel-200 font-bold rounded-lg border border-kernel-600 transition text-sm">
+        Read the Mathematics
+      </a>
+      <a href={`${base}about/`}
+         class="px-6 py-3 bg-kernel-800 hover:bg-kernel-700 text-kernel-200 font-bold rounded-lg border border-kernel-600 transition text-sm">
+        What is GCD?
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ═══════ §2  WHAT IS GCD? (expandable intro) ═══════ -->
+  <section class="mb-20">
+    <h2 class="text-2xl font-bold text-kernel-200 mb-2">Understanding the Framework</h2>
+    <p class="text-sm text-kernel-500 mb-6">Click any card to learn more.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="intro-cards">
+      <!-- Card 1: One Axiom -->
+      <button class="intro-card text-left bg-kernel-900 border border-kernel-800 rounded-lg p-5 hover:border-amber-700/60 transition cursor-pointer" data-idx="0">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-2xl">𝔸</span>
+          <h3 class="text-lg font-bold text-amber-400">One Axiom</h3>
+        </div>
+        <p class="text-sm text-kernel-400">Everything derives from a single axiom — no external theories imported, no borrowed structures.</p>
+      </button>
+
+      <!-- Card 2: One Kernel -->
+      <button class="intro-card text-left bg-kernel-900 border border-kernel-800 rounded-lg p-5 hover:border-blue-700/60 transition cursor-pointer" data-idx="1">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-2xl">𝕂</span>
+          <h3 class="text-lg font-bold text-blue-400">One Kernel</h3>
+        </div>
+        <p class="text-sm text-kernel-400">Four equations produce six outputs with three effective degrees of freedom — the complete measurement.</p>
+      </button>
+
+      <!-- Card 3: Three Tiers -->
+      <button class="intro-card text-left bg-kernel-900 border border-kernel-800 rounded-lg p-5 hover:border-green-700/60 transition cursor-pointer" data-idx="2">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-2xl">⊟</span>
+          <h3 class="text-lg font-bold text-green-400">Three Tiers</h3>
+        </div>
+        <p class="text-sm text-kernel-400">Immutable mathematics (Tier-1) → operational protocol (Tier-0) → domain closures (Tier-2). No back-edges.</p>
+      </button>
+
+      <!-- Card 4: 20 Domains -->
+      <button class="intro-card text-left bg-kernel-900 border border-kernel-800 rounded-lg p-5 hover:border-purple-700/60 transition cursor-pointer" data-idx="3">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-2xl">◎</span>
+          <h3 class="text-lg font-bold text-purple-400">20 Domains</h3>
+        </div>
+        <p class="text-sm text-kernel-400">From quarks to consciousness — each domain maps real-world data through the same kernel.</p>
+      </button>
+    </div>
+
+    <!-- Expandable detail panels -->
+    <div id="intro-detail" class="hidden mt-4 bg-kernel-900/80 border border-kernel-700 rounded-lg p-6 relative">
+      <button id="intro-close" class="absolute top-3 right-3 text-kernel-500 hover:text-kernel-300 text-lg cursor-pointer">✕</button>
+      <h4 id="intro-title" class="text-lg font-bold text-kernel-200 mb-3"></h4>
+      <div id="intro-body" class="text-sm text-kernel-400 leading-relaxed space-y-3"></div>
+    </div>
+  </section>
+
+
+  <!-- ═══════ §3  START HERE — Choose Your Path ═══════ -->
+  <section class="mb-20">
+    <h2 class="text-2xl font-bold text-kernel-200 mb-2">Start Here</h2>
+    <p class="text-sm text-kernel-500 mb-6">Choose how you want to explore GCD.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      <a href={`${base}mathematics/`}
+         class="bg-kernel-900 border border-amber-800/40 rounded-lg p-4 hover:border-amber-500/60 transition group text-center no-underline block">
+        <div class="text-3xl mb-2 opacity-70 group-hover:opacity-100 transition">∫</div>
+        <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition">Explore the Math</div>
+        <div class="text-xs text-kernel-500 mt-1">Full algebra, calculus, identities</div>
+      </a>
+
+      <a href={`${base}calculator/`}
+         class="bg-kernel-900 border border-blue-800/40 rounded-lg p-4 hover:border-blue-500/60 transition group text-center no-underline block">
+        <div class="text-3xl mb-2 opacity-70 group-hover:opacity-100 transition">⊕</div>
+        <div class="text-sm font-bold text-kernel-200 group-hover:text-blue-400 transition">Run the Calculator</div>
+        <div class="text-xs text-kernel-500 mt-1">Compute invariants live</div>
+      </a>
+
+      <a href={`${base}grammar/`}
+         class="bg-kernel-900 border border-purple-800/40 rounded-lg p-4 hover:border-purple-500/60 transition group text-center no-underline block">
+        <div class="text-3xl mb-2 opacity-70 group-hover:opacity-100 transition">§</div>
+        <div class="text-sm font-bold text-kernel-200 group-hover:text-purple-400 transition">Read the Theory</div>
+        <div class="text-xs text-kernel-500 mt-1">Grammar, epistemology, philosophy</div>
+      </a>
+
+      <a href="#domains"
+         class="bg-kernel-900 border border-green-800/40 rounded-lg p-4 hover:border-green-500/60 transition group text-center no-underline block">
+        <div class="text-3xl mb-2 opacity-70 group-hover:opacity-100 transition">◎</div>
+        <div class="text-sm font-bold text-kernel-200 group-hover:text-green-400 transition">Browse Domains</div>
+        <div class="text-xs text-kernel-500 mt-1">20 scientific domains</div>
+      </a>
+
+      <a href={`${base}precision/`}
+         class="bg-kernel-900 border border-cyan-800/40 rounded-lg p-4 hover:border-cyan-500/60 transition group text-center no-underline block">
+        <div class="text-3xl mb-2 opacity-70 group-hover:opacity-100 transition">✓</div>
+        <div class="text-sm font-bold text-kernel-200 group-hover:text-cyan-400 transition">Verify the Claims</div>
+        <div class="text-xs text-kernel-500 mt-1">15-decimal identity sweeps</div>
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ═══════ §4  ARCHITECTURE: The Spine & Three Tiers ═══════ -->
+  <section class="mb-20">
+    <h2 class="text-2xl font-bold text-kernel-200 mb-2">Architecture</h2>
+    <p class="text-sm text-kernel-500 mb-6">Every claim in GCD passes through the same five-stop spine. No exceptions.</p>
+
+    <!-- The Spine -->
+    <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-6 mb-6">
+      <h3 class="text-sm font-bold text-kernel-400 uppercase tracking-wider mb-4">The Spine</h3>
+      <div class="flex flex-wrap items-center justify-center gap-1 md:gap-2 text-xs font-mono mb-6">
+        <div class="px-3 py-2 bg-amber-900/30 text-amber-400 rounded border border-amber-700/40">CONTRACT</div>
+        <span class="text-kernel-600">→</span>
+        <div class="px-3 py-2 bg-blue-900/30 text-blue-400 rounded border border-blue-700/40">CANON</div>
+        <span class="text-kernel-600">→</span>
+        <div class="px-3 py-2 bg-green-900/30 text-green-400 rounded border border-green-700/40">CLOSURES</div>
+        <span class="text-kernel-600">→</span>
+        <div class="px-3 py-2 bg-purple-900/30 text-purple-400 rounded border border-purple-700/40">LEDGER</div>
+        <span class="text-kernel-600">→</span>
+        <div class="px-3 py-2 bg-cyan-900/30 text-cyan-400 rounded border border-cyan-700/40">STANCE</div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs text-kernel-500">
+        <div><strong class="text-amber-400">Contract</strong> — Define rules <em>before</em> evidence. Freeze sources, norms, thresholds.</div>
+        <div><strong class="text-blue-400">Canon</strong> — Tell the story using five words: Drift, Fidelity, Roughness, Return, Integrity.</div>
+        <div><strong class="text-green-400">Closures</strong> — Publish threshold gates. Stance must change when gates are crossed.</div>
+        <div><strong class="text-purple-400">Ledger</strong> — Debit Drift + Roughness, credit Return. The account must reconcile.</div>
+        <div><strong class="text-cyan-400">Stance</strong> — Derived verdict: Stable / Watch / Collapse. Never asserted — always computed.</div>
+      </div>
+    </div>
+
+    <!-- Three Tiers -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-kernel-900 border border-amber-700/30 rounded-lg p-5">
+        <div class="text-xs font-mono text-amber-400 mb-1">TIER-1</div>
+        <h3 class="text-lg font-bold text-kernel-200 mb-2">The Kernel</h3>
+        <p class="text-sm text-kernel-400 mb-3">The mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC). Four primitive equations, six outputs, three effective degrees of freedom. Immutable.</p>
+        <div class="text-xs text-kernel-500 space-y-1">
+          <div>• 3 algebraic identities: F+ω=1, IC≤F, IC=exp(κ)</div>
+          <div>• 44 structural identities verified to 10⁻¹⁶</div>
+          <div>• 47 lemmas, 5 frozen constants</div>
+        </div>
+      </div>
+      <div class="bg-kernel-900 border border-blue-700/30 rounded-lg p-5">
+        <div class="text-xs font-mono text-blue-400 mb-1">TIER-0</div>
+        <h3 class="text-lg font-bold text-kernel-200 mb-2">The Protocol</h3>
+        <p class="text-sm text-kernel-400 mb-3">Operational machinery: embedding data into [0,1]ⁿ, computing the kernel, regime gates, seam calculus, verification. The code is Tier-0; what it computes is Tier-1.</p>
+        <div class="text-xs text-kernel-500 space-y-1">
+          <div>• Python + C99 + C++ implementations</div>
+          <div>• Three-valued verdicts, never boolean</div>
+          <div>• Frozen parameters from the seam</div>
+        </div>
+      </div>
+      <div class="bg-kernel-900 border border-green-700/30 rounded-lg p-5">
+        <div class="text-xs font-mono text-green-400 mb-1">TIER-2</div>
+        <h3 class="text-lg font-bold text-kernel-200 mb-2">Domain Closures</h3>
+        <p class="text-sm text-kernel-400 mb-3">Tier-2 selects which real-world quantities become channels. Each domain maps data through the same kernel — different questions, same mathematics.</p>
+        <div class="text-xs text-kernel-500 space-y-1">
+          <div>• 20 domains from quarks to consciousness</div>
+          <div>• {totalTheorems}+ domain-specific theorems</div>
+          <div>• {totalModules} closure modules</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════ §5  THE KERNEL (6 invariants mini-overview) ═══════ -->
+  <section class="mb-20">
+    <h2 class="text-2xl font-bold text-kernel-200 mb-2">The Kernel — Six Invariants</h2>
+    <p class="text-sm text-kernel-500 mb-6">
+      The kernel function takes a trace vector c ∈ [0,1]ⁿ with weights w ∈ Δⁿ and outputs six invariants.
+      Three are primitive (F, κ, S, C); two are derived (ω = 1−F, IC = exp(κ)).
+      Only three degrees of freedom remain: F, κ, C.
+    </p>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 text-center">
+        <div class="text-2xl font-bold text-amber-400 font-mono">F</div>
+        <div class="text-xs text-kernel-400 mt-1">Fidelity</div>
+        <div class="text-[10px] text-kernel-600 font-mono mt-1">Σ wᵢcᵢ</div>
+      </div>
+      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 text-center">
+        <div class="text-2xl font-bold text-red-400 font-mono">ω</div>
+        <div class="text-xs text-kernel-400 mt-1">Drift</div>
+        <div class="text-[10px] text-kernel-600 font-mono mt-1">1 − F</div>
+      </div>
+      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 text-center">
+        <div class="text-2xl font-bold text-blue-400 font-mono">S</div>
+        <div class="text-xs text-kernel-400 mt-1">Entropy</div>
+        <div class="text-[10px] text-kernel-600 font-mono mt-1">Bernoulli</div>
+      </div>
+      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 text-center">
+        <div class="text-2xl font-bold text-green-400 font-mono">C</div>
+        <div class="text-xs text-kernel-400 mt-1">Curvature</div>
+        <div class="text-[10px] text-kernel-600 font-mono mt-1">σ(cᵢ)/0.5</div>
+      </div>
+      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 text-center">
+        <div class="text-2xl font-bold text-purple-400 font-mono">κ</div>
+        <div class="text-xs text-kernel-400 mt-1">Log-integrity</div>
+        <div class="text-[10px] text-kernel-600 font-mono mt-1">Σ wᵢ ln cᵢ</div>
+      </div>
+      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 text-center">
+        <div class="text-2xl font-bold text-cyan-400 font-mono">IC</div>
+        <div class="text-xs text-kernel-400 mt-1">Integrity</div>
+        <div class="text-[10px] text-kernel-600 font-mono mt-1">exp(κ)</div>
+      </div>
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-4 justify-center">
+      <a href={`${base}mathematics/`} class="text-xs text-amber-400 hover:text-amber-300 transition">Full algebra →</a>
+      <a href={`${base}geometry/`} class="text-xs text-blue-400 hover:text-blue-300 transition">Geometric structure →</a>
+      <a href={`${base}calculator/`} class="text-xs text-green-400 hover:text-green-300 transition">Compute live →</a>
+    </div>
+  </section>
+
+
+  <!-- ═══════ §6  THE CORPUS — Deep Reading ═══════ -->
+  <section class="mb-20">
+    <h2 class="text-2xl font-bold text-kernel-200 mb-2">The Corpus</h2>
+    <p class="text-sm text-kernel-500 mb-6">
+      Six deep-content pages covering the mathematical, philosophical, and epistemological foundations.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {corpus.map(c => (
+        <a href={c.href}
+           class="bg-kernel-900 border border-kernel-800 rounded-lg p-5 hover:border-amber-600/40 hover:bg-kernel-800/50 transition group no-underline block">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-2xl opacity-60 group-hover:opacity-100 transition">{c.icon}</span>
+            <div>
+              <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition">{c.title}</div>
+              <div class="text-[10px] text-kernel-600 italic font-mono">{c.latin}</div>
+            </div>
+          </div>
+          <p class="text-xs text-kernel-400">{c.desc}</p>
         </a>
       ))}
     </div>
-  </div>
+  </section>
 
-  <!-- Domain network — interactive filterable grid -->
-  <div class="mb-12">
-    <h2 class="text-lg font-bold text-kernel-300 mb-2">20 Domain Closures</h2>
-    <p class="text-xs text-kernel-500 mb-4">
-      Each domain selects which real-world quantities become the trace vector.
-      Click a domain to enter its detail page with kernel state, theorems, and entities.
+
+  <!-- ═══════ §7  INTERACTIVE TOOLS (categorized) ═══════ -->
+  <section class="mb-20">
+    <h2 class="text-2xl font-bold text-kernel-200 mb-2">Interactive Tools</h2>
+    <p class="text-sm text-kernel-500 mb-6">
+      All computation runs client-side in your browser — no server, no API. TypeScript kernel ported directly from the C99 implementation.
     </p>
 
-    <!-- Category filter buttons -->
+    {toolCategories.map(cat => (
+      <div class="mb-6">
+        <h3 class={`text-sm font-bold ${cat.color} uppercase tracking-wider mb-3`}>{cat.name}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {cat.tools.map(t => (
+            <a href={t.href}
+               class={`bg-kernel-900 border ${cat.border} rounded-lg p-4 hover:border-amber-600/60 hover:bg-kernel-800/60 transition group no-underline block`}>
+              <div class="flex items-center gap-3">
+                <span class="text-xl opacity-60 group-hover:opacity-100 transition">{t.icon}</span>
+                <div>
+                  <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition">{t.name}</div>
+                  <div class="text-xs text-kernel-500">{t.desc}</div>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+
+
+  <!-- ═══════ §8  20 DOMAIN CLOSURES ═══════ -->
+  <section class="mb-20" id="domains">
+    <h2 class="text-2xl font-bold text-kernel-200 mb-2">20 Domain Closures</h2>
+    <p class="text-sm text-kernel-500 mb-4">
+      Each domain selects which real-world quantities become the trace vector c and weights w.
+      The kernel stays the same — only the question changes.
+      Click any domain to see its kernel state, theorems, entities, and casepacks.
+    </p>
+
+    <!-- Category filter -->
     <div class="flex flex-wrap gap-2 mb-4">
-      <button class="domain-cat-btn text-xs px-3 py-1.5 rounded-lg bg-kernel-700 text-kernel-200 transition" data-cat="all">
+      <button class="domain-cat-btn text-xs px-3 py-1.5 rounded-lg bg-kernel-700 text-kernel-200 transition cursor-pointer" data-cat="all">
         All ({domainCatalog.length})
       </button>
       {categories.map(cat => {
         const count = domainCatalog.filter(d => d.category === cat).length;
         return (
-          <button class={`domain-cat-btn text-xs px-3 py-1.5 rounded-lg bg-kernel-800 hover:bg-kernel-700 transition ${categoryColors[cat]?.split(' ')[0] || 'text-kernel-400'}`}
+          <button class={`domain-cat-btn text-xs px-3 py-1.5 rounded-lg bg-kernel-800 hover:bg-kernel-700 transition cursor-pointer ${categoryColors[cat]?.split(' ')[0] || 'text-kernel-400'}`}
             data-cat={cat}>
             {cat} ({count})
           </button>
@@ -138,22 +450,19 @@ const lensColors: Record<string, string> = {
       })}
     </div>
 
-    <!-- Domain cards grid -->
+    <!-- Domain grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="domain-grid">
       {domainCatalog.map(d => (
         <a href={`${base}${d.slug}/`}
-          class={`domain-card bg-kernel-900 border rounded-lg p-4 hover:border-amber-600/60 hover:bg-kernel-800/60 transition group no-underline block ${categoryColors[d.category]?.split(' ').slice(1).join(' ') || 'border-kernel-700'}`}
-          data-category={d.category} data-lens={d.lens}>
-
+           class={`domain-card bg-kernel-900 border rounded-lg p-4 hover:border-amber-600/60 hover:bg-kernel-800/60 transition group no-underline block ${categoryColors[d.category]?.split(' ').slice(1).join(' ') || 'border-kernel-700'}`}
+           data-category={d.category} data-lens={d.lens}>
           <div class="flex items-start justify-between mb-2">
             <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition">{d.name}</div>
-            <span class="text-[10px] bg-green-900/30 text-green-400 px-1.5 py-0.5 rounded border border-green-700/50 shrink-0 ml-2">
-              STABLE
+            <span class={`text-[10px] px-1.5 py-0.5 rounded border shrink-0 ml-2 ${categoryColors[d.category]?.split(' ')[0] || 'text-kernel-400'} border-kernel-700/50 bg-kernel-800/50`}>
+              {d.category}
             </span>
           </div>
-
           <p class="text-xs text-kernel-400 mb-3">{d.desc}</p>
-
           <div class="flex items-center justify-between text-[10px]">
             <div class="flex gap-2">
               <span class="bg-kernel-800 px-1.5 py-0.5 rounded text-kernel-500">{d.modules} modules</span>
@@ -165,36 +474,88 @@ const lensColors: Record<string, string> = {
         </a>
       ))}
     </div>
-  </div>
+  </section>
 
-  <!-- Aggregate statistics -->
-  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-8">
-    <h3 class="text-sm font-bold text-kernel-300 mb-4">Network Statistics</h3>
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-      <div>
-        <div class="text-2xl font-bold text-amber-400">20</div>
-        <div class="text-xs text-kernel-500">Domains</div>
+
+  <!-- ═══════ §9  BY THE NUMBERS ═══════ -->
+  <section class="mb-20">
+    <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-6">
+      <h2 class="text-sm font-bold text-kernel-400 uppercase tracking-wider mb-6 text-center">By the Numbers</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 text-center">
+        <div>
+          <div class="text-2xl font-bold text-amber-400">1</div>
+          <div class="text-xs text-kernel-500">Axiom</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-amber-400">6</div>
+          <div class="text-xs text-kernel-500">Invariants</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-amber-400">3</div>
+          <div class="text-xs text-kernel-500">DOF</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-blue-400">20</div>
+          <div class="text-xs text-kernel-500">Domains</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-blue-400">{totalModules}</div>
+          <div class="text-xs text-kernel-500">Modules</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-green-400">44</div>
+          <div class="text-xs text-kernel-500">Identities</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-green-400">47</div>
+          <div class="text-xs text-kernel-500">Lemmas</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-purple-400">14,362</div>
+          <div class="text-xs text-kernel-500">Tests</div>
+        </div>
       </div>
-      <div>
-        <div class="text-2xl font-bold text-blue-400">181</div>
-        <div class="text-xs text-kernel-500">Closure Modules</div>
-      </div>
-      <div>
-        <div class="text-2xl font-bold text-green-400">44</div>
-        <div class="text-xs text-kernel-500">Identities</div>
-      </div>
-      <div>
-        <div class="text-2xl font-bold text-purple-400">47</div>
-        <div class="text-xs text-kernel-500">Lemmas</div>
-      </div>
-      <div>
-        <div class="text-2xl font-bold text-cyan-400">14,362</div>
-        <div class="text-xs text-kernel-500">Tests</div>
+
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-center text-xs text-kernel-500">
+        <div>
+          <span class="text-kernel-400 font-bold">{totalTheorems}+ theorems</span> proven across all domains
+        </div>
+        <div>
+          <span class="text-kernel-400 font-bold">3 languages</span> — Python, C99, C++
+        </div>
+        <div>
+          <span class="text-kernel-400 font-bold">9 papers</span> published (RevTeX4-2)
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Fallback: generated markdown table -->
+
+  <!-- ═══════ §10  PUBLISHED PAPERS ═══════ -->
+  <section class="mb-16">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-bold text-kernel-200">Published Papers</h2>
+      <a href={`${base}papers/`} class="text-xs text-amber-400 hover:text-amber-300 transition">View all →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <a href={`${base}papers/`} class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 hover:border-amber-600/40 transition group no-underline block">
+        <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition mb-1">Standard Model Kernel</div>
+        <div class="text-xs text-kernel-500">31 particles, 10 theorems, 74/74 subtests</div>
+      </a>
+      <a href={`${base}papers/`} class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 hover:border-amber-600/40 transition group no-underline block">
+        <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition mb-1">RCFT Second Edition</div>
+        <div class="text-xs text-kernel-500">Recursive collapse field theory foundations</div>
+      </a>
+      <a href={`${base}papers/`} class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 hover:border-amber-600/40 transition group no-underline block">
+        <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition mb-1">Cross-Scale Matter</div>
+        <div class="text-xs text-kernel-500">Quarks to bulk via five phase boundaries</div>
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ═══════ §11  RAW DATA FALLBACK ═══════ -->
   <details class="mb-8">
     <summary class="text-xs text-kernel-600 cursor-pointer hover:text-kernel-400 transition">
       Raw domain table (generated data)
@@ -209,13 +570,95 @@ const lensColors: Record<string, string> = {
   </details>
 </BaseLayout>
 
+
 <script>
-  // Category filter for domain grid
+  // ── "What is GCD?" expandable intro cards ──
+  const introDetails = [
+    {
+      title: 'One Axiom — The Foundation',
+      body: `<p><strong>"Collapse is generative; only what returns is real."</strong></p>
+        <p>This is the single axiom from which everything in GCD derives. It is not a metaphor — it is a constraint on admissible claims. Every equation, identity, theorem, and domain closure traces back to this axiom through a verifiable derivation chain.</p>
+        <p>Classical results — AM-GM inequality, Shannon entropy, the exponential map, probability conservation — emerge as <em>degenerate limits</em> when degrees of freedom are removed from the GCD kernel. The arrow of derivation runs <strong>from the axiom to the classical result</strong>, never the reverse.</p>
+        <p class="text-kernel-500 text-xs italic mt-2">Collapsus generativus est; solum quod redit, reale est.</p>`,
+    },
+    {
+      title: 'One Kernel — The Mathematical Engine',
+      body: `<p>The kernel function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) takes a <strong>trace vector</strong> c (channel values in [0,1]) and <strong>weights</strong> w (summing to 1) and produces six invariants:</p>
+        <div class="grid grid-cols-3 gap-2 my-3 text-xs">
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-amber-400">F</strong> — Fidelity (what survives)</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-red-400">ω</strong> — Drift (what is lost)</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-blue-400">S</strong> — Entropy (field uncertainty)</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-green-400">C</strong> — Curvature (channel coupling)</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-purple-400">κ</strong> — Log-integrity (log sensitivity)</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-cyan-400">IC</strong> — Integrity (multiplicative coherence)</div>
+        </div>
+        <p>Three algebraic identities always hold: <code>F + ω = 1</code> (exact to 0.0e+00), <code>IC ≤ F</code> (solvability condition), and <code>IC = exp(κ)</code>. One statistical constraint (S ≈ f(F,C)) reduces six outputs to <strong>3 effective degrees of freedom</strong>.</p>`,
+    },
+    {
+      title: 'Three Tiers — Immutable Architecture',
+      body: `<p>GCD has a strict three-tier architecture with <strong>no back-edges</strong>:</p>
+        <div class="space-y-2 my-3 text-xs">
+          <div class="bg-kernel-950 p-2 rounded border-l-2 border-amber-500"><strong class="text-amber-400">Tier-1 • The Kernel</strong> — The mathematical function, its identities, lemmas, and frozen constants. Never changes within a run.</div>
+          <div class="bg-kernel-950 p-2 rounded border-l-2 border-blue-500"><strong class="text-blue-400">Tier-0 • The Protocol</strong> — Code that implements the kernel: embedding, regime gates, seam calculus, verification. Configuration frozen per run.</div>
+          <div class="bg-kernel-950 p-2 rounded border-l-2 border-green-500"><strong class="text-green-400">Tier-2 • Domain Closures</strong> — Choose which real-world quantities become channels. Freely extensible; validated before trust. Cannot modify Tier-0 or Tier-1.</div>
+        </div>
+        <p>Within a frozen run: Tier-1 → Tier-0 → Tier-2. <strong>No feedback from Tier-2 to Tier-1.</strong> Diagnostics inform but cannot override gates.</p>`,
+    },
+    {
+      title: '20 Domains — From Quarks to Consciousness',
+      body: `<p>Each domain closure selects a <strong>trace vector</strong> — which measurable quantities become the channels c₁, c₂, ..., cₙ fed to the kernel. The kernel is always the same; only the question changes.</p>
+        <div class="grid grid-cols-2 gap-2 my-3 text-xs">
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-amber-400">Core</strong>: GCD, RCFT</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-blue-400">Physics</strong>: Standard Model, Nuclear, Quantum, Atomic, Materials, Everyday, Kinematics, Weyl, Spacetime Memory</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-cyan-400">Science</strong>: Astronomy</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-green-400">Biology</strong>: Evolution & Neuroscience</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-purple-400">Cognition</strong>: Consciousness, Awareness, Clinical Neuro</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-emerald-400">Applied</strong>: Finance, Security</div>
+          <div class="bg-kernel-950 p-2 rounded"><strong class="text-rose-400">Humanities</strong>: Semiotics, Continuity Theory</div>
+        </div>
+        <p>All domains produce three-valued verdicts: <span class="text-green-400">CONFORMANT</span> / <span class="text-red-400">NONCONFORMANT</span> / <span class="text-kernel-400">NON_EVALUABLE</span>. The same kernel, the same spine, the same gates — applied to different questions.</p>`,
+    },
+  ];
+
+  // Wire up intro card clicks
+  const introCards = document.querySelectorAll('.intro-card');
+  const introDetail = document.getElementById('intro-detail')!;
+  const introTitle = document.getElementById('intro-title')!;
+  const introBody = document.getElementById('intro-body')!;
+  const introClose = document.getElementById('intro-close')!;
+
+  introCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt((card as HTMLElement).dataset.idx || '0');
+      const d = introDetails[idx];
+      introTitle.textContent = d.title;
+      introBody.innerHTML = d.body;
+      introDetail.classList.remove('hidden');
+
+      // Highlight active card
+      introCards.forEach((c, i) => {
+        if (i === idx) {
+          (c as HTMLElement).classList.add('ring-1', 'ring-amber-500/50');
+        } else {
+          (c as HTMLElement).classList.remove('ring-1', 'ring-amber-500/50');
+        }
+      });
+
+      introDetail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  introClose.addEventListener('click', () => {
+    introDetail.classList.add('hidden');
+    introCards.forEach(c => (c as HTMLElement).classList.remove('ring-1', 'ring-amber-500/50'));
+  });
+
+
+  // ── Domain category filter ──
   document.querySelectorAll('.domain-cat-btn').forEach(btn =>
     btn.addEventListener('click', () => {
       const cat = (btn as HTMLElement).dataset.cat!;
 
-      // Update button styles
       document.querySelectorAll('.domain-cat-btn').forEach(b => {
         const isActive = (b as HTMLElement).dataset.cat === cat;
         if (isActive) {
@@ -227,7 +670,6 @@ const lensColors: Record<string, string> = {
         }
       });
 
-      // Filter cards
       document.querySelectorAll('.domain-card').forEach(card => {
         const cardCat = (card as HTMLElement).dataset.category;
         if (cat === 'all' || cardCat === cat) {
@@ -238,4 +680,62 @@ const lensColors: Record<string, string> = {
       });
     })
   );
+
+
+  // ── Hero canvas: subtle floating particles ──
+  const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      const resize = () => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      const particles: { x: number; y: number; vx: number; vy: number; r: number }[] = [];
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          r: Math.random() * 2 + 0.5,
+        });
+      }
+
+      const draw = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.4)';
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        // Draw faint connections between nearby particles
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.08)';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(draw);
+      };
+      draw();
+    }
+  }
 </script>
