@@ -1,4 +1,4 @@
-import{a as s}from"./constants.CAuvrZi4.js";const n=document.getElementById("peirce-table-container");n.innerHTML=`
+import{b as s}from"./constants.DbPyemRV.js";const n=document.getElementById("peirce-table-container");n.innerHTML=`
     <table class="w-full text-sm">
       <thead>
         <tr class="border-b border-kernel-600 text-kernel-400">
