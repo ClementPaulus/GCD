@@ -1,105 +1,513 @@
 ---
 /**
- * Precision Verifier
+ * Precision Verifier — Enhanced
  * Port of: dashboard/pages_advanced.py render_precision_page()
  *
- * Verifies kernel identities to full floating-point precision.
- * Shows 15-decimal invariants, identity checks, error bounds.
+ * Five verification modes:
+ *   1. Random Trials — bulk identity verification across random traces
+ *   2. Manual Trace — edit channels directly, see per-gate conformance
+ *   3. Preset Explorer — 6 structural presets + 32 cross-domain entities
+ *   4. Seam Budget — interactive seam accounting (Γ, D_C, Δκ)
+ *   5. Composition — compose two traces, verify composition algebra
+ *
+ * Conformance Guidance: per-gate analysis showing EXACTLY what needs to change.
  */
 ---
 
 <div id="precision-verifier" class="space-y-4">
-  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
-    <h2 class="text-xl font-bold text-kernel-100 mb-2">Precision Verification</h2>
-    <p class="text-kernel-400 text-sm">
-      Verify the three algebraic identities (F + ω = 1, IC ≤ F, IC = exp(κ))
-      to machine precision. All computations run client-side in your browser.
-    </p>
+  <!-- Tab navigation -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-2">
+    <div class="flex flex-wrap gap-1" role="tablist">
+      <button class="pv-tab px-3 py-1.5 rounded text-sm transition" data-tab="random" role="tab" aria-selected="true">
+        Random Trials
+      </button>
+      <button class="pv-tab px-3 py-1.5 rounded text-sm transition" data-tab="manual" role="tab" aria-selected="false">
+        Manual Trace
+      </button>
+      <button class="pv-tab px-3 py-1.5 rounded text-sm transition" data-tab="presets" role="tab" aria-selected="false">
+        Preset Explorer
+      </button>
+      <button class="pv-tab px-3 py-1.5 rounded text-sm transition" data-tab="seam" role="tab" aria-selected="false">
+        Seam Budget
+      </button>
+      <button class="pv-tab px-3 py-1.5 rounded text-sm transition" data-tab="compose" role="tab" aria-selected="false">
+        Composition
+      </button>
+    </div>
   </div>
 
-  <!-- Dimension controls -->
-  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
-    <h3 class="text-sm font-bold text-kernel-300 mb-3">Test Configuration</h3>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div>
-        <label class="text-xs text-kernel-500 block mb-1">Number of Channels</label>
-        <input id="prec-n" type="number" min="2" max="64" value="8"
-          class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono" />
+  <!-- ═══════════ TAB 1: Random Trials ═══════════ -->
+  <div id="pv-random" class="pv-panel space-y-4">
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-sm font-bold text-kernel-300 mb-3">Bulk Identity Verification</h3>
+      <p class="text-kernel-500 text-xs mb-3">
+        Generate random trace vectors and verify all three algebraic identities
+        (F + ω = 1, IC ≤ F, IC = exp(κ)) to machine precision.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Channels</label>
+          <input id="prec-n" type="number" min="2" max="64" value="8"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Random Trials</label>
+          <input id="prec-trials" type="number" min="10" max="100000" value="1000"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Identity Tolerance</label>
+          <select id="prec-tol"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono">
+            <option value="1e-10">1e-10 (strict)</option>
+            <option value="1e-12" selected>1e-12 (machine ε)</option>
+            <option value="1e-14">1e-14 (exact)</option>
+            <option value="1e-8">1e-8 (relaxed)</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button id="prec-run" class="w-full bg-green-700 hover:bg-green-600 text-white text-sm rounded px-4 py-1.5 transition">
+            Run Verification
+          </button>
+        </div>
       </div>
-      <div>
-        <label class="text-xs text-kernel-500 block mb-1">Random Trials</label>
-        <input id="prec-trials" type="number" min="10" max="100000" value="1000"
-          class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono" />
+    </div>
+    <div id="prec-results" class="space-y-4">
+      <div class="bg-kernel-900 border border-kernel-600 rounded-lg p-4 text-center text-kernel-500 text-sm">
+        Click "Run Verification" to begin.
       </div>
-      <div class="flex items-end">
-        <button id="prec-run" class="w-full bg-green-700 hover:bg-green-600 text-white text-sm rounded px-4 py-1.5 transition">
-          Run Verification
+    </div>
+  </div>
+
+  <!-- ═══════════ TAB 2: Manual Trace ═══════════ -->
+  <div id="pv-manual" class="pv-panel space-y-4 hidden">
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-sm font-bold text-kernel-300 mb-3">Manual Trace Editor</h3>
+      <p class="text-kernel-500 text-xs mb-3">
+        Adjust channel values with sliders and see real-time kernel output,
+        regime classification, and per-gate conformance status.
+      </p>
+      <div class="flex gap-3 mb-3 items-end flex-wrap">
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Channels</label>
+          <select id="manual-n"
+            class="bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono">
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="6">6</option>
+            <option value="8" selected>8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Quick Fill</label>
+          <select id="manual-fill"
+            class="bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono">
+            <option value="">— fill all —</option>
+            <option value="0.5">All 0.50 (equator)</option>
+            <option value="0.7822">All c* (0.7822)</option>
+            <option value="0.95">All 0.95 (stable)</option>
+            <option value="0.3177">All c_trap (0.3177)</option>
+            <option value="random">Random</option>
+          </select>
+        </div>
+        <button id="manual-reset" class="bg-kernel-700 hover:bg-kernel-600 text-kernel-200 text-xs rounded px-3 py-1.5 transition">
+          Reset
+        </button>
+      </div>
+      <div id="manual-sliders" class="space-y-2"></div>
+    </div>
+    <div id="manual-results" class="space-y-3"></div>
+  </div>
+
+  <!-- ═══════════ TAB 3: Preset Explorer ═══════════ -->
+  <div id="pv-presets" class="pv-panel space-y-4 hidden">
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-sm font-bold text-kernel-300 mb-3">Cross-Domain Preset Library</h3>
+      <p class="text-kernel-500 text-xs mb-3">
+        Explore 32 real-world entities and 6 structural presets through the kernel.
+        Each entity maps to an 8-channel trace vector from its source domain.
+      </p>
+      <div class="flex gap-3 items-end flex-wrap">
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Domain Filter</label>
+          <select id="preset-domain"
+            class="bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono">
+            <option value="all">All Domains</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Sort By</label>
+          <select id="preset-sort"
+            class="bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono">
+            <option value="name">Name</option>
+            <option value="F">Fidelity (F)</option>
+            <option value="IC">Integrity (IC)</option>
+            <option value="delta">Gap (Δ)</option>
+            <option value="omega">Drift (ω)</option>
+          </select>
+        </div>
+        <button id="preset-run" class="bg-green-700 hover:bg-green-600 text-white text-sm rounded px-4 py-1.5 transition">
+          Analyze All
         </button>
       </div>
     </div>
+    <div id="preset-results" class="space-y-3">
+      <div class="bg-kernel-900 border border-kernel-600 rounded-lg p-4 text-center text-kernel-500 text-sm">
+        Click "Analyze All" to compute kernel invariants for every preset.
+      </div>
+    </div>
   </div>
 
-  <!-- Results -->
-  <div id="prec-results" class="space-y-4">
-    <div class="bg-kernel-900 border border-kernel-600 rounded-lg p-4 text-center text-kernel-500 text-sm">
-      Click "Run Verification" to begin.
+  <!-- ═══════════ TAB 4: Seam Budget ═══════════ -->
+  <div id="pv-seam" class="pv-panel space-y-4 hidden">
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-sm font-bold text-kernel-300 mb-3">Seam Budget Calculator</h3>
+      <p class="text-kernel-500 text-xs mb-3">
+        Compute the full seam accounting: Γ(ω) drift cost, D_C curvature cost,
+        R·τ_R return credit, and Δκ budget residual. The seam passes when |residual| ≤ tol_seam.
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">ω (drift)</label>
+          <input id="seam-omega" type="number" min="0" max="1" step="0.01" value="0.15"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">C (curvature)</label>
+          <input id="seam-C" type="number" min="0" max="1" step="0.01" value="0.10"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">R (return rate)</label>
+          <input id="seam-R" type="number" min="0" max="10" step="0.1" value="1.0"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono" />
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">τ_R (return time)</label>
+          <input id="seam-tauR" type="number" min="0" max="100" step="0.5" value="1.0"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono" />
+        </div>
+        <div class="flex items-end">
+          <button id="seam-run" class="w-full bg-green-700 hover:bg-green-600 text-white text-sm rounded px-4 py-1.5 transition">
+            Compute
+          </button>
+        </div>
+      </div>
     </div>
+    <div id="seam-results" class="space-y-3">
+      <div class="bg-kernel-900 border border-kernel-600 rounded-lg p-4 text-center text-kernel-500 text-sm">
+        Adjust parameters and click "Compute" to see the full seam accounting.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TAB 5: Composition ═══════════ -->
+  <div id="pv-compose" class="pv-panel space-y-4 hidden">
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-sm font-bold text-kernel-300 mb-3">Composition Algebra</h3>
+      <p class="text-kernel-500 text-xs mb-3">
+        Compose two kernel results. F composes arithmetically (F₁₂ = (F₁+F₂)/2),
+        IC composes geometrically (IC₁₂ = √(IC₁·IC₂)). The heterogeneity gap follows
+        Δ₁₂ = (Δ₁+Δ₂)/2 + (√IC₁ − √IC₂)²/2.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Trace A (preset)</label>
+          <select id="comp-a"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono">
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500 block mb-1">Trace B (preset)</label>
+          <select id="comp-b"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-200 font-mono">
+          </select>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button id="comp-run" class="bg-green-700 hover:bg-green-600 text-white text-sm rounded px-4 py-1.5 transition">
+          Compose
+        </button>
+      </div>
+    </div>
+    <div id="comp-results" class="space-y-3">
+      <div class="bg-kernel-900 border border-kernel-600 rounded-lg p-4 text-center text-kernel-500 text-sm">
+        Select two presets and click "Compose."
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ Conformance Key (always visible) ═══════════ -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <details>
+      <summary class="text-sm font-bold text-kernel-300 cursor-pointer select-none">
+        Conformance Key — What Each Gate Requires
+      </summary>
+      <div class="mt-3 space-y-3 text-xs text-kernel-400">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="bg-kernel-800 rounded p-3">
+            <div class="font-bold text-green-400 mb-1">STABLE Regime (all four must hold)</div>
+            <ul class="space-y-1 list-none">
+              <li><span class="text-kernel-300 font-mono">ω &lt; 0.038</span> — Drift below 3.8%. Reduce channel losses to decrease ω.</li>
+              <li><span class="text-kernel-300 font-mono">F &gt; 0.90</span> — Fidelity above 90%. Raise low channels toward 1.0.</li>
+              <li><span class="text-kernel-300 font-mono">S &lt; 0.15</span> — Bernoulli entropy below 0.15. Move channels away from 0.5 (toward 0 or 1).</li>
+              <li><span class="text-kernel-300 font-mono">C &lt; 0.14</span> — Curvature below 0.14. Reduce spread between channels (make them more uniform).</li>
+            </ul>
+          </div>
+          <div class="bg-kernel-800 rounded p-3">
+            <div class="font-bold text-amber-400 mb-1">WATCH Regime</div>
+            <p>0.038 ≤ ω &lt; 0.30 — or any Stable gate not met. System is operational but drifting.</p>
+            <div class="font-bold text-red-400 mb-1 mt-2">COLLAPSE Regime</div>
+            <p>ω ≥ 0.30 — Drift exceeds 30%. Significant channel degradation.</p>
+            <div class="font-bold text-purple-400 mb-1 mt-2">CRITICAL Overlay</div>
+            <p>IC &lt; 0.30 — Multiplicative coherence is dangerously low. At least one channel is near ε.
+              Raise the weakest channel to restore IC.</p>
+          </div>
+        </div>
+        <div class="bg-kernel-800 rounded p-3">
+          <div class="font-bold text-kernel-300 mb-1">How to Restore Conformance</div>
+          <ol class="list-decimal list-inside space-y-1">
+            <li><strong>Identify the weakest channel</strong> — the one closest to 0. This is the IC killer (geometric slaughter).</li>
+            <li><strong>Raise the weakest channel first</strong> — raising a channel from 0.01 to 0.30 has more impact than raising one from 0.80 to 0.95.</li>
+            <li><strong>Reduce channel spread</strong> — if C is too high, make channels more uniform.</li>
+            <li><strong>Check regime gates in order</strong>: ω first (is drift OK?), then F, S, C. The first failing gate tells you where to act.</li>
+            <li><strong>IC ≤ F is structural</strong> — you cannot increase IC past F. To raise IC, you must also raise F (the arithmetic mean).</li>
+          </ol>
+        </div>
+        <div class="bg-kernel-800 rounded p-3">
+          <div class="font-bold text-kernel-300 mb-1">Three Algebraic Identities (Always True)</div>
+          <ul class="space-y-1 list-none">
+            <li><span class="font-mono text-kernel-200">F + ω = 1</span> — Duality identity. Exact to 0.0e+00. If this fails, the computation is wrong.</li>
+            <li><span class="font-mono text-kernel-200">IC ≤ F</span> — Integrity bound. The solvability condition. If IC &gt; F, a channel was misclamped.</li>
+            <li><span class="font-mono text-kernel-200">IC = exp(κ)</span> — Log-integrity relation. Links multiplicative and additive coherence.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
   </div>
 </div>
 
 <script>
-  import { computeKernel, verifyIdentities, classifyRegime } from '../lib/kernel';
+  import {
+    computeKernel, verifyIdentities, classifyRegime, classifyRank,
+    computeSeamBudget, gammaOmega, costCurvature, computeTauRStar,
+    composeKernels, PRESETS, DOMAIN_PRESETS,
+    type KernelResult, type RegimeResult,
+  } from '../lib/kernel';
+  import { REGIME_THRESHOLDS, TOL_SEAM, EPSILON } from '../lib/constants';
 
-  const runBtn = document.getElementById('prec-run') as HTMLButtonElement;
+  /* ─── Helpers ─────────────────────────────────────────────────── */
 
-  runBtn.addEventListener('click', () => {
+  function regimeColor(r: string): string {
+    if (r === 'STABLE') return 'text-green-400';
+    if (r === 'WATCH') return 'text-amber-400';
+    return 'text-red-400';
+  }
+
+  function gateStatus(pass: boolean): string {
+    return pass
+      ? '<span class="text-green-400 font-bold">PASS</span>'
+      : '<span class="text-red-400 font-bold">FAIL</span>';
+  }
+
+  /** Build per-gate analysis for a kernel result. */
+  function gateAnalysis(r: KernelResult): string {
+    const t = REGIME_THRESHOLDS;
+    const gates = [
+      { name: 'ω < ' + t.omega_stable_max, pass: r.omega < t.omega_stable_max,
+        value: r.omega, target: t.omega_stable_max, unit: 'drift',
+        fix: r.omega >= t.omega_stable_max
+          ? `Reduce ω by ${(r.omega - t.omega_stable_max + 0.001).toFixed(4)} — raise the mean of all channels.`
+          : '' },
+      { name: 'F > ' + t.F_stable_min, pass: r.F > t.F_stable_min,
+        value: r.F, target: t.F_stable_min, unit: 'fidelity',
+        fix: r.F <= t.F_stable_min
+          ? `Increase F by ${(t.F_stable_min - r.F + 0.001).toFixed(4)} — raise the weakest channels.`
+          : '' },
+      { name: 'S < ' + t.S_stable_max, pass: r.S < t.S_stable_max,
+        value: r.S, target: t.S_stable_max, unit: 'entropy',
+        fix: r.S >= t.S_stable_max
+          ? `Reduce S by ${(r.S - t.S_stable_max + 0.001).toFixed(4)} — move channels away from 0.5.`
+          : '' },
+      { name: 'C < ' + t.C_stable_max, pass: r.C < t.C_stable_max,
+        value: r.C, target: t.C_stable_max, unit: 'curvature',
+        fix: r.C >= t.C_stable_max
+          ? `Reduce C by ${(r.C - t.C_stable_max + 0.001).toFixed(4)} — make channels more uniform.`
+          : '' },
+    ];
+
+    const isCritical = r.IC < t.IC_critical_max;
+    const allPass = gates.every(g => g.pass);
+
+    return `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        ${gates.map(g => `
+          <div class="bg-kernel-800 rounded p-2 flex justify-between items-center">
+            <div>
+              <span class="text-xs font-mono text-kernel-300">${g.name}</span>
+              <span class="text-xs text-kernel-500 ml-1">current: <span class="font-mono">${g.value.toFixed(4)}</span></span>
+            </div>
+            <div>${gateStatus(g.pass)}</div>
+          </div>
+          ${!g.pass ? `<div class="text-xs text-amber-300 px-2 -mt-1 mb-1">↳ ${g.fix}</div>` : ''}
+        `).join('')}
+      </div>
+      ${isCritical ? `
+        <div class="bg-red-900/30 border border-red-700 rounded p-2 mt-2 text-xs text-red-300">
+          <strong>CRITICAL</strong>: IC = ${r.IC.toFixed(6)} &lt; 0.30 — multiplicative coherence dangerously low.
+          At least one channel is near ε (guard band). Raise the weakest channel.
+        </div>
+      ` : ''}
+      ${allPass && !isCritical ? `
+        <div class="bg-green-900/30 border border-green-700 rounded p-2 mt-2 text-xs text-green-300">
+          All four Stable gates satisfied. System is CONFORMANT at Stable regime.
+        </div>
+      ` : ''}
+    `;
+  }
+
+  /** Build the sensitivity analysis: which channel is weakest? */
+  function sensitivityAnalysis(c: number[], w: number[]): string {
+    if (c.length === 0) return '';
+    const baseline = computeKernel(c, w);
+    // Find weakest channel (lowest c_i)
+    let minIdx = 0;
+    for (let i = 1; i < c.length; i++) {
+      if (c[i] < c[minIdx]) minIdx = i;
+    }
+    // Compute impact of raising weakest channel by 0.1
+    const improved = [...c];
+    improved[minIdx] = Math.min(1.0, improved[minIdx] + 0.1);
+    const after = computeKernel(improved, w);
+
+    const icRatio = baseline.IC > 0 ? (after.IC / baseline.IC) : Infinity;
+
+    return `
+      <div class="bg-kernel-800 rounded p-3 text-xs">
+        <div class="font-bold text-kernel-300 mb-2">Channel Sensitivity</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2">
+          ${c.map((v, i) => `
+            <div class="rounded px-2 py-1 ${i === minIdx ? 'bg-red-900/40 border border-red-700' : 'bg-kernel-700'}">
+              <span class="text-kernel-500">c[${i}]</span>
+              <span class="font-mono text-kernel-200 ml-1">${v.toFixed(4)}</span>
+              ${i === minIdx ? '<span class="text-red-400 ml-1">← weakest</span>' : ''}
+            </div>
+          `).join('')}
+        </div>
+        <div class="text-kernel-400">
+          Raising c[${minIdx}] from <span class="font-mono">${c[minIdx].toFixed(4)}</span>
+          → <span class="font-mono">${improved[minIdx].toFixed(4)}</span>:
+          IC changes <span class="font-mono">${baseline.IC.toFixed(6)}</span>
+          → <span class="font-mono ${after.IC > baseline.IC ? 'text-green-400' : 'text-kernel-200'}">${after.IC.toFixed(6)}</span>
+          (${icRatio !== Infinity ? icRatio.toFixed(1) + '×' : '∞'} improvement),
+          Δ: <span class="font-mono">${baseline.delta.toFixed(4)}</span>
+          → <span class="font-mono">${after.delta.toFixed(4)}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  /** Render kernel invariants table. */
+  function invariantTable(r: KernelResult, regime: RegimeResult): string {
+    const rank = classifyRank(
+      // Reconstruct from F/IC if we don't have channels — use isHomogeneous hint
+      r.isHomogeneous ? [r.F, r.F] : [r.F + 0.1, r.F - 0.1, r.F],
+    );
+    return `
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+        <div class="bg-kernel-800 rounded p-2 text-center">
+          <div class="text-kernel-500">F (fidelity)</div>
+          <div class="font-mono text-lg text-kernel-100">${r.F.toFixed(6)}</div>
+        </div>
+        <div class="bg-kernel-800 rounded p-2 text-center">
+          <div class="text-kernel-500">ω (drift)</div>
+          <div class="font-mono text-lg text-kernel-100">${r.omega.toFixed(6)}</div>
+        </div>
+        <div class="bg-kernel-800 rounded p-2 text-center">
+          <div class="text-kernel-500">IC (integrity)</div>
+          <div class="font-mono text-lg text-kernel-100">${r.IC.toFixed(6)}</div>
+        </div>
+        <div class="bg-kernel-800 rounded p-2 text-center">
+          <div class="text-kernel-500">Δ (gap)</div>
+          <div class="font-mono text-lg text-kernel-100">${r.delta.toFixed(6)}</div>
+        </div>
+        <div class="bg-kernel-800 rounded p-2 text-center">
+          <div class="text-kernel-500">S (entropy)</div>
+          <div class="font-mono text-kernel-200">${r.S.toFixed(6)}</div>
+        </div>
+        <div class="bg-kernel-800 rounded p-2 text-center">
+          <div class="text-kernel-500">C (curvature)</div>
+          <div class="font-mono text-kernel-200">${r.C.toFixed(6)}</div>
+        </div>
+        <div class="bg-kernel-800 rounded p-2 text-center">
+          <div class="text-kernel-500">κ (log-integrity)</div>
+          <div class="font-mono text-kernel-200">${r.kappa.toFixed(6)}</div>
+        </div>
+        <div class="bg-kernel-800 rounded p-2 text-center">
+          <div class="text-kernel-500">Regime</div>
+          <div class="font-mono text-lg ${regimeColor(regime.regime)}">${regime.regime}${regime.isCritical ? ' ⚠' : ''}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ─── Tab switching ───────────────────────────────────────────── */
+
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.pv-tab');
+  const panels = document.querySelectorAll<HTMLElement>('.pv-panel');
+
+  function switchTab(tabName: string) {
+    tabs.forEach(t => {
+      const active = t.dataset.tab === tabName;
+      t.setAttribute('aria-selected', String(active));
+      t.classList.toggle('bg-amber-600', active);
+      t.classList.toggle('text-white', active);
+      t.classList.toggle('text-kernel-400', !active);
+      t.classList.toggle('hover:text-kernel-200', !active);
+    });
+    panels.forEach(p => {
+      p.classList.toggle('hidden', p.id !== `pv-${tabName}`);
+    });
+  }
+
+  tabs.forEach(t => {
+    t.addEventListener('click', () => switchTab(t.dataset.tab!));
+  });
+
+  // Initialize first tab as active
+  switchTab('random');
+
+  /* ═══════════ TAB 1: Random Trials Logic ═══════════ */
+
+  document.getElementById('prec-run')!.addEventListener('click', () => {
     const n = parseInt((document.getElementById('prec-n') as HTMLInputElement).value);
     const trials = parseInt((document.getElementById('prec-trials') as HTMLInputElement).value);
+    const tol = parseFloat((document.getElementById('prec-tol') as HTMLSelectElement).value);
     const container = document.getElementById('prec-results')!;
 
     container.innerHTML = '<div class="bg-kernel-900 border border-kernel-600 rounded-lg p-4 text-center text-yellow-400 text-sm">Running...</div>';
 
-    // Use setTimeout to let the UI update
     setTimeout(() => {
       const startTime = performance.now();
-
-      // Track worst-case errors
       let maxDualityError = 0;
       let maxExpError = 0;
       let boundViolations = 0;
-      let totalChecks = 0;
-
-      // Regime distribution
-      const regimeCounts: Record<string, number> = {
-        'STABLE': 0, 'WATCH': 0, 'COLLAPSE': 0
-      };
+      const regimeCounts: Record<string, number> = { STABLE: 0, WATCH: 0, COLLAPSE: 0 };
       let criticalCount = 0;
 
-      // Detailed results for a few samples
       const sampleResults: Array<{
-        c: number[];
-        F: number;
-        omega: number;
-        S: number;
-        C: number;
-        kappa: number;
-        IC: number;
-        dualErr: number;
-        expErr: number;
-        icLeF: boolean;
-        regime: string;
+        c: number[]; F: number; omega: number; S: number; C: number;
+        kappa: number; IC: number; dualErr: number; expErr: number;
+        icLeF: boolean; regime: string;
       }> = [];
 
       for (let t = 0; t < trials; t++) {
-        // Generate random trace vector
-        const c = Array.from({length: n}, () => Math.random());
-        // Uniform weights
-        const w = Array.from({length: n}, () => 1.0 / n);
-
+        const c = Array.from({ length: n }, () => Math.random());
+        const w = Array.from({ length: n }, () => 1.0 / n);
         const result = computeKernel(c, w);
-        const checks = verifyIdentities(result);
         const regime = classifyRegime(result);
-
         const dualErr = Math.abs(result.F + result.omega - 1);
         const expErr = Math.abs(result.IC - Math.exp(result.kappa));
         const icLeF = result.IC <= result.F + 1e-15;
@@ -107,49 +515,37 @@
         maxDualityError = Math.max(maxDualityError, dualErr);
         maxExpError = Math.max(maxExpError, expErr);
         if (!icLeF) boundViolations++;
-        totalChecks++;
-
         regimeCounts[regime.regime]++;
         if (regime.isCritical) criticalCount++;
 
         if (t < 5) {
           sampleResults.push({
-            c: c.slice(0, 4),
-            F: result.F,
-            omega: result.omega,
-            S: result.S,
-            C: result.C,
-            kappa: result.kappa,
-            IC: result.IC,
-            dualErr,
-            expErr,
-            icLeF,
+            c: c.slice(0, 4), F: result.F, omega: result.omega,
+            S: result.S, C: result.C, kappa: result.kappa, IC: result.IC,
+            dualErr, expErr, icLeF,
             regime: regime.regime + (regime.isCritical ? ' (CRITICAL)' : ''),
           });
         }
       }
 
       const elapsed = performance.now() - startTime;
-
-      // Build results HTML
-      const verdictColor = boundViolations === 0 && maxDualityError < 1e-10 ? 'text-green-400' : 'text-red-400';
-      const verdict = boundViolations === 0 && maxDualityError < 1e-10 ? 'CONFORMANT' : 'NONCONFORMANT';
+      const verdictPass = boundViolations === 0 && maxDualityError < tol;
+      const verdictColor = verdictPass ? 'text-green-400' : 'text-red-400';
+      const verdict = verdictPass ? 'CONFORMANT' : 'NONCONFORMANT';
 
       container.innerHTML = `
-        <!-- Verdict banner -->
-        <div class="bg-kernel-900 border ${boundViolations === 0 ? 'border-green-600' : 'border-red-600'} rounded-lg p-4">
+        <div class="bg-kernel-900 border ${verdictPass ? 'border-green-600' : 'border-red-600'} rounded-lg p-4">
           <div class="flex justify-between items-center">
             <div>
               <span class="text-2xl font-bold ${verdictColor}">${verdict}</span>
               <span class="text-kernel-500 text-sm ml-2">${trials.toLocaleString()} trials × ${n} channels in ${elapsed.toFixed(1)}ms</span>
             </div>
             <div class="text-right text-xs text-kernel-500">
-              Rate: ${(trials / elapsed * 1000).toFixed(0)} evals/s
+              Rate: ${(trials / elapsed * 1000).toFixed(0)} evals/s · Tolerance: ${tol.toExponential(0)}
             </div>
           </div>
         </div>
 
-        <!-- Identity verification summary -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 text-center">
             <div class="text-xs text-kernel-500 mb-1">Duality: F + ω = 1</div>
@@ -158,15 +554,13 @@
             </div>
             <div class="text-xs text-kernel-600 mt-1">${maxDualityError < 1e-14 ? 'Exact to machine ε' : 'Within tolerance'}</div>
           </div>
-
           <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 text-center">
             <div class="text-xs text-kernel-500 mb-1">Integrity Bound: IC ≤ F</div>
             <div class="font-mono text-sm ${boundViolations === 0 ? 'text-green-400' : 'text-red-400'}">
-              violations: ${boundViolations} / ${totalChecks}
+              violations: ${boundViolations} / ${trials}
             </div>
             <div class="text-xs text-kernel-600 mt-1">${boundViolations === 0 ? 'Zero violations' : 'BOUND VIOLATED'}</div>
           </div>
-
           <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 text-center">
             <div class="text-xs text-kernel-500 mb-1">Log-Integrity: IC = exp(κ)</div>
             <div class="font-mono text-sm ${maxExpError < 1e-12 ? 'text-green-400' : 'text-yellow-400'}">
@@ -176,7 +570,6 @@
           </div>
         </div>
 
-        <!-- Regime distribution -->
         <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
           <h3 class="text-sm font-bold text-kernel-300 mb-3">Regime Distribution (${trials.toLocaleString()} random traces)</h3>
           <div class="flex gap-1 h-6 rounded overflow-hidden mb-2">
@@ -194,25 +587,17 @@
           </div>
         </div>
 
-        <!-- Sample traces -->
         <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
           <h3 class="text-sm font-bold text-kernel-300 mb-3">Sample Traces (first 5)</h3>
           <div class="overflow-x-auto">
             <table class="w-full text-xs font-mono">
-              <thead>
-                <tr class="text-kernel-500 border-b border-kernel-700">
-                  <th class="text-left p-1">c[0..3]</th>
-                  <th class="text-right p-1">F</th>
-                  <th class="text-right p-1">ω</th>
-                  <th class="text-right p-1">S</th>
-                  <th class="text-right p-1">C</th>
-                  <th class="text-right p-1">κ</th>
-                  <th class="text-right p-1">IC</th>
-                  <th class="text-right p-1">|F+ω−1|</th>
-                  <th class="text-right p-1">IC≤F</th>
-                  <th class="text-left p-1">Regime</th>
-                </tr>
-              </thead>
+              <thead><tr class="text-kernel-500 border-b border-kernel-700">
+                <th class="text-left p-1">c[0..3]</th><th class="text-right p-1">F</th>
+                <th class="text-right p-1">ω</th><th class="text-right p-1">S</th>
+                <th class="text-right p-1">C</th><th class="text-right p-1">κ</th>
+                <th class="text-right p-1">IC</th><th class="text-right p-1">|F+ω−1|</th>
+                <th class="text-right p-1">IC≤F</th><th class="text-left p-1">Regime</th>
+              </tr></thead>
               <tbody class="text-kernel-300">
                 ${sampleResults.map(s => `
                   <tr class="border-b border-kernel-800">
@@ -234,5 +619,381 @@
         </div>
       `;
     }, 50);
+  });
+
+  /* ═══════════ TAB 2: Manual Trace Logic ═══════════ */
+
+  let manualChannels: number[] = [0.85, 0.90, 0.80, 0.75, 0.95, 0.70, 0.88, 0.82];
+
+  function buildManualSliders() {
+    const n = parseInt((document.getElementById('manual-n') as HTMLSelectElement).value);
+    while (manualChannels.length < n) manualChannels.push(0.5);
+    manualChannels = manualChannels.slice(0, n);
+
+    const container = document.getElementById('manual-sliders')!;
+    container.innerHTML = manualChannels.map((v, i) => `
+      <div class="flex items-center gap-2">
+        <label class="text-xs text-kernel-500 w-10 shrink-0">c[${i}]</label>
+        <input type="range" min="0" max="1" step="0.001" value="${v}"
+          class="manual-slider flex-1 accent-amber-500 h-2" data-idx="${i}" />
+        <input type="number" min="0" max="1" step="0.01" value="${v.toFixed(3)}"
+          class="manual-num w-20 bg-kernel-800 border border-kernel-600 rounded px-1 py-0.5 text-xs text-kernel-200 font-mono" data-idx="${i}" />
+      </div>
+    `).join('');
+
+    // Bind events
+    container.querySelectorAll<HTMLInputElement>('.manual-slider').forEach(sl => {
+      sl.addEventListener('input', () => {
+        const idx = parseInt(sl.dataset.idx!);
+        manualChannels[idx] = parseFloat(sl.value);
+        const numInput = container.querySelector<HTMLInputElement>(`.manual-num[data-idx="${idx}"]`);
+        if (numInput) numInput.value = parseFloat(sl.value).toFixed(3);
+        updateManualResults();
+      });
+    });
+    container.querySelectorAll<HTMLInputElement>('.manual-num').forEach(num => {
+      num.addEventListener('change', () => {
+        const idx = parseInt(num.dataset.idx!);
+        const val = Math.max(0, Math.min(1, parseFloat(num.value) || 0));
+        manualChannels[idx] = val;
+        num.value = val.toFixed(3);
+        const slider = container.querySelector<HTMLInputElement>(`.manual-slider[data-idx="${idx}"]`);
+        if (slider) slider.value = String(val);
+        updateManualResults();
+      });
+    });
+
+    updateManualResults();
+  }
+
+  function updateManualResults() {
+    const n = manualChannels.length;
+    const w = Array(n).fill(1 / n);
+    const r = computeKernel(manualChannels, w);
+    const regime = classifyRegime(r);
+    const checks = verifyIdentities(r);
+    const rankInfo = classifyRank(manualChannels);
+
+    const container = document.getElementById('manual-results')!;
+    container.innerHTML = `
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-sm font-bold text-kernel-300">Kernel Output</h3>
+          <span class="text-xs text-kernel-500">${rankInfo.description}</span>
+        </div>
+        ${invariantTable(r, regime)}
+      </div>
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+        <h3 class="text-sm font-bold text-kernel-300 mb-3">Regime Gates — Conformance Status</h3>
+        ${gateAnalysis(r)}
+      </div>
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+        <h3 class="text-sm font-bold text-kernel-300 mb-3">Identity Verification</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+          ${checks.map(ch => `
+            <div class="bg-kernel-800 rounded p-2 text-center text-xs">
+              <div class="text-kernel-500">${ch.name}</div>
+              <div class="font-mono ${ch.pass ? 'text-green-400' : 'text-red-400'}">${ch.formula}</div>
+              <div class="font-mono text-kernel-400 mt-1">residual: ${ch.residual.toExponential(2)}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+        ${sensitivityAnalysis(manualChannels, w)}
+      </div>
+    `;
+  }
+
+  // Manual tab initialization
+  document.getElementById('manual-n')!.addEventListener('change', buildManualSliders);
+
+  document.getElementById('manual-fill')!.addEventListener('change', (e) => {
+    const val = (e.target as HTMLSelectElement).value;
+    if (!val) return;
+    const n = manualChannels.length;
+    if (val === 'random') {
+      manualChannels = Array.from({ length: n }, () => Math.random());
+    } else {
+      const v = parseFloat(val);
+      manualChannels = Array(n).fill(v);
+    }
+    buildManualSliders();
+    (e.target as HTMLSelectElement).value = '';
+  });
+
+  document.getElementById('manual-reset')!.addEventListener('click', () => {
+    manualChannels = [0.85, 0.90, 0.80, 0.75, 0.95, 0.70, 0.88, 0.82];
+    (document.getElementById('manual-n') as HTMLSelectElement).value = '8';
+    buildManualSliders();
+  });
+
+  // Build initial sliders
+  buildManualSliders();
+
+  /* ═══════════ TAB 3: Preset Explorer Logic ═══════════ */
+
+  // Populate domain filter
+  const domainSet = new Set(DOMAIN_PRESETS.map(p => p.domain));
+  const domainSelect = document.getElementById('preset-domain') as HTMLSelectElement;
+  domainSet.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d.replace(/_/g, ' ');
+    domainSelect.appendChild(opt);
+  });
+
+  document.getElementById('preset-run')!.addEventListener('click', () => {
+    const filterDomain = (document.getElementById('preset-domain') as HTMLSelectElement).value;
+    const sortBy = (document.getElementById('preset-sort') as HTMLSelectElement).value;
+    const container = document.getElementById('preset-results')!;
+
+    // Compute all presets
+    type PresetRow = { name: string; domain: string; desc: string; r: KernelResult; regime: RegimeResult; c: number[] };
+    const rows: PresetRow[] = [];
+
+    // Structural presets
+    if (filterDomain === 'all') {
+      for (const [, preset] of Object.entries(PRESETS)) {
+        const r = computeKernel([...preset.c], [...preset.w]);
+        rows.push({ name: preset.name, domain: 'structural', desc: '', r, regime: classifyRegime(r), c: [...preset.c] });
+      }
+    }
+
+    // Domain presets
+    for (const dp of DOMAIN_PRESETS) {
+      if (filterDomain !== 'all' && dp.domain !== filterDomain) continue;
+      const r = computeKernel([...dp.c], [...dp.w]);
+      rows.push({ name: dp.name, domain: dp.domain, desc: dp.description, r, regime: classifyRegime(r), c: [...dp.c] });
+    }
+
+    // Sort
+    if (sortBy === 'F') rows.sort((a, b) => b.r.F - a.r.F);
+    else if (sortBy === 'IC') rows.sort((a, b) => b.r.IC - a.r.IC);
+    else if (sortBy === 'delta') rows.sort((a, b) => b.r.delta - a.r.delta);
+    else if (sortBy === 'omega') rows.sort((a, b) => a.r.omega - b.r.omega);
+    else rows.sort((a, b) => a.name.localeCompare(b.name));
+
+    container.innerHTML = `
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+        <h3 class="text-sm font-bold text-kernel-300 mb-3">${rows.length} Entities</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs font-mono">
+            <thead><tr class="text-kernel-500 border-b border-kernel-700">
+              <th class="text-left p-1.5">Entity</th>
+              <th class="text-left p-1.5">Domain</th>
+              <th class="text-right p-1.5">F</th>
+              <th class="text-right p-1.5">ω</th>
+              <th class="text-right p-1.5">IC</th>
+              <th class="text-right p-1.5">Δ</th>
+              <th class="text-right p-1.5">S</th>
+              <th class="text-right p-1.5">C</th>
+              <th class="text-center p-1.5">Regime</th>
+              <th class="text-center p-1.5">Stable?</th>
+            </tr></thead>
+            <tbody class="text-kernel-300">
+              ${rows.map(row => {
+                const allGates = row.r.omega < REGIME_THRESHOLDS.omega_stable_max
+                  && row.r.F > REGIME_THRESHOLDS.F_stable_min
+                  && row.r.S < REGIME_THRESHOLDS.S_stable_max
+                  && row.r.C < REGIME_THRESHOLDS.C_stable_max;
+                return `
+                  <tr class="border-b border-kernel-800 hover:bg-kernel-800/50 cursor-pointer preset-row"
+                      data-channels="${JSON.stringify(row.c)}" title="${row.desc}">
+                    <td class="p-1.5 text-kernel-200">${row.name}</td>
+                    <td class="p-1.5 text-kernel-500">${row.domain}</td>
+                    <td class="text-right p-1.5">${row.r.F.toFixed(4)}</td>
+                    <td class="text-right p-1.5">${row.r.omega.toFixed(4)}</td>
+                    <td class="text-right p-1.5">${row.r.IC.toFixed(4)}</td>
+                    <td class="text-right p-1.5">${row.r.delta.toFixed(4)}</td>
+                    <td class="text-right p-1.5">${row.r.S.toFixed(4)}</td>
+                    <td class="text-right p-1.5">${row.r.C.toFixed(4)}</td>
+                    <td class="text-center p-1.5"><span class="${regimeColor(row.regime.regime)}">${row.regime.regime}${row.regime.isCritical ? ' ⚠' : ''}</span></td>
+                    <td class="text-center p-1.5">${allGates ? '<span class="text-green-400">✓</span>' : '<span class="text-red-400">✗</span>'}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-kernel-600 mt-2">Click any row to load it into the Manual Trace editor.</p>
+      </div>
+      <div id="preset-detail" class="space-y-3"></div>
+    `;
+
+    // Click rows to load into manual editor
+    container.querySelectorAll<HTMLTableRowElement>('.preset-row').forEach(tr => {
+      tr.addEventListener('click', () => {
+        const channels: number[] = JSON.parse(tr.dataset.channels!);
+        manualChannels = channels;
+        (document.getElementById('manual-n') as HTMLSelectElement).value = String(channels.length);
+        buildManualSliders();
+        switchTab('manual');
+      });
+    });
+  });
+
+  /* ═══════════ TAB 4: Seam Budget Logic ═══════════ */
+
+  document.getElementById('seam-run')!.addEventListener('click', () => {
+    const omega = parseFloat((document.getElementById('seam-omega') as HTMLInputElement).value);
+    const C = parseFloat((document.getElementById('seam-C') as HTMLInputElement).value);
+    const R = parseFloat((document.getElementById('seam-R') as HTMLInputElement).value);
+    const tauR = parseFloat((document.getElementById('seam-tauR') as HTMLInputElement).value);
+    const container = document.getElementById('seam-results')!;
+
+    const budget = computeSeamBudget(omega, C, R, tauR);
+    const tauRStar = computeTauRStar(omega, C);
+
+    const borderColor = budget.pass ? 'border-green-600' : 'border-red-600';
+    const passLabel = budget.pass
+      ? '<span class="text-green-400 font-bold text-lg">SEAM PASS</span>'
+      : '<span class="text-red-400 font-bold text-lg">SEAM FAIL</span>';
+
+    container.innerHTML = `
+      <div class="bg-kernel-900 border ${borderColor} rounded-lg p-4">
+        <div class="flex justify-between items-center mb-3">
+          ${passLabel}
+          <span class="text-xs text-kernel-500">|residual| ≤ tol_seam (${TOL_SEAM})</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div class="bg-kernel-800 rounded p-3 text-center">
+            <div class="text-xs text-kernel-500">Γ(ω) — drift cost</div>
+            <div class="font-mono text-lg text-red-300">${budget.gamma.toFixed(6)}</div>
+            <div class="text-xs text-kernel-600">ω${'\u{00B3}'}/(1−ω+ε)</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-3 text-center">
+            <div class="text-xs text-kernel-500">D_C — curvature cost</div>
+            <div class="font-mono text-lg text-amber-300">${budget.D_C.toFixed(6)}</div>
+            <div class="text-xs text-kernel-600">α · C</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-3 text-center">
+            <div class="text-xs text-kernel-500">R · τ_R — return credit</div>
+            <div class="font-mono text-lg text-green-300">${budget.credit.toFixed(6)}</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-3 text-center">
+            <div class="text-xs text-kernel-500">Δκ — budget</div>
+            <div class="font-mono text-lg text-kernel-100">${budget.deltaKappa.toFixed(6)}</div>
+            <div class="text-xs text-kernel-600">credit − (D_ω + D_C)</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-3 text-center">
+            <div class="text-xs text-kernel-500">Seam residual</div>
+            <div class="font-mono text-lg ${budget.pass ? 'text-green-400' : 'text-red-400'}">${budget.residual.toFixed(6)}</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-3 text-center">
+            <div class="text-xs text-kernel-500">τ_R* diagnostic</div>
+            <div class="font-mono text-lg text-kernel-100">${tauRStar.toFixed(4)}</div>
+            <div class="text-xs text-kernel-600">higher = better return</div>
+          </div>
+        </div>
+      </div>
+      ${!budget.pass ? `
+        <div class="bg-kernel-900 border border-amber-700 rounded-lg p-4">
+          <h3 class="text-sm font-bold text-amber-300 mb-2">How to Close the Seam</h3>
+          <ul class="text-xs text-kernel-400 space-y-1 list-disc list-inside">
+            <li>Total debit: D_ω + D_C = ${(budget.D_omega + budget.D_C).toFixed(6)}</li>
+            <li>Current credit: R · τ_R = ${budget.credit.toFixed(6)}</li>
+            <li>Shortfall: ${Math.abs(budget.residual).toFixed(6)}</li>
+            <li><strong>Option 1:</strong> Increase R (return rate) to at least ${((budget.D_omega + budget.D_C) / (tauR || 1)).toFixed(4)}</li>
+            <li><strong>Option 2:</strong> Increase τ_R (return time) to at least ${((budget.D_omega + budget.D_C) / (R || 1)).toFixed(4)}</li>
+            <li><strong>Option 3:</strong> Reduce ω (drift) — currently Γ(${omega.toFixed(3)}) = ${budget.gamma.toFixed(6)}</li>
+            <li><strong>Option 4:</strong> Reduce C (curvature) — currently D_C = ${budget.D_C.toFixed(6)}</li>
+          </ul>
+        </div>
+      ` : ''}
+    `;
+  });
+
+  /* ═══════════ TAB 5: Composition Logic ═══════════ */
+
+  // Populate composition dropdowns
+  const allItems = [
+    ...Object.entries(PRESETS).map(([k, v]) => ({ label: `[structural] ${v.name}`, c: [...v.c], w: [...v.w] })),
+    ...DOMAIN_PRESETS.map(dp => ({ label: `[${dp.domain}] ${dp.name}`, c: [...dp.c], w: [...dp.w] })),
+  ];
+
+  const compA = document.getElementById('comp-a') as HTMLSelectElement;
+  const compB = document.getElementById('comp-b') as HTMLSelectElement;
+  allItems.forEach((item, i) => {
+    const optA = document.createElement('option');
+    optA.value = String(i);
+    optA.textContent = item.label;
+    compA.appendChild(optA);
+    const optB = document.createElement('option');
+    optB.value = String(i);
+    optB.textContent = item.label;
+    compB.appendChild(optB);
+  });
+  if (allItems.length > 1) compB.value = '1';
+
+  document.getElementById('comp-run')!.addEventListener('click', () => {
+    const idxA = parseInt(compA.value);
+    const idxB = parseInt(compB.value);
+    const itemA = allItems[idxA];
+    const itemB = allItems[idxB];
+    const container = document.getElementById('comp-results')!;
+
+    const rA = computeKernel(itemA.c, itemA.w);
+    const rB = computeKernel(itemB.c, itemB.w);
+    const regA = classifyRegime(rA);
+    const regB = classifyRegime(rB);
+    const comp = composeKernels(rA, rB);
+
+    // Verify composition law: Δ₁₂ ≈ predicted
+    const gapError = Math.abs(comp.delta_composed - comp.gap_predicted);
+
+    container.innerHTML = `
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+        <h3 class="text-sm font-bold text-kernel-300 mb-3">Input Traces</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <div class="text-xs text-kernel-400 mb-2 font-bold">A: ${itemA.label}</div>
+            ${invariantTable(rA, regA)}
+          </div>
+          <div>
+            <div class="text-xs text-kernel-400 mb-2 font-bold">B: ${itemB.label}</div>
+            ${invariantTable(rB, regB)}
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-kernel-900 border border-amber-700 rounded-lg p-4">
+        <h3 class="text-sm font-bold text-kernel-300 mb-3">Composed Result (A ∘ B)</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+          <div class="bg-kernel-800 rounded p-2 text-center">
+            <div class="text-kernel-500">F₁₂ = (F₁+F₂)/2</div>
+            <div class="font-mono text-lg text-kernel-100">${comp.F_composed.toFixed(6)}</div>
+            <div class="text-kernel-600">arithmetic</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-2 text-center">
+            <div class="text-kernel-500">IC₁₂ = √(IC₁·IC₂)</div>
+            <div class="font-mono text-lg text-kernel-100">${comp.IC_composed.toFixed(6)}</div>
+            <div class="text-kernel-600">geometric</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-2 text-center">
+            <div class="text-kernel-500">Δ₁₂ (actual)</div>
+            <div class="font-mono text-lg text-kernel-100">${comp.delta_composed.toFixed(6)}</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-2 text-center">
+            <div class="text-kernel-500">Δ₁₂ (predicted)</div>
+            <div class="font-mono text-lg ${gapError < 1e-10 ? 'text-green-400' : 'text-amber-400'}">${comp.gap_predicted.toFixed(6)}</div>
+            <div class="text-kernel-600">Hellinger correction: ${comp.hellinger_correction.toFixed(6)}</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-2 text-center">
+            <div class="text-kernel-500">ω₁₂</div>
+            <div class="font-mono text-kernel-200">${comp.omega_composed.toFixed(6)}</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-2 text-center">
+            <div class="text-kernel-500">Regime</div>
+            <div class="font-mono ${regimeColor(comp.regime)}">${comp.regime}${comp.isCritical ? ' ⚠' : ''}</div>
+          </div>
+          <div class="bg-kernel-800 rounded p-2 text-center col-span-2">
+            <div class="text-kernel-500">Gap composition law error</div>
+            <div class="font-mono ${gapError < 1e-10 ? 'text-green-400' : 'text-amber-400'}">${gapError.toExponential(2)}</div>
+            <div class="text-kernel-600">${gapError < 1e-10 ? 'Verified to machine precision' : 'Approximate (expected for non-identical)'}</div>
+          </div>
+        </div>
+      </div>
+    `;
   });
 </script>
