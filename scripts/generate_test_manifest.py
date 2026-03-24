@@ -73,6 +73,8 @@ DOMAIN_MODULES: list[dict[str, str]] = [
     {"module": "closures.nuclear_physics.reaction_channels", "prefix": "RC", "domain": "nuclear_physics"},
     {"module": "closures.quantum_mechanics.photonic_confinement", "prefix": "CPM", "domain": "quantum_mechanics"},
     {"module": "closures.quantum_mechanics.topological_band_structures", "prefix": "TB", "domain": "quantum_mechanics"},
+    {"module": "closures.rcft.collapse_field_theory", "prefix": "CFT", "domain": "rcft"},
+    {"module": "closures.rcft.scale_recursion", "prefix": "SR", "domain": "rcft"},
     {"module": "closures.spacetime_memory.cosmological_memory", "prefix": "CM", "domain": "spacetime_memory"},
     {"module": "closures.spacetime_memory.gravitational_phenomena", "prefix": "GP", "domain": "spacetime_memory"},
     {"module": "closures.spacetime_memory.gravitational_wave_memory", "prefix": "GW", "domain": "spacetime_memory"},

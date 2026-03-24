@@ -19,6 +19,17 @@ from closures.rcft.coherence_pipeline_closure import (
     derive_coherence,
     verify_coherence_is_derived,
 )
+from closures.rcft.collapse_field_theory import (
+    CFT_ENTITIES,
+    CollapseFieldEntity,
+    compute_cft_kernel,
+)
+from closures.rcft.collapse_field_theory import (
+    compute_all_entities as compute_all_cft_entities,
+)
+from closures.rcft.collapse_field_theory import (
+    verify_all_theorems as verify_all_cft_theorems,
+)
 from closures.rcft.collapse_grammar import diagnose_grammar
 from closures.rcft.fractal_dimension import compute_fractal_dimension
 from closures.rcft.information_geometry import (
@@ -31,6 +42,17 @@ from closures.rcft.information_geometry import (
 )
 from closures.rcft.recursive_field import compute_recursive_field
 from closures.rcft.resonance_pattern import compute_resonance_pattern
+from closures.rcft.scale_recursion import (
+    SR_ENTITIES,
+    ScaleRecursionEntity,
+    compute_sr_kernel,
+)
+from closures.rcft.scale_recursion import (
+    compute_all_entities as compute_all_sr_entities,
+)
+from closures.rcft.scale_recursion import (
+    verify_all_theorems as verify_all_sr_theorems,
+)
 from closures.rcft.universality_class import (
     compute_central_charge,
     compute_critical_exponents,
@@ -39,9 +61,16 @@ from closures.rcft.universality_class import (
 )
 
 __all__ = [
+    "CFT_ENTITIES",
+    "SR_ENTITIES",
     "CoherenceDerivation",
+    "CollapseFieldEntity",
+    "ScaleRecursionEntity",
+    "compute_all_cft_entities",
+    "compute_all_sr_entities",
     "compute_attractor_basin",
     "compute_central_charge",
+    "compute_cft_kernel",
     "compute_critical_exponents",
     "compute_efficiency",
     "compute_fractal_dimension",
@@ -49,11 +78,14 @@ __all__ = [
     "compute_partition_function",
     "compute_recursive_field",
     "compute_resonance_pattern",
+    "compute_sr_kernel",
     "derive_coherence",
     "diagnose_grammar",
     "fisher_distance_1d",
     "fisher_distance_weighted",
     "fisher_geodesic",
+    "verify_all_cft_theorems",
+    "verify_all_sr_theorems",
     "verify_coherence_is_derived",
     "verify_fano_fisher_duality",
     "verify_scaling_relations",
