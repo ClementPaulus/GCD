@@ -76,7 +76,7 @@ web/
 | **scale-ladder** | Reference | Cross-scale coherence: quark → hadron → atom |
 | **geometry** | Corpus | Flat manifold, 44 identities, rank theorem, composition algebra |
 | **grammar** | Corpus | Five-word vocabulary, Latin type system, discourse spine |
-| **epistemology** | Corpus | Observation cost (T9), reproducibility, cognitive equalizer |
+| **epistemology** | Corpus | Episteme of Return — observation cost (T9), reproducibility, cognitive equalizer |
 | **philosophy** | Corpus | Camus/Nietzsche/Jung/Sartre convergences with kernel computation |
 | **rosetta** | Reference | Six-lens Rosetta translator with live scenarios |
 | **ledger** | Reference | 20-domain overview with kernel metrics |
