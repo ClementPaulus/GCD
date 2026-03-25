@@ -51,7 +51,7 @@ py::dict compute_kernel_py(py::array_t<double> c_arr,
     out["C"] = result.C;
     out["kappa"] = result.kappa;
     out["IC"] = result.IC;
-    out["amgm_gap"] = result.delta;
+    out["heterogeneity_gap"] = result.delta;
     out["regime"] = result.regime;
     out["is_homogeneous"] = result.is_homogeneous;
     out["computation_mode"] = result.computation_mode;
