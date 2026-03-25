@@ -123,25 +123,11 @@ api = [
   "uvicorn[standard]>=0.27.0"
 ]
 
-# Communication extensions: Interactive visualization and exploration
-# Provides Streamlit dashboard for exploring validation results
-# NOT required for core validation - use for web UI only
-viz = [
-  "streamlit>=1.30.0",
-  "pandas>=2.0.0",
-  "plotly>=5.18.0",
-  "numpy>=1.24.0"
-]
-
-# All standard communication extensions (API + visualization)
+# All standard communication extensions (API)
 # These provide standard protocol interfaces but are NOT needed for validation
 communications = [
   "fastapi>=0.109.0",
-  "uvicorn[standard]>=0.27.0",
-  "streamlit>=1.30.0",
-  "pandas>=2.0.0",
-  "plotly>=5.18.0",
-  "numpy>=1.24.0"
+  "uvicorn[standard]>=0.27.0"
 ]
 
 # C/C++ accelerator build dependencies (optional)
@@ -166,17 +152,14 @@ all = [
   "fastapi>=0.109.0",
   "httpx>=0.27.0",
   "uvicorn[standard]>=0.27.0",
-  "streamlit>=1.30.0",
-  "pandas>=2.0.0",
-  "plotly>=5.18.0",
   "numpy>=1.24.0"
 ]
 
 # These MUST be strings; do not put lists here.
 [project.urls]
-Homepage = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS"
+Homepage = "https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/"
 Repository = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS"
-Documentation = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/README.md"
+Documentation = "https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/"
 "Bug Tracker" = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/issues"
 Changelog = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CHANGELOG.md"
 "Quick Start" = "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/QUICKSTART_TUTORIAL.md"
@@ -189,7 +172,6 @@ Download = "https://pypi.org/project/umcp/#files"
 umcp = "umcp.cli:main"
 umcp-ext = "umcp.umcp_extensions:main"
 umcp-api = "umcp.api_umcp:main"
-umcp-dashboard = "umcp.dashboard:main"
 umcp-calc = "umcp.universal_calculator:main"
 umcp-finance = "umcp.finance_cli:main"
 
@@ -203,7 +185,6 @@ rcft = "umcp.contracts.rcft:get_contract"
 # Extension entry points for plugin discovery
 [project.entry-points."umcp.extensions"]
 api = "umcp.api_umcp:app"
-visualization = "umcp.dashboard:main"
 
 [tool.setuptools]
 package-dir = {"" = "src", "closures" = "closures"}
@@ -265,12 +246,8 @@ omit = [
   "src/umcp/api_umcp.py",  # Planned REST API extension - stub code
   "src/umcp/minimal_cli.py",  # Minimal CLI alternative - not primary interface
   "src/umcp/preflight.py",  # Complex error-handling paths, tested via integration
-  "src/umcp/dashboard.py",  # Old monolithic dashboard (refactored into package)
-  "src/umcp/dashboard/pages_*.py",  # Streamlit page render functions — pure UI, not unit-testable
-  "src/umcp/dashboard/__init__.py",  # main() entry point — pure Streamlit navigation UI
   "src/umcp/outputs.py",  # Output formatting module - generates SVG/HTML/LaTeX
   "src/umcp/finance_cli.py",  # Finance CLI - subprocess/argparse-heavy
-  "src/umcp/finance_dashboard.py",  # Finance Streamlit dashboard - UI-heavy
 ]
 
 [tool.coverage.report]
@@ -336,10 +313,7 @@ check_untyped_defs = true
 [[tool.mypy.overrides]]
 module = [
   "yaml.*",
-  "streamlit.*",
-  "plotly.*",
   "uvicorn.*",
-  "pandas.*",
   "numpy.*",
   "scipy.*",
   "psutil.*",
@@ -347,9 +321,9 @@ module = [
 ]
 ignore_missing_imports = true
 
-# Exclude extension files from strict type checking (UI-heavy, optional deps)
+# Exclude extension files from strict type checking (optional deps)
 [[tool.mypy.overrides]]
-module = ["umcp.dashboard", "umcp.dashboard.*", "umcp.api_umcp", "umcp.api_routes_v2", "umcp.outputs"]
+module = ["umcp.api_umcp", "umcp.api_routes_v2", "umcp.outputs"]
 ignore_errors = true
 
 # Exclude Weyl closures from strict checking (scientific computing, scipy-heavy)
@@ -385,5 +359,5 @@ venv = ".venv"
 
 extraPaths = ["src", "."]
 
-# Exclude dashboards and casepack scripts from strict checking
-ignore = ["src/umcp/dashboard.py", "src/umcp/finance_dashboard.py", "casepacks", "scripts"]
+# Exclude casepack scripts from strict checking
+ignore = ["casepacks", "scripts"]

@@ -30,7 +30,6 @@ import argparse
 import csv
 import json
 import math
-import os
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -573,28 +572,11 @@ def cmd_report(args: argparse.Namespace) -> None:
 
 
 def cmd_dashboard(args: argparse.Namespace) -> None:
-    """Launch the Streamlit finance dashboard."""
-    ws = _get_workspace(args.workspace)
-    config_path = ws / CONFIG_JSON
-    if not config_path.exists():
-        print("Error: No finance workspace found. Run 'umcp-finance init' first.")
-        sys.exit(1)
-
-    dashboard_path = Path(__file__).parent / "finance_dashboard.py"
-    if not dashboard_path.exists():
-        print(f"Error: Dashboard not found at {dashboard_path}")
-        sys.exit(1)
-
-    port = args.port if hasattr(args, "port") else 8502
-
-    try:
-        import streamlit as _st  # noqa: F401  # pyright: ignore[reportMissingImports]
-    except ImportError:
-        print("Error: Streamlit not installed. Install with: pip install umcp[viz]")
-        sys.exit(1)
-
-    os.environ["UMCP_FINANCE_WORKSPACE"] = str(ws)
-    os.system(f"streamlit run {dashboard_path} --server.port {port}")
+    """Launch the finance dashboard (archived — use web interface)."""
+    print("The Streamlit dashboard has been archived.")
+    print("Visit https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/ for the web interface.")
+    print("Use 'umcp-finance analyze' for CLI-based kernel analysis.")
+    sys.exit(0)
 
 
 # ============================================================================

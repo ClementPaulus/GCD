@@ -9,7 +9,6 @@ Extensions are split into two tiers:
 
   **On-demand** (lazy-loaded on first use, may need optional deps):
     4. api             — REST API server (FastAPI / uvicorn)
-    5. visualization   — Streamlit dashboard
 
 Usage::
 
@@ -24,12 +23,11 @@ Usage::
     # Or via CLI:
     #   umcp-ext list                  # List all (shows Default / On-demand)
     #   umcp-ext info api              # Details for one extension
-    #   umcp-ext run visualization     # Launch dashboard
 
 Cross-references:
   - src/umcp/api_umcp.py       (REST API extension)
-  - src/umcp/dashboard/        (Streamlit dashboard extension)
-  - pyproject.toml             (optional dependencies: api, viz extras)
+  - pyproject.toml             (optional dependencies: api extras)
+  - web/                       (Astro 5 website — GitHub Pages)
 """
 
 from __future__ import annotations
@@ -179,25 +177,6 @@ EXTENSIONS: dict[str, ExtensionInfo] = {
             "Health monitoring",
         ],
     ),
-    "visualization": ExtensionInfo(
-        name="visualization",
-        description="Interactive Streamlit dashboard for exploring UMCP data",
-        type="dashboard",
-        module="umcp.dashboard",
-        default=False,
-        class_name="main",
-        requires=["streamlit", "pandas", "plotly"],
-        command="streamlit run src/umcp/dashboard.py",
-        port=8501,
-        features=[
-            "Real-time system health",
-            "Ledger exploration",
-            "Regime visualization",
-            "Kernel metrics analysis",
-            "Casepack browser",
-            "Contract explorer",
-        ],
-    ),
 }
 
 
@@ -206,9 +185,6 @@ _IMPORT_NAMES: dict[str, str] = {
     "pyyaml": "yaml",
     "uvicorn": "uvicorn",
     "fastapi": "fastapi",
-    "streamlit": "streamlit",
-    "pandas": "pandas",
-    "plotly": "plotly",
 }
 
 
@@ -527,11 +503,9 @@ def main() -> int:
         epilog="""
 Examples:
   umcp-ext list                    # List all extensions
-  umcp-ext list --type dashboard   # List dashboard extensions only
   umcp-ext status                  # Show loaded / on-demand status
   umcp-ext info api                # Show API extension details
   umcp-ext install api             # Install API dependencies
-  umcp-ext run visualization       # Run visualization dashboard
   umcp-ext check api               # Check if API is installed
 """,
     )

@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.2.5** · **14,362 tests** · **20 domains** · **181 closure modules** · **47 lemmas** · **44 structural identities** · **46 dashboard pages**
+**UMCP v2.2.5** · **14,182 tests** · **20 domains** · **181 closure modules** · **47 lemmas** · **44 structural identities**
 
 ## Foundational Principle — Read This First
 
@@ -384,22 +384,9 @@ src/umcp/
 ├── minimal_cli.py            # Minimal CLI for lightweight use
 ├── api_umcp.py               # [Optional] FastAPI REST extension (Pydantic models)
 ├── finance_cli.py            # Finance domain CLI
-├── finance_dashboard.py      # Finance Streamlit dashboard
 ├── universal_calculator.py   # Universal kernel calculator CLI
 ├── umcp_extensions.py        # Protocol-based plugin system
-└── dashboard/                # [Optional] Modular Streamlit dashboard (46 pages)
-│   ├── __init__.py           # Main dashboard entry point
-│   ├── _deps.py              # Dashboard dependency management
-│   ├── _utils.py             # Shared dashboard utilities
-│   ├── pages_core.py         # Overview, Ledger, Casepacks, Contracts, Closures, Regime, Metrics, Health
-│   ├── pages_analysis.py     # Exports, Comparison, Time Series, Formula Builder
-│   ├── pages_science.py      # Cosmology, Astronomy, Nuclear, Quantum, Finance, RCFT, Materials, Security, Atomic, SM
-│   ├── pages_physics.py      # GCD framework, Physics interface, Kinematics interface
-│   ├── pages_interactive.py  # Test Templates, Batch Validation, Live Runner
-│   ├── pages_management.py   # Notifications, Bookmarks, API Integration
-│   ├── pages_diagnostic.py   # τ_R* Diagnostic, Epistemic Classification, Insights Engine
-│   ├── pages_exploration.py  # Canon Explorer, Rosetta Translation (9 lenses incl. Semiotics), Orientation
-│   └── pages_advanced.py     # Precision, Geometry, Domain Overview
+└── api_umcp.py               # [Optional] FastAPI REST extension (Pydantic models)
 ├── fleet/                    # Distributed fleet-scale validation
 │   ├── __init__.py           # Fleet public API
 │   ├── scheduler.py          # Job scheduler (submit, route, track)
@@ -600,7 +587,7 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 14,362 tests (pytest --collect-only | grep ":" | wc -l to verify)
+pytest                                       # 14,182 tests (pytest --collect-only | grep ":" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
@@ -639,7 +626,7 @@ See `COMMIT_PROTOCOL.md` for the full specification. **Never skip this step.** E
 
 **Every source file** starts with `from __future__ import annotations` (PEP 563). Maintain this.
 
-**Optional dependency guarding** — wrap optional imports in `try/except`, set to `None` on failure, check before use. Applied to: yaml, fastapi, streamlit, plotly, pandas, numpy. Never add required imports for optional features.
+**Optional dependency guarding** — wrap optional imports in `try/except`, set to `None` on failure, check before use. Applied to: yaml, fastapi, numpy. Never add required imports for optional features.
 
 **Dataclasses** are the dominant data container. `NamedTuples` for immutable math outputs (`KernelInvariants` in `constants.py`). Pydantic `BaseModel` is API-extension only. Serialization uses explicit `.to_dict()` methods, not `dataclasses.asdict()`.
 
@@ -666,12 +653,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**14,362 test cases** across **172 test files** in `tests/` (171 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_293_*`). Single `tests/conftest.py` provides:
+**14,182 test cases** across **170 test files** in `tests/` (169 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_293_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 14,362 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 14,182 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -688,7 +675,7 @@ umcp validate <target>
 | `test_130` | Kinematics audit spec | 35 |
 | `test_135` | Nuclear physics closures | 76 |
 | `test_140` | Weyl cosmology closures | 43 |
-| `test_145–147` | τ_R* diagnostics (79), dashboard (144), dynamics (57) | 280 |
+| `test_145–147` | τ_R* diagnostics (79), dynamics (57) | 136 |
 | `test_148–149` | Standard Model (subatomic kernel, formalism, RCFT universality) | 108 |
 | `test_150–153` | Measurement engine, active matter, epistemic weld | 172 |
 | `test_154–159` | Advanced QM: TERS, atom-dot, muon-laser, double-slit, regime calibration | 963 |
@@ -744,11 +731,11 @@ umcp validate <target>
 | `test_293` | Emergent structural insights (T-SI-1 through T-SI-6) | 47 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 1,895 |
-| **TOTAL** | | **14,362** |
+| **TOTAL** | | **14,182** |
 
 ## Extension System
 
-Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version`, `description`, `check_dependencies()`). Built-in extensions (api, visualization, ledger, formatter) registered in a plain dict. CLI: `umcp-ext list|info|check|run`. API: `umcp-api` (:8000). Dashboard: `umcp-dashboard` (:8501).
+Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version`, `description`, `check_dependencies()`). Built-in extensions (api, ledger, formatter) registered in a plain dict. CLI: `umcp-ext list|info|check|run`. API: `umcp-api` (:8000). Web: [calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS](https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/).
 
 ## Key Files to Read First
 
@@ -768,7 +755,7 @@ Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version
 | C++ kernel/seam/SHA-256 | `src/umcp_cpp/` (headers, pybind11 bindings, Catch2 tests) |
 | Accelerator benchmark | `scripts/benchmark_cpp.py` (correctness + performance) |
 | Fleet architecture | `src/umcp/fleet/` (Scheduler, Worker, Queue, Cache, Tenant) |
-| Dashboard pages | `src/umcp/dashboard/` (46 modular pages) |
+| Web interface | `web/` (Astro 5, TypeScript kernel, GitHub Pages) |
 | Subatomic particles | `closures/standard_model/subatomic_kernel.py` (31 particles, 8-channel trace) |
 | SM 10 theorems | `closures/standard_model/particle_physics_formalism.py` (74/74 subtests) |
 | SM extended theorems | `closures/standard_model/sm_extended_theorems.py` (15 theorems, 60/60 subtests) |

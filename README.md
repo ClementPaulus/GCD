@@ -8,7 +8,7 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](src/umcp_cpp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![UMCP v2.2.5](https://img.shields.io/badge/UMCP-v2.2.5-orange.svg)](pyproject.toml)
-[![Tests: 14,362](https://img.shields.io/badge/tests-14%2C362-brightgreen.svg)](tests/)
+[![Tests: 14,182](https://img.shields.io/badge/tests-14%2C182-brightgreen.svg)](tests/)
 [![Domains: 20](https://img.shields.io/badge/domains-20-blueviolet.svg)](closures/)
 [![Closures: 181](https://img.shields.io/badge/closures-181-informational.svg)](closures/)
 [![Theorems: 252](https://img.shields.io/badge/theorems-252_proven-ff69b4.svg)](closures/)
@@ -24,7 +24,7 @@ Explore the GCD kernel live in your browser — no installation required. Comput
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Three-layer C → C++ → Python architecture**: The framework is written in Python with **20 domains**, **181 closure modules**, **252 proven theorems**, and **14,362 tests**. A portable **C99 orchestration core** (`src/umcp_c/`) formalizes the entire Tier-0 protocol in ~1,900 lines of C — frozen contract, regime gates, trace management, integrity ledger, and the full validation spine — with no heap allocation in the hot path and a stable `extern "C"` ABI callable from any language. A **C++17 accelerator** (`src/umcp_cpp/`) links against the C core and exposes a pybind11 zero-copy NumPy bridge for 50–80× speedup on kernel computation, seam chains, and SHA-256 integrity. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to NumPy. Same formulas, same frozen parameters, same results to machine precision — **760 C/C++ test assertions** verify this. The C layer reduces mechanical overhead and maximizes runtime performance now that the protocol is fully synthesized.
+**Three-layer C → C++ → Python architecture**: The framework is written in Python with **20 domains**, **181 closure modules**, **252 proven theorems**, and **14,182 tests**. A portable **C99 orchestration core** (`src/umcp_c/`) formalizes the entire Tier-0 protocol in ~1,900 lines of C — frozen contract, regime gates, trace management, integrity ledger, and the full validation spine — with no heap allocation in the hot path and a stable `extern "C"` ABI callable from any language. A **C++17 accelerator** (`src/umcp_cpp/`) links against the C core and exposes a pybind11 zero-copy NumPy bridge for 50–80× speedup on kernel computation, seam chains, and SHA-256 integrity. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to NumPy. Same formulas, same frozen parameters, same results to machine precision — **760 C/C++ test assertions** verify this. The C layer reduces mechanical overhead and maximizes runtime performance now that the protocol is fully synthesized.
 
 ---
 
@@ -50,7 +50,7 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
   <ul>
   <li><a href="#startup--from-clone-to-running">Startup — From Clone to Running</a></li>
   <li><a href="#c-stack--build--verify">C Stack — Build &amp; Verify</a></li>
-  <li><a href="#services--api--dashboard">Services — API &amp; Dashboard</a></li>
+  <li><a href="#services--api">Services — API</a></li>
   <li><a href="#development-loop--edit-validate-commit">Development Loop — Edit, Validate, Commit</a></li>
   <li><a href="#reset--clean-slate">Reset &amp; Clean Slate</a></li>
   <li><a href="#useful-utilities">Useful Utilities</a></li>
@@ -134,7 +134,7 @@ Every claim, measurement, validation, and narrative in UMCP follows exactly **fi
 
 ### The Three-Tier Stack
 
-Tier-1 (44 structural identities, 47 lemmas, 252 proven theorems) → Tier-0 (14,362 tests, 181 closure modules, C++17 accelerator) → Tier-2 (20 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
+Tier-1 (44 structural identities, 47 lemmas, 252 proven theorems) → Tier-0 (14,182 tests, 181 closure modules, C++17 accelerator) → Tier-2 (20 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
 
 <p align="center">
   <img src="images/10_tier_architecture.png" alt="Three-Tier Architecture: Tier-1 (Kernel) → Tier-0 (Protocol) → Tier-2 (Domains)" width="88%">
@@ -180,16 +180,7 @@ The GCD kernel is available as a **live web calculator** at [calebpruett927.gith
 | **τ_R\* Surface** | Canvas 2D heatmap of the τ_R\* diagnostic over the (ω, C) plane with regime boundary lines and mouse tooltips |
 | **Orientation Proofs** | 9 computational receipts matching `scripts/orientation.py` ground truth — duality, integrity bound, geometric slaughter, first weld, confinement cliff, scale inversion, equator convergence, seam associativity — plus fixed point analysis and regime partition statistics |
 
-### Also Available: Streamlit Dashboard (46 pages)
-
-For developers working with the repository, UMCP also includes a full **Streamlit dashboard** with 46 pages covering all 20 domains, validation, and diagnostics:
-
-```bash
-pip install -e ".[all]"     # Install with visualization dependencies
-umcp-dashboard              # Launch at http://localhost:8501
-```
-
-The dashboard includes science domain pages, regime phase diagrams, cross-domain comparison, Rosetta translation (9 lenses), batch validation, canon exploration, and more. See `src/umcp/dashboard/` for details.
+The [**Interactive Web Calculator**](https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/calculator) is the primary interface for exploring GCD — no installation needed. For the full suite of pages including domain exploration, regime diagnostics, Rosetta translation, and orientation proofs, visit the [**GCD website**](https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/).
 
 ---
 
@@ -234,7 +225,6 @@ src/umcp/
 │   ├── cache.py              # Content-addressable artifact cache
 │   └── tenant.py             # Multi-tenant isolation, quotas, namespaces
 ├── accel.py                  # C++ accelerator wrapper (auto-fallback to NumPy)
-├── dashboard/                # Modular Streamlit dashboard
 └── api_umcp.py               # FastAPI REST extension (Pydantic models)
 
 src/umcp_c/                       # C99 Orchestration Core (Tier-0 Protocol Foundation)
@@ -566,7 +556,6 @@ pip install -e ".[all]"
 | **Core** | `pyyaml`, `jsonschema`, `numpy`, `scipy` |
 | **Dev** | `pytest`, `ruff`, `mypy`, `pre-commit` |
 | **API** | `fastapi`, `uvicorn` (optional) |
-| **Viz** | `streamlit`, `plotly`, `pandas` (optional) |
 | **C++ Accel** | `pybind11`, CMake ≥ 3.16, C++17 compiler (optional) |
 
 **Requires**: Python ≥ 3.11
@@ -632,7 +621,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                            # All 14,362 tests
+pytest                            # All 14,182 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
@@ -643,13 +632,9 @@ pytest -n auto                  # Parallel execution
 umcp integrity                  # Verify SHA-256 checksums
 ```
 
-### Launch the dashboard
+### Explore Online
 
-```bash
-umcp-dashboard                             # Start interactive dashboard on :8501
-```
-
-See the <strong><a href="#interactive-web-calculator">Interactive Web Calculator</a></strong> section above, or run <code>umcp-dashboard</code> locally for the full 46-page Streamlit dashboard.
+Visit the [**GCD website**](https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/) for interactive kernel computation, domain exploration, regime diagnostics, and orientation proofs — all running client-side with zero dependencies.
 
 ### Use the kernel in Python
 
@@ -696,7 +681,7 @@ umcp integrity                             # Verify SHA-256 checksums
 umcp validate .                            # Full repo validation → CONFORMANT
 
 # 3. Run the test suite
-pytest -v --tb=short                       # 14,362 tests
+pytest -v --tb=short                       # 14,182 tests
 ```
 
 ### C Stack — Build & Verify
@@ -725,15 +710,14 @@ python -c "from umcp.accel import backend; print(backend())"   # → 'cpp'
 python scripts/benchmark_cpp.py
 ```
 
-### Services — API & Dashboard
+### Services — API
 
 ```bash
 # FastAPI REST server (http://localhost:8000)
 umcp-api                                   # Or: uvicorn umcp.api_umcp:app --reload --port 8000
-
-# Streamlit dashboard (http://localhost:8501) — see Interactive Web Calculator section for details
-umcp-dashboard                             # 46 pages, 20 domains, real-time kernel exploration
 ```
+
+For interactive exploration, visit the [**GCD website**](https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/) (client-side, zero dependencies).
 
 ### Development Loop — Edit, Validate, Commit
 
@@ -823,7 +807,7 @@ umcp validate <target>
 The GitHub Actions workflow (`.github/workflows/validate.yml`) enforces:
 
 1. **Lint** — `ruff format --check` + `ruff check` + `mypy`
-2. **Test** — Full pytest suite (14,362 tests, 172 test files)
+2. **Test** — Full pytest suite (14,182 tests, 170 test files)
 3. **Validate** — Baseline + strict validation (both must return CONFORMANT)
 
 ### Pre-Commit Protocol
@@ -842,7 +826,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 
 ## Test Suite
 
-**14,362 tests** across **172 test files**, organized by tier and domain:
+**14,182 tests** across **170 test files**, organized by tier and domain:
 
 | Test Range | Domain | Tests |
 |------------|--------|------:|
@@ -996,7 +980,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 ├── schemas/                   # 17 JSON Schema files
 ├── canon/                     # 21 canonical anchor files
 ├── casepacks/                 # 25 reproducible validation bundles
-├── tests/                     # 172 test files, 14,362 tests
+├── tests/                     # 170 test files, 14,182 tests
 ├── paper/                     # 17 LaTeX papers + 2 Markdown papers + Bibliography.bib (159 entries)
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log
