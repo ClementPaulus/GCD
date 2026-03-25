@@ -395,7 +395,6 @@ def install_extension(name: str) -> bool:
 
     extras_map = {
         "api": "api",
-        "visualization": "viz",
         "ledger": "",
         "formatter": "",
     }

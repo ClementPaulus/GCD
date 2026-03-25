@@ -69,8 +69,12 @@ def test_check_extension_nonexistent():
 
 
 def test_extension_registry_has_expected_extensions():
-    """Registry should contain the expected extensions."""
-    expected = ["api", "visualization", "ledger", "formatter"]
+    """Registry should contain the expected extensions.
+
+    Note: 'visualization' (Streamlit dashboard) was archived and removed
+    from the repo-level registry. It remains valid in archive/dashboard/.
+    """
+    expected = ["api", "ledger", "formatter"]
     for name in expected:
         assert name in umcp_extensions.EXTENSIONS
 
@@ -108,11 +112,15 @@ def test_api_extension_has_endpoints():
     assert "/health" in endpoints
 
 
-def test_visualization_extension_has_features():
-    """Visualization extension should have feature definitions."""
+def test_visualization_extension_archived():
+    """Visualization extension was archived — should return not_found.
+
+    The Streamlit dashboard was moved to archive/dashboard/ and is no
+    longer registered at the repo level.  It remains a valid standalone
+    tool but does not count against the active extension registry.
+    """
     info = umcp_extensions.get_extension_info("visualization")
-    assert "features" in info
-    assert len(info["features"]) > 0
+    assert info["status"] == "not_found"
 
 
 def test_install_extension_nonexistent():
@@ -175,10 +183,10 @@ def test_check_extension_api():
     assert isinstance(result, bool)
 
 
-def test_check_extension_visualization():
-    """Test check_extension for visualization (if installed)."""
+def test_check_extension_visualization_archived():
+    """Visualization was archived — check_extension returns False."""
     result = umcp_extensions.check_extension("visualization")
-    assert isinstance(result, bool)
+    assert result is False
 
 
 def test_load_extension_api():
@@ -213,10 +221,10 @@ def test_default_names_includes_core_three():
     assert {"ledger", "formatter", "thermodynamics"} <= defaults
 
 
-def test_on_demand_names_includes_api_and_viz():
-    """On-demand tier must include api and visualization."""
+def test_on_demand_names_includes_api():
+    """On-demand tier must include api (visualization was archived)."""
     on_demand = set(manager.on_demand_names)
-    assert {"api", "visualization"} <= on_demand
+    assert {"api"} <= on_demand
 
 
 def test_default_flag_in_registry():
@@ -225,7 +233,7 @@ def test_default_flag_in_registry():
     assert umcp_extensions.EXTENSIONS["formatter"].default is True
     assert umcp_extensions.EXTENSIONS["thermodynamics"].default is True
     assert umcp_extensions.EXTENSIONS["api"].default is False
-    assert umcp_extensions.EXTENSIONS["visualization"].default is False
+    # visualization was archived — no longer in EXTENSIONS
 
 
 # ============================================================================
@@ -243,7 +251,6 @@ def test_manager_startup_loads_defaults():
     assert "thermodynamics" in loaded
     # On-demand should NOT be loaded yet
     assert not mgr.is_loaded("api")
-    assert not mgr.is_loaded("visualization")
 
 
 def test_manager_get_lazy_loads():
