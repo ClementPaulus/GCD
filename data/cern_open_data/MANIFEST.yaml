@@ -195,9 +195,9 @@ cross_references:
   cross_sections: "closures/standard_model/cross_sections.py"
   symmetry_breaking: "closures/standard_model/symmetry_breaking.py"
   coupling_constants: "closures/standard_model/coupling_constants.py"
-  higgs_analysis: "CERN_HIGGS_RESEARCH.md"
+  higgs_analysis: "archive/reports/CERN_HIGGS_RESEARCH.md"
   experimental_probes: "scripts/run_experimental_probes.py"
-  negative_result: "NEGATIVE_RESULT_ANALYSIS.md"
+  negative_result: "archive/reports/NEGATIVE_RESULT_ANALYSIS.md"
 
 # ─── Gap analysis ────────────────────────────────────────────────────
 gaps_filled:

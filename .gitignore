@@ -148,6 +148,7 @@ celerybeat.pid
 .env
 .envrc
 .venv
+.venv-*/
 env/
 venv/
 ENV/
@@ -304,3 +305,11 @@ cmake_install.cmake
 Makefile
 compile_commands.json
 _deps/
+
+# Root-level LaTeX build artifacts (LIBER_COLLAPSUS)
+LIBER_COLLAPSUS.aux
+LIBER_COLLAPSUS.log
+LIBER_COLLAPSUS.out
+
+# Stale distribution packages
+dist/
