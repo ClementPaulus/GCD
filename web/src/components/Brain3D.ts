@@ -34,6 +34,7 @@ interface PathwayDef {
 }
 
 const PATHWAYS: PathwayDef[] = [
+  // ── Sensory ────────────────────────────────────────────────────
   {
     name: 'visual',
     label: 'Visual Pathway',
@@ -47,58 +48,146 @@ const PATHWAYS: PathwayDef[] = [
     regions: ['medial_geniculate', 'temporal_cortex'],
   },
   {
+    name: 'somatosensory',
+    label: 'Somatosensory Pathway',
+    color: 0x93c5fd,
+    regions: ['medulla', 'thalamus', 'somatosensory_cortex', 'parietal_cortex'],
+  },
+
+  // ── Motor ──────────────────────────────────────────────────────
+  {
     name: 'motor',
-    label: 'Motor Pathway',
+    label: 'Motor (Cortico-Basal Ganglia)',
     color: 0xc084fc,
     regions: ['frontal_cortex', 'putamen', 'globus_pallidus', 'thalamus', 'corticospinal_tract'],
   },
   {
-    name: 'papez',
-    label: 'Papez Circuit (Memory)',
-    color: 0xfbbf24,
-    regions: ['hippocampus_ca1', 'fornix', 'mammillary_body', 'mammillothalamic_tract', 'thalamus', 'cingulate_cortex'],
+    name: 'direct_pathway',
+    label: 'Basal Ganglia Direct Pathway',
+    color: 0xa78bfa,
+    regions: ['frontal_cortex', 'caudate', 'putamen', 'globus_pallidus', 'thalamus', 'frontal_cortex'],
   },
   {
-    name: 'reward',
-    label: 'Reward Pathway',
-    color: 0xf472b6,
-    regions: ['midbrain', 'nucleus_accumbens', 'prefrontal_dorsolateral'],
-  },
-  {
-    name: 'salience',
-    label: 'Salience Network',
-    color: 0xfb923c,
-    regions: ['insular_cortex', 'cingulate_cortex', 'amygdala_lateral'],
-  },
-  {
-    name: 'default_mode',
-    label: 'Default Mode Network',
-    color: 0x818cf8,
-    regions: ['prefrontal_dorsolateral', 'cingulate_cortex', 'parietal_cortex', 'hippocampus_ca1'],
+    name: 'indirect_pathway',
+    label: 'Basal Ganglia Indirect Pathway',
+    color: 0x7c3aed,
+    regions: ['caudate', 'putamen', 'globus_pallidus', 'subthalamic_nucleus', 'globus_pallidus', 'thalamus'],
   },
   {
     name: 'cerebellar',
     label: 'Cerebellar Loop',
     color: 0x22d3ee,
-    regions: ['cerebellum_anterior', 'dentate_nucleus', 'cerebellar_peduncles', 'thalamus', 'frontal_cortex'],
+    regions: ['frontal_cortex', 'pons', 'cerebellum_anterior', 'dentate_nucleus', 'cerebellar_peduncles', 'thalamus', 'frontal_cortex'],
   },
   {
+    name: 'rubrospinal',
+    label: 'Rubrospinal Tract',
+    color: 0xd946ef,
+    regions: ['red_nucleus', 'cerebellar_peduncles', 'corticospinal_tract', 'medulla'],
+  },
+
+  // ── Memory & Limbic ────────────────────────────────────────────
+  {
+    name: 'papez',
+    label: 'Papez Circuit (Memory)',
+    color: 0xfbbf24,
+    regions: ['hippocampus_ca1', 'fornix', 'mammillary_body', 'mammillothalamic_tract', 'thalamus', 'cingulate_cortex', 'entorhinal_cortex', 'hippocampus_ca1'],
+  },
+  {
+    name: 'hippocampal_entorhinal',
+    label: 'Hippocampal-Entorhinal Loop',
+    color: 0xfcd34d,
+    regions: ['entorhinal_cortex', 'hippocampus_ca1', 'hippocampus_ca23', 'fornix', 'septal_nuclei'],
+  },
+  {
+    name: 'prefrontal_amygdala',
+    label: 'Prefrontal-Amygdala Regulation',
+    color: 0xf0abfc,
+    regions: ['prefrontal_dorsolateral', 'cingulate_cortex', 'amygdala_lateral', 'amygdala_basal', 'hypothalamus'],
+  },
+
+  // ── Reward & Motivation ────────────────────────────────────────
+  {
+    name: 'reward',
+    label: 'Mesolimbic Reward Pathway',
+    color: 0xf472b6,
+    regions: ['midbrain', 'nucleus_accumbens', 'septal_nuclei', 'prefrontal_dorsolateral'],
+  },
+
+  // ── Large-Scale Networks ───────────────────────────────────────
+  {
+    name: 'salience',
+    label: 'Salience Network',
+    color: 0xfb923c,
+    regions: ['insular_cortex', 'cingulate_cortex', 'amygdala_lateral', 'thalamus'],
+  },
+  {
+    name: 'default_mode',
+    label: 'Default Mode Network',
+    color: 0x818cf8,
+    regions: ['prefrontal_dorsolateral', 'cingulate_cortex', 'parietal_cortex', 'temporal_cortex', 'hippocampus_ca1'],
+  },
+  {
+    name: 'frontoparietal',
+    label: 'Frontoparietal Control Network',
+    color: 0x67e8f9,
+    regions: ['prefrontal_dorsolateral', 'parietal_cortex', 'insular_cortex', 'thalamus'],
+  },
+
+  // ── Language ───────────────────────────────────────────────────
+  {
+    name: 'language_arcuate',
+    label: 'Language (Arcuate Fasciculus)',
+    color: 0xe879f9,
+    regions: ['frontal_cortex', 'arcuate_fasciculus', 'temporal_cortex', 'parietal_cortex'],
+  },
+
+  // ── Commissural & Association ──────────────────────────────────
+  {
+    name: 'callosal',
+    label: 'Callosal Interhemispheric',
+    color: 0xfda4af,
+    regions: ['frontal_cortex', 'corpus_callosum', 'parietal_cortex', 'occipital_cortex'],
+  },
+  {
+    name: 'limbic_thalamocortical',
+    label: 'Limbic-Thalamo-Cortical',
+    color: 0x86efac,
+    regions: ['amygdala_lateral', 'thalamus', 'cingulate_cortex', 'prefrontal_dorsolateral', 'insular_cortex'],
+  },
+
+  // ── Neuromodulatory ────────────────────────────────────────────
+  {
     name: 'dopamine',
-    label: 'Dopaminergic Pathway',
+    label: 'Dopaminergic (Nigrostriatal + Mesocortical)',
     color: 0xa78bfa,
-    regions: ['substantia_nigra', 'putamen', 'caudate', 'frontal_cortex'],
+    regions: ['substantia_nigra', 'putamen', 'caudate', 'nucleus_accumbens', 'frontal_cortex'],
   },
   {
     name: 'serotonin',
     label: 'Serotonergic Pathway',
     color: 0x2dd4bf,
-    regions: ['raphe_nuclei', 'thalamus', 'hippocampus_ca1', 'frontal_cortex', 'cingulate_cortex'],
+    regions: ['raphe_nuclei', 'thalamus', 'hippocampus_ca1', 'amygdala_lateral', 'frontal_cortex', 'cingulate_cortex'],
   },
   {
     name: 'norepinephrine',
     label: 'Noradrenergic Pathway',
     color: 0xf87171,
     regions: ['locus_coeruleus', 'thalamus', 'amygdala_lateral', 'hippocampus_ca1', 'frontal_cortex'],
+  },
+
+  // ── Autonomic / Circadian ──────────────────────────────────────
+  {
+    name: 'circadian',
+    label: 'Circadian (SCN → Pineal)',
+    color: 0xfde68a,
+    regions: ['suprachiasmatic_nucleus', 'hypothalamus', 'pineal_gland'],
+  },
+  {
+    name: 'autonomic',
+    label: 'Central Autonomic Network',
+    color: 0xfda4af,
+    regions: ['hypothalamus', 'amygdala_basal', 'insular_cortex', 'pons', 'medulla'],
   },
 ];
 
@@ -118,70 +207,122 @@ interface RegionDef {
 
 const REGION_DEFS: RegionDef[] = [
   // ── Cortical (8) ───────────────────────────────────────────────
-  { name: 'frontal_cortex', category: 'cortical', pos: [0, 0.55, 0.65], scale: [0.55, 0.35, 0.35], shape: 'ellipsoid' },
-  { name: 'parietal_cortex', category: 'cortical', pos: [0, 0.65, -0.05], scale: [0.5, 0.25, 0.3], shape: 'ellipsoid' },
-  { name: 'occipital_cortex', category: 'cortical', pos: [0, 0.35, -0.65], scale: [0.35, 0.3, 0.25], shape: 'ellipsoid' },
-  { name: 'temporal_cortex', category: 'cortical', pos: [0.45, -0.1, 0.2], scale: [0.2, 0.2, 0.4], shape: 'ellipsoid' },
-  { name: 'insular_cortex', category: 'cortical', pos: [0.3, 0.15, 0.2], scale: [0.08, 0.12, 0.15], shape: 'ellipsoid' },
-  { name: 'entorhinal_cortex', category: 'cortical', pos: [0.25, -0.2, 0.35], scale: [0.08, 0.06, 0.08], shape: 'sphere' },
-  { name: 'prefrontal_dorsolateral', category: 'cortical', pos: [0.3, 0.6, 0.55], scale: [0.2, 0.15, 0.15], shape: 'ellipsoid' },
-  { name: 'somatosensory_cortex', category: 'cortical', pos: [0.15, 0.6, 0.05], scale: [0.15, 0.2, 0.12], shape: 'ellipsoid' },
+  // Frontal lobe: anterior-superior, broad shell
+  { name: 'frontal_cortex', category: 'cortical', pos: [0, 0.50, 0.55], scale: [0.50, 0.30, 0.30], shape: 'ellipsoid' },
+  // Parietal lobe: superior-posterior to frontal, behind central sulcus
+  { name: 'parietal_cortex', category: 'cortical', pos: [0, 0.62, -0.10], scale: [0.45, 0.22, 0.28], shape: 'ellipsoid' },
+  // Occipital lobe: posterior pole
+  { name: 'occipital_cortex', category: 'cortical', pos: [0, 0.30, -0.62], scale: [0.30, 0.25, 0.20], shape: 'ellipsoid' },
+  // Temporal lobe: lateral-inferior, runs anterior-posterior
+  { name: 'temporal_cortex', category: 'cortical', pos: [0.48, -0.05, 0.10], scale: [0.18, 0.18, 0.38], shape: 'ellipsoid' },
+  // Insula: buried deep in lateral sulcus
+  { name: 'insular_cortex', category: 'cortical', pos: [0.32, 0.12, 0.12], scale: [0.06, 0.12, 0.14], shape: 'ellipsoid' },
+  // Entorhinal: medial temporal, anterior to hippocampus
+  { name: 'entorhinal_cortex', category: 'cortical', pos: [0.18, -0.15, 0.18], scale: [0.07, 0.05, 0.07], shape: 'sphere' },
+  // DLPFC: dorsolateral prefrontal, anterior-superior-lateral
+  { name: 'prefrontal_dorsolateral', category: 'cortical', pos: [0.30, 0.55, 0.50], scale: [0.18, 0.14, 0.14], shape: 'ellipsoid' },
+  // Somatosensory: postcentral gyrus, just behind central sulcus
+  { name: 'somatosensory_cortex', category: 'cortical', pos: [0.18, 0.62, 0.02], scale: [0.14, 0.20, 0.10], shape: 'ellipsoid' },
 
   // ── Subcortical (7) ────────────────────────────────────────────
-  { name: 'thalamus', category: 'subcortical', pos: [0.08, 0.15, -0.05], scale: [0.15, 0.1, 0.12], shape: 'ellipsoid' },
-  { name: 'caudate', category: 'subcortical', pos: [0.15, 0.35, 0.15], scale: [0.05, 0.12, 0.06], shape: 'ellipsoid' },
-  { name: 'putamen', category: 'subcortical', pos: [0.22, 0.2, 0.1], scale: [0.06, 0.1, 0.08], shape: 'ellipsoid' },
-  { name: 'globus_pallidus', category: 'subcortical', pos: [0.18, 0.18, 0.05], scale: [0.04, 0.07, 0.05], shape: 'ellipsoid' },
-  { name: 'subthalamic_nucleus', category: 'subcortical', pos: [0.1, 0.05, 0.0], scale: [0.03, 0.02, 0.03], shape: 'sphere' },
-  { name: 'nucleus_accumbens', category: 'subcortical', pos: [0.12, 0.08, 0.3], scale: [0.04, 0.03, 0.04], shape: 'sphere' },
-  { name: 'claustrum', category: 'subcortical', pos: [0.28, 0.2, 0.15], scale: [0.02, 0.12, 0.1], shape: 'ellipsoid' },
+  // Thalamus: central relay, slightly posterior, near midline
+  { name: 'thalamus', category: 'subcortical', pos: [0.06, 0.12, -0.06], scale: [0.14, 0.09, 0.11], shape: 'ellipsoid' },
+  // Caudate: C-shaped, head anterior-superior to thalamus
+  { name: 'caudate', category: 'subcortical', pos: [0.12, 0.30, 0.18], scale: [0.05, 0.14, 0.06], shape: 'ellipsoid' },
+  // Putamen: lateral to globus pallidus
+  { name: 'putamen', category: 'subcortical', pos: [0.22, 0.18, 0.08], scale: [0.06, 0.11, 0.08], shape: 'ellipsoid' },
+  // Globus pallidus: medial to putamen
+  { name: 'globus_pallidus', category: 'subcortical', pos: [0.16, 0.15, 0.04], scale: [0.04, 0.07, 0.05], shape: 'ellipsoid' },
+  // Subthalamic nucleus: below thalamus, above substantia nigra
+  { name: 'subthalamic_nucleus', category: 'subcortical', pos: [0.08, 0.02, -0.02], scale: [0.03, 0.02, 0.03], shape: 'sphere' },
+  // Nucleus accumbens: ventral striatum, anterior-inferior
+  { name: 'nucleus_accumbens', category: 'subcortical', pos: [0.08, 0.05, 0.25], scale: [0.04, 0.03, 0.04], shape: 'sphere' },
+  // Claustrum: thin sheet lateral to putamen, deep to insula
+  { name: 'claustrum', category: 'subcortical', pos: [0.28, 0.18, 0.10], scale: [0.02, 0.12, 0.10], shape: 'ellipsoid' },
 
   // ── Limbic (7) ─────────────────────────────────────────────────
-  { name: 'hippocampus_ca1', category: 'limbic', pos: [0.2, -0.05, -0.05], scale: [0.06, 0.04, 0.1], shape: 'ellipsoid' },
-  { name: 'hippocampus_ca23', category: 'limbic', pos: [0.2, -0.05, -0.15], scale: [0.05, 0.04, 0.08], shape: 'ellipsoid' },
-  { name: 'amygdala_lateral', category: 'limbic', pos: [0.22, -0.08, 0.12], scale: [0.05, 0.05, 0.04], shape: 'sphere' },
-  { name: 'amygdala_basal', category: 'limbic', pos: [0.22, -0.12, 0.12], scale: [0.04, 0.04, 0.04], shape: 'sphere' },
-  { name: 'cingulate_cortex', category: 'limbic', pos: [0.0, 0.5, 0.15], scale: [0.06, 0.04, 0.35], shape: 'ellipsoid' },
-  { name: 'septal_nuclei', category: 'limbic', pos: [0.0, 0.15, 0.3], scale: [0.04, 0.04, 0.03], shape: 'sphere' },
-  { name: 'mammillary_body', category: 'limbic', pos: [0.03, -0.12, 0.05], scale: [0.03, 0.03, 0.03], shape: 'sphere' },
+  // Hippocampus CA1: medial temporal floor, curves posterior
+  { name: 'hippocampus_ca1', category: 'limbic', pos: [0.18, -0.06, -0.08], scale: [0.06, 0.04, 0.12], shape: 'ellipsoid' },
+  // Hippocampus CA2/3: slightly medial and posterior to CA1
+  { name: 'hippocampus_ca23', category: 'limbic', pos: [0.16, -0.06, -0.18], scale: [0.05, 0.04, 0.10], shape: 'ellipsoid' },
+  // Lateral amygdala: anterior medial temporal, superior
+  { name: 'amygdala_lateral', category: 'limbic', pos: [0.20, -0.05, 0.10], scale: [0.05, 0.05, 0.04], shape: 'sphere' },
+  // Basal amygdala: just inferior to lateral
+  { name: 'amygdala_basal', category: 'limbic', pos: [0.20, -0.10, 0.10], scale: [0.04, 0.04, 0.04], shape: 'sphere' },
+  // Cingulate: arches over corpus callosum, midline
+  { name: 'cingulate_cortex', category: 'limbic', pos: [0.0, 0.48, 0.10], scale: [0.06, 0.04, 0.38], shape: 'ellipsoid' },
+  // Septal nuclei: anterior to thalamus, ventral to corpus callosum
+  { name: 'septal_nuclei', category: 'limbic', pos: [0.0, 0.12, 0.25], scale: [0.04, 0.04, 0.03], shape: 'sphere' },
+  // Mammillary body: base of hypothalamus, posterior
+  { name: 'mammillary_body', category: 'limbic', pos: [0.03, -0.08, 0.0], scale: [0.03, 0.03, 0.03], shape: 'sphere' },
 
   // ── Brainstem (7) ──────────────────────────────────────────────
-  { name: 'midbrain', category: 'brainstem', pos: [0, -0.15, -0.2], scale: [0.08, 0.06, 0.08], shape: 'ellipsoid' },
-  { name: 'pons', category: 'brainstem', pos: [0, -0.25, -0.18], scale: [0.1, 0.07, 0.1], shape: 'ellipsoid' },
-  { name: 'medulla', category: 'brainstem', pos: [0, -0.38, -0.2], scale: [0.07, 0.09, 0.07], shape: 'ellipsoid' },
-  { name: 'substantia_nigra', category: 'brainstem', pos: [0.06, -0.12, -0.18], scale: [0.04, 0.02, 0.04], shape: 'sphere' },
-  { name: 'red_nucleus', category: 'brainstem', pos: [0.03, -0.1, -0.2], scale: [0.025, 0.025, 0.025], shape: 'sphere' },
-  { name: 'locus_coeruleus', category: 'brainstem', pos: [0.04, -0.22, -0.22], scale: [0.02, 0.015, 0.02], shape: 'sphere' },
-  { name: 'raphe_nuclei', category: 'brainstem', pos: [0, -0.2, -0.24], scale: [0.02, 0.08, 0.02], shape: 'ellipsoid' },
+  // Midbrain (mesencephalon): superior brainstem, below thalamus
+  { name: 'midbrain', category: 'brainstem', pos: [0, -0.10, -0.18], scale: [0.08, 0.06, 0.08], shape: 'ellipsoid' },
+  // Pons: below midbrain, bulges anteriorly
+  { name: 'pons', category: 'brainstem', pos: [0, -0.22, -0.16], scale: [0.10, 0.07, 0.10], shape: 'ellipsoid' },
+  // Medulla oblongata: inferior brainstem, continuous with spinal cord
+  { name: 'medulla', category: 'brainstem', pos: [0, -0.36, -0.18], scale: [0.07, 0.10, 0.07], shape: 'ellipsoid' },
+  // Substantia nigra: ventral midbrain
+  { name: 'substantia_nigra', category: 'brainstem', pos: [0.06, -0.08, -0.16], scale: [0.04, 0.02, 0.05], shape: 'sphere' },
+  // Red nucleus: dorsal midbrain, slightly medial
+  { name: 'red_nucleus', category: 'brainstem', pos: [0.03, -0.06, -0.18], scale: [0.025, 0.025, 0.025], shape: 'sphere' },
+  // Locus coeruleus: dorsal pons, tiny bilateral nuclei
+  { name: 'locus_coeruleus', category: 'brainstem', pos: [0.04, -0.20, -0.22], scale: [0.02, 0.015, 0.02], shape: 'sphere' },
+  // Raphe nuclei: midline brainstem, spans midbrain→medulla
+  { name: 'raphe_nuclei', category: 'brainstem', pos: [0, -0.18, -0.20], scale: [0.02, 0.10, 0.02], shape: 'ellipsoid' },
 
   // ── Cerebellar (6) ─────────────────────────────────────────────
-  { name: 'cerebellum_anterior', category: 'cerebellar', pos: [0, -0.15, -0.5], scale: [0.3, 0.12, 0.12], shape: 'ellipsoid' },
-  { name: 'cerebellum_posterior', category: 'cerebellar', pos: [0, -0.25, -0.55], scale: [0.35, 0.15, 0.15], shape: 'ellipsoid' },
-  { name: 'vermis', category: 'cerebellar', pos: [0, -0.2, -0.52], scale: [0.05, 0.1, 0.1], shape: 'ellipsoid' },
-  { name: 'dentate_nucleus', category: 'cerebellar', pos: [0.15, -0.2, -0.48], scale: [0.04, 0.04, 0.04], shape: 'sphere' },
-  { name: 'cerebellar_wm', category: 'cerebellar', pos: [0, -0.18, -0.48], scale: [0.2, 0.08, 0.08], shape: 'ellipsoid' },
-  { name: 'cerebellar_peduncles', category: 'cerebellar', pos: [0.1, -0.18, -0.38], scale: [0.06, 0.04, 0.06], shape: 'ellipsoid' },
+  // Anterior lobe: superior cerebellum, behind pons
+  { name: 'cerebellum_anterior', category: 'cerebellar', pos: [0, -0.18, -0.46], scale: [0.30, 0.10, 0.12], shape: 'ellipsoid' },
+  // Posterior lobe: largest part, inferior-posterior
+  { name: 'cerebellum_posterior', category: 'cerebellar', pos: [0, -0.30, -0.52], scale: [0.35, 0.14, 0.15], shape: 'ellipsoid' },
+  // Vermis: midline strip connecting hemispheres
+  { name: 'vermis', category: 'cerebellar', pos: [0, -0.24, -0.50], scale: [0.05, 0.12, 0.10], shape: 'ellipsoid' },
+  // Dentate nucleus: deep cerebellar nucleus, lateral
+  { name: 'dentate_nucleus', category: 'cerebellar', pos: [0.14, -0.24, -0.48], scale: [0.04, 0.04, 0.04], shape: 'sphere' },
+  // Cerebellar white matter: arbor vitae
+  { name: 'cerebellar_wm', category: 'cerebellar', pos: [0, -0.22, -0.46], scale: [0.20, 0.08, 0.08], shape: 'ellipsoid' },
+  // Cerebellar peduncles: connect cerebellum to brainstem
+  { name: 'cerebellar_peduncles', category: 'cerebellar', pos: [0.10, -0.20, -0.36], scale: [0.06, 0.04, 0.06], shape: 'ellipsoid' },
 
   // ── White Matter (8) ───────────────────────────────────────────
-  { name: 'corpus_callosum', category: 'white_matter', pos: [0, 0.38, 0.05], scale: [0.08, 0.03, 0.35], shape: 'ellipsoid' },
-  { name: 'corticospinal_tract', category: 'white_matter', pos: [0.08, 0.0, -0.1], scale: [0.03, 0.25, 0.03], shape: 'ellipsoid' },
-  { name: 'arcuate_fasciculus', category: 'white_matter', pos: [0.35, 0.35, 0.1], scale: [0.03, 0.03, 0.2], shape: 'ellipsoid' },
-  { name: 'uncinate_fasciculus', category: 'white_matter', pos: [0.3, 0.05, 0.35], scale: [0.03, 0.03, 0.12], shape: 'ellipsoid' },
-  { name: 'fornix', category: 'white_matter', pos: [0, 0.25, 0.05], scale: [0.03, 0.12, 0.04], shape: 'ellipsoid' },
-  { name: 'internal_capsule', category: 'white_matter', pos: [0.15, 0.2, 0.0], scale: [0.04, 0.15, 0.04], shape: 'ellipsoid' },
-  { name: 'anterior_commissure', category: 'white_matter', pos: [0, 0.1, 0.2], scale: [0.12, 0.02, 0.02], shape: 'ellipsoid' },
-  { name: 'cingulum_bundle', category: 'white_matter', pos: [0.06, 0.45, 0.1], scale: [0.03, 0.03, 0.3], shape: 'ellipsoid' },
+  // Corpus callosum: massive midline commissure connecting hemispheres
+  { name: 'corpus_callosum', category: 'white_matter', pos: [0, 0.36, 0.02], scale: [0.08, 0.03, 0.36], shape: 'ellipsoid' },
+  // Corticospinal tract: descends from motor cortex through internal capsule to spinal cord
+  { name: 'corticospinal_tract', category: 'white_matter', pos: [0.10, 0.05, -0.08], scale: [0.03, 0.30, 0.03], shape: 'ellipsoid' },
+  // Arcuate fasciculus: connects Broca's area (frontal) to Wernicke's (temporal-parietal)
+  { name: 'arcuate_fasciculus', category: 'white_matter', pos: [0.35, 0.32, 0.05], scale: [0.03, 0.03, 0.22], shape: 'ellipsoid' },
+  // Uncinate fasciculus: connects anterior temporal to orbitofrontal
+  { name: 'uncinate_fasciculus', category: 'white_matter', pos: [0.28, 0.02, 0.30], scale: [0.03, 0.03, 0.14], shape: 'ellipsoid' },
+  // Fornix: arches from hippocampus to mammillary body
+  { name: 'fornix', category: 'white_matter', pos: [0.04, 0.22, 0.0], scale: [0.03, 0.14, 0.05], shape: 'ellipsoid' },
+  // Internal capsule: V-shaped fiber bundle between thalamus and basal ganglia
+  { name: 'internal_capsule', category: 'white_matter', pos: [0.14, 0.18, -0.02], scale: [0.04, 0.16, 0.04], shape: 'ellipsoid' },
+  // Anterior commissure: small commissure connecting temporal lobes anterior to fornix
+  { name: 'anterior_commissure', category: 'white_matter', pos: [0, 0.08, 0.18], scale: [0.12, 0.02, 0.02], shape: 'ellipsoid' },
+  // Cingulum bundle: runs within cingulate gyrus, connects frontal to temporal
+  { name: 'cingulum_bundle', category: 'white_matter', pos: [0.06, 0.44, 0.06], scale: [0.03, 0.03, 0.32], shape: 'ellipsoid' },
 
   // ── Specialized (9) ────────────────────────────────────────────
-  { name: 'hypothalamus', category: 'specialized', pos: [0, 0.02, 0.1], scale: [0.06, 0.05, 0.06], shape: 'ellipsoid' },
-  { name: 'thalamic_pulvinar', category: 'specialized', pos: [0.1, 0.15, -0.18], scale: [0.06, 0.04, 0.05], shape: 'ellipsoid' },
-  { name: 'lateral_geniculate', category: 'specialized', pos: [0.15, 0.05, -0.12], scale: [0.03, 0.03, 0.03], shape: 'sphere' },
-  { name: 'medial_geniculate', category: 'specialized', pos: [0.12, 0.03, -0.15], scale: [0.025, 0.025, 0.025], shape: 'sphere' },
-  { name: 'mammillothalamic_tract', category: 'specialized', pos: [0.02, 0.0, 0.02], scale: [0.015, 0.08, 0.015], shape: 'ellipsoid' },
-  { name: 'pineal_gland', category: 'specialized', pos: [0, 0.2, -0.22], scale: [0.025, 0.025, 0.025], shape: 'sphere' },
-  { name: 'choroid_plexus', category: 'specialized', pos: [0.05, 0.3, -0.05], scale: [0.04, 0.02, 0.15], shape: 'ellipsoid' },
-  { name: 'area_postrema', category: 'specialized', pos: [0, -0.35, -0.22], scale: [0.02, 0.015, 0.02], shape: 'sphere' },
-  { name: 'suprachiasmatic_nucleus', category: 'specialized', pos: [0, 0.0, 0.15], scale: [0.02, 0.015, 0.02], shape: 'sphere' },
+  // Hypothalamus: ventral diencephalon, below thalamus
+  { name: 'hypothalamus', category: 'specialized', pos: [0, -0.02, 0.08], scale: [0.06, 0.05, 0.06], shape: 'ellipsoid' },
+  // Pulvinar: posterior thalamic nucleus, visual association
+  { name: 'thalamic_pulvinar', category: 'specialized', pos: [0.08, 0.12, -0.18], scale: [0.06, 0.04, 0.05], shape: 'ellipsoid' },
+  // LGN: lateral geniculate, inferolateral thalamus—visual relay
+  { name: 'lateral_geniculate', category: 'specialized', pos: [0.14, 0.04, -0.12], scale: [0.03, 0.03, 0.03], shape: 'sphere' },
+  // MGN: medial geniculate, posterior-inferior thalamus—auditory relay
+  { name: 'medial_geniculate', category: 'specialized', pos: [0.10, 0.02, -0.15], scale: [0.025, 0.025, 0.025], shape: 'sphere' },
+  // Mammillothalamic tract: vertical from mammillary body to anterior thalamus
+  { name: 'mammillothalamic_tract', category: 'specialized', pos: [0.02, 0.02, 0.0], scale: [0.015, 0.08, 0.015], shape: 'ellipsoid' },
+  // Pineal gland: dorsal midline, posterior to third ventricle
+  { name: 'pineal_gland', category: 'specialized', pos: [0, 0.18, -0.20], scale: [0.025, 0.025, 0.025], shape: 'sphere' },
+  // Choroid plexus: lines ventricles, primary in lateral ventricles
+  { name: 'choroid_plexus', category: 'specialized', pos: [0.05, 0.28, -0.06], scale: [0.04, 0.02, 0.15], shape: 'ellipsoid' },
+  // Area postrema: dorsal medulla, circumventricular organ (emetic trigger)
+  { name: 'area_postrema', category: 'specialized', pos: [0, -0.34, -0.20], scale: [0.02, 0.015, 0.02], shape: 'sphere' },
+  // SCN: suprachiasmatic nucleus, anterior hypothalamus above optic chiasm
+  { name: 'suprachiasmatic_nucleus', category: 'specialized', pos: [0, -0.02, 0.14], scale: [0.02, 0.015, 0.02], shape: 'sphere' },
 ];
 
 // ── Brain3D class ────────────────────────────────────────────────

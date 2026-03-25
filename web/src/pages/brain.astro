@@ -713,6 +713,87 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </div>
 
+      <!-- Additional circuits -->
+      <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-5">
+        <h3 class="text-sm font-bold text-kernel-200 mb-3">Large-Scale Networks & Neuromodulatory Systems</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-kernel-950 rounded p-4 border border-kernel-800">
+            <h4 class="text-xs font-bold text-indigo-400 mb-2">Default Mode Network</h4>
+            <div class="flex items-center gap-1.5 text-[10px] text-kernel-400 flex-wrap">
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-blue-400">DLPFC</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-green-400">Cingulate</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-blue-400">Parietal</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-green-400">Hippocampus</span>
+            </div>
+            <p class="text-[10px] text-kernel-500 mt-2">Active during rest, mind-wandering, self-referential thought. Anti-correlated with task-positive networks.</p>
+          </div>
+          <div class="bg-kernel-950 rounded p-4 border border-kernel-800">
+            <h4 class="text-xs font-bold text-orange-400 mb-2">Salience Network</h4>
+            <div class="flex items-center gap-1.5 text-[10px] text-kernel-400 flex-wrap">
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-blue-400">Insula</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-green-400">Cingulate</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-green-400">Amygdala</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-purple-400">Thalamus</span>
+            </div>
+            <p class="text-[10px] text-kernel-500 mt-2">Detects salient stimuli. Switches between DMN and frontoparietal networks. Insula is the hub.</p>
+          </div>
+          <div class="bg-kernel-950 rounded p-4 border border-kernel-800">
+            <h4 class="text-xs font-bold text-cyan-400 mb-2">Frontoparietal Control</h4>
+            <div class="flex items-center gap-1.5 text-[10px] text-kernel-400 flex-wrap">
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-blue-400">DLPFC</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-blue-400">Parietal</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-blue-400">Insula</span>
+              <span class="text-kernel-600">↔</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-purple-400">Thalamus</span>
+            </div>
+            <p class="text-[10px] text-kernel-500 mt-2">Cognitive control and flexible goal-directed behavior. Working memory maintenance.</p>
+          </div>
+          <div class="bg-kernel-950 rounded p-4 border border-kernel-800">
+            <h4 class="text-xs font-bold text-violet-400 mb-2">Basal Ganglia Direct/Indirect</h4>
+            <div class="flex items-center gap-1.5 text-[10px] text-kernel-400 flex-wrap">
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-purple-400">Striatum</span>
+              <span class="text-kernel-600">→</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-purple-400">GPi (direct)</span>
+              <span class="text-kernel-600">/</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-purple-400">GPe → STN (indirect)</span>
+              <span class="text-kernel-600">→</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-purple-400">Thalamus</span>
+            </div>
+            <p class="text-[10px] text-kernel-500 mt-2">Direct pathway facilitates movement (Go). Indirect pathway inhibits (NoGo). Balance disrupted in Parkinson's and Huntington's.</p>
+          </div>
+          <div class="bg-kernel-950 rounded p-4 border border-kernel-800">
+            <h4 class="text-xs font-bold text-fuchsia-400 mb-2">Language (Arcuate)</h4>
+            <div class="flex items-center gap-1.5 text-[10px] text-kernel-400 flex-wrap">
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-blue-400">Broca's (Frontal)</span>
+              <span class="text-kernel-600">→</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-pink-400">Arcuate fasciculus</span>
+              <span class="text-kernel-600">→</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-blue-400">Wernicke's (Temporal)</span>
+            </div>
+            <p class="text-[10px] text-kernel-500 mt-2">Classical language circuit. Damage to arcuate fasciculus causes conduction aphasia — can understand and produce speech, but cannot repeat.</p>
+          </div>
+          <div class="bg-kernel-950 rounded p-4 border border-kernel-800">
+            <h4 class="text-xs font-bold text-yellow-300 mb-2">Circadian (SCN → Pineal)</h4>
+            <div class="flex items-center gap-1.5 text-[10px] text-kernel-400 flex-wrap">
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-rose-400">SCN</span>
+              <span class="text-kernel-600">→</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-rose-400">Hypothalamus</span>
+              <span class="text-kernel-600">→</span>
+              <span class="px-1.5 py-0.5 bg-kernel-800 rounded text-rose-400">Pineal gland</span>
+            </div>
+            <p class="text-[10px] text-kernel-500 mt-2">Master clock circuit. SCN entrains to light via retina, drives melatonin synthesis in pineal. Both structures are among the smallest (volumetric_fraction &lt; 0.01).</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Connectivity hub analysis -->
       <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-5">
         <h3 class="text-sm font-bold text-kernel-200 mb-3">Connectivity Hubs</h3>
