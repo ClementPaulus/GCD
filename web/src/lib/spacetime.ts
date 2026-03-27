@@ -1,12 +1,12 @@
 /**
- * Spacetime Physics — GCD Budget Surface and Gravitational Analogs
+ * Spacetime Physics -- GCD Budget Surface and Gravitational Analogs
  *
  * Ported from closures/spacetime_memory/spacetime_kernel.py
  * Maps GCD kernel invariants to gravitational phenomena:
- *   Event horizon  = ω → 1 pole (Γ → ∞)
+ *   Event horizon  = ω -> 1 pole (Γ -> inf)
  *   Gravity        = dΓ/dω (gradient of drift cost)
  *   Mass           = accumulated |κ| (well depth)
- *   Tidal force    = d²Γ/dω² (curvature of cost surface)
+ *   Tidal force    = d^2Γ/dω^2 (curvature of cost surface)
  *   Lensing        = deflection from heterogeneity gap Δ
  *   Time dilation  = descent/ascent cost asymmetry
  *
@@ -16,10 +16,10 @@
 import { EPSILON, P_EXPONENT, ALPHA } from './constants';
 import { gammaOmega } from './kernel';
 
-/* ─── Budget Surface ────────────────────────────────────────────── */
+/* --- Budget Surface ---------------------------------------------- */
 
 /**
- * Budget surface height: Γ(ω) + α·C
+ * Budget surface height: Γ(ω) + alpha*C
  * The 2D cost landscape over (ω, C) parameter space.
  */
 export function budgetSurfaceHeight(
@@ -35,11 +35,11 @@ export function budgetSurfaceHeight(
   return gamma + alpha * C;
 }
 
-/* ─── Derivatives of Γ(ω) — Gravitational Analogs ───────────────── */
+/* --- Derivatives of Γ(ω) -- Gravitational Analogs ----------------- */
 
 /**
  * First derivative of Γ(ω) = ω^p / (1 - ω + ε)
- * dΓ/dω = [p·ω^(p-1)·(1-ω+ε) + ω^p] / (1-ω+ε)²
+ * dΓ/dω = [p*ω^(p-1)*(1-ω+ε) + ω^p] / (1-ω+ε)^2
  * Gravitational analog: "gravitational field strength"
  */
 export function dGamma(
@@ -71,29 +71,29 @@ export function d2Gamma(
   return (right - left) / (2 * h);
 }
 
-/* ─── Well Depth (Mass Analog) ──────────────────────────────────── */
+/* --- Well Depth (Mass Analog) ------------------------------------ */
 
 /**
  * Well depth = |κ|. Accumulated log-integrity measures how deep
- * the gravitational potential well is. Larger |κ| → more massive object.
+ * the gravitational potential well is. Larger |κ| -> more massive object.
  */
 export function wellDepth(kappa: number): number {
   return Math.abs(kappa);
 }
 
-/* ─── Gravitational Lensing ─────────────────────────────────────── */
+/* --- Gravitational Lensing --------------------------------------- */
 
 export type LensingMorphology =
-  | 'perfect_ring'   // Δ < 0.01 — Einstein ring
-  | 'thick_arc'      // Δ < 0.10 — strong lensing arc
-  | 'thin_arc'       // Δ < 0.30 — distorted arc
-  | 'distorted'      // Δ ≥ 0.30 — weak lensing distortion
+  | 'perfect_ring'   // Δ < 0.01 -- Einstein ring
+  | 'thick_arc'      // Δ < 0.10 -- strong lensing arc
+  | 'thin_arc'       // Δ < 0.30 -- distorted arc
+  | 'distorted'      // Δ >= 0.30 -- weak lensing distortion
   ;
 
 /**
  * Deflection angle from heterogeneity gap and well depth.
- * θ_defl = 4·wellDepth / (Δ + ε)
- * Analogous to Einstein's deflection formula θ = 4GM/(c²b).
+ * theta_defl = 4*wellDepth / (Δ + ε)
+ * Analogous to Einstein's deflection formula theta = 4GM/(c^2b).
  */
 export function deflectionAngle(
   delta: number,
@@ -113,7 +113,7 @@ export function classifyLensing(delta: number): LensingMorphology {
   return 'distorted';
 }
 
-/* ─── Arrow of Time (Descent/Ascent Asymmetry) ──────────────────── */
+/* --- Arrow of Time (Descent/Ascent Asymmetry) -------------------- */
 
 /**
  * Cost of descending from omStart to omEnd (falling in).
@@ -138,7 +138,7 @@ export function descentCost(
 /**
  * Cost of ascending from omEnd back to omStart (escaping).
  * Asymmetric: ascent integrates against the Γ gradient.
- * ascentCost = descentCost × (1 + Γ(omEnd)/Γ(omStart+ε))
+ * ascentCost = descentCost * (1 + Γ(omEnd)/Γ(omStart+ε))
  */
 export function ascentCost(
   omStart: number,
@@ -153,7 +153,7 @@ export function ascentCost(
 /**
  * Arrow asymmetry: ratio of ascent cost to descent cost.
  * > 1 means it's harder to escape than to fall in.
- * At the event horizon this diverges — no return.
+ * At the event horizon this diverges -- no return.
  */
 export function arrowAsymmetry(
   omStart: number,
@@ -164,12 +164,12 @@ export function arrowAsymmetry(
   return ascentCost(omStart, omEnd) / dc;
 }
 
-/* ─── Additional Physics Functions ──────────────────────────────── */
+/* --- Additional Physics Functions -------------------------------- */
 
 /**
- * Hawking temperature analog: T_H ∝ 1/|κ|
- * In GCD: smaller well depth → higher temperature.
- * Normalized: T = 1/(8π·|κ|). Returns 0 for κ near zero.
+ * Hawking temperature analog: T_H ~ 1/|κ|
+ * In GCD: smaller well depth -> higher temperature.
+ * Normalized: T = 1/(8pi*|κ|). Returns 0 for κ near zero.
  */
 export function hawkingTemperature(kappa: number): number {
   const wd = Math.abs(kappa);
@@ -179,7 +179,7 @@ export function hawkingTemperature(kappa: number): number {
 
 /**
  * Gravitational redshift: z = Γ(ω) / (1 + Γ(ω))
- * Light escaping from depth ω is redshifted. z → 1 at the horizon.
+ * Light escaping from depth ω is redshifted. z -> 1 at the horizon.
  */
 export function gravitationalRedshift(omega: number): number {
   const gamma = gammaOmega(omega);
@@ -187,7 +187,7 @@ export function gravitationalRedshift(omega: number): number {
 }
 
 /**
- * Escape velocity analog: v_esc = √(2Γ/(1+Γ))
+ * Escape velocity analog: v_esc = sqrt(2Γ/(1+Γ))
  * Approaches 1 (c) at the horizon. Below ISCO, escape is impossible.
  */
 export function escapeVelocity(omega: number): number {
@@ -198,17 +198,250 @@ export function escapeVelocity(omega: number): number {
 /**
  * ISCO (Innermost Stable Circular Orbit) analog in GCD.
  * The ω value where tidal forces destabilize orbits.
- * In Schwarzschild: r_ISCO = 6M = 3r_s → ω_ISCO ≈ 0.50
+ * In Schwarzschild: r_ISCO = 6M = 3r_s -> ω_ISCO ~= 0.50
  */
 export const OMEGA_ISCO = 0.50;
 
 /**
  * Photon sphere ω: where circular photon orbits exist.
- * In Schwarzschild: r_ps = 3M = 1.5r_s → ω_ps ≈ 0.65
+ * In Schwarzschild: r_ps = 3M = 1.5r_s -> ω_ps ~= 0.65
  */
 export const OMEGA_PHOTON_SPHERE = 0.65;
 
-/* ─── Black Hole Entities ───────────────────────────────────────── */
+/**
+ * Ergosphere outer boundary in GCD.
+ * In Kerr: the static limit depends on spin. At maximal spin -> r_ergo = 2M.
+ * In GCD: ergosphere begins where frame-dragging cost exceeds escape cost.
+ * ω_ergo ~= 0.42 (just inside ISCO for high-spin BH).
+ */
+export const OMEGA_ERGOSPHERE = 0.42;
+
+/**
+ * Marginally bound orbit -- matter falling from infinity reaches this before plunge.
+ */
+export const OMEGA_MARGINALLY_BOUND = 0.55;
+
+/* --- Frame-Dragging & Kerr Physics ------------------------------- */
+
+/**
+ * Frame-dragging angular velocity (Lense-Thirring).
+ * In GCD: spin parameter a* maps to angular momentum channel ratio.
+ * ω_drag = a* * Γ(ω) / (1 + Γ(ω))^2
+ *
+ * Near the horizon omega_drag -> a* (4M)^-1 -- frame is dragged at the BH spin rate.
+ * @param omega Drift parameter
+ * @param spinStar Dimensionless spin a* in [0, 1) -- from trace vector angular momentum channel
+ */
+export function frameDragging(omega: number, spinStar: number): number {
+  const gamma = gammaOmega(omega);
+  const denom = (1 + gamma) * (1 + gamma);
+  return spinStar * gamma / denom;
+}
+
+/**
+ * Ergosphere radius factor: how large the ergosphere is relative to the horizon.
+ * In Kerr: r_ergo(theta) = M + sqrt(M^2 - a^2cos^2theta). At equator: r_ergo = 2M.
+ * GCD analog: ergoFactor = 1 + sqrt(1 - a*^2) for the equatorial plane.
+ * Returns ratio r_ergo/r_horizon.
+ */
+export function ergosphereFactor(spinStar: number): number {
+  const a2 = Math.min(spinStar * spinStar, 1 - EPSILON);
+  return 1 + Math.sqrt(1 - a2);
+}
+
+/**
+ * Penrose process: maximum extractable energy from the ergosphere.
+ * E_extract / E_input = 1 - sqrt(1 - a*^2)  ~= 0.29 for a* = 0.998 (maximal Kerr).
+ * This energy comes from the BH's rotational energy -- the BH spins down.
+ */
+export function penroseEfficiency(spinStar: number): number {
+  const a2 = Math.min(spinStar * spinStar, 1 - EPSILON);
+  return 1 - Math.sqrt(1 - a2);
+}
+
+/* --- Bekenstein-Hawking Entropy ---------------------------------- */
+
+/**
+ * Black hole entropy analog: S_BH = A/(4l_P^2) -> S_BH ~ |κ|^2 in GCD.
+ * The area of the horizon grows as κ^2 (log-integrity squared).
+ * In GCD the "area" is the occupied volume of the collapse manifold.
+ * Returns dimensionless entropy ~ κ^2.
+ */
+export function bhEntropy(kappa: number): number {
+  return kappa * kappa / (4 * Math.PI);
+}
+
+/* --- Orbital Precession ------------------------------------------ */
+
+/**
+ * Orbital precession rate (perihelion advance analog).
+ * In GR: δφ = 6piGM/(c^2a(1-e^2)) per orbit.
+ * GCD analog: δφ = 6pi * Γ(ω) / (r_eff^2) where r_eff = 1/(1+Γ).
+ * Higher ω -> stronger field -> larger precession.
+ */
+export function orbitalPrecession(omega: number): number {
+  const gamma = gammaOmega(omega);
+  const rEff = 1.0 / (1 + gamma);
+  return 6 * Math.PI * gamma * rEff * rEff;
+}
+
+/* --- Gravitational Wave Strain ----------------------------------- */
+
+/**
+ * GW strain (quadrupole formula analog).
+ * h ~ (2G/c^4) * (M * v^2) / r ~ Γ(ω)^2 * C for a system with curvature C != 0.
+ * Only binary/asymmetric systems (C > 0) emit GW. Spherical collapse (C = 0) is silent.
+ *
+ * @param omega Drift at emission
+ * @param C Curvature (heterogeneity) -- encodes the quadrupole moment
+ * @param distance Observer distance (dimensionless, from camera)
+ */
+export function gwStrain(omega: number, C: number, distance: number): number {
+  const gamma = gammaOmega(omega);
+  if (distance < EPSILON) return 0;
+  return (gamma * gamma * C) / distance;
+}
+
+/**
+ * GW frequency (dominant mode).
+ * f_GW ~ 1/M ~ 1/|κ| -- smaller BHs ring at higher frequencies.
+ * Returns dimensionless cyclic frequency.
+ */
+export function gwFrequency(kappa: number): number {
+  const wd = Math.abs(kappa);
+  if (wd < EPSILON) return 0;
+  return 1.0 / (2 * Math.PI * wd);
+}
+
+/* --- Shapiro Time Delay ------------------------------------------ */
+
+/**
+ * Shapiro time delay: extra travel time for light passing near a mass.
+ * Δt = 4GM/c^3 * ln(4r_1r_2/b^2) -> GCD analog: Δt ~ |κ| * ln(1/Δ + 1)
+ * Larger well depth and smaller heterogeneity gap -> larger delay.
+ */
+export function shapiroDelay(kappa: number, delta: number): number {
+  const wd = Math.abs(kappa);
+  return 4 * wd * Math.log(1.0 / (delta + EPSILON) + 1);
+}
+
+/* --- Surface Gravity --------------------------------------------- */
+
+/**
+ * Surface gravity κ_s (not to be confused with log-integrity κ).
+ * κ_s = dΓ/dω evaluated at the horizon candidate.
+ * Connected to Hawking temperature: T_H = κ_s / (2pi).
+ * This is the "gravitational acceleration" at the event horizon.
+ */
+export function surfaceGravity(omega: number): number {
+  return dGamma(omega);
+}
+
+/* --- Photon Ring Structure --------------------------------------- */
+
+/**
+ * Photon ring demagnification factor for the n-th image.
+ * Higher-order images (n=1, 2, 3...) are exponentially demagnified.
+ * δ_n = exp(-2pin * sqrt(1/(ω+ε))) -- the Lyapunov exponent controls the ring spacing.
+ *
+ * n=0: direct image (primary)
+ * n=1: first sub-ring (one extra half-orbit, ~exp(-pi) demagnified)
+ * n=2: second sub-ring (two extra half-orbits, ~exp(-2pi) demagnified)
+ */
+export function photonRingDemag(n: number, omega: number): number {
+  const lyapunov = Math.sqrt(1.0 / (omega + EPSILON));
+  return Math.exp(-2 * Math.PI * n * lyapunov);
+}
+
+/**
+ * Photon ring angular radius for the n-th sub-ring.
+ * The critical impact parameter b_c = 3sqrt3 M (Schwarzschild).
+ * GCD analog: b_c ~ 1/(dΓ/dω) at the photon sphere.
+ * Each sub-ring converges: r_n = r_crit * (1 + δ_n)
+ */
+export function photonRingRadius(n: number, omega: number): number {
+  const dg = dGamma(omega);
+  if (dg < EPSILON) return 0;
+  const rCrit = 3 * Math.sqrt(3) / dg; // critical impact parameter analog
+  const demag = photonRingDemag(n, omega);
+  return rCrit * (1 + demag);
+}
+
+/* --- Tidal Disruption -------------------------------------------- */
+
+/**
+ * Tidal disruption parameter: how strongly an extended object
+ * is stretched by the differential gravity field.
+ * T_tidal = d^2Γ/dω^2 * (size of object in ω-space)
+ *
+ * @param omega Position in drift space
+ * @param objectSize Object's extent in ω-coordinates (default 0.01)
+ */
+export function tidalParameter(omega: number, objectSize: number = 0.01): number {
+  return Math.abs(d2Gamma(omega)) * objectSize;
+}
+
+/**
+ * Tidal disruption radius: the ω value where tidal forces exceed
+ * the self-binding of an object (parameterized by its IC).
+ * Objects with lower IC (less coherent) disrupt at larger radii (lower ω).
+ * r_tidal ~ (M/m)^(1/3) -> ω_tidal = ω_h * (1 - IC^(1/3))
+ */
+export function tidalDisruptionOmega(objectIC: number): number {
+  const omegaH = 1.0 - EPSILON; // horizon
+  const icClamped = Math.max(objectIC, EPSILON);
+  return omegaH * (1 - Math.pow(icClamped, 1.0 / 3.0));
+}
+
+/* --- Proper Time & Distance -------------------------------------- */
+
+/**
+ * Proper time dilation factor at drift ω.
+ * dτ/dt = sqrt(1 - 2Γ/(1+Γ)) -- approaches 0 at the horizon (time freezes).
+ */
+export function properTimeFactor(omega: number): number {
+  const gamma = gammaOmega(omega);
+  const ratio = 2 * gamma / (1 + gamma);
+  if (ratio >= 1.0) return 0; // at or past horizon
+  return Math.sqrt(1 - ratio);
+}
+
+/**
+ * Coordinate velocity of radially infalling matter.
+ * v_r = sqrt(2Γ/(1+Γ)) * (1 - 2Γ/(1+Γ))
+ * Falls to zero at the horizon (frozen star appearance).
+ */
+export function coordinateFallSpeed(omega: number): number {
+  const gamma = gammaOmega(omega);
+  const ratio = 2 * gamma / (1 + gamma);
+  if (ratio >= 1.0) return 0;
+  return Math.sqrt(ratio) * (1 - ratio);
+}
+
+/**
+ * Eddington luminosity analog.
+ * L_Edd ~ M ~ |κ|. The maximum luminosity before radiation pressure
+ * halts accretion. Systems above L_Edd are "super-Eddington."
+ */
+export function eddingtonLuminosity(kappa: number): number {
+  return 4 * Math.PI * Math.abs(kappa);
+}
+
+/**
+ * Radiative efficiency: fraction of rest mass converted to radiation
+ * as matter falls from ISCO to the horizon.
+ * η_Schw ~= 0.057 (6%), η_Kerr(a*=1) ~= 0.42 (42%).
+ * GCD: η = 1 - sqrt(1 - 2Γ(ω_ISCO)/(1+Γ(ω_ISCO))) * (1 - penrose_boost)
+ */
+export function radiativeEfficiency(spinStar: number = 0): number {
+  const gamma = gammaOmega(OMEGA_ISCO);
+  const ratio = 2 * gamma / (1 + gamma);
+  const base = ratio >= 1.0 ? 1.0 : 1 - Math.sqrt(1 - ratio);
+  const penroseBoost = penroseEfficiency(spinStar) * 0.5;
+  return Math.min(base + penroseBoost, 0.42); // capped at Kerr maximum
+}
+
+/* --- Black Hole Entities ----------------------------------------- */
 
 export interface SpacetimeEntity {
   name: string;
@@ -229,7 +462,7 @@ export const BLACK_HOLE_ENTITIES: SpacetimeEntity[] = [
     symbol: 'BH',
     c: [0.99, 0.50, 0.99, 0.99, 0.60, 0.10, 0.95, 0.40],
     w: Array(8).fill(0.125),
-    description: '~3–20 M☉. Endpoint of massive star collapse. One channel (c[5]=0.10) near floor — the information channel collapses at the horizon.',
+    description: '~3-20 M(Sun). Endpoint of massive star collapse. One channel (c[5]=0.10) near floor -- the information channel collapses at the horizon.',
     grAnalog: 'Schwarzschild solution (non-rotating, uncharged)',
   },
   {
@@ -237,23 +470,23 @@ export const BLACK_HOLE_ENTITIES: SpacetimeEntity[] = [
     symbol: 'EH',
     c: [0.10, 0.02, 0.08, 0.02, 0.05, 0.05, 0.45, 0.65],
     w: Array(8).fill(0.125),
-    description: 'The surface of no return. Almost all channels near floor — maximum drift, minimum fidelity. The pole Γ(ω→1)→∞ lives here.',
-    grAnalog: 'r = 2GM/c² (Schwarzschild radius)',
+    description: 'The surface of no return. Almost all channels near floor -- maximum drift, minimum fidelity. The pole Γ(ω->1)->inf lives here.',
+    grAnalog: 'r = 2GM/c^2 (Schwarzschild radius)',
   },
   {
     name: 'Photon Sphere',
     symbol: 'PS',
     c: [0.30, 0.15, 0.25, 0.12, 0.25, 0.20, 0.55, 0.70],
     w: Array(8).fill(0.125),
-    description: 'r = 3GM/c². Light orbits but is unstable. Intermediate collapse — all channels depressed but not at floor.',
-    grAnalog: 'r = 1.5 × Schwarzschild radius',
+    description: 'r = 3GM/c^2. Light orbits but is unstable. Intermediate collapse -- all channels depressed but not at floor.',
+    grAnalog: 'r = 1.5 * Schwarzschild radius',
   },
   {
     name: 'Binary BH Merger',
     symbol: 'BBH',
     c: [0.95, 0.85, 0.90, 0.80, 0.90, 0.70, 0.95, 0.95],
     w: Array(8).fill(0.125),
-    description: 'Pre-merger inspiral. High coherence — the gravitational wave signal carries nearly intact information. IC high.',
+    description: 'Pre-merger inspiral. High coherence -- the gravitational wave signal carries nearly intact information. IC high.',
     grAnalog: 'LIGO/Virgo inspiral-merger-ringdown',
   },
   {
@@ -261,7 +494,7 @@ export const BLACK_HOLE_ENTITIES: SpacetimeEntity[] = [
     symbol: 'AD',
     c: [0.75, 0.60, 0.70, 0.50, 0.65, 0.40, 0.80, 0.55],
     w: Array(8).fill(0.125),
-    description: 'Matter spiraling inward. Intermediate fidelity — energy extracted but structure partially preserved. Watch regime typical.',
+    description: 'Matter spiraling inward. Intermediate fidelity -- energy extracted but structure partially preserved. Watch regime typical.',
     grAnalog: 'Shakura-Sunyaev thin disk / ADAF',
   },
   {
@@ -269,7 +502,7 @@ export const BLACK_HOLE_ENTITIES: SpacetimeEntity[] = [
     symbol: 'NHL',
     c: [0.20, 0.30, 0.10, 0.25, 0.15, 0.12, 0.90, 0.15],
     w: Array(8).fill(0.125),
-    description: 'Causal loop at the stretched horizon. Most channels near floor, but c[6]=0.90 — the circulation channel persists even at the boundary.',
+    description: 'Causal loop at the stretched horizon. Most channels near floor, but c[6]=0.90 -- the circulation channel persists even at the boundary.',
     grAnalog: 'Stretched horizon / membrane paradigm',
   },
   {
@@ -277,7 +510,7 @@ export const BLACK_HOLE_ENTITIES: SpacetimeEntity[] = [
     symbol: 'KBH',
     c: [0.95, 0.85, 0.95, 0.90, 0.70, 0.12, 0.98, 0.80],
     w: Array(8).fill(0.125),
-    description: 'Rotating BH (a* ≈ 0.998). Frame-dragging creates the ergosphere. Angular momentum channel elevated; information channel still collapses.',
+    description: 'Rotating BH (a* ~= 0.998). Frame-dragging creates the ergosphere. Angular momentum channel elevated; information channel still collapses.',
     grAnalog: 'Kerr solution (rotating, uncharged)',
   },
   {
@@ -285,7 +518,7 @@ export const BLACK_HOLE_ENTITIES: SpacetimeEntity[] = [
     symbol: 'SgrA*',
     c: [0.992, 0.20, 0.985, 0.995, 0.80, 0.03, 0.99, 0.15],
     w: Array(8).fill(0.125),
-    description: '4.15 × 10⁶ M☉ supermassive BH at Milky Way center. Extreme mass but nearly all information lost. Deep well, very low IC.',
+    description: '4.15 * 10^6 M(Sun) supermassive BH at Milky Way center. Extreme mass but nearly all information lost. Deep well, very low IC.',
     grAnalog: 'Supermassive BH (EHT 2022 shadow image)',
   },
   {
@@ -295,5 +528,37 @@ export const BLACK_HOLE_ENTITIES: SpacetimeEntity[] = [
     w: Array(8).fill(0.125),
     description: 'Innermost Stable Circular Orbit. The boundary between stable orbits and plunging trajectories. Matter crossing ISCO spirals into the horizon.',
     grAnalog: 'r = 6M (Schwarzschild) / r = M (extremal Kerr)',
+  },
+  {
+    name: 'Ergosphere',
+    symbol: 'ERGO',
+    c: [0.42, 0.55, 0.38, 0.60, 0.85, 0.08, 0.92, 0.75],
+    w: Array(8).fill(0.125),
+    description: 'Region between static limit and event horizon of a Kerr BH. Frame-dragging forces all matter to co-rotate. Penrose process extracts energy here -- the angular momentum channel (c[4]=0.85) remains elevated.',
+    grAnalog: 'Kerr ergosphere (r_+ < r < r_ergo)',
+  },
+  {
+    name: 'Primordial Black Hole',
+    symbol: 'PBH',
+    c: [0.70, 0.60, 0.65, 0.55, 0.30, 0.50, 0.40, 0.80],
+    w: Array(8).fill(0.125),
+    description: '~10^1^5 g. Formed in early universe density fluctuations. Small mass -> high Hawking temperature -> actively evaporating. Information channel (c[5]=0.50) partially preserved -- possible dark matter candidate.',
+    grAnalog: 'Planck-mass remnant / microscopic BH',
+  },
+  {
+    name: 'Intermediate-Mass BH',
+    symbol: 'IMBH',
+    c: [0.97, 0.45, 0.96, 0.92, 0.65, 0.07, 0.97, 0.35],
+    w: Array(8).fill(0.125),
+    description: '~10^2-10^5 M(Sun). Elusive mass gap between stellar and supermassive. Possibly formed from runaway stellar mergers in dense clusters. Deep well but moderate IC -- bridging two regimes.',
+    grAnalog: 'Possible seeds of supermassive BHs',
+  },
+  {
+    name: 'Reissner-Nordstrom BH',
+    symbol: 'RNBH',
+    c: [0.88, 0.70, 0.92, 0.85, 0.10, 0.15, 0.85, 0.50],
+    w: Array(8).fill(0.125),
+    description: 'Charged, non-rotating BH. Two horizons: outer r_+ and inner Cauchy r_-. The charge channel (c[4]=0.10) is near floor -- EM self-energy collapses. IC severely reduced by charge-mass coupling.',
+    grAnalog: 'Reissner-Nordstrom metric (Q != 0, J = 0)',
   },
 ];

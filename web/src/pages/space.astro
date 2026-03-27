@@ -1,6 +1,6 @@
 ---
 /**
- * Space Simulator — Immersive ESA-style Black Hole Environment
+ * Space Simulator -- Immersive ESA-style Black Hole Environment
  *
  * Full-viewport WebGL space simulation with:
  *   - Gravitational lensing of background starfield
@@ -20,9 +20,9 @@ const base = import.meta.env.BASE_URL;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="ESA-style immersive 3D black hole space simulator powered by GCD kernel physics — gravitational lensing, accretion disk, photon ring, and real-time kernel readouts." />
+    <meta name="description" content="ESA-style immersive 3D black hole space simulator powered by GCD kernel physics -- gravitational lensing, accretion disk, photon ring, and real-time kernel readouts." />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-    <title>Space Simulator — GCD Kernel</title>
+    <title>Space Simulator -- GCD Kernel</title>
 
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +38,7 @@ const base = import.meta.env.BASE_URL;
       }
       #sim-canvas:active { cursor: grabbing; }
 
-      /* ── HUD Overlay ── */
+      /* -- HUD Overlay -- */
       .hud {
         position: fixed;
         z-index: 10;
@@ -106,7 +106,7 @@ const base = import.meta.env.BASE_URL;
       .regime-watch { color: #fcd34d; }
       .regime-collapse { color: #fca5a5; }
 
-      /* ── Controls Overlay ── */
+      /* -- Controls Overlay -- */
       #controls-overlay {
         position: fixed;
         z-index: 20;
@@ -147,7 +147,7 @@ const base = import.meta.env.BASE_URL;
         font-weight: 600;
       }
 
-      /* ── Top bar ── */
+      /* -- Top bar -- */
       #top-bar {
         position: fixed;
         top: 0;
@@ -180,7 +180,7 @@ const base = import.meta.env.BASE_URL;
         letter-spacing: 1px;
       }
 
-      /* ── Crosshair ── */
+      /* -- Crosshair -- */
       #crosshair {
         position: fixed;
         top: 50%;
@@ -212,7 +212,7 @@ const base = import.meta.env.BASE_URL;
         transform: translateX(-50%);
       }
 
-      /* ── Regime indicator bar ── */
+      /* -- Regime indicator bar -- */
       #regime-bar {
         position: fixed;
         bottom: 0;
@@ -223,7 +223,7 @@ const base = import.meta.env.BASE_URL;
         transition: background-color 0.5s;
       }
 
-      /* ── Responsive ── */
+      /* -- Responsive -- */
       @media (max-width: 640px) {
         .hud { font-size: 10px; }
         .hud-value { font-size: 14px; }
@@ -235,9 +235,9 @@ const base = import.meta.env.BASE_URL;
   <body>
     <!-- Top navigation bar -->
     <div id="top-bar">
-      <a href={base}>← GCD·Kernel</a>
+      <a href={base}><- GCD*Kernel</a>
       <span class="top-title">SPACE SIMULATOR</span>
-      <a href={`${base}blackhole/`}>Black Hole →</a>
+      <a href={`${base}blackhole/`}>Black Hole -></a>
     </div>
 
     <!-- Main WebGL canvas -->
@@ -246,71 +246,110 @@ const base = import.meta.env.BASE_URL;
     <!-- Crosshair reticle -->
     <div id="crosshair"></div>
 
-    <!-- HUD: Left panel — Kernel invariants -->
+    <!-- HUD: Left panel -- Kernel invariants -->
     <div id="hud-left" class="hud">
       <div class="hud-panel">
         <div class="hud-title">GCD Kernel</div>
         <div>
           <span class="hud-label">F&nbsp;&nbsp;</span>
-          <span id="hud-F" class="hud-value">—</span>
+          <span id="hud-F" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">ω&nbsp;&nbsp;</span>
-          <span id="hud-omega" class="hud-value">—</span>
+          <span id="hud-omega" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">IC </span>
-          <span id="hud-IC" class="hud-value">—</span>
+          <span id="hud-IC" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">κ&nbsp;&nbsp;</span>
-          <span id="hud-kappa" class="hud-value">—</span>
+          <span id="hud-kappa" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">S&nbsp;&nbsp;</span>
-          <span id="hud-S" class="hud-value">—</span>
+          <span id="hud-S" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">Δ&nbsp;&nbsp;</span>
-          <span id="hud-delta" class="hud-value">—</span>
+          <span id="hud-delta" class="hud-value">--</span>
         </div>
       </div>
     </div>
 
-    <!-- HUD: Right panel — Physics readouts -->
+    <!-- HUD: Right panel -- Physics readouts -->
     <div id="hud-right" class="hud">
       <div class="hud-panel">
         <div class="hud-title">Physics</div>
         <div>
           <span class="hud-label">Γ(ω)&nbsp;&nbsp;</span>
-          <span id="hud-gamma" class="hud-value">—</span>
+          <span id="hud-gamma" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">z&nbsp;&nbsp;</span>
-          <span id="hud-redshift" class="hud-value">—</span>
+          <span id="hud-redshift" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">v_esc&nbsp;&nbsp;</span>
-          <span id="hud-vesc" class="hud-value">—</span>
+          <span id="hud-vesc" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">T_H&nbsp;&nbsp;</span>
-          <span id="hud-hawking" class="hud-value">—</span>
+          <span id="hud-hawking" class="hud-value">--</span>
         </div>
         <div>
           <span class="hud-label">dist&nbsp;&nbsp;</span>
-          <span id="hud-dist" class="hud-value">—</span>
+          <span id="hud-dist" class="hud-value">--</span>
+        </div>
+        <div style="margin-top: 6px; border-top: 1px solid rgba(16,185,129,0.2); padding-top: 4px;">
+          <div class="hud-title" style="font-size: 9px; opacity: 0.6;">Kerr Physics</div>
+        </div>
+        <div>
+          <span class="hud-label">a*&nbsp;&nbsp;</span>
+          <span id="hud-spin" class="hud-value">--</span>
+        </div>
+        <div>
+          <span class="hud-label">ω_drag&nbsp;&nbsp;</span>
+          <span id="hud-drag" class="hud-value">--</span>
+        </div>
+        <div>
+          <span class="hud-label">η_P&nbsp;&nbsp;</span>
+          <span id="hud-penrose" class="hud-value">--</span>
+        </div>
+        <div>
+          <span class="hud-label">dτ/dt&nbsp;&nbsp;</span>
+          <span id="hud-time" class="hud-value">--</span>
+        </div>
+        <div>
+          <span class="hud-label">S_BH&nbsp;&nbsp;</span>
+          <span id="hud-entropy" class="hud-value">--</span>
+        </div>
+        <div>
+          <span class="hud-label">δφ&nbsp;&nbsp;</span>
+          <span id="hud-prec" class="hud-value">--</span>
+        </div>
+        <div>
+          <span class="hud-label">h_GW&nbsp;&nbsp;</span>
+          <span id="hud-gw" class="hud-value">--</span>
+        </div>
+        <div>
+          <span class="hud-label">κ_s&nbsp;&nbsp;</span>
+          <span id="hud-surfg" class="hud-value">--</span>
+        </div>
+        <div>
+          <span class="hud-label">η_rad&nbsp;&nbsp;</span>
+          <span id="hud-radeff" class="hud-value">--</span>
         </div>
       </div>
     </div>
 
-    <!-- HUD: Bottom bar — Regime + status -->
+    <!-- HUD: Bottom bar -- Regime + status -->
     <div id="hud-bottom" class="hud">
       <div class="hud-panel" style="padding: 6px 20px;">
         <span class="hud-label">REGIME:&nbsp;</span>
-        <span id="hud-regime" class="hud-value" style="font-size: 14px;">—</span>
+        <span id="hud-regime" class="hud-value" style="font-size: 14px;">--</span>
         <span style="margin: 0 12px; opacity: 0.3;">|</span>
-        <span class="hud-label">Drag to orbit&nbsp;&nbsp;·&nbsp;&nbsp;Scroll to zoom&nbsp;&nbsp;·&nbsp;&nbsp;Dbl-click to reset</span>
+        <span class="hud-label">Drag to orbit&nbsp;&nbsp;*&nbsp;&nbsp;Scroll to zoom&nbsp;&nbsp;*&nbsp;&nbsp;Dbl-click to reset</span>
       </div>
     </div>
 
@@ -319,7 +358,7 @@ const base = import.meta.env.BASE_URL;
 
     <!-- Controls guide (fades away) -->
     <div id="controls-overlay">
-      <div class="controls-title">⊕ Controls</div>
+      <div class="controls-title">(+) Controls</div>
       <div class="controls-grid">
         <span class="controls-key">Mouse drag</span><span>Orbit camera</span>
         <span class="controls-key">Scroll wheel</span><span>Zoom in/out</span>
@@ -334,21 +373,33 @@ const base = import.meta.env.BASE_URL;
       import { initSpaceSim } from '../lib/webgl-space-sim';
       import type { HUDData } from '../lib/webgl-space-sim';
 
-      // ── Init WebGL space simulator ──
+      // -- Init WebGL space simulator --
       const canvas = document.getElementById('sim-canvas') as HTMLCanvasElement;
 
-      // HUD element refs
+      // HUD element refs -- kernel
       const elF = document.getElementById('hud-F')!;
       const elOmega = document.getElementById('hud-omega')!;
       const elIC = document.getElementById('hud-IC')!;
       const elKappa = document.getElementById('hud-kappa')!;
       const elS = document.getElementById('hud-S')!;
       const elDelta = document.getElementById('hud-delta')!;
+      // HUD element refs -- basic physics
       const elGamma = document.getElementById('hud-gamma')!;
       const elRedshift = document.getElementById('hud-redshift')!;
       const elVesc = document.getElementById('hud-vesc')!;
       const elHawking = document.getElementById('hud-hawking')!;
       const elDist = document.getElementById('hud-dist')!;
+      // HUD element refs -- Kerr physics
+      const elSpin = document.getElementById('hud-spin')!;
+      const elDrag = document.getElementById('hud-drag')!;
+      const elPenrose = document.getElementById('hud-penrose')!;
+      const elTime = document.getElementById('hud-time')!;
+      const elEntropy = document.getElementById('hud-entropy')!;
+      const elPrec = document.getElementById('hud-prec')!;
+      const elGW = document.getElementById('hud-gw')!;
+      const elSurfG = document.getElementById('hud-surfg')!;
+      const elRadEff = document.getElementById('hud-radeff')!;
+      // HUD element refs -- regime
       const elRegime = document.getElementById('hud-regime')!;
       const regimeBar = document.getElementById('regime-bar')!;
 
@@ -360,17 +411,29 @@ const base = import.meta.env.BASE_URL;
         if (now - lastHUDUpdate < 66) return; // ~15fps
         lastHUDUpdate = now;
 
+        // Kernel invariants
         elF.textContent = data.F.toFixed(4);
         elOmega.textContent = data.omega.toFixed(4);
         elIC.textContent = data.IC.toFixed(4);
         elKappa.textContent = data.kappa.toFixed(4);
         elS.textContent = data.S.toFixed(4);
         elDelta.textContent = data.delta.toFixed(4);
+        // Basic physics
         elGamma.textContent = data.gamma.toFixed(3);
         elRedshift.textContent = data.redshift.toFixed(4);
         elVesc.textContent = data.escapeV.toFixed(4) + ' c';
         elHawking.textContent = data.hawkingT.toFixed(6);
         elDist.textContent = data.distance.toFixed(1) + ' r_s';
+        // Kerr physics
+        elSpin.textContent = data.spinStar.toFixed(3);
+        elDrag.textContent = data.frameDrag.toFixed(4);
+        elPenrose.textContent = (data.penroseEff * 100).toFixed(1) + '%';
+        elTime.textContent = data.timeFactor.toFixed(4);
+        elEntropy.textContent = data.entropy.toFixed(3);
+        elPrec.textContent = data.precession.toFixed(4) + ' rad';
+        elGW.textContent = data.gwStrainVal.toExponential(2);
+        elSurfG.textContent = data.surfGravity.toFixed(4);
+        elRadEff.textContent = (data.radEfficiency * 100).toFixed(1) + '%';
 
         // Regime coloring
         const regime = data.regime.split(' ')[0];
@@ -387,7 +450,7 @@ const base = import.meta.env.BASE_URL;
 
       const sim = initSpaceSim(canvas, updateHUD);
 
-      // ── Controls overlay auto-dismiss ──
+      // -- Controls overlay auto-dismiss --
       const controlsOverlay = document.getElementById('controls-overlay')!;
       let controlsTimer = setTimeout(() => controlsOverlay.classList.add('hidden'), 6000);
       canvas.addEventListener('mousedown', () => {

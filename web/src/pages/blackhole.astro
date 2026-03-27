@@ -1,12 +1,12 @@
 ---
 /**
- * Black Hole Simulation — GCD Gravitational Analogs
+ * Black Hole Simulation -- GCD Gravitational Analogs
  *
  * Maps GCD kernel invariants to black hole physics:
- *   Event horizon  = ω → 1 pole (Γ → ∞)
+ *   Event horizon  = ω -> 1 pole (Γ -> inf)
  *   Gravity        = dΓ/dω (gradient of drift cost)
  *   Mass           = accumulated |κ| (well depth)
- *   Tidal force    = d²Γ/dω² (curvature of cost surface)
+ *   Tidal force    = d^2Γ/dω^2 (curvature of cost surface)
  *   Lensing        = deflection from heterogeneity gap Δ
  *   Time dilation  = descent/ascent cost asymmetry
  *
@@ -16,7 +16,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL;
 ---
 
-<BaseLayout title="Black Hole Simulation — GCD">
+<BaseLayout title="Black Hole Simulation -- GCD">
   <div class="max-w-6xl mx-auto">
     <!-- Header -->
     <div class="mb-6">
@@ -24,22 +24,22 @@ const base = import.meta.env.BASE_URL;
         Black Hole Simulation
       </h1>
       <p class="text-kernel-400 max-w-3xl">
-        A black hole in GCD is the <strong class="text-red-400">Γ(ω→1) pole</strong> — the point where drift cost diverges
+        A black hole in GCD is the <strong class="text-red-400">Γ(ω->1) pole</strong> -- the point where drift cost diverges
         and return becomes impossible. The event horizon is not imported from general relativity; it is
-        <em>derived independently</em> as the structural boundary where τ_R = ∞_rec.
+        <em>derived independently</em> as the structural boundary where τ_R = inf_rec.
       </p>
       <p class="text-kernel-500 italic text-sm mt-2">
-        Collapsus generativus est; solum quod redit, reale est. — At the horizon, nothing returns.
+        Collapsus generativus est; solum quod redit, reale est. -- At the horizon, nothing returns.
       </p>
       <a href={`${base}space/`}
          class="inline-block mt-3 px-4 py-2 bg-blue-900/50 border border-blue-700/50 rounded-lg text-blue-300 text-sm hover:bg-blue-800/50 hover:border-blue-600 transition">
-        🌌 Launch Immersive Space Simulator →
+         Launch Immersive Space Simulator ->
       </a>
     </div>
 
-    <!-- GR↔GCD Translation Table -->
+    <!-- GR<->GCD Translation Table -->
     <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-5 mb-6">
-      <h2 class="text-lg font-bold text-kernel-200 mb-3">GR ↔ GCD Translation</h2>
+      <h2 class="text-lg font-bold text-kernel-200 mb-3">GR <-> GCD Translation</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
           <thead>
@@ -50,16 +50,24 @@ const base = import.meta.env.BASE_URL;
             </tr>
           </thead>
           <tbody class="text-kernel-300 font-mono text-xs">
-            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Event Horizon</td><td class="pr-4 py-2">ω → 1 pole</td><td class="py-2">Γ(ω) = ω³/(1−ω+ε) → ∞</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Event Horizon</td><td class="pr-4 py-2">ω -> 1 pole</td><td class="py-2">Γ(ω) = ω^3/(1-ω+ε) -> inf</td></tr>
             <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Gravitational Field</td><td class="pr-4 py-2">dΓ/dω</td><td class="py-2">Gradient of drift cost</td></tr>
             <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Mass</td><td class="pr-4 py-2">|κ| well depth</td><td class="py-2">Accumulated log-integrity</td></tr>
-            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Tidal Force</td><td class="pr-4 py-2">d²Γ/dω²</td><td class="py-2">Cost curvature (spaghettification)</td></tr>
-            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Gravitational Lensing</td><td class="pr-4 py-2">Δ = F − IC</td><td class="py-2">Heterogeneity gap deflects trajectories</td></tr>
-            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Time Dilation</td><td class="pr-4 py-2">Ascent/descent asymmetry</td><td class="py-2">Cost(ascent) / Cost(descent) → ∞ near horizon</td></tr>
-            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Hawking Temperature</td><td class="pr-4 py-2">T_H = 1/(8π|κ|)</td><td class="py-2">Inverse well depth — shallow wells radiate hotter</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Tidal Force</td><td class="pr-4 py-2">d^2Γ/dω^2</td><td class="py-2">Cost curvature (spaghettification)</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Gravitational Lensing</td><td class="pr-4 py-2">Δ = F - IC</td><td class="py-2">Heterogeneity gap deflects trajectories</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Time Dilation</td><td class="pr-4 py-2">Ascent/descent asymmetry</td><td class="py-2">Cost(ascent) / Cost(descent) -> inf near horizon</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Hawking Temperature</td><td class="pr-4 py-2">T_H = 1/(8pi|κ|)</td><td class="py-2">Inverse well depth -- shallow wells radiate hotter</td></tr>
             <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Gravitational Redshift</td><td class="pr-4 py-2">z = Γ/(1+Γ)</td><td class="py-2">Photon energy loss escaping the well</td></tr>
-            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">ISCO</td><td class="pr-4 py-2">ω ≈ 0.50</td><td class="py-2">Innermost stable circular orbit — tidal destabilization</td></tr>
-            <tr><td class="pr-4 py-2 text-kernel-400 font-sans">Photon Sphere</td><td class="pr-4 py-2">ω ≈ 0.65</td><td class="py-2">Unstable circular photon orbits</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">ISCO</td><td class="pr-4 py-2">ω ~= 0.50</td><td class="py-2">Innermost stable circular orbit -- tidal destabilization</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Photon Sphere</td><td class="pr-4 py-2">ω ~= 0.65</td><td class="py-2">Unstable circular photon orbits</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Frame-Dragging</td><td class="pr-4 py-2">ω_drag(ω, a*)</td><td class="py-2">Lense-Thirring: ω*a**(1-ω^2)^{-3/2}</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Ergosphere</td><td class="pr-4 py-2">ω > ω_ergo</td><td class="py-2">Region where frame-dragging exceeds orbit speed</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Penrose Process</td><td class="pr-4 py-2">η_P(a*)</td><td class="py-2">Energy extraction: 1 - sqrt(1 - (a*/2)^2)</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">BH Entropy</td><td class="pr-4 py-2">S_BH = κ^2/(4pi)</td><td class="py-2">Bekenstein analog from log-integrity squared</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Orbital Precession</td><td class="pr-4 py-2">δφ(ω)</td><td class="py-2">6piω^2/(1-ω)^2 -- perihelion advance near well</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">GW Strain</td><td class="pr-4 py-2">h(ω,C,d)</td><td class="py-2">4ω^2C/(d+ε) -- quadrupole radiation</td></tr>
+            <tr class="border-b border-kernel-800"><td class="pr-4 py-2 text-kernel-400 font-sans">Time Dilation</td><td class="pr-4 py-2">dτ/dt</td><td class="py-2">sqrt(1 - ω) -- proper time slowdown near horizon</td></tr>
+            <tr><td class="pr-4 py-2 text-kernel-400 font-sans">Radiative Efficiency</td><td class="pr-4 py-2">η_rad(a*)</td><td class="py-2">1 - sqrt(1 - 2/(3r_ISCO)) -- accretion luminosity</td></tr>
           </tbody>
         </table>
       </div>
@@ -69,22 +77,22 @@ const base = import.meta.env.BASE_URL;
     <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6">
       <h2 class="text-lg font-bold text-kernel-200 mb-2">3D Gravity Well</h2>
       <p class="text-xs text-kernel-500 mb-4">
-        The budget surface Γ(ω) rendered as a 3D funnel. The event horizon (ω → 1) plunges
-        to the center — where cost diverges and τ_R = ∞_rec. The bright band is the accretion
+        The budget surface Γ(ω) rendered as a 3D funnel. The event horizon (ω -> 1) plunges
+        to the center -- where cost diverges and τ_R = inf_rec. The bright band is the accretion
         disk. Orbiting particles spiral inward following Kepler-like trajectories.
-        <strong class="text-kernel-400">Drag to rotate · Scroll to zoom · Double-click to reset</strong>
+        <strong class="text-kernel-400">Drag to rotate * Scroll to zoom * Double-click to reset</strong>
       </p>
       <div class="relative">
         <canvas id="gl-canvas" class="w-full rounded" style="height: 520px; cursor: grab;"></canvas>
         <div class="absolute top-3 left-3 flex flex-col gap-1">
           <div class="text-[10px] text-kernel-500 bg-kernel-900/85 px-2 py-1 rounded border border-kernel-800">
-            <span class="text-teal-400">●</span> Stable &nbsp;
-            <span class="text-amber-400">●</span> Watch &nbsp;
-            <span class="text-red-400">●</span> Collapse
+            <span class="text-teal-400">*</span> Stable &nbsp;
+            <span class="text-amber-400">*</span> Watch &nbsp;
+            <span class="text-red-400">*</span> Collapse
           </div>
         </div>
         <div class="absolute bottom-3 right-3 text-[10px] text-kernel-600 bg-kernel-900/85 px-2 py-1 rounded border border-kernel-800">
-          WebGL · 64×96 mesh · 180 particles · 300 stars
+          WebGL * 64*96 mesh * 180 particles * 300 stars
         </div>
       </div>
     </div>
@@ -99,7 +107,7 @@ const base = import.meta.env.BASE_URL;
 
       <div class="flex flex-wrap items-center gap-4 mb-4">
         <div class="flex-1 min-w-[200px]">
-          <label class="text-xs text-kernel-400 block mb-1">ω (Radial Position → Horizon)</label>
+          <label class="text-xs text-kernel-400 block mb-1">ω (Radial Position -> Horizon)</label>
           <input id="infall-omega" type="range" min="0" max="0.995" step="0.001" value="0.10" class="w-full accent-red-500" />
           <div class="flex justify-between text-[10px] text-kernel-600 mt-1">
             <span>Safe (ω=0)</span>
@@ -129,9 +137,9 @@ const base = import.meta.env.BASE_URL;
     <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6">
       <h2 class="text-lg font-bold text-kernel-200 mb-2">Budget Surface</h2>
       <p class="text-xs text-kernel-500 mb-4">
-        The full cost landscape over (ω, C). Height = Γ(ω) + α·C.
-        Entity positions are marked — objects deeper in the potential well have higher ω.
-        The dark ridge at ω → 1 is the event horizon.
+        The full cost landscape over (ω, C). Height = Γ(ω) + alpha*C.
+        Entity positions are marked -- objects deeper in the potential well have higher ω.
+        The dark ridge at ω -> 1 is the event horizon.
       </p>
       <div class="flex flex-col md:flex-row gap-4 items-start">
         <div class="relative">
@@ -160,7 +168,7 @@ const base = import.meta.env.BASE_URL;
       <h2 class="text-lg font-bold text-kernel-200 mb-2">Entity Kernel Comparison</h2>
       <p class="text-xs text-kernel-500 mb-4">
         Each spacetime entity through the GCD kernel. The trace vector becomes six invariants;
-        the invariants determine the regime. The heterogeneity gap Δ = F − IC is the lensing diagnostic.
+        the invariants determine the regime. The heterogeneity gap Δ = F - IC is the lensing diagnostic.
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="entity-cards"></div>
     </div>
@@ -170,8 +178,8 @@ const base = import.meta.env.BASE_URL;
       <h2 class="text-lg font-bold text-kernel-200 mb-2">Arrow of Time</h2>
       <p class="text-xs text-kernel-500 mb-4">
         Descent cost vs ascent cost as a function of depth. Near the horizon, escape cost
-        diverges relative to infall cost — this IS time dilation in GCD. The asymmetry ratio
-        grows without bound as ω → 1.
+        diverges relative to infall cost -- this IS time dilation in GCD. The asymmetry ratio
+        grows without bound as ω -> 1.
       </p>
       <div class="relative">
         <canvas id="arrow-canvas" style="max-width: 720px; height: 280px; width: 100%;"></canvas>
@@ -180,9 +188,9 @@ const base = import.meta.env.BASE_URL;
 
     <!-- Tidal Force -->
     <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6">
-      <h2 class="text-lg font-bold text-kernel-200 mb-2">Tidal Force (d²Γ/dω²)</h2>
+      <h2 class="text-lg font-bold text-kernel-200 mb-2">Tidal Force (d^2Γ/dω^2)</h2>
       <p class="text-xs text-kernel-500 mb-4">
-        The second derivative of Γ(ω) measures the rate of change of the gravitational field —
+        The second derivative of Γ(ω) measures the rate of change of the gravitational field --
         the "spaghettification" diagnostic. Tidal force is small far from the horizon and
         catastrophic near it.
       </p>
@@ -195,14 +203,76 @@ const base = import.meta.env.BASE_URL;
     <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
       <h2 class="text-lg font-bold text-kernel-200 mb-2">Gravitational Lensing</h2>
       <p class="text-xs text-kernel-500 mb-4">
-        The heterogeneity gap Δ = F − IC determines lensing morphology. Small Δ → Einstein ring.
-        Large Δ → weak distortion. The deflection angle θ = 4|κ|/(Δ+ε) mirrors Einstein's formula.
+        The heterogeneity gap Δ = F - IC determines lensing morphology. Small Δ -> Einstein ring.
+        Large Δ -> weak distortion. The deflection angle theta = 4|κ|/(Δ+ε) mirrors Einstein's formula.
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="relative">
           <canvas id="lensing-canvas" style="width: 100%; height: 420px;"></canvas>
         </div>
         <div id="lensing-info" class="space-y-3 text-xs"></div>
+      </div>
+    </div>
+
+    <!-- Frame-Dragging & Spin -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6">
+      <h2 class="text-lg font-bold text-kernel-200 mb-2">Frame-Dragging (Lense-Thirring)</h2>
+      <p class="text-xs text-kernel-500 mb-4">
+        A spinning black hole drags spacetime around it. In GCD, frame-dragging ω_drag = ω*a**(1-ω^2)^{-3/2}
+        diverges as ω -> 1 -- the ergosphere where dragging exceeds orbital velocity. At a* = 0 (Schwarzschild),
+        there is no dragging; at a* -> 1 (extremal Kerr), the ergosphere fills the space.
+      </p>
+      <div class="relative">
+        <canvas id="framedrag-canvas" style="max-width: 720px; height: 280px; width: 100%;"></canvas>
+      </div>
+    </div>
+
+    <!-- Penrose Process -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6">
+      <h2 class="text-lg font-bold text-kernel-200 mb-2">Penrose Process -- Energy Extraction</h2>
+      <p class="text-xs text-kernel-500 mb-4">
+        The Penrose process extracts rotational energy from a spinning black hole. In GCD,
+        efficiency η_P = 1 - sqrt(1 - (a*/2)^2). Maximum extraction at a* = 1 gives η_P ~= 13.4%.
+        Also shown: radiative efficiency η_rad from accretion onto the ISCO, which reaches ~42% for extremal spin.
+      </p>
+      <div class="relative">
+        <canvas id="penrose-canvas" style="max-width: 720px; height: 280px; width: 100%;"></canvas>
+      </div>
+    </div>
+
+    <!-- Proper Time Dilation -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6">
+      <h2 class="text-lg font-bold text-kernel-200 mb-2">Proper Time Dilation (dτ/dt)</h2>
+      <p class="text-xs text-kernel-500 mb-4">
+        The ratio of proper time to coordinate time: dτ/dt = sqrt(1-ω). As ω -> 1, clocks freeze and
+        time dilation becomes infinite. This is the GCD analog of gravitational time dilation at the
+        Schwarzschild radius. Also shown: BH entropy S_BH = κ^2/(4pi), the Bekenstein analog.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="relative">
+          <canvas id="timedilation-canvas" style="width: 100%; height: 280px;"></canvas>
+        </div>
+        <div class="relative">
+          <canvas id="entropy-canvas" style="width: 100%; height: 280px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orbital Precession & GW Strain -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
+      <h2 class="text-lg font-bold text-kernel-200 mb-2">Orbital Precession & Gravitational Waves</h2>
+      <p class="text-xs text-kernel-500 mb-4">
+        Orbital precession δφ = 6piω^2/(1-ω)^2 grows super-linearly near the horizon -- the GCD analog of
+        Mercury's perihelion advance. Gravitational wave strain h = 4ω^2C/(d+ε) from the inspiral radiates
+        the curvature channel as quadrupole waves.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="relative">
+          <canvas id="precession-canvas" style="width: 100%; height: 280px;"></canvas>
+        </div>
+        <div class="relative">
+          <canvas id="gwstrain-canvas" style="width: 100%; height: 280px;"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -216,14 +286,17 @@ const base = import.meta.env.BASE_URL;
     deflectionAngle, classifyLensing, descentCost, ascentCost,
     arrowAsymmetry, BLACK_HOLE_ENTITIES,
     hawkingTemperature, gravitationalRedshift, escapeVelocity,
+    frameDragging, penroseEfficiency, bhEntropy,
+    orbitalPrecession, gwStrain, surfaceGravity,
+    properTimeFactor, radiativeEfficiency,
     type SpacetimeEntity,
   } from '../lib/spacetime';
   import { initBlackHole3D } from '../lib/webgl-blackhole';
 
-  /* ─── Helpers ───────────────────────────────────────────────────── */
+  /* --- Helpers ----------------------------------------------------- */
 
   function fmtV(v: number): string {
-    if (!isFinite(v)) return '∞';
+    if (!isFinite(v)) return 'inf';
     const a = Math.abs(v);
     if (a >= 10000) return v.toExponential(2);
     if (a >= 100) return v.toFixed(1);
@@ -257,7 +330,7 @@ const base = import.meta.env.BASE_URL;
     return [canvas, ctx, w];
   }
 
-  /* ─── Entity Kernel Data ──────────────────────────────────────── */
+  /* --- Entity Kernel Data ---------------------------------------- */
 
   const entityData = BLACK_HOLE_ENTITIES.map(e => {
     const kr = computeKernel(e.c, e.w);
@@ -265,7 +338,7 @@ const base = import.meta.env.BASE_URL;
     return { entity: e, kernel: kr, regime: rg.regime, isCritical: rg.isCritical };
   });
 
-  /* ─── 1. Infall Simulator ─────────────────────────────────────── */
+  /* --- 1. Infall Simulator --------------------------------------- */
 
   function renderInfall() {
     const slider = document.getElementById('infall-omega') as HTMLInputElement;
@@ -285,15 +358,15 @@ const base = import.meta.env.BASE_URL;
 
     document.getElementById('infall-omega-val')!.textContent = omega.toFixed(3);
     const regimeEl = document.getElementById('infall-regime')!;
-    regimeEl.textContent = regime + (omega > 0.95 ? ' — NEAR HORIZON' : '');
+    regimeEl.textContent = regime + (omega > 0.95 ? ' -- NEAR HORIZON' : '');
     regimeEl.style.color = regimeColor(regime);
 
     // Metrics
     const metricsHtml = [
-      { label: 'Γ(ω) — Drift Cost', value: fmtV(gamma), color: '#ef4444' },
-      { label: 'dΓ/dω — Gravity', value: fmtV(dg), color: '#f97316' },
-      { label: 'd²Γ/dω² — Tidal', value: fmtV(d2g), color: '#a855f7' },
-      { label: 'Escape Ratio', value: fmtV(escapeRatio) + '×', color: '#60a5fa' },
+      { label: 'Γ(ω) -- Drift Cost', value: fmtV(gamma), color: '#ef4444' },
+      { label: 'dΓ/dω -- Gravity', value: fmtV(dg), color: '#f97316' },
+      { label: 'd^2Γ/dω^2 -- Tidal', value: fmtV(d2g), color: '#a855f7' },
+      { label: 'Escape Ratio', value: fmtV(escapeRatio) + '*', color: '#60a5fa' },
     ].map(m => `
       <div class="bg-kernel-800 border border-kernel-700 rounded p-3">
         <div class="text-[10px] text-kernel-500 mb-1">${m.label}</div>
@@ -351,7 +424,7 @@ const base = import.meta.env.BASE_URL;
     ctx.fillStyle = 'rgba(255,255,255,0.6)';
     ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('ω (Radial Position → Horizon)', m.left + plotW / 2, cssH - 4);
+    ctx.fillText('ω (Radial Position -> Horizon)', m.left + plotW / 2, cssH - 4);
     ctx.save(); ctx.translate(14, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
     ctx.fillText('Γ(ω)', 0, 0); ctx.restore();
 
@@ -489,7 +562,7 @@ const base = import.meta.env.BASE_URL;
     canvas.onmouseleave = () => { tooltip.className = 'hidden'; };
   }
 
-  /* ─── 2. Budget Surface Heatmap ───────────────────────────────── */
+  /* --- 2. Budget Surface Heatmap --------------------------------- */
 
   function renderSurface() {
     const [canvas, ctx, cssW] = setupCanvas('surface-canvas', 400, 400);
@@ -516,7 +589,7 @@ const base = import.meta.env.BASE_URL;
         const cost = budgetSurfaceHeight(om, cv);
         const t = Math.min(cost / maxCost, 1.0);
 
-        // Color: deep blue → teal → yellow → red
+        // Color: deep blue -> teal -> yellow -> red
         let r: number, g: number, b: number;
         if (t < 0.25) {
           const s = t / 0.25;
@@ -615,7 +688,7 @@ const base = import.meta.env.BASE_URL;
     legendEl.innerHTML = legendHtml;
   }
 
-  /* ─── 3. Entity Cards ─────────────────────────────────────────── */
+  /* --- 3. Entity Cards ------------------------------------------- */
 
   function renderEntityCards() {
     const container = document.getElementById('entity-cards')!;
@@ -640,7 +713,7 @@ const base = import.meta.env.BASE_URL;
             <div>
               <div class="text-sm font-bold text-kernel-200">${ed.entity.name}</div>
               <div class="text-[10px] ${regimeBg(ed.regime)} px-2 py-0.5 rounded inline-block border">
-                ${ed.regime}${ed.isCritical ? ' · CRITICAL' : ''}
+                ${ed.regime}${ed.isCritical ? ' * CRITICAL' : ''}
               </div>
             </div>
           </div>
@@ -666,7 +739,7 @@ const base = import.meta.env.BASE_URL;
           </div>
           <div class="mt-2 pt-2 border-t border-kernel-700 grid grid-cols-3 gap-1 text-[10px] text-center">
             <div><span class="text-kernel-500">Well</span><br/><span class="font-mono text-kernel-300">${wd.toFixed(2)}</span></div>
-            <div><span class="text-kernel-500">Defl</span><br/><span class="font-mono text-kernel-300">${fmtV(defl)}°</span></div>
+            <div><span class="text-kernel-500">Defl</span><br/><span class="font-mono text-kernel-300">${fmtV(defl)}deg</span></div>
             <div><span class="text-kernel-500">Lens</span><br/><span class="font-mono text-kernel-300">${lensingLabels[lensing]}</span></div>
           </div>
           <div class="mt-1 pt-1 border-t border-kernel-700 grid grid-cols-3 gap-1 text-[10px] text-center">
@@ -674,13 +747,23 @@ const base = import.meta.env.BASE_URL;
             <div><span class="text-kernel-500">z</span><br/><span class="font-mono text-kernel-300">${gravitationalRedshift(kr.omega).toFixed(4)}</span></div>
             <div><span class="text-kernel-500">v_esc</span><br/><span class="font-mono text-kernel-300">${escapeVelocity(kr.omega).toFixed(3)}c</span></div>
           </div>
+          <div class="mt-1 pt-1 border-t border-kernel-700 grid grid-cols-3 gap-1 text-[10px] text-center">
+            <div><span class="text-kernel-500">dτ/dt</span><br/><span class="font-mono text-kernel-300">${properTimeFactor(kr.omega).toFixed(4)}</span></div>
+            <div><span class="text-kernel-500">S_BH</span><br/><span class="font-mono text-kernel-300">${bhEntropy(kr.kappa).toFixed(3)}</span></div>
+            <div><span class="text-kernel-500">δφ</span><br/><span class="font-mono text-kernel-300">${fmtV(orbitalPrecession(kr.omega))}</span></div>
+          </div>
+          <div class="mt-1 pt-1 border-t border-kernel-700 grid grid-cols-3 gap-1 text-[10px] text-center">
+            <div><span class="text-kernel-500">κ_s</span><br/><span class="font-mono text-kernel-300">${surfaceGravity(kr.omega).toFixed(4)}</span></div>
+            <div><span class="text-kernel-500">η_P</span><br/><span class="font-mono text-kernel-300">${(penroseEfficiency(0.7) * 100).toFixed(1)}%</span></div>
+            <div><span class="text-kernel-500">ω_drag</span><br/><span class="font-mono text-kernel-300">${frameDragging(kr.omega, 0.7).toFixed(3)}</span></div>
+          </div>
           <div class="mt-1 text-[9px] text-kernel-600 font-mono">GR: ${ed.entity.grAnalog}</div>
         </div>`;
     }
     container.innerHTML = html;
   }
 
-  /* ─── 4. Arrow of Time Chart ──────────────────────────────────── */
+  /* --- 4. Arrow of Time Chart ------------------------------------ */
 
   function renderArrowChart() {
     const [canvas, ctx, cssW] = setupCanvas('arrow-canvas', 720, 280);
@@ -781,12 +864,12 @@ const base = import.meta.env.BASE_URL;
     ctx.textAlign = 'left';
     ctx.fillText('Ratio = 1: symmetric (no time dilation)', m.left + 5, mapY(1) - 5);
     ctx.fillStyle = 'rgba(96,165,250,0.7)';
-    ctx.fillText('Ratio → ∞: escape impossible', m.left + plotW * 0.6, m.top + 16);
+    ctx.fillText('Ratio -> inf: escape impossible', m.left + plotW * 0.6, m.top + 16);
 
     ctx.restore();
   }
 
-  /* ─── 5. Tidal Force Chart ────────────────────────────────────── */
+  /* --- 5. Tidal Force Chart -------------------------------------- */
 
   function renderTidalChart() {
     const [canvas, ctx, cssW] = setupCanvas('tidal-canvas', 720, 260);
@@ -842,7 +925,7 @@ const base = import.meta.env.BASE_URL;
     ctx.textAlign = 'center';
     ctx.fillText('ω', m.left + plotW / 2, cssH - 6);
     ctx.save(); ctx.translate(14, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
-    ctx.fillText('d²Γ/dω² (Tidal Force)', 0, 0); ctx.restore();
+    ctx.fillText('d^2Γ/dω^2 (Tidal Force)', 0, 0); ctx.restore();
 
     // Clip
     ctx.save();
@@ -877,12 +960,12 @@ const base = import.meta.env.BASE_URL;
     ctx.font = 'bold 10px ui-sans-serif, system-ui, sans-serif';
     ctx.fillStyle = 'rgba(168,85,247,0.6)';
     ctx.textAlign = 'right';
-    ctx.fillText('Spaghettification zone →', m.left + plotW - 10, m.top + 18);
+    ctx.fillText('Spaghettification zone ->', m.left + plotW - 10, m.top + 18);
 
     ctx.restore();
   }
 
-  /* ─── 6. Gravitational Lensing ────────────────────────────────── */
+  /* --- 6. Gravitational Lensing ---------------------------------- */
 
   function renderLensing() {
     const [canvas, ctx, cssW] = setupCanvas('lensing-canvas', 420, 420);
@@ -908,7 +991,7 @@ const base = import.meta.env.BASE_URL;
       ctx.fill();
     }
 
-    // Gravitational lensing distortion — background grid warped by BH
+    // Gravitational lensing distortion -- background grid warped by BH
     ctx.strokeStyle = 'rgba(100,140,255,0.06)';
     ctx.lineWidth = 0.5;
     const gridSize = 20;
@@ -939,7 +1022,7 @@ const base = import.meta.env.BASE_URL;
       ctx.stroke();
     }
 
-    // BH shadow — deep radial gradient
+    // BH shadow -- deep radial gradient
     const shadowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.5);
     shadowGrad.addColorStop(0, 'rgba(0,0,0,1)');
     shadowGrad.addColorStop(0.6, 'rgba(0,0,0,0.95)');
@@ -1000,7 +1083,7 @@ const base = import.meta.env.BASE_URL;
         ctx.stroke();
         ctx.globalAlpha = 1;
       } else if (morphology === 'thick_arc') {
-        // Arc ~ 270°
+        // Arc ~ 270deg
         const startAngle = -Math.PI * 0.75 + i * 0.4;
         ctx.beginPath();
         ctx.arc(cx, cy, ringR, startAngle, startAngle + Math.PI * 1.5);
@@ -1010,7 +1093,7 @@ const base = import.meta.env.BASE_URL;
         ctx.stroke();
         ctx.globalAlpha = 1;
       } else if (morphology === 'thin_arc') {
-        // Arc ~ 120°
+        // Arc ~ 120deg
         const startAngle = -Math.PI * 0.3 + i * 0.6;
         ctx.beginPath();
         ctx.arc(cx, cy, ringR, startAngle, startAngle + Math.PI * 0.67);
@@ -1020,7 +1103,7 @@ const base = import.meta.env.BASE_URL;
         ctx.stroke();
         ctx.globalAlpha = 1;
       } else {
-        // Distorted — small scattered dots
+        // Distorted -- small scattered dots
         for (let j = 0; j < 5; j++) {
           const angle = (j / 5) * Math.PI * 2 + i * 0.8;
           const jitter = (Math.random() - 0.5) * 15;
@@ -1043,10 +1126,10 @@ const base = import.meta.env.BASE_URL;
     // Lensing info panel
     const infoEl = document.getElementById('lensing-info')!;
     const lensingLabels: Record<string, string> = {
-      perfect_ring: 'Einstein Ring — nearly perfect symmetry',
-      thick_arc: 'Strong Arc — 270° lensing arc',
-      thin_arc: 'Thin Arc — partial deflection',
-      distorted: 'Weak Distortion — scattered images',
+      perfect_ring: 'Einstein Ring -- nearly perfect symmetry',
+      thick_arc: 'Strong Arc -- 270deg lensing arc',
+      thin_arc: 'Thin Arc -- partial deflection',
+      distorted: 'Weak Distortion -- scattered images',
     };
 
     let infoHtml = '<h3 class="text-sm font-bold text-kernel-300 mb-2">Lensing by Entity</h3>';
@@ -1066,7 +1149,7 @@ const base = import.meta.env.BASE_URL;
           <div class="text-kernel-500 grid grid-cols-3 gap-x-2 font-mono text-[10px]">
             <span>Δ = ${delta.toFixed(4)}</span>
             <span>|κ| = ${wd.toFixed(2)}</span>
-            <span>θ = ${fmtV(defl)}°</span>
+            <span>theta = ${fmtV(defl)}deg</span>
           </div>
           <div class="text-kernel-400 text-[10px] mt-1">${lensingLabels[morphology]}</div>
         </div>`;
@@ -1074,7 +1157,638 @@ const base = import.meta.env.BASE_URL;
     infoEl.innerHTML = infoHtml;
   }
 
-  /* ─── Initial Render + Event Binding ──────────────────────────── */
+  /* --- 7. Frame-Dragging Chart --------------------------------- */
+
+  function renderFrameDrag() {
+    const [canvas, ctx, cssW] = setupCanvas('framedrag-canvas', 720, 280);
+    const cssH = 280;
+    const m = { top: 24, right: 20, bottom: 48, left: 64 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    const spins = [0.3, 0.5, 0.7, 0.9, 0.998];
+    const spinColors = ['#60a5fa', '#34d399', '#fbbf24', '#f97316', '#ef4444'];
+    const yCap = 8;
+
+    const mapX = (w: number) => m.left + (w / 1.0) * plotW;
+    const mapY = (v: number) => m.top + (1 - Math.min(v, yCap) / yCap) * plotH;
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 10; i++) {
+      const x = m.left + (i / 10) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 10; i += 2) ctx.fillText((i / 10).toFixed(1), mapX(i / 10), m.top + plotH + 16);
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 4; i++) {
+      const val = yCap - (i / 4) * yCap;
+      ctx.fillText(val.toFixed(0), m.left - 5, m.top + (i / 4) * plotH + 4);
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ω', m.left + plotW / 2, cssH - 6);
+    ctx.save(); ctx.translate(14, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('ω_drag (Frame-Dragging)', 0, 0); ctx.restore();
+
+    // Clip
+    ctx.save();
+    ctx.beginPath(); ctx.rect(m.left, m.top, plotW, plotH); ctx.clip();
+
+    // Curves for each spin
+    spins.forEach((spin, si) => {
+      ctx.strokeStyle = spinColors[si];
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i < 600; i++) {
+        const om = (i / 599) * 0.95;
+        const fd = frameDragging(om, spin);
+        const px = mapX(om);
+        const py = mapY(fd);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Label at end
+      const labelOm = 0.85 - si * 0.06;
+      const labelFd = frameDragging(labelOm, spin);
+      if (labelFd < yCap) {
+        ctx.fillStyle = spinColors[si];
+        ctx.font = '9px ui-monospace, monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`a*=${spin}`, mapX(labelOm) + 4, mapY(labelFd) - 4);
+      }
+    });
+
+    // Entity markers at spin=0.7
+    for (const ed of entityData) {
+      const ew = ed.kernel.omega;
+      const fd = frameDragging(ew, 0.7);
+      if (ew < 0.95 && fd < yCap) {
+        ctx.beginPath();
+        ctx.arc(mapX(ew), mapY(fd), 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = regimeColor(ed.regime);
+        ctx.fill();
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  /* --- 8. Penrose Process Chart ---------------------------------- */
+
+  function renderPenrose() {
+    const [canvas, ctx, cssW] = setupCanvas('penrose-canvas', 720, 280);
+    const cssH = 280;
+    const m = { top: 24, right: 20, bottom: 48, left: 64 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    const yCap = 0.45;
+    const mapX = (s: number) => m.left + (s / 1.0) * plotW;
+    const mapY = (v: number) => m.top + (1 - Math.min(v, yCap) / yCap) * plotH;
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 10; i++) {
+      const x = m.left + (i / 10) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 10; i += 2) ctx.fillText((i / 10).toFixed(1), mapX(i / 10), m.top + plotH + 16);
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 4; i++) {
+      const val = (yCap - (i / 4) * yCap) * 100;
+      ctx.fillText(val.toFixed(0) + '%', m.left - 5, m.top + (i / 4) * plotH + 4);
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('a* (Spin Parameter)', m.left + plotW / 2, cssH - 6);
+    ctx.save(); ctx.translate(14, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Efficiency', 0, 0); ctx.restore();
+
+    // Clip
+    ctx.save();
+    ctx.beginPath(); ctx.rect(m.left, m.top, plotW, plotH); ctx.clip();
+
+    // Penrose efficiency
+    const gradP = ctx.createLinearGradient(0, m.top, 0, m.top + plotH);
+    gradP.addColorStop(0, 'rgba(236,72,153,0.12)');
+    gradP.addColorStop(1, 'rgba(236,72,153,0.01)');
+    ctx.fillStyle = gradP;
+    ctx.beginPath();
+    ctx.moveTo(mapX(0), mapY(0));
+    for (let i = 0; i < 500; i++) {
+      const spin = (i / 499) * 0.999;
+      ctx.lineTo(mapX(spin), mapY(penroseEfficiency(spin)));
+    }
+    ctx.lineTo(mapX(0.999), mapY(0));
+    ctx.closePath(); ctx.fill();
+
+    ctx.strokeStyle = '#ec4899';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < 500; i++) {
+      const spin = (i / 499) * 0.999;
+      const eff = penroseEfficiency(spin);
+      i === 0 ? ctx.moveTo(mapX(spin), mapY(eff)) : ctx.lineTo(mapX(spin), mapY(eff));
+    }
+    ctx.stroke();
+
+    // Radiative efficiency
+    const gradR = ctx.createLinearGradient(0, m.top, 0, m.top + plotH);
+    gradR.addColorStop(0, 'rgba(249,115,22,0.10)');
+    gradR.addColorStop(1, 'rgba(249,115,22,0.01)');
+    ctx.fillStyle = gradR;
+    ctx.beginPath();
+    ctx.moveTo(mapX(0), mapY(0));
+    for (let i = 0; i < 500; i++) {
+      const spin = (i / 499) * 0.999;
+      ctx.lineTo(mapX(spin), mapY(radiativeEfficiency(spin)));
+    }
+    ctx.lineTo(mapX(0.999), mapY(0));
+    ctx.closePath(); ctx.fill();
+
+    ctx.strokeStyle = '#f97316';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < 500; i++) {
+      const spin = (i / 499) * 0.999;
+      const eff = radiativeEfficiency(spin);
+      i === 0 ? ctx.moveTo(mapX(spin), mapY(eff)) : ctx.lineTo(mapX(spin), mapY(eff));
+    }
+    ctx.stroke();
+
+    // Legend
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.fillStyle = '#ec4899';
+    ctx.textAlign = 'left';
+    ctx.fillText('η_P (Penrose)', m.left + 10, m.top + 14);
+    ctx.fillStyle = '#f97316';
+    ctx.fillText('η_rad (Radiative)', m.left + 10, m.top + 28);
+
+    // Max Penrose annotation
+    ctx.fillStyle = 'rgba(236,72,153,0.7)';
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('Max η_P ~= 29.3% (Kerr)', mapX(0.95), mapY(penroseEfficiency(0.999)) + 14);
+
+    ctx.restore();
+  }
+
+  /* --- 9. Proper Time Dilation Chart ----------------------------- */
+
+  function renderTimeDilation() {
+    const [canvas, ctx, cssW] = setupCanvas('timedilation-canvas', 360, 280);
+    const cssH = 280;
+    const m = { top: 24, right: 16, bottom: 48, left: 50 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    const mapX = (w: number) => m.left + (w / 1.0) * plotW;
+    const mapY = (v: number) => m.top + (1 - v) * plotH;
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 10; i++) {
+      const x = m.left + (i / 10) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 10; i += 2) ctx.fillText((i / 10).toFixed(1), mapX(i / 10), m.top + plotH + 16);
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 4; i++) {
+      const val = 1 - (i / 4);
+      ctx.fillText(val.toFixed(2), m.left - 5, m.top + (i / 4) * plotH + 4);
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ω', m.left + plotW / 2, cssH - 6);
+    ctx.save(); ctx.translate(12, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('dτ/dt', 0, 0); ctx.restore();
+
+    // Clip
+    ctx.save();
+    ctx.beginPath(); ctx.rect(m.left, m.top, plotW, plotH); ctx.clip();
+
+    // Fill
+    const grad = ctx.createLinearGradient(0, m.top, 0, m.top + plotH);
+    grad.addColorStop(0, 'rgba(52,211,153,0.12)');
+    grad.addColorStop(1, 'rgba(239,68,68,0.12)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(mapX(0), mapY(0));
+    for (let i = 0; i <= 600; i++) {
+      const om = (i / 600) * 0.999;
+      ctx.lineTo(mapX(om), mapY(properTimeFactor(om)));
+    }
+    ctx.lineTo(mapX(0.999), mapY(0));
+    ctx.closePath(); ctx.fill();
+
+    // Curve
+    ctx.strokeStyle = '#34d399';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i <= 600; i++) {
+      const om = (i / 600) * 0.999;
+      const pt = properTimeFactor(om);
+      i === 0 ? ctx.moveTo(mapX(om), mapY(pt)) : ctx.lineTo(mapX(om), mapY(pt));
+    }
+    ctx.stroke();
+
+    // Entity dots
+    for (const ed of entityData) {
+      const pt = properTimeFactor(ed.kernel.omega);
+      ctx.beginPath();
+      ctx.arc(mapX(ed.kernel.omega), mapY(pt), 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = regimeColor(ed.regime);
+      ctx.fill();
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // Annotation
+    ctx.fillStyle = 'rgba(52,211,153,0.7)';
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('Time freezes at ω -> 1', m.left + 5, m.top + plotH - 10);
+
+    ctx.restore();
+  }
+
+  /* --- 10. BH Entropy Chart ------------------------------------- */
+
+  function renderEntropy() {
+    const [canvas, ctx, cssW] = setupCanvas('entropy-canvas', 360, 280);
+    const cssH = 280;
+    const m = { top: 24, right: 16, bottom: 48, left: 56 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // Compute entropy over kappa range
+    const data: [number, number][] = [];
+    let maxE = 0;
+    for (let i = 0; i <= 400; i++) {
+      const kap = -(i / 400) * 8; // κ ranges from 0 to -8
+      const e = bhEntropy(kap);
+      data.push([kap, e]);
+      maxE = Math.max(maxE, e);
+    }
+    const yCap = Math.min(maxE * 1.1, 6);
+
+    const mapX = (k: number) => m.left + ((k + 8) / 8) * plotW; // -8 on left, 0 on right
+    const mapY = (v: number) => m.top + (1 - Math.min(v, yCap) / yCap) * plotH;
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 8; i++) {
+      const x = m.left + (i / 8) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 4; i++) {
+      const kap = -8 + (i / 4) * 8;
+      ctx.fillText(kap.toFixed(0), m.left + (i / 4) * plotW, m.top + plotH + 16);
+    }
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 4; i++) {
+      const val = yCap - (i / 4) * yCap;
+      ctx.fillText(val.toFixed(1), m.left - 5, m.top + (i / 4) * plotH + 4);
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('κ (Log-Integrity)', m.left + plotW / 2, cssH - 6);
+    ctx.save(); ctx.translate(12, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('S_BH = κ^2/(4pi)', 0, 0); ctx.restore();
+
+    // Clip
+    ctx.save();
+    ctx.beginPath(); ctx.rect(m.left, m.top, plotW, plotH); ctx.clip();
+
+    // Fill
+    const grad = ctx.createLinearGradient(m.left, 0, m.left + plotW, 0);
+    grad.addColorStop(0, 'rgba(168,85,247,0.15)');
+    grad.addColorStop(1, 'rgba(168,85,247,0.02)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(mapX(data[0][0]), mapY(0));
+    for (const [k, e] of data) ctx.lineTo(mapX(k), mapY(e));
+    ctx.lineTo(mapX(data[data.length - 1][0]), mapY(0));
+    ctx.closePath(); ctx.fill();
+
+    // Curve
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < data.length; i++) {
+      const px = mapX(data[i][0]);
+      const py = mapY(data[i][1]);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Entity markers
+    for (const ed of entityData) {
+      const kap = ed.kernel.kappa;
+      const e = bhEntropy(kap);
+      if (kap >= -8) {
+        ctx.beginPath();
+        ctx.arc(mapX(kap), mapY(e), 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = regimeColor(ed.regime);
+        ctx.fill();
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    // Annotation
+    ctx.fillStyle = 'rgba(168,85,247,0.7)';
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('S_BH ~ κ^2 (area law analog)', m.left + 5, m.top + 14);
+
+    ctx.restore();
+  }
+
+  /* --- 11. Orbital Precession Chart ------------------------------ */
+
+  function renderPrecession() {
+    const [canvas, ctx, cssW] = setupCanvas('precession-canvas', 360, 280);
+    const cssH = 280;
+    const m = { top: 24, right: 16, bottom: 48, left: 56 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    const data: [number, number][] = [];
+    let maxP = 0;
+    for (let i = 0; i < 600; i++) {
+      const om = (i / 599) * 0.7;
+      const p = orbitalPrecession(om);
+      data.push([om, p]);
+      if (p < 200) maxP = Math.max(maxP, p);
+    }
+    const yCap = Math.min(maxP * 1.1, 50);
+
+    const mapX = (w: number) => m.left + (w / 0.8) * plotW;
+    const mapY = (v: number) => m.top + (1 - Math.min(v, yCap) / yCap) * plotH;
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 8; i++) {
+      const x = m.left + (i / 8) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 8; i += 2) ctx.fillText((i / 10).toFixed(1), mapX(i / 10), m.top + plotH + 16);
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 4; i++) {
+      const val = yCap - (i / 4) * yCap;
+      ctx.fillText(val.toFixed(0), m.left - 5, m.top + (i / 4) * plotH + 4);
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ω', m.left + plotW / 2, cssH - 6);
+    ctx.save(); ctx.translate(12, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('δφ (rad/orbit)', 0, 0); ctx.restore();
+
+    // Clip
+    ctx.save();
+    ctx.beginPath(); ctx.rect(m.left, m.top, plotW, plotH); ctx.clip();
+
+    // Fill
+    const grad = ctx.createLinearGradient(0, m.top, 0, m.top + plotH);
+    grad.addColorStop(0, 'rgba(251,191,36,0.12)');
+    grad.addColorStop(1, 'rgba(251,191,36,0.01)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(mapX(data[0][0]), mapY(0));
+    for (const [om, p] of data) ctx.lineTo(mapX(om), mapY(p));
+    ctx.lineTo(mapX(data[data.length - 1][0]), mapY(0));
+    ctx.closePath(); ctx.fill();
+
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < data.length; i++) {
+      i === 0 ? ctx.moveTo(mapX(data[i][0]), mapY(data[i][1])) : ctx.lineTo(mapX(data[i][0]), mapY(data[i][1]));
+    }
+    ctx.stroke();
+
+    // Entity dots
+    for (const ed of entityData) {
+      const om = ed.kernel.omega;
+      if (om <= 0.7) {
+        const p = orbitalPrecession(om);
+        if (p < yCap) {
+          ctx.beginPath();
+          ctx.arc(mapX(om), mapY(p), 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = regimeColor(ed.regime);
+          ctx.fill();
+          ctx.strokeStyle = '#000';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Annotation
+    ctx.fillStyle = 'rgba(251,191,36,0.7)';
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('δφ = 6piω^2/(1-ω)^2', m.left + 5, m.top + 14);
+
+    ctx.restore();
+  }
+
+  /* --- 12. GW Strain Chart --------------------------------------- */
+
+  function renderGWStrain() {
+    const [canvas, ctx, cssW] = setupCanvas('gwstrain-canvas', 360, 280);
+    const cssH = 280;
+    const m = { top: 24, right: 16, bottom: 48, left: 56 };
+    const plotW = cssW - m.left - m.right;
+    const plotH = cssH - m.top - m.bottom;
+
+    ctx.fillStyle = '#06060c';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    // GW strain for different C values at distance=1
+    const cVals = [0.2, 0.4, 0.6, 0.8];
+    const cColors = ['#60a5fa', '#34d399', '#fbbf24', '#ef4444'];
+    let maxH = 0;
+    for (const cv of cVals) {
+      for (let i = 0; i < 600; i++) {
+        const om = (i / 599) * 0.95;
+        maxH = Math.max(maxH, gwStrain(om, cv, 1));
+      }
+    }
+    const yCap = Math.min(maxH * 1.1, 4);
+
+    const mapX = (w: number) => m.left + (w / 1.0) * plotW;
+    const mapY = (v: number) => m.top + (1 - Math.min(v, yCap) / yCap) * plotH;
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 10; i++) {
+      const x = m.left + (i / 10) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, m.top); ctx.lineTo(x, m.top + plotH); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(m.left, m.top); ctx.lineTo(m.left, m.top + plotH);
+    ctx.lineTo(m.left + plotW, m.top + plotH); ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 10; i += 2) ctx.fillText((i / 10).toFixed(1), mapX(i / 10), m.top + plotH + 16);
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= 4; i++) {
+      const val = yCap - (i / 4) * yCap;
+      ctx.fillText(val.toFixed(1), m.left - 5, m.top + (i / 4) * plotH + 4);
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ω', m.left + plotW / 2, cssH - 6);
+    ctx.save(); ctx.translate(12, m.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('h (GW Strain)', 0, 0); ctx.restore();
+
+    // Clip
+    ctx.save();
+    ctx.beginPath(); ctx.rect(m.left, m.top, plotW, plotH); ctx.clip();
+
+    // Curves for each C value
+    cVals.forEach((cv, ci) => {
+      ctx.strokeStyle = cColors[ci];
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i < 600; i++) {
+        const om = (i / 599) * 0.95;
+        const h = gwStrain(om, cv, 1);
+        i === 0 ? ctx.moveTo(mapX(om), mapY(h)) : ctx.lineTo(mapX(om), mapY(h));
+      }
+      ctx.stroke();
+
+      // Label
+      ctx.fillStyle = cColors[ci];
+      ctx.font = '9px ui-monospace, monospace';
+      ctx.textAlign = 'right';
+      const lom = 0.6;
+      const lh = gwStrain(lom, cv, 1);
+      if (lh < yCap) ctx.fillText(`C=${cv}`, mapX(lom) - 3, mapY(lh) - 4);
+    });
+
+    // Entity markers
+    for (const ed of entityData) {
+      const om = ed.kernel.omega;
+      const h = gwStrain(om, ed.kernel.C, 1);
+      if (om < 0.95 && h < yCap) {
+        ctx.beginPath();
+        ctx.arc(mapX(om), mapY(h), 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = regimeColor(ed.regime);
+        ctx.fill();
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    // Annotation
+    ctx.fillStyle = 'rgba(96,165,250,0.7)';
+    ctx.font = '9px ui-monospace, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('h = 4ω^2C/(d+ε)', m.left + 5, m.top + 14);
+
+    ctx.restore();
+  }
+
+  /* --- Initial Render + Event Binding ---------------------------- */
 
   const infallSlider = document.getElementById('infall-omega') as HTMLInputElement;
   infallSlider.addEventListener('input', renderInfall);
@@ -1085,6 +1799,12 @@ const base = import.meta.env.BASE_URL;
   renderArrowChart();
   renderTidalChart();
   renderLensing();
+  renderFrameDrag();
+  renderPenrose();
+  renderTimeDilation();
+  renderEntropy();
+  renderPrecession();
+  renderGWStrain();
 
   // Init WebGL 3D gravity well
   const glCanvas = document.getElementById('gl-canvas') as HTMLCanvasElement;
@@ -1103,6 +1823,12 @@ const base = import.meta.env.BASE_URL;
       renderArrowChart();
       renderTidalChart();
       renderLensing();
+      renderFrameDrag();
+      renderPenrose();
+      renderTimeDilation();
+      renderEntropy();
+      renderPrecession();
+      renderGWStrain();
     }, 200);
   });
 </script>
