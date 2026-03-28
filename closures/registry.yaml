@@ -547,6 +547,24 @@ registry:
           epsilon: 1.0e-8
           weights: [0.333333, 0.333333, 0.333333]
           BE_peak_ref: 8.7945
+      - name: "cosmic_ray_propagation"
+        path: "closures/nuclear_physics/cosmic_ray_propagation.py"
+        description: "Cosmic ray propagation: 12 species (knee→GZK) through 8-channel kernel, 6 theorems (T-CR-1–T-CR-6)"
+        contract: "NUC.INTSTACK.v1"
+        inputs: ["species", "energy_eV", "charge_Z", "mass_A"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        frozen_params:
+          epsilon: 1.0e-8
+          weights: [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]
+      - name: "cosmic_ray_airshower"
+        path: "closures/nuclear_physics/cosmic_ray_airshower.py"
+        description: "Cosmic ray air shower: 12 stages (fireball→ground) through 8-channel kernel, reconfinement IC cliff, 6 theorems (T-AS-CR-1–T-AS-CR-6)"
+        contract: "NUC.INTSTACK.v1"
+        inputs: ["stage", "deconfinement_fraction", "temperature_frac"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        frozen_params:
+          epsilon: 1.0e-8
+          weights: [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]
 
     atomic_physics:
       - name: "ionization_energy"
@@ -1082,6 +1100,26 @@ registry:
           - "drift_stability"
           - "equator_proximity"
           - "poloidal_closure"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 6
+      - name: "cosmic_ray_sources"
+        path: "closures/spacetime_memory/cosmic_ray_sources.py"
+        description: "Cosmic ray source environments: 12 accelerator entities × 8 channels. Characterizes IC/F birthmarks of SNRs, pulsars, AGN, GRBs, and cluster shocks. 6 theorems (T-CRS-1 through T-CRS-6)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["source_environment_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        channels:
+          - "magnetic_power"
+          - "shock_compression"
+          - "lorentz_factor"
+          - "acceleration_time"
+          - "containment_frac"
+          - "target_density"
+          - "radiation_opacity"
+          - "spectral_regularity"
         frozen_params:
           epsilon: 1.0e-8
           n_channels: 8
