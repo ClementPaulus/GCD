@@ -34,7 +34,7 @@
 \usepackage{authblk}
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 
-% ── colour palette ────────────────────────────────────────────
+% ── color palette ────────────────────────────────────────────
 \usepackage{xcolor}
 \definecolor{linkblue}{HTML}{337799}
 \definecolor{TierOneGold}{HTML}{B8860B}
@@ -91,35 +91,36 @@ phase transitions from quarks to the cosmic horizon}
 % ABSTRACT
 % ============================================================
 \begin{abstract}
-The ratio of geometric to arithmetic coherence ($\IC/F$), computed
-from a single algebraic kernel applied to normalised physical
-measurements, exhibits structurally identical phase-transition
-signatures across systems spanning 61~orders of
-magnitude---from quark confinement ($10^{-15}$\,m) to
-dark-energy--dominated cosmology ($10^{26}$\,m). At the quark--hadron
-boundary, $\IC/F$ collapses $23\times$ as colour confinement drives a
-single measurement channel to zero; atomic structure subsequently
-restores coherence $35\times$ through emergent degrees of freedom;
-dark energy reproduces the identical collapse mechanism at
+The ratio of composite integrity to fidelity ($\IC/F$)---the
+geometric mean of normalized measurements divided by their
+arithmetic mean---computed from a single algebraic kernel,
+exhibits structurally identical phase-transition signatures
+across systems spanning 61~orders of magnitude---from quark
+confinement ($10^{-15}$\,m) to dark-energy--dominated cosmology
+($10^{26}$\,m). At the quark--hadron
+boundary, $\IC/F$ drops by a factor of~23 as color confinement
+drives a single measurement channel to zero; atomic structure
+subsequently restores coherence 35-fold through emergent degrees of
+freedom; dark energy drives the identical collapse mechanism at
 $10^{26}$\,m scales. The heterogeneity gap $\Delta = F - \IC$ spikes
-at every phase boundary tested, providing a single-number diagnostic
-for structural fragility independent of the underlying dynamics.
+at every phase boundary tested, providing a single-number,
+dynamics-independent diagnostic for structural fragility.
 
 These patterns emerge from a six-output kernel function
 $K\!:\![0,1]^n \times \Delta^n \to (F, \omega, S, C,
-\kappa, \IC)$, derived from a single admissibility axiom, that maps
-any bounded measurement vector to fidelity~$F$ (weighted arithmetic
-mean), log-integrity~$\kappa$ (weighted log-mean), and composite
-integrity~$\IC = \exp(\kappa)$ (weighted geometric mean), among
-other quantities. Three algebraic identities---$F + \omega \equiv 1$
-(duality), $\IC \leq F$ (integrity bound), and
+\kappa, \IC)$, derived from a single admissibility axiom. The kernel
+maps any bounded measurement vector to fidelity~$F$ (weighted
+arithmetic mean), log-integrity~$\kappa$ (weighted log-mean), and
+composite integrity~$\IC = \exp(\kappa)$ (weighted geometric mean),
+among other quantities. Three algebraic identities---$F + \omega
+\equiv 1$ (duality), $\IC \leq F$ (integrity bound), and
 $\IC = \exp(\kappa)$ (log-integrity relation)---guarantee the
 diagnostic's structural reliability across all domains. The integrity
-bound $\IC \leq F$ instantiates the classical weighted inequality of
-arithmetic and geometric means; the contribution is not the bound
-itself but its systematic application as a scale-independent
+bound $\IC \leq F$ corresponds to the classical weighted inequality
+of arithmetic and geometric means; the contribution lies not in the
+bound itself but in its systematic application as a scale-independent
 phase-transition diagnostic across 20~scientific domains. Exhaustive
-computational verification---11{,}342~automated proofs across
+computational verification---15{,}014~automated proofs across
 406~physical objects---confirms all three identities to machine
 precision ($<\!10^{-15}$) with zero violations.
 \end{abstract}
@@ -146,9 +147,9 @@ horizon.
 
 The central obstacle is that cross-scale frameworks typically rely on
 dimensional analysis, renormalization group
-flows~\cite{gross1973,politzer1973}, or statistical correlations, all
-of which require dynamical input or scale-dependent running. What has
-been missing is not cross-scale structure \emph{per se}, but a single
+flows~\cite{gross1973,politzer1973}, or statistical correlations---all
+requiring dynamical input or scale-dependent running. What has
+been missing is not cross-scale structure \emph{per se} but a single
 algebraic diagnostic---one number, computed identically at every
 scale---that detects phase transitions without knowledge of the
 underlying dynamics.
@@ -157,7 +158,7 @@ Here we report such a framework. Starting from a single admissibility
 axiom---that only claims which \emph{return} through a
 collapse--recovery cycle receive epistemic credit---we derive a
 six-output kernel function $K$ and three algebraic identities that
-hold exactly (to machine precision, $<\!10^{-15}$) across 406
+hold exactly (to machine precision, $<10^{-15}$) across 406
 objects spanning 61~orders of magnitude.
 
 The framework, termed Generative Collapse Dynamics (GCD), rests on
@@ -169,15 +170,10 @@ three principles:
   real}~(Axiom-0). This is not a dynamical law but an
   \emph{admissibility criterion}: only claims that survive a
   collapse--recovery cycle receive epistemic credit. Operationally,
-  this produces the seam calculus (a composable verification
-  boundary between outbound collapse and demonstrated return), the
-  return time~$\tR$ (a measured re-entry delay, not an assumed one),
-  and three-valued verdicts (Conformant / Nonconformant /
-  Non-Evaluable) that replace the Boolean pass/fail of conventional
-  testing. Without Axiom-0 one has a kernel function; with it, one
-  has a measurement protocol that distinguishes verified claims
-  (\emph{welds}) from internally consistent but non-returning
-  assertions (\emph{gestures}).
+  this produces a composable verification boundary (the \emph{seam}),
+  a measured re-entry delay ($\tR$), and three-valued verdicts
+  (Conformant / Nonconformant / Non-Evaluable) that replace
+  Boolean pass/fail testing.
 \item \textbf{Universal kernel.} A function
   $K\!:\![0,1]^n \times \Delta^n \to \mathbb{R}^6$ maps any bounded
   measurement vector (the ``trace'') and weight vector to six
@@ -189,29 +185,22 @@ three principles:
 \end{enumerate}
 
 This approach differs fundamentally from curve-fitting, machine
-learning, or phenomenological modelling. The identities are
+learning, or phenomenological modeling. The identities are
 \emph{algebraic necessities} of the kernel function, verified
 exhaustively across 20~scientific domains from quantum
 chromodynamics to cosmology.
 
 Critically, the framework is not a single result but a complete
-measurement architecture. The kernel (Tier-1) is implemented by
-an open protocol (Tier-0) and extended via modular domain
-closures (Tier-2): each closure declares which real-world
-quantities become the trace vector~$\tvec$, frozen in a versioned
-contract \emph{before} evaluation. The system currently comprises
-201~closure modules, 46~proven lemmas, 44~structural identities,
-21~versioned contracts, and 28~validated casepacks. Classical
-results---including Shannon entropy, the arithmetic--geometric
-mean inequality, and the fluctuation--dissipation
-theorem---emerge as \emph{degenerate limits} of the kernel when
-structural degrees of freedom are removed (see Discussion),
-ensuring full compatibility with established methods. A built-in
-cross-domain translation protocol (the ``Rosetta'') maps the
-kernel's five-word diagnostic vocabulary into nine disciplinary
-lenses, enabling physicists, neuroscientists, and economists to
-read the same invariants in their native dialect while the
-underlying audit remains invariant.
+measurement architecture. The kernel is implemented by an open
+protocol and extended via modular domain closures: each closure
+declares which real-world quantities become the trace
+vector~$\tvec$, frozen in a versioned contract \emph{before}
+evaluation. Classical results---including Shannon entropy, the
+arithmetic--geometric mean inequality, and the
+fluctuation--dissipation theorem---emerge as \emph{degenerate
+limits} of the kernel when structural degrees of freedom are
+removed (see Discussion), ensuring full compatibility with
+established methods.
 
 % ============================================================
 % RESULTS
@@ -245,12 +234,11 @@ weighted geometric mean. The geometric mean is the natural choice
 for integrity because it is the unique mean that decomposes
 multiplicatively across subsystems
 ($\IC_{12} = \sqrt{\IC_1 \cdot \IC_2}$; cf.\ the Bhattacharyya
-coefficient), making it the correct aggregator for composition
-across scales, and because it emerges as the solvability condition
+coefficient) and because it arises as the solvability condition
 for trace recovery (see Identity~\ref{id:bound}). The entropy~$S$
 is the Bernoulli field entropy---the unique entropy functional for
 independent binary channels. The curvature~$C \in [0,1]$ measures
-channel heterogeneity normalised to the maximum standard deviation.
+channel heterogeneity normalized to the maximum standard deviation.
 
 \subsection{Three algebraic identities}
 
@@ -263,10 +251,9 @@ and $\wvec \in \Delta^n$.
 \end{identity}
 
 This is definitional: $\omega \equiv 1 - F$ by construction.
-That three identities grounded in classical mathematics can serve as
-a cross-scale diagnostic is precisely the point: the mathematics is
-not novel; the \emph{empirical discovery} is that applying these
-identities as a unified measurement lens across 406~objects reveals
+The three identities rest on classical mathematics;
+the contribution is the \emph{empirical discovery} that applying them
+as a unified measurement lens across 406~objects reveals
 cross-scale structure---the confinement cliff, atomic recovery,
 cosmological decoherence---invisible to any single-domain analysis.
 The identities provide the \emph{lens}; the contribution is what
@@ -278,20 +265,20 @@ $\IC \leq F$ for all admissible traces, with equality if and only if
 $c_i = c_0$ for all~$i$ (the homogeneous trace).
 \end{identity}
 
-$\IC \leq F$ is the classical weighted inequality of arithmetic and
-geometric means~\cite{hardylittlewoodpolya1952}; the novelty lies
-not in the bound itself but in its application as a
+$\IC \leq F$ corresponds to the classical weighted inequality of
+arithmetic and geometric means~\cite{hardylittlewoodpolya1952};
+the novelty lies not in the bound itself but in its application as a
 scale-independent phase-transition diagnostic.
 Three properties give it cross-scale power beyond the classical
 statement. First, the bound acquires a \emph{solvability
 interpretation}: given only the aggregate values $F$ and $\IC$,
-recovering individual channel values requires solving
-$c_{1,2} = F \pm \sqrt{F^2 - \IC^2}$, which yields real solutions
-only when $\IC \leq F$. Second, the gap $\Delta = F - \IC$
+recovering individual channel values in the two-channel case
+requires solving $c_{1,2} = F \pm \sqrt{F^2 - \IC^2}$, which
+yields real solutions only when $\IC \leq F$. Second, the gap $\Delta = F - \IC$
 (the heterogeneity gap) serves as a \emph{scale-independent
 phase-transition diagnostic}---it spikes at every boundary where
-channels die, regardless of the physics producing the death
-(colour confinement, chemical inertness, dark energy).
+channels die, irrespective of the underlying physics
+(color confinement, chemical inertness, dark energy).
 Third, the bound carries \emph{composition laws} absent
 from the classical inequality: $\IC$ composes geometrically across
 subsystems ($\IC_{12} = \sqrt{\IC_1 \cdot \IC_2}$) while $F$
@@ -309,12 +296,11 @@ the definition of the weighted geometric mean.
 
 A fourth constraint, $S \approx f(F, C)$, is statistical rather than
 algebraic: for $n$ independent Bernoulli channels, the central limit
-theorem constrains the channel distribution's shape, making entropy
-asymptotically a function of mean ($F$) and spread ($C$).
+theorem constrains the shape of the channel distribution, making
+entropy asymptotically a function of mean ($F$) and spread ($C$).
 Across 406~physical objects,
-the Pearson correlation
 $|\mathrm{corr}(C, S)| > 0.97$ for $n \geq 8$ channels
-($N = 406$, $p < 10^{-100}$), and approaches~$-1$ in the
+($N = 406$, $p < 10^{-100}$), approaching~$-1$ in the
 large-$n$ limit. This
 constraint reduces the six kernel outputs to \textbf{three effective
 degrees of freedom} $(F, \kappa, C)$: principal component analysis
@@ -324,8 +310,8 @@ by the algebraic identities.
 
 \subsection{Exhaustive verification}
 
-These identities have been subjected to exhaustive computational
-verification across 20~scientific domains:
+These identities were verified exhaustively across
+20~scientific domains:
 
 \begin{itemize}[leftmargin=1.5em,itemsep=2pt]
 \item \textbf{Duality:} $\max|F + \omega - 1| = 0.0$
@@ -335,30 +321,25 @@ verification across 20~scientific domains:
   across 406~physical objects spanning 11~scales
   (Table~\ref{tab:scales}).
 \item \textbf{Periodic table:} 354~identity checks (three per
-  element, all 118), each passing to $< 10^{-9}$.
+  element, all 118), all satisfied to $< 10^{-9}$.
 \item \textbf{Standard Model:} 31~particles (17~fundamental +
-  14~composite), duality verified to
-  $0.0 \times 10^{0}$~residual~\cite{pdg2024}.
-\item \textbf{Algebraic closure.} When two consecutive kernel
-  evaluations are chained---the output of evaluating system~$A$
-  feeds as context into evaluating system~$B$---the composition
-  defines a binary operation on kernel states. This \emph{seam
-  composition} is associative to
-  $5.55 \times 10^{-17}$ (machine precision; IEEE~754
-  floating-point arithmetic is \emph{not} generally associative,
-  so this result confirms algebraic exactness beyond numerical
-  accident), with an identity
-  element (the homogeneous trace), proving the framework forms a
-  monoid under chaining. Associativity guarantees that nested
+  14~composite), duality verified to zero
+  residual~\cite{pdg2024}.
+\item \textbf{Algebraic closure.} Chaining consecutive kernel
+  evaluations defines a binary operation on kernel states.
+  This \emph{seam composition} is associative to
+  $5.55 \times 10^{-17}$ (machine precision), with an identity
+  element (the homogeneous trace), forming a
+  monoid under chaining. Associativity ensures that nested
   cross-scale evaluations (e.g., quarks $\to$ hadrons $\to$ atoms)
   yield the same result regardless of grouping.
 \end{itemize}
 
-In total, 11{,}342~deterministic automated proofs span
+In total, 15{,}014~deterministic automated proofs span
 20~domains (Table~\ref{tab:domains}), supported by
-201~closure modules, 46~proven lemmas, and 44~structural
+181~closure modules, 47~proven lemmas, and 44~structural
 identities verified to machine precision. To our knowledge,
-this constitutes the most extensive cross-domain verification
+this represents the most extensive cross-domain verification
 of mathematical identities linking subatomic to cosmological
 scales.
 
@@ -391,8 +372,8 @@ Cosmological  &   6 & 0.597 & 0.105 & 0.174 & Dark energy loss \\
 \begin{table}[!htbp]
 \caption{\textbf{Domain coverage.} The 20~scientific domains
 across which all three identities hold with zero violations.
-Each domain contributes Tier-2 closures (channel selections and
-entity catalogues) validated against the universal Tier-1 kernel.}
+Each domain contributes closures (channel selections and
+entity catalogs) validated against the universal kernel.}
 \label{tab:domains}
 \begin{tabular}{llll}
 \toprule
@@ -431,13 +412,14 @@ Kinematics & Phase space, motion &
 \subsection{Confinement as geometric integrity collapse}
 
 The most striking cross-scale phenomenon revealed by the kernel is the
-\emph{confinement cliff}: a $23\times$ discontinuity in $\IC/F$
+\emph{confinement cliff}: a 23-fold discontinuity in $\IC/F$
 at the quark--hadron phase boundary (Fig.~\ref{fig:cliff}).
 
-Free quarks carry finite values in all eight channels (mass, spin,
-charge, colour, weak isospin, lepton number, baryon number,
-generation). When they bind into colour-neutral hadrons~\cite{wilson1974confinement},
-the colour-charge channel collapses to the guard band
+Individual quarks, characterized by their quantum numbers, carry
+finite values in all eight channels (mass, spin, charge, color,
+weak isospin, lepton number, baryon number, generation). When
+quarks bind into color-neutral hadrons~\cite{wilson1974confinement},
+the color-charge channel collapses to the guard band
 $\eps \approx 10^{-8}$. Because $\IC$ is the weighted geometric
 mean, a single channel at~$\eps$ catastrophically suppresses
 the product:
@@ -459,14 +441,14 @@ $\IC/F$ hierarchy:
 
 \begin{itemize}[leftmargin=1.5em,itemsep=1pt]
 \item Up quark: $\IC/F = 0.94$ (all channels populated)
-\item Proton: $\IC/F = 0.037$ (colour $\to \eps$: confinement)
-\item Neutron: $\IC/F = 0.0089$ (colour + charge $\to \eps$)
+\item Proton: $\IC/F = 0.037$ (color $\to \eps$: confinement)
+\item Neutron: $\IC/F = 0.0089$ (color + charge $\to \eps$)
 \item $\pi^0$: $\IC/F = 0.002$ (neutral, light: multiple
   dead channels)
 \end{itemize}
 
 This signature is detectable purely from quantum
-numbers~\cite{pdg2024} (mass, spin, charge, colour, isospin,
+numbers~\cite{pdg2024} (mass, spin, charge, color, isospin,
 lepton/baryon number, generation), without reference to
 QCD coupling constants, lattice calculations~\cite{aoki2006lattice},
 or confinement criteria. No existing single-domain diagnostic
@@ -480,41 +462,41 @@ each describe separately and in incommensurable terms.
 
 \subsection{Atomic coherence recovery}
 
-Equally remarkable is the $35\times$ \emph{recovery} of $\IC/F$ at
+Equally remarkable is the 35-fold \emph{recovery} of $\IC/F$ at
 the atomic scale (composite $\to$ atoms: 0.022 to 0.784;
 Fig.~\ref{fig:cliff}), driven by the emergence of measurable
 degrees of freedom absent for hadrons: electronegativity,
-ionisation energy, atomic radius, melting point, boiling point,
+ionization energy, atomic radius, melting point, boiling point,
 density, electron affinity, and covalent radius.
 
-These emergent channels are well-populated for most elements (no dead
-channels except noble gases), correlated through shared electron
-physics, and measured across all 118~elements
+These emergent channels are well-populated for most elements (no
+dead channels except noble gases), correlated through shared
+electronic structure, and measured across all 118~elements
 (Fig.~\ref{fig:periodic}).
 
 The recovery is not uniform. Period~1 (H, He) remains
-near-hadron level ($\IC/F = 0.056$) because hydrogen has too few
-populated channels and helium has a near-dead reactivity channel
-(the same geometric slaughter mechanism as confinement, now
-producing chemical inertness). By Period~4--5, the 8-channel trace
+near-hadron level ($\IC/F = 0.056$) because hydrogen has
+insufficiently populated channels and helium has a near-dead
+reactivity channel (the same geometric slaughter mechanism as
+confinement, here producing chemical inertness). By Period~4--5, the 8-channel trace
 is fully populated and $\IC/F$ peaks above 0.87, with transition
 metals (d-block) achieving maximum coherence ($\langle\IC/F\rangle_d
 = 0.887$).
 
-This demonstrates a structural principle visible across scales:
+This illustrates a structural principle visible across scales:
 \emph{rupture at one scale seeds structure at the next}.
 The near-zero $\IC$ produced by confinement becomes the boundary
-condition for atomic-scale channel formation: colour neutrality
+condition for atomic-scale channel formation: color neutrality
 and charge stability enable the emergence of new observables
-(electronegativity, ionisation energy, etc.) that are well-populated,
+(electronegativity, ionization energy, etc.) that are well-populated,
 and the subsequent recovery to $\IC/F > 0.78$ is measurable and
 reproducible across all 118~elements.
 
 \subsection{Consciousness coherence}
 
 To test universality beyond fundamental physics, we applied the
-identical kernel (same equations, same frozen parameters, same
-verification protocol) to a 10-channel cortical kernel
+same kernel (same equations, same frozen parameters, same
+verification protocol) to a 10-channel cortical trace
 (prefrontal, temporal, parietal, occipital, motor, sensory, limbic,
 cerebellar, brainstem, thalamic coherence) across 20~systems spanning
 developmental and pathological states:
@@ -528,17 +510,16 @@ developmental and pathological states:
 \end{itemize}
 
 Peak coherence occurs at adolescence not because of maximum
-capability but because \emph{all ten channels are most evenly
-distributed at age 15}, minimising the heterogeneity gap
-$\Delta = F - \IC$. Adult specialisation trades uniform coherence
+capability but because \emph{all ten channels attain their most
+uniform distribution at age~15}, minimizing the heterogeneity gap
+$\Delta = F - \IC$. Adult specialization trades uniform coherence
 for depth in specific channels---a structural trade-off
 measurable through the kernel.
 
 The three identities $F + \omega = 1$, $\IC \leq F$, and
 $\IC = \exp(\kappa)$ hold exactly for all 20~consciousness systems
 tested, including altered states (meditation, psychedelic
-experience, flow, anaesthesia, coma). Seven theorems formalising
-these patterns pass all automated tests.
+experience, flow, anesthesia, coma).
 
 \subsection{Cosmological decoherence}
 \label{sec:cosmo}
@@ -546,13 +527,15 @@ these patterns pass all automated tests.
 At the largest accessible scales, the kernel detects dark-energy
 dominance as geometric slaughter of cosmological coherence
 channels. From dark-energy onset ($z \approx 0.7$) to the
-present epoch ($z = 0$), $\IC/F$ drops $27\times$ (from
-0.383 to 0.014) while fidelity~$F$ \emph{rises} (0.583 to 0.649).
+present epoch ($z = 0$), $\IC/F$ drops by a factor of~27 (from
+0.383 to 0.014) while fidelity~$F$ \emph{rises} (from 0.583 to
+0.649).
 
-The mechanism is identical to quark confinement: the cosmological
-constant~$\Lambda$ acts as a near-dead channel in the
-cosmological trace vector, suppressing the geometric mean while
-preserving the arithmetic mean. The same mathematical
+The mechanism is structurally identical to quark confinement:
+when dark energy dominates, the matter-density and
+radiation-density channels in the cosmological trace vector
+approach~$\eps$, suppressing the geometric mean while preserving
+the arithmetic mean. The same mathematical
 structure---channel death $\to$ geometric slaughter $\to$ integrity
 collapse while fidelity persists---operates at $10^{26}$\,m
 with the same kernel that detects it at $10^{-15}$\,m, using
@@ -592,14 +575,14 @@ identical frozen parameters throughout.
 \end{axis}
 % Annotations
 \draw[-{Stealth},CliffRed,thick] (1.35,3.2) -- (1.35,0.6)
-    node[midway,right,font=\scriptsize\bfseries,CliffRed] {$23\times$};
+    node[midway,right,font=\scriptsize\bfseries,CliffRed] {$23{\times}$};
 \draw[-{Stealth},HealGreen,thick] (2.4,0.6) -- (2.4,4.5)
-    node[midway,right,font=\scriptsize\bfseries,HealGreen] {$35\times$};
+    node[midway,right,font=\scriptsize\bfseries,HealGreen] {$35{\times}$};
 \end{tikzpicture}
 \caption{\textbf{The scale ladder of integrity.} $\IC/F$ (coherence
 efficiency) for 406~objects across six physical scales. The
-confinement cliff (fundamental $\to$ composite: $23\times$ drop,
-red arrow) and atomic healing (composite $\to$ atoms: $35\times$
+confinement cliff (fundamental $\to$ composite: 23-fold drop,
+red arrow) and atomic healing (composite $\to$ atoms: 35-fold
 recovery, green arrow) are the dominant cross-scale features. All
 scales obey the same kernel with identical frozen parameters.}
 \label{fig:cliff}
@@ -643,10 +626,11 @@ scales obey the same kernel with identical frozen parameters.}
 \caption{\textbf{Geometric slaughter.} As channels die
 ($c_k \to \eps = 10^{-8}$), fidelity~$F$ (arithmetic mean,
 blue squares) degrades linearly while $\IC$ (geometric mean,
-red circles) collapses super-exponentially. One dead channel in an
-8-channel system reduces $\IC/F$ from 1.0 to 0.114---an order of
-magnitude lost from a single channel death. This mechanism underlies
-confinement, helium inertness, and dark energy decoherence.}
+red circles) collapses super-exponentially. A single dead channel
+in an 8-channel system reduces $\IC/F$ from 1.0 to
+0.114---an order-of-magnitude loss from one channel death. This
+mechanism underlies confinement, helium inertness, and dark-energy
+decoherence.}
 \label{fig:slaughter}
 \end{figure}
 
@@ -687,11 +671,11 @@ confinement, helium inertness, and dark energy decoherence.}
 \end{axis}
 \end{tikzpicture}
 \caption{\textbf{Periodic kernel.} $\IC/F$ for all 118~elements.
-Noble gases (red labels) appear as coherence minima due to
+Noble gases (red labels) appear as coherence minima owing to
 near-zero reactivity channels, reproducing the biological intuition
 of inertness as a \emph{structural} property. The d-block peak
 (Ni at $\IC/F = 0.957$) reflects maximum channel balance.
-Period~1 (H, He) remains near-hadron coherence levels.}
+Period~1 (H, He) remains near hadron coherence levels.}
 \label{fig:periodic}
 \end{figure}
 
@@ -701,7 +685,7 @@ Period~1 (H, He) remains near-hadron coherence levels.}
 \begin{axis}[
     width=\columnwidth,
     height=5.5cm,
-    xlabel={Scale (log$_{10}$ metres)},
+    xlabel={Scale (log$_{10}$ meters)},
     ylabel={IC/F},
     xlabel style={font=\small},
     ylabel style={font=\small},
@@ -742,7 +726,8 @@ Period~1 (H, He) remains near-hadron coherence levels.}
 61~orders of magnitude. The non-monotonic structure---with a sharp
 minimum at the hadron scale and recovery at the atomic scale---is the
 central cross-scale phenomenon. The same kernel with identical frozen
-parameters produces all data points. Dashed line guides the eye.}
+parameters produces all data points. The dashed line is a guide to
+the eye.}
 \label{fig:crossscale}
 \end{figure}
 
@@ -779,17 +764,20 @@ instrument for quantitative cross-scale comparison.
 \subsection{Structural rarity of stability}
 
 The regime classification derived from kernel
-gates---Stable: 12.5\%, Watch: 24.4\%, Collapse: 63.1\% of the
-Fisher parameter space (computed by uniform sampling of $10^4$
-trace vectors $c_i \in [\eps, 1{-}\eps]^n$ and classifying each
-by the four-gate criterion)---carries an implication for fundamental
-physics: \emph{stability is structurally rare}. The Stable regime
-requires the conjunction of four conditions ($\omega < 0.038$,
-$F > 0.90$, $S < 0.15$, $C < 0.14$), and only 12.5\% of the
-admissible parameter space satisfies all four simultaneously. This is
-consonant with the observation that matter in the universe is
-overwhelmingly in disordered or transitional states; localised
-structure occupies a narrow band of the available phase space.
+gates partitions the Fisher parameter space into
+Stable (12.5\%), Watch (24.4\%), and Collapse (63.1\%),
+computed by uniform sampling of $10^4$ trace vectors
+$c_i \in [\eps, 1{-}\eps]^n$ and classifying each by the
+four-gate criterion. This carries an implication: \emph{stability
+is structurally rare} in the admissible parameter space. The
+Stable regime requires the conjunction of four conditions
+($\omega < 0.038$, $F > 0.90$, $S < 0.15$, $C < 0.14$), and only
+12.5\% of the admissible parameter space satisfies all four
+simultaneously. While the physical distribution of systems need not
+be uniform in this space, the result indicates that stability
+requires \emph{simultaneous} satisfaction of multiple conditions, a
+constraint consistent with the observation that ordered structure
+occupies a narrow region of the available phase space.
 
 \subsection{Testable predictions}
 
@@ -798,10 +786,10 @@ verification:
 
 \begin{enumerate}[leftmargin=2em,itemsep=2pt]
 \item \textbf{Confinement signature in lattice QCD.}
-  Lattice simulations that resolve per-flavour condensates
+  Lattice simulations that resolve per-flavor condensates
   across the deconfinement transition should exhibit a sharp
   drop in the kernel's $\IC/F$ ratio at the transition
-  temperature, consistent with the $23\times$ cliff predicted
+  temperature, consistent with the 23-fold cliff predicted
   from quantum numbers alone.
 \item \textbf{Noble-gas coherence minimum.}
   Any multi-channel analysis of atomic properties that includes
@@ -818,8 +806,8 @@ verification:
 \subsection{Relationship to established frameworks}
 
 A natural concern is whether the kernel constitutes a closed
-formalism incompatible with standard methods. The opposite is the
-case: classical results emerge as \emph{degenerate limits} of the
+formalism incompatible with standard methods. On the contrary,
+classical results emerge as \emph{degenerate limits} of the
 kernel when structural degrees of freedom are removed. The arrow
 of derivation runs from the kernel outward:
 
@@ -827,8 +815,8 @@ of derivation runs from the kernel outward:
 \item \textbf{Integrity bound $\to$ AM-GM inequality.}
   $\IC \leq F$ holds for arbitrary heterogeneous traces with
   channel semantics, weights, guard band, and composition laws
-  ($\IC$ geometric, $F$ arithmetic). Stripping all structure
-  recovers the classical inequality of
+  ($\IC$ geometric, $F$ arithmetic). Removing these structural
+  elements yields the classical inequality of
   means~\cite{hardylittlewoodpolya1952}.
 \item \textbf{Bernoulli field entropy $\to$ Shannon entropy.}
   The full entropy $S = -\sum w_i[c_i \ln c_i + (1{-}c_i)\ln(1{-}c_i)]$
@@ -836,18 +824,18 @@ of derivation runs from the kernel outward:
   field is removed (i.e., $c_i \in \{0,1\}$
   only)~\cite{shannon1948}.
 \item \textbf{Duality identity $\to$ completeness constraints.}
-  $F + \omega \equiv 1$ instantiates the general structure
-  ``preserved + lost = total.'' This structure appears in
-  fluctuation--dissipation relations (signal + dissipation = input)
-  and unitarity ($|\alpha|^2 + |\beta|^2 = 1$ for quantum
-  amplitudes). GCD does not derive these physical theorems;
-  rather, the duality identity shares their algebraic skeleton,
-  suggesting a common structural origin.
+  $F + \omega \equiv 1$ exemplifies the general structure
+  ``preserved + lost = total.'' The same algebraic structure
+  appears in fluctuation--dissipation relations (signal +
+  dissipation = input) and unitarity ($|\alpha|^2 + |\beta|^2 = 1$
+  for quantum amplitudes). GCD does not derive these physical
+  theorems; rather, the duality identity shares their algebraic
+  skeleton, suggesting a common structural origin.
 \item \textbf{Cost function $\to$ critical slowing.}
   $\Gamma(\omega) = \omega^3/(1{-}\omega)$ generates a full phase
-  diagram; restricting to the neighbourhood of the transition
-  point recovers critical exponents from renormalization group
-  theory~\cite{gross1973}.
+  diagram; restricting to the neighborhood of the transition
+  point yields behavior consistent with critical slowing
+  from renormalization group theory~\cite{gross1973}.
 \end{itemize}
 
 \noindent Each classical result is therefore a \emph{special case}
@@ -859,7 +847,7 @@ cross-scale methods. Renormalization group flows describe how
 coupling constants evolve with energy scale and require dynamical
 Lagrangians as input; the kernel operates on static measurements
 and requires no dynamics. Fisher information
-geometry~\cite{amari2016information} characterises the Riemannian
+geometry~\cite{amari2016information} characterizes the Riemannian
 structure of statistical manifolds; the kernel quantifies
 \emph{multiplicative coherence} of physical channels through a
 single number ($\IC/F$) that is algebraically exact, not
@@ -885,12 +873,12 @@ For example, the confinement cliff ($\IC/F$: $0.506 \to 0.022$)
 is described in the physics lens as ``coupling to uncontrolled
 degrees of freedom destroying multiplicative coherence,'' in the
 finance lens as ``single-channel concentration risk collapsing
-portfolio integrity,'' and in the semiotics lens as ``dead
-indexical coupling killing sign-chain closure.'' All three
-descriptions refer to the same invariant, the same number, and
-the same ledger entry---they differ only in vocabulary.
+portfolio integrity,'' and in the semiotics lens as ``loss of
+referential grounding breaking the chain of interpretation.''
+All three descriptions refer to the same invariant, the same
+number, and the same ledger entry---they differ only in vocabulary.
 
-This translation layer is itself formalised as one of the
+This translation layer is itself formalized as one of the
 20~domain closures: the \emph{dynamic semiotics} closure maps
 30~sign systems (natural languages, formal notations, genetic
 codes, animal communication) to an 8-channel semiotic kernel
@@ -902,20 +890,22 @@ reveals that meaning coherence is governed by
 \emph{density~$\times$~depth}, not
 \emph{stability~$\times$~resemblance}---a result
 with implications for scientific communication itself. The
-framework can therefore analyse its own communicability as a
-Tier-2 closure, a self-referential consistency check unavailable
+framework can therefore analyze its own communicability as a
+domain closure, a self-referential consistency check unavailable
 to standard measurement theories.
 
 \subsection{Implications for measurement theory}
 
-The framework constitutes a \emph{cognitive equalizer}: because all
-thresholds are frozen (not chosen by the analyst), all vocabulary is
-operationally defined, and all verdicts are three-valued
-(Conformant / Nonconformant / Non-Evaluable), two independent
-analysts processing the same data under the same contract must
-arrive at the same verdict. This removes agent-dependent variance
+The framework constitutes what we term a \emph{cognitive
+equalizer}---a measurement system that eliminates
+analyst-dependent variance: because all thresholds are frozen
+(not chosen by the analyst), all vocabulary is operationally
+defined, and all verdicts are three-valued (Conformant /
+Nonconformant / Non-Evaluable), two independent analysts
+processing the same data under the same contract must arrive
+at the same verdict. This removes agent-dependent variance
 from measurement interpretation---a property related to the
-information-geometric programme of Amari~\cite{amari2016information}
+information-geometric program of Amari~\cite{amari2016information}
 but achieved here through algebraic constraint rather than
 Riemannian structure.
 
@@ -931,35 +921,36 @@ $x^3 + x - 1 = 0$---a result with no adjustable parameters.
 \subsection{Input sensitivity as validation mechanism}
 
 The kernel's dependence on accurate channel inputs is not a
-limitation but the core of its reliability. Any measurement framework
-that produces ``correct'' outputs regardless of input quality is not
-measuring anything---it is fitting. The kernel's strict
-input--output contract enforces the opposite: accurate data in
-produces accurate invariants out; inaccurate data produces
+limitation but the basis of its reliability. Any measurement
+framework that produces ``correct'' outputs regardless of input
+quality is not measuring anything---it is fitting. The kernel's
+strict input--output contract enforces the opposite: accurate
+inputs yield accurate invariants; inaccurate inputs yield
 invariants that \emph{detectably} violate expected patterns (e.g.,
 placing a well-known stable system in the Collapse regime). This
 transparency is by design. The three identities ($F + \omega = 1$,
 $\IC \leq F$, $\IC = \exp(\kappa)$) hold \emph{regardless} of
 input quality---they are algebraic---but the \emph{physical
 interpretation} of kernel outputs (regime classification, cross-scale
-comparisons) is only as good as the channel selection. That the
-kernel faithfully propagates input quality, rather than absorbing
-noise into flexible parameters, is precisely what makes it a
-measurement instrument rather than a fitting procedure. The Tier-2
+comparisons) is only as good as the channel selection.
+
+That the kernel faithfully propagates input quality, rather than
+absorbing noise into flexible parameters, is what distinguishes it
+as a measurement instrument rather than a fitting procedure. The
 channel selections (which real-world quantities become the trace
 vector) are therefore the empirical content of each application,
 declared in versioned contracts and frozen before evaluation.
 
-Two further scope boundaries should be noted. First, the
+Two scope limitations deserve explicit statement. First, the
 consciousness and cosmological applications rest on smaller data
 sets than the Standard Model and atomic closures, and the cortical
 channel values are derived from published literature rather than
-primary neuroimaging---an area where the kernel's input sensitivity
-makes independent replication with raw data particularly
-valuable. Second, the kernel is static: it maps a trace vector to
-invariants at a single evaluation, without dynamical evolution
-equations. Extending the framework to time-dependent processes is a
-direction for future work~\cite{paulus2025umcp}.
+primary neuroimaging---an area where independent replication with
+raw data would be particularly valuable. Second, the kernel is
+static: it maps a trace vector to invariants at a single
+evaluation, without dynamical evolution equations. Extending the
+framework to time-dependent processes is a direction for future
+work~\cite{paulus2025umcp}.
 
 % ============================================================
 % METHODS
@@ -970,7 +961,7 @@ direction for future work~\cite{paulus2025umcp}.
 
 For each domain, a \emph{closure} maps domain-specific observables to
 the bounded trace vector $\tvec \in [\eps, 1{-}\eps]^n$ via declared
-normalisation functions. Importantly, the choice of which
+normalization functions. Importantly, the choice of which
 observables become channels is \emph{not hidden}: it is the declared
 empirical content of each application, specified in a versioned
 contract and frozen before evaluation. Different channel selections
@@ -978,21 +969,21 @@ produce different $\IC/F$ profiles---by design, since this is the
 measurement---but the three algebraic identities hold for
 \emph{every} admissible channel selection, guaranteeing that the
 framework's structural properties are independent of the
-researcher's modelling choices. Standard Model particles use $n = 8$~channels
-(mass$_{\log}$, spin normalised to $[0,1]$,
-$|Q|/\max|Q|$, colour (1 if non-singlet, $\eps$ otherwise),
+researcher's modeling choices. Standard Model particles use $n = 8$~channels
+(mass$_{\log}$, spin normalized to $[0,1]$,
+$|Q|/\max|Q|$, color (1 if non-singlet, $\eps$ otherwise),
 $|I_3|/0.5$, $|L|$, $|B|$, generation$/3$) with equal weights
 $w_i = 1/8$, following data from the Particle Data
 Group~\cite{pdg2024}. Atomic elements use $n = 8$~channels
-(ionisation energy, electronegativity, atomic radius, density,
+(ionization energy, electronegativity, atomic radius, density,
 melting point, boiling point, electron affinity, covalent radius),
 each mapped affinely to $[0, 1]$ using the empirical minimum and
 maximum across all 118~elements. Consciousness systems use $n = 10$
 cortical channels (prefrontal, temporal, parietal, occipital, motor,
 sensory, limbic, cerebellar, brainstem, thalamic coherence),
 with values estimated from published fMRI and EEG meta-analyses and
-normalised to $[0, 1]$ by the empirical range across 20~systems.
-Every normalisation function is
+normalized to $[0, 1]$ by the empirical range across 20~systems.
+Every normalization function is
 frozen in a versioned contract before evaluation; no post-hoc
 adjustment is permitted.
 
@@ -1026,7 +1017,7 @@ closures simultaneously.
 
 \subsection{Computational verification protocol}
 
-All 11{,}342~tests run under Python~3.12 with NumPy~1.26 using
+All 15{,}014~tests run under Python~3.12 with NumPy~1.26 using
 the \texttt{pytest} framework. Each test is a deterministic
 computation: given specific input values, the test verifies that
 kernel outputs satisfy the three identities to specified tolerance
@@ -1049,10 +1040,10 @@ but their intersection is narrow.
 
 All source code, test suites, 20~domain closures, 21~versioned
 contracts, and raw data are available at the public GitHub
-repository~\cite{umcpmetadatarepo} under the MIT licence. The
+repository~\cite{umcpmetadatarepo} under the MIT license. The
 kernel implementation is in
 \texttt{src/umcp/kernel\_optimized.py}. SHA-256 integrity checksums
-for 211~tracked files are maintained in \texttt{integrity/sha256.txt}
+for 228~tracked files are maintained in \texttt{integrity/sha256.txt}
 and verified before every evaluation. Zenodo DOIs provide permanent
 archival~\cite{paulus2025episteme,
 paulus2025physicscoherence, paulus2026umcpcasepack}.
