@@ -219,8 +219,8 @@ CRS_ENTITIES: tuple[CRSourceEntity, ...] = (
         0.90,  # extreme B in shocked ejecta
         0.90,  # ultrarelativistic external shock
         0.95,  # Γ ~ 100-1000 (Γ/Γ_max ≈ 1)
-        0.05,  # very brief (~100 s for prompt, ~days for afterglow)
-        0.15,  # rapid expansion → rapid escape
+        0.02,  # very brief (~100 s prompt / ~10^6 s afterglow)
+        0.10,  # ultrarelativistic expansion → immediate escape
         0.20,  # low external density (pre-burst wind)
         0.35,  # significant radiation losses at GRB luminosities
         0.60,  # broken power law (prompt→afterglow→jet break)
