@@ -265,8 +265,10 @@ GENERATIVE-COLLAPSE-DYNAMICS/
 # Stale tarball artifacts
 casepacks/*.tgz
 
-# Editor / IDE (uncomment if you want them ignored repo-wide)
-.vscode/
+# Editor / IDE — track .vscode/settings.json for codespace performance
+# (file watcher, search, and explorer exclusions benefit all users)
+.vscode/*
+!.vscode/settings.json
 .idea/
 *.swp
 *~

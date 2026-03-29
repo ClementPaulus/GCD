@@ -1,0 +1,75 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "cmake.sourceDirectory": "/workspaces/GENERATIVE-COLLAPSE-DYNAMICS/src/umcp_cpp",
+    "markdown.validate.enabled": false,
+    "markdown.validate.fragmentLinks.enabled": "ignore",
+    "markdownlint.ignore": [
+        "build/**",
+        "src/umcp_cpp/build/**"
+    ],
+    "files.exclude": {
+        "build/": true,
+        "build_integrated/": true,
+        "src/umcp_cpp/build/": true,
+        "src/umcp_cpp/build_new/": true,
+        "dist/": true,
+        "archive/": true,
+        "web/node_modules/": true,
+        "web/dist/": true,
+        "**/__pycache__/": true,
+        "**/*.pyc": true,
+        "**/.mypy_cache/": true,
+        "**/.pytest_cache/": true,
+        ".ruff_cache/": true,
+        "src/umcp.egg-info/": true
+    },
+    "search.exclude": {
+        "build/": true,
+        "build_integrated/": true,
+        "src/umcp_cpp/build/": true,
+        "src/umcp_cpp/build_new/": true,
+        "dist/": true,
+        "archive/": true,
+        "web/node_modules/": true,
+        "web/dist/": true,
+        "**/__pycache__/": true,
+        "**/*.pyc": true,
+        "**/.mypy_cache/": true,
+        "**/.pytest_cache/": true,
+        ".ruff_cache/": true,
+        "src/umcp.egg-info/": true,
+        "ledger/return_log.csv": true,
+        "runs/": true
+    },
+
+    // Exclude heavy directories from file watcher to reduce CPU/IO overhead.
+    // These are build artifacts, dependencies, and archival data that rarely
+    // change during active development. Archive is still accessible via
+    // terminal or by temporarily removing the exclusion.
+    "files.watcherExclude": {
+        "build/**": true,
+        "build_integrated/**": true,
+        "src/umcp_cpp/build/**": true,
+        "src/umcp_cpp/build_new/**": true,
+        "dist/**": true,
+        "archive/**": true,
+        "web/node_modules/**": true,
+        "web/dist/**": true,
+        "**/__pycache__/**": true,
+        "**/.mypy_cache/**": true,
+        "runs/**": true,
+        "ledger/**": true,
+        ".git/objects/**": true,
+        "images/**": true,
+        "paper/**/*.aux": true,
+        "paper/**/*.log": true
+    },
+
+    // Conda recipe uses Jinja2 templating ({% %}, {{ }}) which is
+    // not valid standard YAML — treat as plain text to suppress
+    // ~145 false-positive YAML parse errors.
+    "files.associations": {
+        "**/conda.recipe/meta.yaml": "plaintext",
+        "**/conda.recipe/*.yaml": "plaintext"
+    }
+}
