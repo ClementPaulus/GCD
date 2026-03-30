@@ -141,22 +141,22 @@ import{c as b,a as k}from"./kernel.CLAplkPS.js";import"./constants.6x37F0HI.js";
           </div>
         </div>
       `}d.addEventListener("change",m),n.addEventListener("change",m),m()}f();function I(){const d=r.map(t=>t.kernel.F),n=r.map(t=>t.kernel.IC),m=r.map(t=>t.kernel.delta),e={STABLE:0,WATCH:0,COLLAPSE:0};r.forEach(t=>e[t.regime]++);const s=r.filter(t=>t.isCritical).length,l=t=>t.reduce((o,v)=>o+v,0)/t.length,i=t=>Math.max(...t),c=t=>Math.min(...t),x=document.getElementById("agg-stats");x.innerHTML=`
-      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 text-center">
+      <div class="bg-kernel-900/50 border border-kernel-800/40 rounded-xl p-4 text-center">
         <div class="text-xs text-kernel-500 mb-1">Mean F</div>
         <div class="text-xl font-mono text-kernel-100">${l(d).toFixed(4)}</div>
         <div class="text-xs text-kernel-600">[${c(d).toFixed(3)} – ${i(d).toFixed(3)}]</div>
       </div>
-      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 text-center">
+      <div class="bg-kernel-900/50 border border-kernel-800/40 rounded-xl p-4 text-center">
         <div class="text-xs text-kernel-500 mb-1">Mean IC</div>
         <div class="text-xl font-mono text-kernel-100">${l(n).toFixed(4)}</div>
         <div class="text-xs text-kernel-600">[${c(n).toFixed(3)} – ${i(n).toFixed(3)}]</div>
       </div>
-      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 text-center">
+      <div class="bg-kernel-900/50 border border-kernel-800/40 rounded-xl p-4 text-center">
         <div class="text-xs text-kernel-500 mb-1">Mean Gap Δ</div>
         <div class="text-xl font-mono text-amber-400">${l(m).toFixed(4)}</div>
         <div class="text-xs text-kernel-600">Max: ${i(m).toFixed(4)}</div>
       </div>
-      <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4 text-center">
+      <div class="bg-kernel-900/50 border border-kernel-800/40 rounded-xl p-4 text-center">
         <div class="text-xs text-kernel-500 mb-1">Regime Distribution</div>
         <div class="text-xs mt-1 space-y-1">
           <div class="text-green-400">Stable: ${e.STABLE} / ${r.length}</div>
