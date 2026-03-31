@@ -31,6 +31,13 @@ from closures.quantum_mechanics.indefinite_causal_order import (
 )
 from closures.quantum_mechanics.photonic_confinement import compute_all_entities as compute_cpm_entities
 from closures.quantum_mechanics.spin_measurement import compute_spin_measurement
+from closures.quantum_mechanics.spliceosome_dynamics import SD_ENTITIES
+from closures.quantum_mechanics.spliceosome_dynamics import (
+    compute_all_entities as compute_all_sd_entities,
+)
+from closures.quantum_mechanics.spliceosome_dynamics import (
+    verify_all_theorems as verify_all_sd_theorems,
+)
 from closures.quantum_mechanics.topological_band_structures import (
     TB_ENTITIES,
 )
@@ -46,8 +53,10 @@ from closures.quantum_mechanics.wavefunction_collapse import compute_wavefunctio
 
 __all__ = [
     "ICO_ENTITIES",
+    "SD_ENTITIES",
     "TB_ENTITIES",
     "compute_all_ico_entities",
+    "compute_all_sd_entities",
     "compute_all_tb_entities",
     "compute_cpm_entities",
     "compute_entanglement",
@@ -58,5 +67,6 @@ __all__ = [
     "compute_uncertainty",
     "compute_wavefunction_collapse",
     "run_all_ico_theorems",
+    "verify_all_sd_theorems",
     "verify_all_tb_theorems",
 ]

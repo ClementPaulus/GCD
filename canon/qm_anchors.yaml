@@ -318,3 +318,18 @@ quantum_constants:
     value: 0.0072973525693
     unit: dimensionless
     description: Fine-structure constant
+
+spliceosome_dynamics:
+  description: >
+    Spliceosome active site remodeling — all-atom MD simulation (~2M atoms,
+    Franklin supercomputer, 360+ GPUs) of the first catalytic step (5' splice
+    site cleavage).  Collapse-return structure: cryo-EM = collapse (temporal
+    info lost), MD simulation = return (trajectory recovered).  CRG functional
+    network provides biological context (305 genes, 150 proteins + 5 snRNAs).
+  entities: 12
+  channels: 8
+  theorems: 6
+  theorem_prefix: "T-SD"
+  references:
+    - "Martino et al. (2026). All-atom MD of spliceosome active site. PNAS. DOI:10.1073/pnas.2522293123"
+    - "CRG Barcelona (2024). Human spliceosome blueprint. Science. DOI:10.1126/science.adn8105"

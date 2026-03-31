@@ -524,6 +524,38 @@ registry:
           - "closures/quantum_mechanics/entanglement.py"
           - "closures/quantum_mechanics/wavefunction_collapse.py"
         reference: "arXiv:2603.15608"
+      - name: "spliceosome_dynamics"
+        path: "closures/quantum_mechanics/spliceosome_dynamics.py"
+        description: >
+          Spliceosome dynamics closure: 12 entities × 8 channels → Tier-1
+          invariants.  Maps all-atom MD simulation of spliceosome active site
+          remodeling (Martino et al. PNAS 2026, ~2M atoms, Franklin
+          supercomputer) and CRG functional interaction network (Science 2024,
+          305 genes, 150 proteins + 5 snRNAs) through catalytic_fidelity,
+          conformational_coherence, component_complexity, rna_protein_coupling,
+          transition_resolution, simulation_convergence,
+          network_interconnection, energetic_discrimination.
+          6 theorems (T-SD-1 through T-SD-6).
+        contract: "QM.INTSTACK.v1"
+        inputs: ["spliceosome_entity_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "heterogeneity_gap", "regime"]
+        channels:
+          - "catalytic_fidelity"
+          - "conformational_coherence"
+          - "component_complexity"
+          - "rna_protein_coupling"
+          - "transition_resolution"
+          - "simulation_convergence"
+          - "network_interconnection"
+          - "energetic_discrimination"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 6
+        cross_references:
+          - "closures/quantum_mechanics/quantum_material_simulation.py"
+        reference: "DOI:10.1073/pnas.2522293123"
 
     nuclear_physics:
       - name: "nuclide_binding"
