@@ -394,7 +394,7 @@ across all domains. Key results from the latest run:
 | B3 | Composition | IC₁₂ = √(IC₁·IC₂) | Geometric cascade verified |
 | B4 | Fisher Volume | Z = Σw·ln(4g_F) | Log-volume computed |
 | B5 | Budget Conservation | \|Δκ\| ≤ tol_seam | Double-entry verified |
-| B6 | Self-Duality | c* = σ(1/c*) = 0.7822 | Logistic fixed point |
+| B6 | Self-Duality | c\* = σ(1/c\*) = 0.7822 | Logistic fixed point |
 | B7 | Trapping | Γ(ω_trap) = 1 | Budget boundary at c_trap = 0.3178 |
 | B8 | Curvature Decomposition | f'' = −g_F − 1/c² | Fisher + pole structure |
 | B9 | Closure Dimensionality | dim = 4/5 | Low-rank closure space |
@@ -406,7 +406,7 @@ across all domains. Key results from the latest run:
 
 | Constant | Value | Role |
 |:---------|:------|:-----|
-| c* | 0.782188294280200 | Logistic self-dual fixed point |
+| c\* | 0.782188294280200 | Logistic self-dual fixed point |
 | c_trap | 0.317672191999601 | Cardano root of x³ + x − 1 = 0 |
 | ε | 10⁻⁸ | Guard band |
 | p | 3 | Unique integer for Cardano root |

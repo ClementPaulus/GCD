@@ -299,6 +299,7 @@ ignore = [
 python_version = "3.11"
 mypy_path = "src"
 explicit_package_bases = true
+namespace_packages = true
 strict = true
 warn_unused_ignores = true
 warn_redundant_casts = true
@@ -318,6 +319,7 @@ module = [
   "numpy.*",
   "scipy.*",
   "psutil.*",
+  "pandas.*",
   "closures.*",
 ]
 ignore_missing_imports = true
