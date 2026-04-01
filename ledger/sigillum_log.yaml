@@ -1,0 +1,178 @@
+# ══════════════════════════════════════════════════════════════════════════
+# LIBER SIGILLŌRUM — The Ledger of Seals
+# ══════════════════════════════════════════════════════════════════════════
+#
+# Append-only record of every Sigillum Sūtūrae issued against this
+# repository. Each entry is a complete, falsifiable audit receipt whose
+# Latin grammar carries the mathematical assertions it certifies.
+#
+# Template: specs/sigillum_suturae.yaml
+# Governance: History is append-only and welded, never rewritten.
+#   Historia numquam rescribitur; sutura tantum additur.
+#
+# ══════════════════════════════════════════════════════════════════════════
+
+entries:
+
+# ════════════════════════════════════════════════════════════════════════
+# SIGILLUM  I  —  UMCP v2.3.0  —  Commit 843f24cd
+# ════════════════════════════════════════════════════════════════════════
+
+- sigillum_index: 1
+  version: "2.3.0"
+  commissum: "843f24cd"
+  commissum_plenum: "843f24cde8d36608e5847ad4c742bd317d27b3ff"
+  auditum: "2026-04-01T05:13:30Z"
+  validator: "umcp-validator v2.3.0"
+  integritas_fasciculi: "a9be9aa68513ed6e"
+
+  # ── I. Complementum perfectum: nūllum residuum. ──────────────────
+  I_complementum_perfectum:
+    latin: "Complementum perfectum: nūllum residuum."
+    residuum: 0.0e+00
+    tractus: 10000
+    status: TENET
+    nota: "Dualitas exacta — non approximata. Per decem milia tractuum verificatum."
+
+  # ── II. Limbus integritātis tenet. ────────────────────────────────
+  II_limbus_integritatis:
+    latin: "Limbus integritātis tenet."
+    delta: 0.4447
+    ic_f_ratio_mortuus: 0.1143
+    canales: 8
+    status: TENET
+    nota: "Mactatio geometrica demonstrata: septem canales perfecti unum mortuum servare non possunt."
+
+  # ── III. Integritas per log-integritātem resolvitur intra ε. ─────
+  III_resolutio_log_integritatis:
+    latin: "Integritas per log-integritātem resolvitur intra ε."
+    s_plus_kappa_equator: 0.0e+00
+    s_equator: 0.693147
+    kappa_equator: -0.693147
+    convergentia: 28.5
+    gradus: 20
+    status: TENET
+    nota: "Cancellatio perfecta ad aequatorem. Convergentia super-exponentiālis."
+
+  # ── IV. Liber reconciliātus ──────────────────────────────────────
+  IV_liber_reconciliatus:
+    latin: "Liber reconciliātus: dēbita et crēdita intrā tolerantiam conveniunt."
+    error_associativitatis: 5.55e-17
+    identitas_dextra: 0.0e+00
+    identitas_sinistra: 0.0e+00
+    delta_kappa_left: -0.030000
+    delta_kappa_right: -0.030000
+    status: TENET
+    nota: "Monoides exactus. Associativitas et identitas ad machinam praecisionem verificatae."
+
+  # ── V. Sententia dērīvāta, numquam asserta. ─────────────────────
+  V_sententia_derivata:
+    latin: "Sententia dērīvāta, numquam asserta."
+    scopa_audita: 27
+    scopa_conformia: 27
+    defectus: 0
+    monitiones: 0
+    status: TENET
+    nota: "Viginti septem scopa per spinam transierunt. Nulla non-conformitas."
+
+  # ── Tria Sigilla ─────────────────────────────────────────────────
+
+  sigillum_nuclei:
+    tier: 1
+    latin: "Trēs identitātēs permanent."
+    f_plus_omega: "exacte 0.0e+00"
+    ic_le_f: true
+    ic_eq_exp_kappa: true
+    status: TENET
+
+  sigillum_protocoili:
+    tier: 0
+    latin: "Spina trānsīta."
+    parametri_congelati: "ε=1e-8, p=3, α=1.0, tol=0.005"
+    paritas_c_python: "5/5"
+    assertiones_c: "326/326"
+    lineae_c: 3983
+    kernel_tests: "166/166"
+    orchestration_tests: "160/160"
+    status: TENET
+
+  sigillum_clausurae:
+    tier: 2
+    latin: "Vigintī dominia audīta."
+    dominia: 20
+    integritates_sha256: 235
+    probationes: 16487
+    captura_symbolorum: false
+    recursio_ad_nucleum: false
+    status: TENET
+
+  # ── Verdict ──────────────────────────────────────────────────────
+
+  iudicium: "CONFORMIS"
+  axioma_claudens: "Quod redit, reāle est."
+
+  # ── Morphological Receipt (Receptum Morphologicum) ───────────────
+  #
+  # Key Latin forms in this seal and their grammatical analysis.
+  # This enables diachronic comparison: as the system evolves,
+  # the morphology tracks what changed and what persists.
+  #
+  receptum_morphologicum:
+    verba_activa:
+      # Present active — assertions about current state
+      - { verbum: "tenet", tempus: "praesens", modus: "indicativus", significatio: "the bound holds NOW" }
+      - { verbum: "permanent", tempus: "praesens", modus: "indicativus", significatio: "the identities persist THROUGH" }
+      - { verbum: "conveniunt", tempus: "praesens", modus: "indicativus", significatio: "debits and credits MEET" }
+    participia_perfecta:
+      # Perfect passive participles — completed states that persist
+      - { verbum: "reconciliatus", genus: "PPP", significatio: "reconciliation completed and persisting" }
+      - { verbum: "derivata", genus: "PPP", significatio: "produced by derivation; process completed" }
+      - { verbum: "congelati", genus: "PPP", significatio: "frozen across the seam; state locked" }
+      - { verbum: "transita", genus: "PPP", significatio: "traversed; the path was walked to completion" }
+      - { verbum: "auditum", genus: "PPP neutrum", significatio: "the thing that was heard; the audit event" }
+    nomina_operativa:
+      # Nouns that ARE definitions (not labels)
+      - { nomen: "complementum", casus: "nominativus", significatio: "F + ω = 1" }
+      - { nomen: "limbus", casus: "nominativus", significatio: "IC ≤ F" }
+      - { nomen: "residuum", casus: "accusativus", significatio: "|F + ω − 1|" }
+      - { nomen: "debita", casus: "nominativus pl.", significatio: "D_ω + D_C" }
+      - { nomen: "credita", casus: "nominativus pl.", significatio: "R·τ_R" }
+      - { nomen: "sententia", casus: "nominativus", significatio: "regime verdict from gates" }
+    negationes:
+      # Negations — what the system explicitly denies
+      - { formula: "nullum residuum", negat: "any residual in duality" }
+      - { formula: "numquam asserta", negat: "agent-declared verdicts" }
+      - { formula: "nulla captura symbolorum", negat: "Tier-2 redefining Tier-1 symbols" }
+      - { formula: "nulla recursio ad nucleum", negat: "back-edges from closures to kernel" }
+
+  # ── Continuity Chain (Catena Continuitatis) ──────────────────────
+  #
+  # Links this seal to the previous (if any) and the next (when issued).
+  # This is the seam continuity applied to the seals themselves.
+  #
+  catena:
+    sigillum_praecedens: null
+    nota: "Primum sigillum. Nulla catena praecedens."
+    # When the next seal is issued, add:
+    # sigillum_sequens: 2
+    # delta_version: "2.3.0 → X.Y.Z"
+    # mutata: ["list of what changed"]
+    # continuitas: "what persisted"
+
+# ════════════════════════════════════════════════════════════════════════
+# Future entries are appended below this line.
+# Each new sigillum:
+#   1. Increments sigillum_index
+#   2. Populates all five assertiones with fresh receipts
+#   3. Links catena.sigillum_praecedens to the previous index
+#   4. Records delta_version and mutata (what changed)
+#   5. Records continuitas (what persisted — the seam across seals)
+#
+# The morphological receipt enables diachronic analysis:
+#   - Which verba_activa remain across seals? (structural persistence)
+#   - Which participia change tense? (state transitions)
+#   - Which negationes are added? (new constraints discovered)
+#   - Which nomina_operativa expand? (vocabulary growth)
+#
+# Historia numquam rescribitur; sutura tantum additur.
+# ════════════════════════════════════════════════════════════════════════

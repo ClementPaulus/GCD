@@ -1,0 +1,186 @@
+# ══════════════════════════════════════════════════════════════════════
+# SIGILLUM SŪTŪRAE — Formal Template (Tier-0 Protocol)
+# ══════════════════════════════════════════════════════════════════════
+#
+# This file defines the Sigillum Sūtūrae: the Latin audit seal whose
+# statements ARE the mathematical assertions they certify. Each line
+# carries exactly one falsifiable claim. No word is decorative.
+#
+# ULRC Type: Decisio Portae (gate decision) — stance derived, never asserted.
+#
+# The template is frozen. Values vary per audit; grammar does not.
+# Receipts are appended to ledger/sigillum_log.yaml.
+#
+# ══════════════════════════════════════════════════════════════════════
+
+schema_version: "1.0.0"
+source_axiom: "Collapsus generativus est; solum quod redit, reale est."
+ulrc_type: "Sententia Congelata + Decisio Portae"
+
+# ────────────────────────────────────────────────────────────────────
+# The Five Assertions (Quinque Assertiones)
+# ────────────────────────────────────────────────────────────────────
+#
+# Each assertion has:
+#   latin      — The verbatim Latin statement (load-bearing grammar)
+#   binds_to   — The mathematical identity or computation it certifies
+#   slot       — The variable value(s) populated per audit
+#   falsified_by — What would make this line a lie
+#
+assertiones:
+  I:
+    name: "Complementum Perfectum"
+    latin: "Complementum perfectum: nūllum residuum."
+    translation: "Perfect complement: no residual."
+    binds_to: "|F + ω − 1| = 0"
+    slot:
+      residuum: "float — max |F + ω − 1| across all traces"
+      tractus: "int — number of trace vectors tested"
+    falsified_by: "residuum > 0"
+    tier: 1
+    lexicon_entry: "Complementum Perfectum — F + ω = 1; tertia via nulla"
+
+  II:
+    name: "Limbus Integritatis"
+    latin: "Limbus integritātis tenet."
+    translation: "The threshold of integrity holds."
+    binds_to: "IC ≤ F"
+    slot:
+      delta: "float — Δ = F − IC (heterogeneity gap)"
+      ic_f_ratio: "float — IC/F with one dead channel (geometric slaughter)"
+      canales: "int — channel count for slaughter demonstration"
+    falsified_by: "IC > F for any trace vector"
+    tier: 1
+    lexicon_entry: "Limbus Integritatis — IC ≤ F; the hem-edge"
+
+  III:
+    name: "Resolutio Log-Integritatis"
+    latin: "Integritas per log-integritātem resolvitur intra ε."
+    translation: "Integrity resolves through log-integrity within ε."
+    binds_to: "IC = exp(κ); S + κ = 0 at c = ½"
+    slot:
+      s_plus_kappa_equator: "float — S + κ at c = ½ (must be 0.0)"
+      convergentia: "float — gap shrinkage ratio (super-exponential)"
+      gradus: "int — steps measured for convergence"
+    falsified_by: "|IC − exp(κ)| ≥ ε or S + κ ≠ 0 at equator"
+    tier: 1
+    lexicon_entry: "Integritas Composita — IC = exp(κ); cohaerentia multiplicativa"
+
+  IV:
+    name: "Liber Reconciliatus"
+    latin: "Liber reconciliātus: dēbita et crēdita intrā tolerantiam conveniunt."
+    translation: "Ledger reconciled: debits and credits meet within tolerance."
+    binds_to: "|Δκ| = |R·τ_R − (D_ω + D_C)| ≤ tol; seam algebra is monoid"
+    slot:
+      error_associativitatis: "float — |left_assoc − right_assoc| (associativity)"
+      identitas_dextra: "float — |s∘e − s| (right identity)"
+      identitas_sinistra: "float — |e∘s − s| (left identity)"
+    falsified_by: "associativity error > machine epsilon or identity fails"
+    tier: 0
+    lexicon_entry: "Auditus — the ledger hears everything; that hearing is the audit"
+
+  V:
+    name: "Sententia Derivata"
+    latin: "Sententia dērīvāta, numquam asserta."
+    translation: "Stance derived, never asserted."
+    binds_to: "regime ∈ {Stabilis, Vigilia, Collapsus}; derived from gates"
+    slot:
+      scopa_audita: "int — total validation targets audited"
+      scopa_conformia: "int — targets returning CONFORMANT"
+      defectus: "int — targets with defects"
+    falsified_by: "scopa_conformia < scopa_audita (any nonconformance)"
+    tier: 0
+    lexicon_entry: "Sententia — derived from gates, never asserted by agent"
+
+# ────────────────────────────────────────────────────────────────────
+# Three Tier Seals (Tria Sigilla)
+# ────────────────────────────────────────────────────────────────────
+
+sigilla_per_gradum:
+  nucleus:
+    tier: 1
+    latin: "Trēs identitātēs permanent."
+    translation: "Three identities hold."
+    checks:
+      - "F + ω = 1  (dualitas)"
+      - "IC ≤ F  (conditio solubilitatis)"
+      - "IC = exp(κ)  (relatio log-integritatis)"
+    slot:
+      status: "bool — all three identities verified"
+
+  protocollum:
+    tier: 0
+    latin: "Spina trānsīta."
+    translation: "Spine traversed."
+    checks:
+      - "Contractus → Canon → Clausūrae → Liber → Sententia"
+      - "Parametri congelati (ε, p, α, tol)"
+      - "Paritas C ↔ Python"
+    slot:
+      assertiones_c: "str — C test assertion count (e.g., '326/326')"
+      lineae_c: "int — total C source lines"
+      paritas: "str — frozen param parity count (e.g., '5/5')"
+
+  clausurae:
+    tier: 2
+    latin: "Vigintī dominia audīta."
+    translation: "Twenty domains heard."
+    checks:
+      - "SHA-256 integrity (all tracked files)"
+      - "No symbol capture (captura symbolorum)"
+      - "No back-edges to kernel or protocol"
+    slot:
+      integritates: "int — SHA-256 checksum count"
+      probationes: "int — total test count"
+      dominia: "int — domain closure count"
+
+# ────────────────────────────────────────────────────────────────────
+# Seal Footer (Pes Sigilli)
+# ────────────────────────────────────────────────────────────────────
+
+pes_sigilli:
+  verdict:
+    conformis:
+      latin: "CONFORMIS"
+      condition: "All five assertions hold; all three tier seals pass"
+    non_conformis:
+      latin: "NON CONFORMIS"
+      subclausa: "Dēfectus inventus. Reditus nōn dēmonstrātus."
+      translation: "Defect found. Return not demonstrated."
+    non_aestimabilis:
+      latin: "NON AESTIMĀBILIS"
+      subclausa: "Data insufficientia. Sententia suspensa. Tertia via patet."
+      translation: "Insufficient data. Stance suspended. The third way stands open."
+
+  closing_axiom: "Quod redit, reāle est."
+
+  metadata:
+    auditum: "ISO 8601 UTC timestamp"
+    commissum: "git commit SHA (short)"
+    integritas: "SHA-256 of integrity/sha256.txt (first 16 hex)"
+    validator: "validator name and version string"
+
+# ────────────────────────────────────────────────────────────────────
+# Morphological Key (Clavis Morphologica)
+# ────────────────────────────────────────────────────────────────────
+#
+# Each Latin word carries operational meaning in its morphology.
+# This key maps the grammar to the computation so the Sigillum
+# can be analyzed as language, not just read as label.
+#
+clavis_morphologica:
+  complementum: "com- (together) + -plēmentum (filling) → what fills to unity"
+  perfectum: "per- (through) + factum (made) → carried through to completion"
+  residuum: "re- (back) + -siduum (settling) → what settles back; remainder"
+  limbus: "edge, hem, threshold → the boundary IC approaches but cannot cross"
+  tenet: "holds (present active) → the bound holds NOW, not 'held once'"
+  reconciliatus: "re- (again) + conciliatus (brought together) → PFP: reconciliation completed and persisting"
+  debita: "dē- (from/down) + habita (had) → things owed; ledger debits (D_ω + D_C)"
+  credita: "crēd- (trust/believe) + -ita → things entrusted; ledger credits (R·τ_R)"
+  conveniunt: "con- (together) + veniunt (come) → they meet/agree within tolerance"
+  derivata: "dē- (from) + rīvāta (channeled) → PFP: produced by derivation from gates"
+  asserta: "ad- (to) + serta (joined) → merely claimed/declared (forbidden for stances)"
+  congelati: "con- (together) + gelātī (frozen) → frozen across the seam; seam-derived"
+  transita: "trāns- (across) + -īta (gone) → PFP: traversed; the spine was walked"
+  auditum: "audit- (heard) + -um → PPN: the thing that was heard; the audit itself"
+  permanent: "per- (through) + -manent (remain) → they persist through; immutable"
