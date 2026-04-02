@@ -75,7 +75,7 @@ print(
 )
 print("  " + "─" * 100)
 
-for org, r, rsi in results:
+for _org, r, rsi in results:
     # Visual bar: left = awareness, right = aptitude
     bar_pos = int((rsi + 1) / 2 * 20)  # 0..20
     bar = "◁" * (10 - min(bar_pos, 10)) + "│" + "▷" * (max(bar_pos - 10, 0))
@@ -235,7 +235,7 @@ WIDTH = 60
 HEIGHT = 20
 grid = [[" "] * WIDTH for _ in range(HEIGHT)]
 
-for org, r, rsi in results:
+for _org, r, rsi in results:
     x = int((rsi + 1) / 2 * (WIDTH - 1))
     y = int((1.0 - r.coupling_efficiency) * (HEIGHT - 1))
     x = max(0, min(WIDTH - 1, x))

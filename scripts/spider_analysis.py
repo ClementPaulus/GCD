@@ -53,7 +53,7 @@ for r in results:
         f"{r.delta:7.4f} {r.omega:6.3f} {r.S:6.3f} {r.C:6.3f}  {r.regime:<10} ◄"
     )
 print("  " + "─" * 86)
-for org, r in comparisons:
+for _org, r in comparisons:
     print(
         f"  {r.name:<18} {r.F:6.3f} {r.IC:7.4f} {r.coupling_efficiency:6.3f} "
         f"{r.delta:7.4f} {r.omega:6.3f} {r.S:6.3f} {r.C:6.3f}  {r.regime:<10}"
@@ -64,7 +64,7 @@ print("\n" + "=" * 90)
 print("  SPIDER CHANNEL PROFILES (5+5 partition)")
 print("=" * 90)
 
-for r, org in zip(results, spiders):
+for r, org in zip(results, spiders, strict=True):
     c = org.trace
     print(f"\n  ── {r.name} ──")
     print("  Awareness subspace (reflective):")
@@ -86,7 +86,7 @@ print("=" * 90)
 
 print(f"\n  {'Organism':<20} {'plan':>6} {'Aw_mean':>8} {'plan/Aw':>8}  note")
 print("  " + "─" * 60)
-all_items = [(s, r) for s, r in zip(spiders, results)] + comparisons
+all_items = [(s, r) for s, r in zip(spiders, results, strict=True)] + comparisons
 for org, r in all_items:
     planning = org.channels[2]
     ratio = planning / r.awareness_mean if r.awareness_mean > 0 else 0
@@ -109,7 +109,7 @@ for r in results:
 
 # ── κ-sensitivity ──
 print("\n  κ-SENSITIVITY (which channels drive integrity):")
-for r, org in zip(results, spiders):
+for r, _org in zip(results, spiders, strict=True):
     s = r.sensitivity
     sorted_idx = np.argsort(s)[::-1]
     print(f"\n  {r.name}:")
