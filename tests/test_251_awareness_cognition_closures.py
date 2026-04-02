@@ -2,7 +2,7 @@
 
 Tests cover:
     - Entity catalog completeness and channel bounds
-    - Tier-1 identity verification for all 34 organisms
+    - Tier-1 identity verification for all 36 organisms
     - Structural analysis correlations
     - 10 theorems (T-AW-1 through T-AW-10)
     - Human developmental trajectory
@@ -64,8 +64,8 @@ from umcp.frozen_contract import EPSILON
 class TestCatalog:
     """Verify organism catalog structure and completeness."""
 
-    def test_catalog_has_34_entities(self) -> None:
-        assert len(ORGANISM_CATALOG) == 34
+    def test_catalog_has_36_entities(self) -> None:
+        assert len(ORGANISM_CATALOG) == 36
 
     def test_all_organisms_have_10_channels(self) -> None:
         for org in ORGANISM_CATALOG:
@@ -164,7 +164,7 @@ class TestStructuralAnalysis:
         return analyze_awareness_structure()
 
     def test_entity_count(self, analysis: AwarenessStructuralAnalysis) -> None:
-        assert analysis.n_entities == 34
+        assert analysis.n_entities == 36
 
     def test_zero_stable(self, analysis: AwarenessStructuralAnalysis) -> None:
         assert analysis.n_stable == 0

@@ -222,6 +222,8 @@ ORGANISM_CATALOG: list[Organism] = [
     Organism("Fruit fly",        "Insecta",     (0.01, 0.08, 0.08, 0.01, 0.03, 0.55, 0.65, 0.50, 0.90, 0.40)),
     Organism("Honeybee",         "Insecta",     (0.01, 0.12, 0.15, 0.10, 0.15, 0.70, 0.60, 0.40, 0.80, 0.30)),
     Organism("Jumping spider",   "Arachnida",   (0.01, 0.10, 0.12, 0.01, 0.08, 0.90, 0.75, 0.35, 0.65, 0.40)),
+    Organism("Orb weaver",       "Arachnida",   (0.01, 0.05, 0.25, 0.01, 0.03, 0.75, 0.80, 0.40, 0.70, 0.30)),
+    Organism("Trapdoor spider",  "Arachnida",   (0.01, 0.03, 0.30, 0.01, 0.02, 0.70, 0.65, 0.50, 0.45, 0.55)),
     Organism("Octopus",          "Cephalopoda", (0.10, 0.25, 0.20, 0.05, 0.15, 0.75, 0.85, 0.35, 0.60, 0.50)),
     Organism("Mantis shrimp",    "Crustacea",   (0.01, 0.05, 0.08, 0.01, 0.05, 0.95, 0.90, 0.30, 0.55, 0.45)),
 
@@ -288,6 +290,8 @@ class AwarenessKernelResult:
     delta: float  # F - IC (heterogeneity gap)
     delta_ratio: float  # delta / F
     coupling_efficiency: float  # IC / F
+    return_strategy_index: float  # RSI = (Ap - Aw) / (Ap + Aw), [-1, +1]
+    return_strategy_band: str  # categorical: trait / trait-leaning / mixed / social-leaning / social
     weakest_channel: str
     strongest_channel: str
     binding_gate: str
@@ -298,6 +302,46 @@ class AwarenessKernelResult:
         """Ratio of max to min sensitivity."""
         s = self.sensitivity
         return float(np.max(s) / np.min(s)) if np.min(s) > 0 else float("inf")
+
+
+# ═══════════════════════════════════════════════════════════════════
+# RETURN STRATEGY
+# ═══════════════════════════════════════════════════════════════════
+
+
+def _return_strategy_index(aw: float, ap: float) -> float:
+    """Normalized contrast: RSI = (Ap - Aw) / (Ap + Aw).
+
+    Range [-1, +1]:
+        +1 → pure trait-carried return (body/genome)
+         0 → balanced (mixed strategy)
+        -1 → pure socially-carried return (culture/language)
+    """
+    denom = ap + aw
+    if denom < 1e-12:
+        return 0.0
+    return (ap - aw) / denom
+
+
+def _return_strategy_band(rsi: float) -> str:
+    """Classify RSI into categorical band.
+
+    Bands:
+        trait:          RSI > +0.50
+        trait-leaning:  +0.20 < RSI ≤ +0.50
+        mixed:          -0.20 ≤ RSI ≤ +0.20
+        social-leaning: -0.50 ≤ RSI < -0.20
+        social:         RSI < -0.50
+    """
+    if rsi > 0.50:
+        return "trait"
+    if rsi > 0.20:
+        return "trait-leaning"
+    if rsi >= -0.20:
+        return "mixed"
+    if rsi >= -0.50:
+        return "social-leaning"
+    return "social"
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -320,6 +364,10 @@ def compute_awareness_kernel(org: Organism) -> AwarenessKernelResult:
     c_min_idx = int(np.argmin(c))
     c_max_idx = int(np.argmax(c))
 
+    # Return strategy
+    rsi = _return_strategy_index(aw, ap)
+    band = _return_strategy_band(rsi)
+
     return AwarenessKernelResult(
         name=org.name,
         clade=org.clade,
@@ -336,6 +384,8 @@ def compute_awareness_kernel(org: Organism) -> AwarenessKernelResult:
         delta=ko.F - ko.IC,
         delta_ratio=(ko.F - ko.IC) / ko.F if ko.F > 0 else 0.0,
         coupling_efficiency=ko.IC / ko.F if ko.F > 0 else 0.0,
+        return_strategy_index=rsi,
+        return_strategy_band=band,
         weakest_channel=ALL_CHANNELS[c_min_idx],
         strongest_channel=ALL_CHANNELS[c_max_idx],
         binding_gate=diag.gates.binding,
@@ -574,7 +624,7 @@ def main() -> None:
 
     hdr = (
         f"{'Entity':28s} {'F':>6s} {'IC':>7s} {'Δ':>6s} {'Δ/F%':>5s} {'IC/F':>5s} "
-        f"{'C':>5s} {'Aw':>5s} {'Ap':>5s} {'Gap':>6s} {'Regime':>8s} {'Bind':>5s}"
+        f"{'C':>5s} {'Aw':>5s} {'Ap':>5s} {'Gap':>6s} {'RSI':>6s} {'Band':>14s} {'Regime':>8s} {'Bind':>5s}"
     )
     print(hdr)
     print("-" * len(hdr))
@@ -583,7 +633,8 @@ def main() -> None:
         print(
             f"{r.name:28s} {r.F:6.4f} {r.IC:7.4f} {r.delta:6.4f} {r.delta_ratio * 100:5.1f} "
             f"{r.coupling_efficiency:5.3f} {r.C:5.3f} {r.awareness_mean:5.3f} "
-            f"{r.aptitude_mean:5.3f} {r.gap:+6.3f} {r.regime:>8s} {r.binding_gate:>5s}"
+            f"{r.aptitude_mean:5.3f} {r.gap:+6.3f} {r.return_strategy_index:+6.3f} "
+            f"{r.return_strategy_band:>14s} {r.regime:>8s} {r.binding_gate:>5s}"
         )
 
     # Validation

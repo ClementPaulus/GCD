@@ -1783,7 +1783,7 @@ def plot_tier_architecture() -> None:
             "Regime gates: Stable / Watch / Collapse  │  Seam calculus\n\n"
             "Validator  │  Contracts  │  Schemas  │  SHA-256 integrity\n"
             "Three-valued verdicts: CONFORMANT / NONCONFORMANT / NON_EVALUABLE\n"
-            "7,442 tests  │  133 closure modules  │  C++17 accelerator (50-80× speedup)",
+            "17,858 tests  │  217 closure modules  │  C++17 accelerator (50-80× speedup)",
         ),
         (
             1.5,
@@ -1792,10 +1792,11 @@ def plot_tier_architecture() -> None:
             2.5,
             "TIER 2: EXPANSION SPACE",
             PURPLE,
-            "18 domains across physics, biology, cognition, and formal systems:\n\n"
+            "20 domains across physics, biology, cognition, and formal systems:\n\n"
             "Standard Model  │  Nuclear  │  Atomic  │  QM  │  Astronomy  │  WEYL\n"
             "Kinematics  │  Materials  │  Finance  │  Security  │  GCD  │  RCFT\n"
-            "Evolution  │  Semiotics  │  Consciousness  │  Continuity  │  Everyday  │  Awareness",
+            "Evolution  │  Semiotics  │  Consciousness  │  Continuity\n"
+            "Everyday  │  Awareness  │  Clinical Neuro  │  Spacetime Memory",
         ),
     ]
 
