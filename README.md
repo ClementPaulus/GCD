@@ -978,7 +978,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 │   ├── epistemic_weld.py      # Epistemic cost tracking
 │   ├── fleet/                 # Distributed validation
 │   └── dashboard/             # Modular Streamlit dashboard
-├── closures/                  # 20 domains, 198 modules
+├── closures/                  # 20 domains, 217 modules
 │   ├── standard_model/        # 31 particles, 27 theorems
 │   ├── atomic_physics/        # 118 elements, Tier-1 proof
 │   ├── quantum_mechanics/     # Double slit, entanglement, tunneling, QDM, FQHE
