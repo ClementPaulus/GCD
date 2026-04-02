@@ -443,6 +443,47 @@ export const DOMAIN_PRESETS: DomainPreset[] = [
     c: [0.7822, 0.7822, 0.7822, 0.7822, 0.7822, 0.7822, 0.7822, 0.7822], w: Array(8).fill(0.125) },
   { name: 'Drift Trap (c_trap)', domain: 'corner', description: 'All channels at c_trap=0.3177 — Cardano root',
     c: [0.3177, 0.3177, 0.3177, 0.3177, 0.3177, 0.3177, 0.3177, 0.3177], w: Array(8).fill(0.125) },
+  // ── Quantum Mechanics (expanded) ──
+  { name: 'EPR-Bohm Pair', domain: 'qm', description: 'Maximally entangled spin-½ pair — Bell inequality violation',
+    c: [1.0, 0.5, 0.5, 0.0, 1.0, 0.5, 0.5, 0.0], w: Array(8).fill(0.125) },
+  { name: 'Schrödinger Cat', domain: 'qm', description: 'Macroscopic superposition — equal alive/dead coherence',
+    c: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], w: Array(8).fill(0.125) },
+  { name: 'Quantum Zeno', domain: 'qm', description: 'Frequent measurement freezes decay — fidelity lock',
+    c: [0.99, 0.99, 0.95, 0.98, 0.97, 0.99, 0.96, 0.98], w: Array(8).fill(0.125) },
+  // ── Thermodynamics ──
+  { name: 'Ice–Water (0°C)', domain: 'thermo', description: 'Phase boundary — coexisting solid/liquid at triple point',
+    c: [0.50, 0.50, 0.85, 0.45, 0.55, 0.40, 0.60, 0.50], w: Array(8).fill(0.125) },
+  { name: 'Carnot Engine', domain: 'thermo', description: 'Ideal heat engine — maximum efficiency thermodynamic cycle',
+    c: [0.95, 0.85, 0.40, 0.15, 0.90, 0.80, 0.35, 0.20], w: Array(8).fill(0.125) },
+  { name: 'Heat Death', domain: 'thermo', description: 'Maximum entropy state — uniform temperature, no gradients',
+    c: [0.50, 0.50, 0.50, 0.50, 0.50, 0.50, 0.50, 0.50], w: Array(8).fill(0.125) },
+  // ── Materials Science ──
+  { name: 'Diamond (C)', domain: 'materials', description: 'Hardest natural material — sp³ hybridized carbon lattice',
+    c: [0.95, 0.99, 0.88, 0.92, 0.90, 0.85, 0.95, 0.91], w: Array(8).fill(0.125) },
+  { name: 'Graphene', domain: 'materials', description: 'Single-layer sp² carbon — Dirac fermion behavior',
+    c: [0.90, 0.95, 0.80, 0.10, 0.85, 0.92, 0.88, 0.65], w: Array(8).fill(0.125) },
+  { name: 'High-Tc Superconductor', domain: 'materials', description: 'YBCO cuprate — Cooper pairs above 77 K',
+    c: [0.70, 0.55, 0.90, 0.30, 0.85, 0.40, 0.75, 0.60], w: Array(8).fill(0.125) },
+  // ── Computational Semiotics ──
+  { name: 'Malbolge VM', domain: 'semiotics', description: 'Self-modifying ternary VM — maximal computational hostility',
+    c: [0.10, 0.90, 0.15, 0.70, 0.05, 0.85, 0.20, 0.95], w: Array(8).fill(0.125) },
+  { name: 'Shakespeare Sonnet', domain: 'semiotics', description: 'Iambic pentameter — high regularity semiotic structure',
+    c: [0.92, 0.88, 0.85, 0.80, 0.91, 0.87, 0.83, 0.78], w: Array(8).fill(0.125) },
+  // ── Evolution / Biology ──
+  { name: 'Cambrian Explosion', domain: 'biology', description: 'Rapid phyla diversification — max channel heterogeneity',
+    c: [0.30, 0.90, 0.55, 0.85, 0.25, 0.95, 0.40, 0.70], w: Array(8).fill(0.125) },
+  { name: 'Extremophile', domain: 'biology', description: 'Tardigrade-like extremophile — survival across hostile regimes',
+    c: [0.80, 0.70, 0.60, 0.85, 0.75, 0.65, 0.55, 0.90], w: Array(8).fill(0.125) },
+  // ── Spacetime / Cosmology ──
+  { name: 'Hawking Radiation', domain: 'spacetime', description: 'Black hole evaporation — information at the horizon',
+    c: [0.01, 0.99, 0.50, 0.01, 0.98, 0.02, 0.50, 0.01], w: Array(8).fill(0.125) },
+  { name: 'Cosmic Dawn (z≈20)', domain: 'spacetime', description: 'First stars ignite — reionization begins',
+    c: [0.15, 0.10, 0.85, 0.20, 0.05, 0.90, 0.25, 0.12], w: Array(8).fill(0.125) },
+  // ── Clinical Neuroscience ──
+  { name: 'Anesthesia (Propofol)', domain: 'neuro', description: 'Loss of consciousness — cortical integration breakdown',
+    c: [0.20, 0.30, 0.15, 0.80, 0.25, 0.10, 0.35, 0.70], w: Array(8).fill(0.125) },
+  { name: 'Meditation (Jhāna)', domain: 'neuro', description: 'Deep absorption — high coherence, low entropy state',
+    c: [0.90, 0.85, 0.80, 0.30, 0.88, 0.82, 0.75, 0.35], w: Array(8).fill(0.125) },
 ];
 
 /* ─── Analysis / Sweep Functions ────────────────────────────────── */
@@ -1062,6 +1103,191 @@ export function batchCompute(
       identityPass: ids.every(id => id.pass),
     };
   });
+}
+
+/* ─── Perturbation Analysis ─────────────────────────────────────── */
+
+export interface PerturbationResult {
+  channelIndex: number;
+  dF_dc: number;       // ∂F/∂cᵢ = wᵢ
+  dIC_dc: number;      // ∂IC/∂cᵢ ≈ IC · wᵢ / cᵢ
+  dS_dc: number;       // ∂S/∂cᵢ ≈ wᵢ · ln((1−cᵢ)/cᵢ)
+  dOmega_dc: number;   // ∂ω/∂cᵢ = −wᵢ
+  influence: number;    // Normalized influence score
+}
+
+/**
+ * Perturbation analysis: how sensitive is each invariant to each channel?
+ *
+ * Uses analytical partial derivatives of the kernel function.
+ * Influence = |dIC/dc| normalized so Σ influence = 1.
+ */
+export function perturbationAnalysis(
+  c: number[],
+  w?: number[],
+  epsilon: number = EPSILON,
+): PerturbationResult[] {
+  const n = c.length;
+  const weights = w ?? Array(n).fill(1 / n);
+  const result = computeKernel(c, weights, epsilon);
+  const results: PerturbationResult[] = [];
+  let totalInfluence = 0;
+
+  for (let i = 0; i < n; i++) {
+    const ci = Math.max(c[i], epsilon);
+    const wi = weights[i];
+    const dF_dc = wi;
+    const dIC_dc = result.IC * wi / ci;
+    const dS_dc = ci > epsilon && ci < 1 - epsilon
+      ? wi * Math.log((1 - ci) / ci)
+      : 0;
+    const influence = Math.abs(dIC_dc);
+    totalInfluence += influence;
+    results.push({
+      channelIndex: i,
+      dF_dc,
+      dIC_dc,
+      dS_dc,
+      dOmega_dc: -wi,
+      influence,
+    });
+  }
+
+  // Normalize influence
+  if (totalInfluence > 0) {
+    for (const r of results) r.influence /= totalInfluence;
+  }
+
+  return results;
+}
+
+/* ─── Multi-Sweep: Comparative Cross-Channel ───────────────────── */
+
+export interface MultiSweepResult {
+  channelIndex: number;
+  points: SweepPoint[];
+  icRange: number;      // max(IC) − min(IC) during sweep
+  fRange: number;       // max(F) − min(F) during sweep
+  regimeTransitions: number;
+}
+
+/**
+ * Sweep every channel independently and compare their effects.
+ * Identifies which channel has the most structural impact.
+ */
+export function multiSweep(
+  channels: number[],
+  weights: number[],
+  steps: number = 100,
+): MultiSweepResult[] {
+  const results: MultiSweepResult[] = [];
+  for (let ch = 0; ch < channels.length; ch++) {
+    const points = sweepChannel(channels, weights, ch, steps);
+    const ics = points.map(p => p.IC);
+    const fs = points.map(p => p.F);
+    let transitions = 0;
+    for (let i = 1; i < points.length; i++) {
+      if (points[i].regime !== points[i - 1].regime) transitions++;
+    }
+    results.push({
+      channelIndex: ch,
+      points,
+      icRange: Math.max(...ics) - Math.min(...ics),
+      fRange: Math.max(...fs) - Math.min(...fs),
+      regimeTransitions: transitions,
+    });
+  }
+  return results;
+}
+
+/* ─── Domain Comparison Matrix ──────────────────────────────────── */
+
+export interface DomainComparisonEntry {
+  nameA: string;
+  nameB: string;
+  fidelityDistance: number;
+  integrityDistance: number;
+  regimeSame: boolean;
+  composedRegime: RegimeLabel;
+  hellingerLike: number;
+}
+
+/**
+ * Generate a pairwise comparison matrix for a set of domain presets.
+ * Uses Hellinger-like distance: d = |√IC₁ − √IC₂|.
+ */
+export function domainComparisonMatrix(
+  presets: Array<{ name: string; c: number[]; w?: number[] }>,
+): DomainComparisonEntry[] {
+  const entries: DomainComparisonEntry[] = [];
+  const results = presets.map(p => ({
+    name: p.name,
+    kernel: computeKernel(p.c, p.w),
+    regime: classifyRegime(computeKernel(p.c, p.w)),
+  }));
+
+  for (let i = 0; i < results.length; i++) {
+    for (let j = i + 1; j < results.length; j++) {
+      const a = results[i];
+      const b = results[j];
+      const comp = composeKernels(a.kernel, b.kernel);
+      entries.push({
+        nameA: a.name,
+        nameB: b.name,
+        fidelityDistance: Math.abs(a.kernel.F - b.kernel.F),
+        integrityDistance: Math.abs(a.kernel.IC - b.kernel.IC),
+        regimeSame: a.regime.regime === b.regime.regime,
+        composedRegime: comp.regime,
+        hellingerLike: Math.abs(
+          Math.sqrt(Math.max(0, a.kernel.IC)) -
+          Math.sqrt(Math.max(0, b.kernel.IC))
+        ),
+      });
+    }
+  }
+
+  return entries;
+}
+
+/* ─── Export Helpers ─────────────────────────────────────────────── */
+
+export interface ExportData {
+  timestamp: string;
+  version: string;
+  channels: number[];
+  weights: number[];
+  kernel: KernelResult;
+  regime: RegimeResult;
+  rank: RankResult;
+  fisher: FisherResult;
+  identities: IdentityCheck[];
+  seamBudget?: SeamBudgetResult;
+}
+
+/**
+ * Package all kernel results into a single exportable object.
+ */
+export function exportResults(
+  c: number[],
+  w?: number[],
+  seamParams?: { R: number; tauR: number },
+): ExportData {
+  const kernel = computeKernel(c, w);
+  const regime = classifyRegime(kernel);
+  const rank = classifyRank(c);
+  const fisher = fisherCoordinates(kernel);
+  const identities = verifyIdentities(kernel);
+  let seamBudget: SeamBudgetResult | undefined;
+  if (seamParams) {
+    seamBudget = computeSeamBudget(kernel.omega, kernel.C, seamParams.R, seamParams.tauR);
+  }
+  return {
+    timestamp: new Date().toISOString(),
+    version: '2.3.0',
+    channels: [...c],
+    weights: w ? [...w] : Array(c.length).fill(1 / c.length),
+    kernel, regime, rank, fisher, identities, seamBudget,
+  };
 }
 
 /* ─── Internal PRNG (deterministic) ─────────────────────────────── */

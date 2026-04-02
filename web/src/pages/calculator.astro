@@ -2,29 +2,54 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StructureExplorer from '../components/StructureExplorer.astro';
 import AdvancedExplorer from '../components/AdvancedExplorer.astro';
+import DiagnosticSuite from '../components/DiagnosticSuite.astro';
 ---
 
 <BaseLayout title="Structure Explorer — GCD Kernel Research Tool">
   <div class="max-w-6xl mx-auto">
     <!-- Hero -->
-    <div class="mb-6">
-      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Structure Explorer</h1>
-      <p class="text-kernel-400 text-lg leading-relaxed">
-        Interactive research tool for the GCD kernel K: [0,1]<sup>n</sup> × Δ<sup>n</sup> → (F, ω, S, C, κ, IC).
-        Nine analysis modes let you compute invariants, sweep channels, map regime landscapes,
-        verify identities, explore seam budgets, compose domains, batch-compare, and run orientation proofs.
+    <div class="mb-8 text-center">
+      <div class="inline-block mb-3 px-3 py-1 rounded-full bg-kernel-800/60 border border-kernel-700/40 text-[10px] font-mono text-kernel-400 uppercase tracking-widest">
+        UMCP v2.3.0 · 20 Domains · 264 Theorems · 18,108 Tests
+      </div>
+      <h1 class="text-4xl font-extrabold text-kernel-100 mb-3 tracking-tight">
+        Structure Explorer
+      </h1>
+      <p class="text-kernel-400 text-lg leading-relaxed max-w-3xl mx-auto">
+        Interactive research tool for the GCD kernel
+        <span class="font-mono text-cyan-400/80">K: [0,1]<sup>n</sup> × Δ<sup>n</sup> → (F, ω, S, C, κ, IC)</span>.
+        Fifteen analysis modes across three tiers: core computation, identity verification,
+        and deep structural diagnostics — all running client-side.
       </p>
+    </div>
+
+    <!-- ═══════ Architecture Diagram ═══════ -->
+    <div class="mb-6 bg-kernel-900/40 border border-kernel-700/40 rounded-xl p-5">
+      <h2 class="text-xs font-bold text-purple-400/80 uppercase tracking-wider mb-3">The Spine — Every Computation Follows This Path</h2>
+      <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-mono mb-3">
+        <span class="px-3 py-1.5 bg-kernel-800/60 rounded-lg border border-kernel-700/30 text-green-400">CONTRACT<br/><span class="text-kernel-600 text-[9px]">freeze</span></span>
+        <span class="text-kernel-600">→</span>
+        <span class="px-3 py-1.5 bg-kernel-800/60 rounded-lg border border-kernel-700/30 text-amber-400">CANON<br/><span class="text-kernel-600 text-[9px]">5 words</span></span>
+        <span class="text-kernel-600">→</span>
+        <span class="px-3 py-1.5 bg-kernel-800/60 rounded-lg border border-kernel-700/30 text-cyan-400">CLOSURES<br/><span class="text-kernel-600 text-[9px]">thresholds</span></span>
+        <span class="text-kernel-600">→</span>
+        <span class="px-3 py-1.5 bg-kernel-800/60 rounded-lg border border-kernel-700/30 text-purple-400">LEDGER<br/><span class="text-kernel-600 text-[9px]">reconcile</span></span>
+        <span class="text-kernel-600">→</span>
+        <span class="px-3 py-1.5 bg-kernel-800/60 rounded-lg border border-kernel-700/30 text-red-400">STANCE<br/><span class="text-kernel-600 text-[9px]">verdict</span></span>
+      </div>
+      <p class="text-center text-[10px] text-kernel-600 italic">Omnia per spinam transeunt — Everything passes through the spine</p>
     </div>
 
     <!-- ═══════ TOOL MAP — What's Available ═══════ -->
     <div class="mb-6 bg-kernel-900/50 border border-kernel-700/50 rounded-xl p-5">
-      <h2 class="text-sm font-bold text-amber-400/80 uppercase tracking-wider mb-3">All 9 Analysis Tools — Click to Jump</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2 text-xs">
+      <h2 class="text-sm font-bold text-amber-400/80 uppercase tracking-wider mb-3">15 Analysis Tools — Click to Jump</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 text-xs">
+        <!-- Column 1: Core -->
         <div class="space-y-2">
-          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider">Core Tools</div>
+          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider pb-1 border-b border-kernel-800/50">Core Computation</div>
           <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="compute">
             <span class="text-green-400 font-bold">◉ Kernel Compute</span>
-            <div class="text-kernel-500 mt-0.5">Trace vector → 6 invariants + regime + identities</div>
+            <div class="text-kernel-500 mt-0.5">Trace vector → 6 invariants + regime + radar chart</div>
           </a>
           <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="sweep">
             <span class="text-amber-400 font-bold">〰 Sensitivity Sweep</span>
@@ -35,11 +60,12 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
             <div class="text-kernel-500 mt-0.5">2D heatmap of regime landscape across two channels</div>
           </a>
         </div>
+        <!-- Column 2: Verification & Advanced -->
         <div class="space-y-2">
-          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider">Verification</div>
+          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider pb-1 border-b border-kernel-800/50">Verification & Seam</div>
           <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="identity">
             <span class="text-cyan-400 font-bold">≡ Identity Lab</span>
-            <div class="text-kernel-500 mt-0.5">Verify 3 algebraic identities + S+κ curves</div>
+            <div class="text-kernel-500 mt-0.5">Verify F+ω=1, IC≤F, IC=exp(κ) + S+κ curve</div>
           </a>
           <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="seam">
             <span class="text-red-400 font-bold">⊢ Seam Budget</span>
@@ -50,15 +76,16 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
             <div class="text-kernel-500 mt-0.5">Live computation of all 10 structural receipts</div>
           </a>
         </div>
+        <!-- Column 3: Cross-Domain -->
         <div class="space-y-2">
-          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider">Cross-Domain</div>
+          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider pb-1 border-b border-kernel-800/50">Cross-Domain Analysis</div>
           <a href="#advanced-explorer" class="tool-jump-adv block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="composition">
             <span class="text-blue-400 font-bold">⊕ Composition</span>
             <div class="text-kernel-500 mt-0.5">Compose two systems — F arithmetic, IC geometric</div>
           </a>
           <a href="#advanced-explorer" class="tool-jump-adv block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="batch">
             <span class="text-orange-400 font-bold">▦ Batch Compare</span>
-            <div class="text-kernel-500 mt-0.5">Side-by-side comparison of multiple domains</div>
+            <div class="text-kernel-500 mt-0.5">Multi-domain side-by-side comparison table</div>
           </a>
           <a href="#advanced-explorer" class="tool-jump-adv block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="taustar">
             <span class="text-pink-400 font-bold">τ τ_R* Surface</span>
@@ -66,84 +93,132 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
           </a>
         </div>
       </div>
+      <!-- Diagnostic Suite tools row -->
+      <div class="mt-4 pt-3 border-t border-kernel-800/50">
+        <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider mb-2">Diagnostic Suite — Deep Structural Analysis</div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
+          <a href="#diagnostic-suite" class="tool-jump-diag block bg-kernel-800/60 rounded-lg p-2 hover:bg-kernel-700/60 transition no-underline border border-purple-700/30" data-mode="extended">
+            <span class="text-purple-400 font-bold text-[11px]">⊞ Extended IDs</span>
+            <div class="text-kernel-600 mt-0.5 text-[10px]">10 identity checks</div>
+          </a>
+          <a href="#diagnostic-suite" class="tool-jump-diag block bg-kernel-800/60 rounded-lg p-2 hover:bg-kernel-700/60 transition no-underline border border-purple-700/30" data-mode="perturbation">
+            <span class="text-cyan-300 font-bold text-[11px]">∂ Perturbation</span>
+            <div class="text-kernel-600 mt-0.5 text-[10px]">Channel sensitivity</div>
+          </a>
+          <a href="#diagnostic-suite" class="tool-jump-diag block bg-kernel-800/60 rounded-lg p-2 hover:bg-kernel-700/60 transition no-underline border border-purple-700/30" data-mode="fisher">
+            <span class="text-green-300 font-bold text-[11px]">θ Fisher Geometry</span>
+            <div class="text-kernel-600 mt-0.5 text-[10px]">Flat manifold, f(θ)</div>
+          </a>
+          <a href="#diagnostic-suite" class="tool-jump-diag block bg-kernel-800/60 rounded-lg p-2 hover:bg-kernel-700/60 transition no-underline border border-purple-700/30" data-mode="rank">
+            <span class="text-amber-300 font-bold text-[11px]">⊡ Rank Analysis</span>
+            <div class="text-kernel-600 mt-0.5 text-[10px]">DOF classification</div>
+          </a>
+          <a href="#diagnostic-suite" class="tool-jump-diag block bg-kernel-800/60 rounded-lg p-2 hover:bg-kernel-700/60 transition no-underline border border-purple-700/30" data-mode="comparison">
+            <span class="text-blue-300 font-bold text-[11px]">⊞ Domain Compare</span>
+            <div class="text-kernel-600 mt-0.5 text-[10px]">Pairwise matrix</div>
+          </a>
+          <a href="#diagnostic-suite" class="tool-jump-diag block bg-kernel-800/60 rounded-lg p-2 hover:bg-kernel-700/60 transition no-underline border border-purple-700/30" data-mode="multisweep">
+            <span class="text-pink-300 font-bold text-[11px]">≋ Multi-Sweep</span>
+            <div class="text-kernel-600 mt-0.5 text-[10px]">All-channel overlay</div>
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- ═══════ DOMAIN PRESETS — Organized by Category ═══════ -->
     <div class="mb-6 bg-kernel-900/50 border border-kernel-700/50 rounded-xl p-5">
-      <h2 class="text-sm font-bold text-amber-400/80 uppercase tracking-wider mb-1">Domain Presets — 35 Pre-Loaded Systems</h2>
-      <p class="text-xs text-kernel-500 mb-3">Click any preset to load it into the Kernel Compute tool below.</p>
+      <div class="flex items-center justify-between mb-1">
+        <h2 class="text-sm font-bold text-amber-400/80 uppercase tracking-wider">Domain Presets — Pre-Loaded Systems</h2>
+        <span class="text-[10px] font-mono text-kernel-600" id="preset-count-badge"></span>
+      </div>
+      <p class="text-xs text-kernel-500 mb-3">Click any preset to load it into the active tool below. Each button shows the regime color and fidelity.</p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs" id="domain-preset-grid">
-        <!-- Core -->
         <div>
           <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Core Kernels</div>
           <div class="space-y-1" id="cat-core"></div>
         </div>
-        <!-- Particles -->
         <div>
           <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Standard Model</div>
           <div class="space-y-1" id="cat-sm"></div>
         </div>
-        <!-- Astrophysics -->
         <div>
-          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Astrophysics</div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Astrophysics & Cosmology</div>
           <div class="space-y-1" id="cat-astro"></div>
         </div>
-        <!-- Atomic / Nuclear -->
         <div>
           <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Atomic & Nuclear</div>
           <div class="space-y-1" id="cat-atom"></div>
         </div>
-        <!-- Neuro / Bio -->
         <div>
           <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Neuroscience & Biology</div>
           <div class="space-y-1" id="cat-neuro"></div>
         </div>
-        <!-- Finance / Semiotics -->
         <div>
-          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Finance, Semiotics & More</div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Quantum Mechanics</div>
+          <div class="space-y-1" id="cat-qm"></div>
+        </div>
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Thermodynamics</div>
+          <div class="space-y-1" id="cat-thermo"></div>
+        </div>
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Materials Science</div>
+          <div class="space-y-1" id="cat-materials"></div>
+        </div>
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Semiotics & Computing</div>
+          <div class="space-y-1" id="cat-semiotics"></div>
+        </div>
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Finance & Other</div>
           <div class="space-y-1" id="cat-other"></div>
         </div>
-        <!-- Special points -->
         <div>
-          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Corner Probes & Special Points</div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Corner Probes & Fixed Points</div>
           <div class="space-y-1" id="cat-special"></div>
         </div>
       </div>
     </div>
 
-    <!-- Quick reference -->
+    <!-- ═══════ Quick Reference — The Kernel ═══════ -->
     <div class="mb-6 bg-kernel-900/50 border border-kernel-700/50 rounded-xl p-5">
       <h2 class="text-sm font-bold text-amber-400/80 uppercase tracking-wider mb-3">Quick Reference — The Six Invariants</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
-        <div class="bg-kernel-800/60 rounded-lg p-2.5">
-          <span class="text-green-400 font-bold">F</span>
+        <div class="bg-kernel-800/60 rounded-lg p-2.5 border-l-2 border-green-500/50">
+          <span class="text-green-400 font-bold text-sm">F</span>
           <span class="text-kernel-500 ml-1">Fidelity</span>
           <div class="text-kernel-600 mt-1">Σ wᵢcᵢ — what survives</div>
+          <div class="text-kernel-700 text-[10px] italic mt-0.5">fidelitas</div>
         </div>
-        <div class="bg-kernel-800/60 rounded-lg p-2.5">
-          <span class="text-red-400 font-bold">ω</span>
+        <div class="bg-kernel-800/60 rounded-lg p-2.5 border-l-2 border-red-500/50">
+          <span class="text-red-400 font-bold text-sm">ω</span>
           <span class="text-kernel-500 ml-1">Drift</span>
           <div class="text-kernel-600 mt-1">1 − F — what is lost</div>
+          <div class="text-kernel-700 text-[10px] italic mt-0.5">derivatio</div>
         </div>
-        <div class="bg-kernel-800/60 rounded-lg p-2.5">
-          <span class="text-amber-400 font-bold">S</span>
+        <div class="bg-kernel-800/60 rounded-lg p-2.5 border-l-2 border-amber-500/50">
+          <span class="text-amber-400 font-bold text-sm">S</span>
           <span class="text-kernel-500 ml-1">Entropy</span>
           <div class="text-kernel-600 mt-1">Bernoulli field uncertainty</div>
+          <div class="text-kernel-700 text-[10px] italic mt-0.5">entropia</div>
         </div>
-        <div class="bg-kernel-800/60 rounded-lg p-2.5">
-          <span class="text-purple-400 font-bold">C</span>
+        <div class="bg-kernel-800/60 rounded-lg p-2.5 border-l-2 border-purple-500/50">
+          <span class="text-purple-400 font-bold text-sm">C</span>
           <span class="text-kernel-500 ml-1">Curvature</span>
           <div class="text-kernel-600 mt-1">stddev(cᵢ)/0.5 — coupling</div>
+          <div class="text-kernel-700 text-[10px] italic mt-0.5">curvatura</div>
         </div>
-        <div class="bg-kernel-800/60 rounded-lg p-2.5">
-          <span class="text-cyan-400 font-bold">κ</span>
+        <div class="bg-kernel-800/60 rounded-lg p-2.5 border-l-2 border-cyan-500/50">
+          <span class="text-cyan-400 font-bold text-sm">κ</span>
           <span class="text-kernel-500 ml-1">Log-integrity</span>
-          <div class="text-kernel-600 mt-1">Σ wᵢ ln(cᵢ) — sensitivity</div>
+          <div class="text-kernel-600 mt-1">Σ wᵢ ln(cᵢ) — logarithmic sensitivity</div>
+          <div class="text-kernel-700 text-[10px] italic mt-0.5">log-integritas</div>
         </div>
-        <div class="bg-kernel-800/60 rounded-lg p-2.5">
-          <span class="text-blue-400 font-bold">IC</span>
+        <div class="bg-kernel-800/60 rounded-lg p-2.5 border-l-2 border-blue-500/50">
+          <span class="text-blue-400 font-bold text-sm">IC</span>
           <span class="text-kernel-500 ml-1">Integrity</span>
           <div class="text-kernel-600 mt-1">exp(κ) — multiplicative coherence</div>
+          <div class="text-kernel-700 text-[10px] italic mt-0.5">integritas composita</div>
         </div>
       </div>
       <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-kernel-500">
@@ -159,20 +234,66 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
       </div>
     </div>
 
-    <!-- Explorer -->
+    <!-- ═══════ SECTION: Core Explorer ═══════ -->
+    <div class="mb-2 flex items-center gap-2">
+      <div class="h-px flex-1 bg-gradient-to-r from-transparent via-kernel-700/50 to-transparent"></div>
+      <span class="text-[10px] font-mono text-kernel-600 uppercase tracking-widest">Tier 1 — Core Computation</span>
+      <div class="h-px flex-1 bg-gradient-to-r from-transparent via-kernel-700/50 to-transparent"></div>
+    </div>
     <StructureExplorer />
 
-    <!-- Advanced Research Tools -->
+    <!-- ═══════ SECTION: Advanced Research ═══════ -->
+    <div class="mb-2 mt-8 flex items-center gap-2">
+      <div class="h-px flex-1 bg-gradient-to-r from-transparent via-kernel-700/50 to-transparent"></div>
+      <span class="text-[10px] font-mono text-kernel-600 uppercase tracking-widest">Tier 2 — Cross-Domain Analysis</span>
+      <div class="h-px flex-1 bg-gradient-to-r from-transparent via-kernel-700/50 to-transparent"></div>
+    </div>
     <AdvancedExplorer />
 
-    <!-- Math notes footer -->
-    <div class="mt-10 mb-8 bg-kernel-900/30 border border-kernel-800/50 rounded-xl p-5 text-xs text-kernel-500 space-y-2">
-      <h3 class="text-sm font-bold text-kernel-400 mb-2">Mathematical Notes</h3>
-      <p><strong>Three algebraic identities</strong> (always true): F + ω = 1, IC ≤ F, IC = exp(κ).</p>
-      <p><strong>One statistical constraint</strong>: S ≈ f(F, C) — entropy is asymptotically determined by fidelity and curvature.</p>
-      <p><strong>Three effective DOF</strong>: 6 kernel outputs reduce to 3 independent dimensions (F, κ, C).</p>
-      <p><strong>Frozen parameters</strong>: ε = 10⁻⁸, p = 3 (Cardano root), α = 1.0, tol = 0.005 — seam-derived, not chosen.</p>
-      <p class="text-kernel-600 italic">All computation runs client-side — no data leaves your browser.</p>
+    <!-- ═══════ SECTION: Diagnostic Suite ═══════ -->
+    <div class="mb-2 mt-8 flex items-center gap-2">
+      <div class="h-px flex-1 bg-gradient-to-r from-transparent via-purple-700/30 to-transparent"></div>
+      <span class="text-[10px] font-mono text-purple-400/60 uppercase tracking-widest">Tier 3 — Deep Diagnostics</span>
+      <div class="h-px flex-1 bg-gradient-to-r from-transparent via-purple-700/30 to-transparent"></div>
+    </div>
+    <DiagnosticSuite />
+
+    <!-- ═══════ Mathematical Reference Footer ═══════ -->
+    <div class="mt-10 mb-8 bg-kernel-900/30 border border-kernel-800/50 rounded-xl p-6 text-xs text-kernel-500 space-y-3">
+      <h3 class="text-sm font-bold text-kernel-400 mb-3">Mathematical Reference</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <p class="font-semibold text-kernel-400">Three Algebraic Identities (always true by construction):</p>
+          <ul class="list-disc list-inside space-y-1 text-kernel-600">
+            <li><span class="text-green-400/80 font-mono">F + ω = 1</span> — Duality identity (complementum perfectum)</li>
+            <li><span class="text-cyan-400/80 font-mono">IC ≤ F</span> — Integrity bound (solvability condition for trace recovery)</li>
+            <li><span class="text-blue-400/80 font-mono">IC = exp(κ)</span> — Log-integrity relation</li>
+          </ul>
+          <p class="font-semibold text-kernel-400 mt-3">One Statistical Constraint:</p>
+          <ul class="list-disc list-inside text-kernel-600">
+            <li>S ≈ f(F, C) — Entropy is asymptotically determined by (F, C) via CLT</li>
+          </ul>
+        </div>
+        <div class="space-y-2">
+          <p class="font-semibold text-kernel-400">Effective Degrees of Freedom:</p>
+          <ul class="list-disc list-inside space-y-1 text-kernel-600">
+            <li>6 kernel outputs → <span class="text-amber-400/80 font-mono">3 independent DOF</span> (F, κ, C)</li>
+            <li>Rank-1: homogeneous (1 DOF) ⊂ Rank-2: binary (2 DOF) ⊂ Rank-3: general (3 DOF)</li>
+          </ul>
+          <p class="font-semibold text-kernel-400 mt-3">Frozen Parameters (seam-derived):</p>
+          <ul class="list-disc list-inside space-y-1 text-kernel-600">
+            <li><span class="font-mono">ε = 10⁻⁸</span> guard band · <span class="font-mono">p = 3</span> (Cardano root of x³+x−1=0)</li>
+            <li><span class="font-mono">α = 1.0</span> coupling · <span class="font-mono">tol = 0.005</span> seam width</li>
+            <li><span class="font-mono">c* = 0.7822</span> self-dual · <span class="font-mono">c_trap = 0.3177</span> drift trap</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-3 pt-3 border-t border-kernel-800/50 flex items-center justify-between">
+        <p class="text-kernel-600 italic">All computation runs client-side — no data leaves your browser.</p>
+        <p class="text-kernel-700 font-mono text-[10px]">Collapsus generativus est; solum quod redit, reale est.</p>
+      </div>
     </div>
   </div>
 </BaseLayout>
@@ -187,25 +308,44 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
     astro: { container: 'cat-astro', items: [] },
     atom: { container: 'cat-atom', items: [] },
     neuro: { container: 'cat-neuro', items: [] },
+    qm: { container: 'cat-qm', items: [] },
+    thermo: { container: 'cat-thermo', items: [] },
+    materials: { container: 'cat-materials', items: [] },
+    semiotics: { container: 'cat-semiotics', items: [] },
     other: { container: 'cat-other', items: [] },
     special: { container: 'cat-special', items: [] },
   };
 
   // Add the 6 core PRESETS as domain-style entries
-  for (const [key, p] of Object.entries(PRESETS)) {
+  for (const [, p] of Object.entries(PRESETS)) {
     categories.core.items.push({ name: p.name, domain: 'core', c: p.c, w: p.w, description: '' });
   }
 
-  // Categorize the 29 DOMAIN_PRESETS
+  // Domain routing map — lowercase domain → category key
+  const domainRoute: Record<string, string> = {
+    standard_model: 'sm',
+    astronomy: 'astro', weyl: 'astro', spacetime_memory: 'astro', spacetime: 'astro',
+    atomic_physics: 'atom', nuclear_physics: 'atom',
+    consciousness: 'neuro', clinical: 'neuro', evolution: 'neuro', biology: 'neuro', neuro: 'neuro',
+    quantum_mechanics: 'qm', qm: 'qm',
+    thermodynamics: 'thermo', thermo: 'thermo',
+    materials_science: 'materials', materials: 'materials',
+    dynamic_semiotics: 'semiotics', semiotics: 'semiotics',
+    corner_probe: 'special',
+  };
+
+  // Categorize all DOMAIN_PRESETS
   for (const dp of DOMAIN_PRESETS) {
     const d = dp.domain.toLowerCase();
-    if (d === 'standard_model') categories.sm.items.push(dp);
-    else if (d === 'astronomy' || d === 'weyl' || d === 'spacetime_memory') categories.astro.items.push(dp);
-    else if (d === 'atomic_physics' || d === 'nuclear_physics') categories.atom.items.push(dp);
-    else if (d === 'consciousness' || d === 'clinical' || d === 'evolution') categories.neuro.items.push(dp);
-    else if (d === 'corner_probe') categories.special.items.push(dp);
-    else categories.other.items.push(dp);
+    const key = domainRoute[d] || 'other';
+    categories[key].items.push(dp);
   }
+
+  // Count total presets
+  let totalPresets = 0;
+  for (const cat of Object.values(categories)) totalPresets += cat.items.length;
+  const badge = document.getElementById('preset-count-badge');
+  if (badge) badge.textContent = `${totalPresets} systems`;
 
   function renderDomainPresets() {
     const regimeColor: Record<string, string> = {
@@ -214,9 +354,15 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
       COLLAPSE: 'border-red-700/50 text-red-400',
     };
 
+    // Hide empty category containers
     for (const [, cat] of Object.entries(categories)) {
       const el = document.getElementById(cat.container);
-      if (!el || cat.items.length === 0) continue;
+      if (!el) continue;
+      const parent = el.parentElement;
+      if (cat.items.length === 0 && parent) {
+        parent.style.display = 'none';
+        continue;
+      }
 
       el.innerHTML = cat.items.map(dp => {
         const k = computeKernel(dp.c, dp.w);
@@ -258,7 +404,6 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
     link.addEventListener('click', (e) => {
       const mode = (link as HTMLElement).dataset.mode;
       if (mode) {
-        // Click the corresponding mode tab in StructureExplorer
         setTimeout(() => {
           const tab = document.querySelector(`#mode-tabs [data-mode="${mode}"]`) as HTMLElement;
           tab?.click();
@@ -273,6 +418,19 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
       if (mode) {
         setTimeout(() => {
           const tab = document.querySelector(`#adv-mode-tabs [data-adv-mode="${mode}"]`) as HTMLElement;
+          tab?.click();
+        }, 300);
+      }
+    });
+  });
+
+  // Diagnostic Suite jump links
+  document.querySelectorAll('.tool-jump-diag').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const mode = (link as HTMLElement).dataset.mode;
+      if (mode) {
+        setTimeout(() => {
+          const tab = document.querySelector(`#diag-mode-tabs [data-mode="${mode}"]`) as HTMLElement;
           tab?.click();
         }, 300);
       }

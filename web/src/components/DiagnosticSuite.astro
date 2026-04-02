@@ -1,0 +1,1152 @@
+---
+/**
+ * DiagnosticSuite.astro — Advanced Diagnostic & Analysis Tools
+ *
+ * Surfaces powerful kernel functions not available in the main explorer:
+ *   1. Extended Identity Network — 10-check verification (vs 3 in Identity Lab)
+ *   2. Perturbation Analysis — channel sensitivity / influence ranking
+ *   3. Fisher Geometry — θ coordinate, manifold structure
+ *   4. Rank Analysis — structural dimensionality (Rank-1/2/3)
+ *   5. Domain Comparison — pairwise distance matrix across presets
+ *   6. Multi-Sweep — comparative cross-channel sweep overlay
+ */
+---
+
+<section class="diag-suite" id="diagnostic-suite">
+  <div class="diag-header">
+    <h2>Diagnostic Suite</h2>
+    <p class="diag-subtitle">Deep structural analysis tools — identity networks,
+      perturbation sensitivity, Fisher geometry, rank classification, and cross-domain comparison</p>
+  </div>
+
+  <!-- Mode Tabs -->
+  <div class="diag-tabs" id="diag-mode-tabs">
+    <button class="diag-tab active" data-mode="extended">Extended Identities</button>
+    <button class="diag-tab" data-mode="perturbation">Perturbation</button>
+    <button class="diag-tab" data-mode="fisher">Fisher Geometry</button>
+    <button class="diag-tab" data-mode="rank">Rank Analysis</button>
+    <button class="diag-tab" data-mode="comparison">Domain Comparison</button>
+    <button class="diag-tab" data-mode="multisweep">Multi-Sweep</button>
+  </div>
+
+  <!-- Mode Descriptions -->
+  <div class="diag-guidance" id="diag-guidance">
+    <p id="diag-guidance-text"></p>
+  </div>
+
+  <!-- Input Panel (shared across modes) -->
+  <div class="diag-input-panel" id="diag-input-panel">
+    <div class="diag-preset-row">
+      <label>Quick Load:</label>
+      <select id="diag-preset-select"><option value="">— pick preset —</option></select>
+    </div>
+    <div class="diag-channels" id="diag-channels"></div>
+    <div class="diag-actions">
+      <button id="diag-compute-btn" class="diag-btn">Run Analysis</button>
+      <button id="diag-export-btn" class="diag-btn diag-btn-secondary">Export JSON</button>
+    </div>
+  </div>
+
+  <!-- ═══════ Extended Identities Panel ═══════ -->
+  <div class="diag-panel" id="panel-extended" style="display:block">
+    <div class="ext-id-grid" id="ext-id-grid"></div>
+    <div class="ext-id-summary" id="ext-id-summary"></div>
+  </div>
+
+  <!-- ═══════ Perturbation Panel ═══════ -->
+  <div class="diag-panel" id="panel-perturbation" style="display:none">
+    <div class="pert-chart-container">
+      <canvas id="pert-influence-canvas" width="700" height="320"></canvas>
+    </div>
+    <div class="pert-table-wrap" id="pert-table-wrap"></div>
+    <div class="pert-insights" id="pert-insights"></div>
+  </div>
+
+  <!-- ═══════ Fisher Geometry Panel ═══════ -->
+  <div class="diag-panel" id="panel-fisher" style="display:none">
+    <div class="fisher-result-grid" id="fisher-result-grid"></div>
+    <div class="fisher-chart-container">
+      <canvas id="fisher-manifold-canvas" width="700" height="360"></canvas>
+    </div>
+    <div class="fisher-notes" id="fisher-notes"></div>
+  </div>
+
+  <!-- ═══════ Rank Analysis Panel ═══════ -->
+  <div class="diag-panel" id="panel-rank" style="display:none">
+    <div class="rank-result" id="rank-result"></div>
+    <div class="rank-chart-container">
+      <canvas id="rank-spectrum-canvas" width="700" height="300"></canvas>
+    </div>
+    <div class="rank-explanation" id="rank-explanation"></div>
+  </div>
+
+  <!-- ═══════ Domain Comparison Panel ═══════ -->
+  <div class="diag-panel" id="panel-comparison" style="display:none">
+    <div class="comp-selector" id="comp-selector"></div>
+    <button id="comp-run-btn" class="diag-btn">Compare Selected</button>
+    <div class="comp-matrix-wrap" id="comp-matrix-wrap"></div>
+    <canvas id="comp-heatmap-canvas" width="700" height="400"></canvas>
+  </div>
+
+  <!-- ═══════ Multi-Sweep Panel ═══════ -->
+  <div class="diag-panel" id="panel-multisweep" style="display:none">
+    <div class="ms-config">
+      <label>Metric: <select id="ms-metric">
+        <option value="IC">IC (Integrity)</option>
+        <option value="F">F (Fidelity)</option>
+        <option value="S">S (Entropy)</option>
+        <option value="delta">Δ (Gap)</option>
+        <option value="omega">ω (Drift)</option>
+      </select></label>
+      <label>Steps: <input type="number" id="ms-steps" value="150" min="50" max="500" /></label>
+    </div>
+    <div class="ms-chart-container">
+      <canvas id="ms-chart-canvas" width="700" height="380"></canvas>
+    </div>
+    <div class="ms-ranking" id="ms-ranking"></div>
+  </div>
+</section>
+
+<style>
+  .diag-suite {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+  }
+  .diag-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .diag-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #a855f7, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+  }
+  .diag-subtitle {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+  }
+
+  /* Tabs */
+  .diag-tabs {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .diag-tab {
+    background: rgba(30, 41, 59, 0.6);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .diag-tab:hover { border-color: #a855f7; color: #e2e8f0; }
+  .diag-tab.active {
+    background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(34,211,238,0.15));
+    border-color: #a855f7;
+    color: #e2e8f0;
+    font-weight: 600;
+  }
+
+  /* Guidance */
+  .diag-guidance {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.65rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  /* Input Panel */
+  .diag-input-panel {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .diag-preset-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .diag-preset-row label { color: #94a3b8; font-size: 0.8rem; }
+  .diag-preset-row select {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.8);
+    color: #e2e8f0;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    border-radius: 0.35rem;
+    padding: 0.35rem 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+  }
+  .diag-channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .diag-ch-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .diag-ch-item label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    min-width: 28px;
+  }
+  .diag-ch-item input[type="range"] { flex: 1; height: 4px; }
+  .diag-ch-item input[type="number"] {
+    width: 56px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #e2e8f0;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    border-radius: 0.25rem;
+    padding: 0.15rem 0.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+  .diag-actions { display: flex; gap: 0.5rem; }
+  .diag-btn {
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .diag-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  .diag-btn-secondary {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    color: #94a3b8;
+  }
+
+  /* Panels */
+  .diag-panel {
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Extended Identities */
+  .ext-id-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+  }
+  .ext-id-card {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.8rem;
+  }
+  .ext-id-card.pass { border-left: 3px solid #34d399; }
+  .ext-id-card.fail { border-left: 3px solid #ef4444; }
+  .ext-id-name {
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 0.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ext-id-tag {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.25rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+  .ext-id-tag.pass { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+  .ext-id-tag.fail { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+  .ext-id-formula { color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.15rem; font-style: italic; }
+  .ext-id-value { color: #64748b; font-size: 0.72rem; }
+  .ext-id-summary {
+    text-align: center;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .ext-id-summary.all-pass {
+    background: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    color: #34d399;
+  }
+  .ext-id-summary.has-fail {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+  }
+
+  /* Perturbation */
+  .pert-chart-container, .fisher-chart-container, .rank-chart-container, .ms-chart-container {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+  .pert-chart-container canvas, .fisher-chart-container canvas,
+  .rank-chart-container canvas, .ms-chart-container canvas {
+    max-width: 100%;
+  }
+  .pert-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+  .pert-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pert-table th {
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.3);
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  .pert-table td {
+    padding: 0.35rem 0.6rem;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.1);
+    color: #e2e8f0;
+  }
+  .pert-table tr:hover td { background: rgba(100,116,139,0.05); }
+  .pert-insights {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  /* Fisher */
+  .fisher-result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .fisher-card {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    text-align: center;
+  }
+  .fisher-card .label { font-size: 0.72rem; color: #94a3b8; }
+  .fisher-card .value { font-size: 1.1rem; font-weight: 700; color: #22d3ee; margin-top: 0.15rem; }
+  .fisher-notes {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  /* Rank */
+  .rank-result {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .rank-card {
+    flex: 1;
+    min-width: 140px;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    text-align: center;
+  }
+  .rank-badge {
+    display: inline-block;
+    padding: 0.25rem 0.8rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+  .rank-1 { background: rgba(52,211,153,0.15); color: #34d399; }
+  .rank-2 { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .rank-3 { background: rgba(168,85,247,0.15); color: #a855f7; }
+  .rank-explanation {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  /* Comparison */
+  .comp-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+  .comp-chip {
+    padding: 0.25rem 0.6rem;
+    background: rgba(30,41,59,0.6);
+    border: 1px solid rgba(100,116,139,0.3);
+    border-radius: 0.35rem;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .comp-chip:hover { border-color: #a855f7; }
+  .comp-chip.selected { background: rgba(168,85,247,0.15); border-color: #a855f7; color: #e2e8f0; }
+  .comp-matrix-wrap {
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  .comp-matrix {
+    border-collapse: collapse;
+    font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+    width: 100%;
+  }
+  .comp-matrix th, .comp-matrix td {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid rgba(100, 116, 139, 0.15);
+    text-align: center;
+  }
+  .comp-matrix th { color: #94a3b8; background: rgba(15,23,42,0.5); }
+  .comp-matrix td { color: #e2e8f0; }
+
+  /* Multi-Sweep */
+  .ms-config {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .ms-config label { color: #94a3b8; font-size: 0.8rem; display: flex; gap: 0.4rem; align-items: center; }
+  .ms-config select, .ms-config input[type="number"] {
+    background: rgba(15, 23, 42, 0.8);
+    color: #e2e8f0;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    border-radius: 0.3rem;
+    padding: 0.3rem 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+  }
+  .ms-ranking {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .ms-rank-card {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.78rem;
+  }
+  .ms-rank-card .ch-label { font-weight: 600; color: #e2e8f0; }
+  .ms-rank-card .ch-stat { color: #94a3b8; font-size: 0.72rem; }
+</style>
+
+<script>
+  import {
+    computeKernel, classifyRegime, verifyIdentities, verifyExtendedIdentities,
+    fisherCoordinates, classifyRank, sweepChannel, entropyCurve,
+    perturbationAnalysis, multiSweep, exportResults,
+    PRESETS, DOMAIN_PRESETS,
+  } from '../lib/kernel';
+  import type { KernelResult, ExtendedIdentityCheck, PerturbationResult } from '../lib/kernel';
+  import { setupCanvas, clearChart, drawGrid, drawAxes, drawCurve,
+    drawVerticalMarker, drawHorizontalMarker, drawPoint, drawLegend,
+    mapX, mapY, CHART_COLORS } from '../lib/chart';
+
+  /* ─── Mode Descriptions ───────────────────────────────────────── */
+
+  const MODE_GUIDANCE: Record<string, string> = {
+    extended: 'Verify all 10 extended algebraic identities (A1–A8, B1–B3) against your trace vector. Three core identities (duality, integrity bound, log-integrity) plus seven structural checks including gap non-negativity, entropy bounds, curvature bounds, rank-1 identity, and solvability condition.',
+    perturbation: 'Analytical perturbation analysis: compute ∂F/∂cᵢ, ∂IC/∂cᵢ, ∂S/∂cᵢ for each channel. Identify which channel has the most influence on integrity (IC) and where the system is most sensitive to small changes.',
+    fisher: 'Fisher geometry of the trace: compute the Fisher coordinate θ = arccos(√F), the Fisher metric g_F(θ) = 1 (flat manifold), and the relationship between S, κ, and the single generating function f(θ) = 2cos²θ·ln(tan θ).',
+    rank: 'Classify the structural rank of the trace vector. Rank-1: all channels equal (1 DOF). Rank-2: two distinct values (2 DOF). Rank-3: general heterogeneous (3 DOF). Higher rank means more independent structural information.',
+    comparison: 'Compare multiple domain presets pairwise. Computes fidelity distance |F₁−F₂|, integrity distance |IC₁−IC₂|, Hellinger-like distance |√IC₁−√IC₂|, and composed regime for each pair.',
+    multisweep: 'Sweep each channel independently and overlay the results. Identifies which channel has the widest IC range, the most regime transitions, and produces a comparative influence ranking.',
+  };
+
+  /* ─── State ───────────────────────────────────────────────────── */
+
+  let currentMode = 'extended';
+  let nChannels = 8;
+  let channelValues = [0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.25];
+  const selectedComps = new Set<number>();
+
+  const CHANNEL_COLORS = [
+    '#f59e0b', '#3b82f6', '#34d399', '#ef4444',
+    '#a855f7', '#22d3ee', '#f472b6', '#84cc16',
+    '#fb923c', '#6366f1', '#2dd4bf', '#fbbf24',
+  ];
+
+  /* ─── Init ────────────────────────────────────────────────────── */
+
+  function init() {
+    renderGuidance();
+    populatePresets();
+    renderChannelInputs();
+    attachListeners();
+  }
+
+  function renderGuidance() {
+    const el = document.getElementById('diag-guidance-text');
+    if (el) el.textContent = MODE_GUIDANCE[currentMode] ?? '';
+  }
+
+  function populatePresets() {
+    const sel = document.getElementById('diag-preset-select') as HTMLSelectElement;
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— pick preset —</option>';
+    const allPresets = [...PRESETS, ...DOMAIN_PRESETS];
+    for (let i = 0; i < allPresets.length; i++) {
+      const o = document.createElement('option');
+      o.value = String(i);
+      const p = allPresets[i];
+      o.textContent = p.name;
+      sel.appendChild(o);
+    }
+    sel.addEventListener('change', () => {
+      const idx = parseInt(sel.value);
+      if (isNaN(idx)) return;
+      const p = allPresets[idx];
+      channelValues = [...p.c];
+      nChannels = p.c.length;
+      renderChannelInputs();
+    });
+  }
+
+  function renderChannelInputs() {
+    const el = document.getElementById('diag-channels');
+    if (!el) return;
+    el.innerHTML = '';
+    for (let i = 0; i < nChannels; i++) {
+      const item = document.createElement('div');
+      item.className = 'diag-ch-item';
+      item.innerHTML = `
+        <label style="color:${CHANNEL_COLORS[i % CHANNEL_COLORS.length]}">c${i+1}</label>
+        <input type="range" min="0" max="1" step="0.01" value="${channelValues[i]}" data-ch="${i}" />
+        <input type="number" min="0" max="1" step="0.01" value="${channelValues[i].toFixed(2)}" data-ch="${i}" />
+      `;
+      el.appendChild(item);
+    }
+    el.addEventListener('input', (e) => {
+      const t = e.target as HTMLInputElement;
+      const ch = parseInt(t.dataset.ch ?? '');
+      if (isNaN(ch)) return;
+      const v = parseFloat(t.value);
+      if (isNaN(v)) return;
+      channelValues[ch] = Math.max(0, Math.min(1, v));
+      // Sync range ↔ number
+      const pair = el.querySelectorAll(`[data-ch="${ch}"]`);
+      pair.forEach(p => { if (p !== t) (p as HTMLInputElement).value = channelValues[ch].toFixed(2); });
+    });
+  }
+
+  function attachListeners() {
+    // Mode tabs
+    document.querySelectorAll('.diag-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        currentMode = (tab as HTMLElement).dataset.mode ?? 'extended';
+        document.querySelectorAll('.diag-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.diag-panel').forEach(p => (p as HTMLElement).style.display = 'none');
+        const panel = document.getElementById(`panel-${currentMode}`);
+        if (panel) panel.style.display = 'block';
+        renderGuidance();
+        // Show/hide shared input for comparison mode
+        const inputPanel = document.getElementById('diag-input-panel');
+        if (inputPanel) inputPanel.style.display = currentMode === 'comparison' ? 'none' : '';
+        const compPanel = document.getElementById('panel-comparison');
+        if (compPanel && currentMode === 'comparison') renderCompSelector();
+      });
+    });
+
+    // Compute
+    document.getElementById('diag-compute-btn')?.addEventListener('click', runAnalysis);
+
+    // Export
+    document.getElementById('diag-export-btn')?.addEventListener('click', () => {
+      const data = exportResults(channelValues);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `gcd-diagnostic-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Comparison run
+    document.getElementById('comp-run-btn')?.addEventListener('click', runComparison);
+
+    // Listen for preset load events from calculator page
+    document.addEventListener('load-preset', (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.c) {
+        channelValues = [...detail.c];
+        nChannels = detail.c.length;
+        renderChannelInputs();
+      }
+    });
+  }
+
+  /* ─── Dispatch ────────────────────────────────────────────────── */
+
+  function runAnalysis() {
+    const w = Array(nChannels).fill(1 / nChannels);
+    const kernel = computeKernel(channelValues, w);
+
+    switch (currentMode) {
+      case 'extended': runExtendedIdentities(kernel); break;
+      case 'perturbation': runPerturbation(kernel); break;
+      case 'fisher': runFisher(kernel); break;
+      case 'rank': runRank(); break;
+      case 'multisweep': runMultiSweep(); break;
+      default: runExtendedIdentities(kernel);
+    }
+  }
+
+  /* ─── Extended Identities ─────────────────────────────────────── */
+
+  function runExtendedIdentities(kernel: KernelResult) {
+    const basic = verifyIdentities(kernel);
+    const ext = verifyExtendedIdentities(kernel);
+    const all = [...basic.map(b => ({
+      name: b.name, formula: b.formula, value: b.value, tolerance: b.tolerance, pass: b.pass,
+      category: 'Core',
+    })), ...ext.map(e => ({
+      name: e.name, formula: e.formula ?? '', value: e.residual, tolerance: e.tolerance, pass: e.pass,
+      category: 'Extended',
+    }))];
+
+    const grid = document.getElementById('ext-id-grid');
+    if (grid) {
+      grid.innerHTML = all.map(check => `
+        <div class="ext-id-card ${check.pass ? 'pass' : 'fail'}">
+          <div class="ext-id-name">
+            ${check.name}
+            <span class="ext-id-tag ${check.pass ? 'pass' : 'fail'}">${check.pass ? 'PASS' : 'FAIL'}</span>
+          </div>
+          <div class="ext-id-formula">${check.formula}</div>
+          <div class="ext-id-value">residual: ${typeof check.value === 'number' ? check.value.toExponential(2) : '—'} (tol: ${check.tolerance.toExponential(1)})</div>
+        </div>
+      `).join('');
+    }
+
+    const passed = all.filter(c => c.pass).length;
+    const summary = document.getElementById('ext-id-summary');
+    if (summary) {
+      summary.className = `ext-id-summary ${passed === all.length ? 'all-pass' : 'has-fail'}`;
+      summary.textContent = `${passed} / ${all.length} identities verified — ${passed === all.length ? 'ALL PASS' : `${all.length - passed} FAILED`}`;
+    }
+  }
+
+  /* ─── Perturbation Analysis ───────────────────────────────────── */
+
+  function runPerturbation(kernel: KernelResult) {
+    const w = Array(nChannels).fill(1 / nChannels);
+    const results = perturbationAnalysis(channelValues, w);
+
+    // Bar chart — influence per channel
+    const canvas = document.getElementById('pert-influence-canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const area = setupCanvas(canvas, 700, 320);
+      clearChart(area);
+
+      const maxInf = Math.max(...results.map(r => r.influence), 0.01);
+      drawGrid(area, { label: 'Channel', min: 0, max: nChannels }, { label: 'Influence', min: 0, max: maxInf, ticks: 5 });
+      drawAxes(area, { label: 'Channel', min: 0, max: nChannels, format: v => `c${Math.round(v)+1}` },
+        { label: 'Normalized Influence', min: 0, max: maxInf });
+
+      const ctx = area.ctx;
+      const barW = area.plotW / nChannels * 0.7;
+      const gap = area.plotW / nChannels * 0.15;
+      for (let i = 0; i < results.length; i++) {
+        const x = area.plotX + (i / nChannels) * area.plotW + gap;
+        const h = (results[i].influence / maxInf) * area.plotH;
+        const y = area.plotY + area.plotH - h;
+
+        const grad = ctx.createLinearGradient(x, y, x, y + h);
+        grad.addColorStop(0, CHANNEL_COLORS[i % CHANNEL_COLORS.length]);
+        grad.addColorStop(1, CHANNEL_COLORS[i % CHANNEL_COLORS.length] + '40');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, y, barW, h);
+
+        // Value label
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = `10px ${area.ctx.font.split(' ').pop()}`;
+        ctx.textAlign = 'center';
+        ctx.fillText((results[i].influence * 100).toFixed(1) + '%', x + barW / 2, y - 6);
+      }
+    }
+
+    // Table
+    const tableWrap = document.getElementById('pert-table-wrap');
+    if (tableWrap) {
+      tableWrap.innerHTML = `<table class="pert-table">
+        <tr><th>Ch</th><th>c</th><th>∂F/∂c</th><th>∂IC/∂c</th><th>∂S/∂c</th><th>Influence</th></tr>
+        ${results.map(r => `<tr>
+          <td style="color:${CHANNEL_COLORS[r.channelIndex % CHANNEL_COLORS.length]}">c${r.channelIndex+1}</td>
+          <td>${channelValues[r.channelIndex].toFixed(3)}</td>
+          <td>${r.dF_dc.toFixed(4)}</td>
+          <td>${r.dIC_dc.toFixed(4)}</td>
+          <td>${r.dS_dc.toFixed(4)}</td>
+          <td>${(r.influence * 100).toFixed(1)}%</td>
+        </tr>`).join('')}
+      </table>`;
+    }
+
+    // Insights
+    const insights = document.getElementById('pert-insights');
+    if (insights) {
+      const sorted = [...results].sort((a, b) => b.influence - a.influence);
+      const top = sorted[0];
+      const bottom = sorted[sorted.length - 1];
+      const topPct = (top.influence * 100).toFixed(1);
+      const botPct = (bottom.influence * 100).toFixed(1);
+      const ratio = top.influence / Math.max(bottom.influence, 1e-12);
+      insights.innerHTML = `
+        <strong>Perturbation Insights:</strong><br/>
+        Most influential: <span style="color:${CHANNEL_COLORS[top.channelIndex % CHANNEL_COLORS.length]}">c${top.channelIndex+1}</span>
+        (${topPct}% of total IC sensitivity, value=${channelValues[top.channelIndex].toFixed(3)})<br/>
+        Least influential: <span style="color:${CHANNEL_COLORS[bottom.channelIndex % CHANNEL_COLORS.length]}">c${bottom.channelIndex+1}</span>
+        (${botPct}%, value=${channelValues[bottom.channelIndex].toFixed(3)})<br/>
+        Influence ratio: ${ratio.toFixed(1)}× — ${ratio > 5 ? 'highly concentrated sensitivity (geometric slaughter risk)' :
+          ratio > 2 ? 'moderate concentration' : 'well-distributed sensitivity'}<br/>
+        IC = ${kernel.IC.toFixed(6)} — ${kernel.IC < 0.30 ? 'CRITICAL: IC below 0.30 threshold' :
+          kernel.IC < kernel.F * 0.5 ? 'large heterogeneity gap signals dominant weak channels' : 'healthy IC/F ratio'}
+      `;
+    }
+  }
+
+  /* ─── Fisher Geometry ─────────────────────────────────────────── */
+
+  function runFisher(kernel: KernelResult) {
+    const fisher = fisherCoordinates(kernel);
+
+    // Result cards
+    const grid = document.getElementById('fisher-result-grid');
+    if (grid) {
+      grid.innerHTML = [
+        { label: 'θ (Fisher angle)', value: fisher.theta.toFixed(6), color: '#22d3ee' },
+        { label: 'F = cos²θ', value: kernel.F.toFixed(6), color: '#f59e0b' },
+        { label: 'ω = sin²θ', value: kernel.omega.toFixed(6), color: '#ef4444' },
+        { label: 'g_F(θ) (metric)', value: fisher.gF.toFixed(6), color: '#a855f7' },
+        { label: 'Ricci scalar R', value: fisher.R.toFixed(6), color: '#34d399' },
+        { label: 'θ / (π/2)', value: (fisher.theta / (Math.PI / 2)).toFixed(4), color: '#f472b6' },
+      ].map(c => `
+        <div class="fisher-card">
+          <div class="label">${c.label}</div>
+          <div class="value" style="color:${c.color}">${c.value}</div>
+        </div>
+      `).join('');
+    }
+
+    // Manifold chart: f(θ) = S + κ across θ ∈ [0, π/2]
+    const canvas = document.getElementById('fisher-manifold-canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const area = setupCanvas(canvas, 700, 360, { margins: { left: 64 } });
+      clearChart(area);
+      const xAxis = { label: 'θ (Fisher coordinate)', min: 0, max: Math.PI / 2, ticks: 8 };
+      const yAxis = { label: 'Value', min: -4, max: 1.0, ticks: 10 };
+      const fmtAngle = (v: number) => (v / Math.PI * 180).toFixed(0) + '°';
+      drawGrid(area, { ...xAxis, format: fmtAngle }, yAxis);
+      drawAxes(area, { ...xAxis, format: fmtAngle }, yAxis);
+
+      // Generate curves
+      const steps = 200;
+      const sCurve: {x:number;y:number}[] = [];
+      const kCurve: {x:number;y:number}[] = [];
+      const fCurve: {x:number;y:number}[] = [];
+      for (let i = 0; i <= steps; i++) {
+        const th = (i / steps) * Math.PI / 2;
+        const cosT = Math.cos(th);
+        const sinT = Math.sin(th);
+        const c = cosT * cosT;
+        const cE = Math.max(c, 1e-8);
+        const S = -(c * Math.log(cE) + (1 - c) * Math.log(Math.max(1 - c, 1e-8)));
+        const k = Math.log(cE);
+        sCurve.push({ x: th, y: S });
+        kCurve.push({ x: th, y: k });
+        fCurve.push({ x: th, y: S + k });
+      }
+
+      const xR = { min: xAxis.min, max: xAxis.max };
+      const yR = { min: yAxis.min, max: yAxis.max };
+      drawCurve(area, sCurve, xR, yR, { color: CHART_COLORS.amber, lineWidth: 2 });
+      drawCurve(area, kCurve, xR, yR, { color: CHART_COLORS.cyan, lineWidth: 2 });
+      drawCurve(area, fCurve, xR, yR, { color: CHART_COLORS.green, lineWidth: 2.5 });
+
+      // Mark current position
+      drawVerticalMarker(area, fisher.theta, xR, {
+        color: '#e2e8f0', dash: [4, 3], label: `θ = ${(fisher.theta / Math.PI * 180).toFixed(1)}°`,
+      });
+
+      // Mark equator
+      drawVerticalMarker(area, Math.PI / 4, xR, {
+        color: CHART_COLORS.purple, dash: [2, 4], label: 'equator (45°)', labelPosition: 'bottom',
+      });
+
+      // S+κ = 0 line
+      drawHorizontalMarker(area, 0, yR, { color: '#64748b', dash: [3, 3], label: 'f = 0' });
+
+      drawLegend(area, [
+        { label: 'S (entropy)', color: CHART_COLORS.amber },
+        { label: 'κ (log-integrity)', color: CHART_COLORS.cyan },
+        { label: 'f = S + κ', color: CHART_COLORS.green },
+      ], { x: area.plotX + 10, y: area.plotY + 10 });
+    }
+
+    // Notes
+    const notes = document.getElementById('fisher-notes');
+    if (notes) {
+      const thetaDeg = fisher.theta / Math.PI * 180;
+      notes.innerHTML = `
+        <strong>Fisher Geometry Notes:</strong><br/>
+        The Bernoulli manifold is <em>flat</em> in Fisher coordinates — g_F(θ) = ${fisher.gF.toFixed(6)}
+        (= 1 to machine precision). All structure comes from the embedding, not intrinsic curvature.<br/><br/>
+        Current position: θ = ${thetaDeg.toFixed(2)}° (${thetaDeg < 45 ? 'below' : thetaDeg > 45 ? 'above' : 'at'} the equator).
+        ${thetaDeg < 10 ? ' Deep stable territory — high fidelity, low drift.' :
+          thetaDeg > 80 ? ' Deep collapse territory — high drift, low fidelity.' :
+          Math.abs(thetaDeg - 45) < 5 ? ' Near the equator where S + κ = 0 — the four-way convergence point.' : ''}
+        <br/>Ricci curvature R = ${fisher.R.toFixed(6)} confirms flat geometry (identically zero for Bernoulli).
+      `;
+    }
+  }
+
+  /* ─── Rank Analysis ───────────────────────────────────────────── */
+
+  function runRank() {
+    const rank = classifyRank(channelValues);
+    const w = Array(nChannels).fill(1 / nChannels);
+    const kernel = computeKernel(channelValues, w);
+
+    const resultEl = document.getElementById('rank-result');
+    if (resultEl) {
+      const rankClass = rank.rank === 1 ? 'rank-1' : rank.rank === 2 ? 'rank-2' : 'rank-3';
+      resultEl.innerHTML = `
+        <div class="rank-card">
+          <div class="rank-badge ${rankClass}">Rank-${rank.rank}</div>
+          <div style="color:#94a3b8;font-size:0.78rem">${rank.label}</div>
+          <div style="color:#64748b;font-size:0.72rem">Effective DOF: ${rank.effectiveDOF}</div>
+        </div>
+        <div class="rank-card">
+          <div style="color:#94a3b8;font-size:0.78rem">Distinct Values</div>
+          <div style="color:#22d3ee;font-size:1.3rem;font-weight:700">${rank.distinctValues}</div>
+        </div>
+        <div class="rank-card">
+          <div style="color:#94a3b8;font-size:0.78rem">Δ = F − IC</div>
+          <div style="color:#f59e0b;font-size:1.3rem;font-weight:700">${kernel.delta.toFixed(6)}</div>
+        </div>
+        <div class="rank-card">
+          <div style="color:#94a3b8;font-size:0.78rem">IC / F ratio</div>
+          <div style="color:#a855f7;font-size:1.3rem;font-weight:700">${(kernel.IC / Math.max(kernel.F, 1e-12)).toFixed(4)}</div>
+        </div>
+      `;
+    }
+
+    // Spectrum chart — sorted channel values
+    const canvas = document.getElementById('rank-spectrum-canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const area = setupCanvas(canvas, 700, 300);
+      clearChart(area);
+      drawGrid(area, { label: 'Channel (sorted)', min: 0, max: nChannels, ticks: nChannels },
+        { label: 'Value', min: 0, max: 1, ticks: 5 });
+      drawAxes(area, { label: 'Channel (sorted)', min: 0, max: nChannels, format: v => `${Math.round(v)+1}` },
+        { label: 'Value', min: 0, max: 1 });
+
+      const sorted = [...channelValues].sort((a, b) => b - a);
+      const ctx = area.ctx;
+      const barW = area.plotW / nChannels * 0.65;
+      const gap = area.plotW / nChannels * 0.175;
+
+      for (let i = 0; i < sorted.length; i++) {
+        const x = area.plotX + (i / nChannels) * area.plotW + gap;
+        const h = sorted[i] * area.plotH;
+        const y = area.plotY + area.plotH - h;
+
+        const grad = ctx.createLinearGradient(x, y, x, y + h);
+        grad.addColorStop(0, '#a855f7');
+        grad.addColorStop(1, '#a855f740');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, y, barW, h);
+
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '10px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(sorted[i].toFixed(2), x + barW / 2, y - 5);
+      }
+
+      // F line
+      drawHorizontalMarker(area, kernel.F, { min: 0, max: 1 }, {
+        color: CHART_COLORS.amber, dash: [5, 3], label: `F = ${kernel.F.toFixed(3)}`,
+      });
+      // IC line
+      drawHorizontalMarker(area, kernel.IC, { min: 0, max: 1 }, {
+        color: CHART_COLORS.cyan, dash: [5, 3], label: `IC = ${kernel.IC.toFixed(3)}`,
+      });
+    }
+
+    // Explanation
+    const expl = document.getElementById('rank-explanation');
+    if (expl) {
+      const descriptions: Record<number, string> = {
+        1: 'Rank-1 (homogeneous): All channels have the same value. IC = F exactly, Δ = 0, C = 0. This is the trivial case — 1 effective degree of freedom. The system is fully described by a single parameter.',
+        2: 'Rank-2 (two-level): The trace vector has an effective 2-channel structure. The curvature C is determined by F and κ: C = g(F, κ). Two effective degrees of freedom — knowing any two of {F, κ, C} determines the third.',
+        3: 'Rank-3 (general): The generic heterogeneous case with n ≥ 3 distinct groups. F, κ, and C are mutually independent — 3 effective degrees of freedom. Almost all real-world systems are rank-3. The heterogeneity gap Δ > 0 reveals structural diversity.',
+      };
+      expl.innerHTML = `<strong>Rank Classification:</strong><br/>${descriptions[rank.rank] ?? ''}`;
+    }
+  }
+
+  /* ─── Domain Comparison ───────────────────────────────────────── */
+
+  function renderCompSelector() {
+    const el = document.getElementById('comp-selector');
+    if (!el) return;
+    const allPresets = [...PRESETS, ...DOMAIN_PRESETS];
+    el.innerHTML = allPresets.map((p, i) => `
+      <span class="comp-chip ${selectedComps.has(i) ? 'selected' : ''}" data-idx="${i}">${p.name}</span>
+    `).join('');
+
+    el.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (!t.classList.contains('comp-chip')) return;
+      const idx = parseInt(t.dataset.idx ?? '');
+      if (isNaN(idx)) return;
+      if (selectedComps.has(idx)) {
+        selectedComps.delete(idx);
+        t.classList.remove('selected');
+      } else {
+        selectedComps.add(idx);
+        t.classList.add('selected');
+      }
+    });
+  }
+
+  function runComparison() {
+    const allPresets = [...PRESETS, ...DOMAIN_PRESETS];
+    const selected = [...selectedComps].sort().map(i => allPresets[i]).filter(Boolean);
+    if (selected.length < 2) return;
+
+    // Compute kernels
+    const kResults = selected.map(p => ({
+      name: p.name,
+      kernel: computeKernel(p.c, p.w),
+      regime: classifyRegime(computeKernel(p.c, p.w)).regime,
+    }));
+
+    // Build matrix table
+    const wrap = document.getElementById('comp-matrix-wrap');
+    if (wrap) {
+      let html = '<table class="comp-matrix"><tr><th></th>';
+      for (const r of kResults) html += `<th>${r.name.slice(0, 12)}</th>`;
+      html += '</tr>';
+
+      for (let i = 0; i < kResults.length; i++) {
+        html += `<tr><th>${kResults[i].name.slice(0, 12)}</th>`;
+        for (let j = 0; j < kResults.length; j++) {
+          if (i === j) {
+            html += `<td style="color:#64748b">—</td>`;
+          } else {
+            const dF = Math.abs(kResults[i].kernel.F - kResults[j].kernel.F);
+            const dIC = Math.abs(kResults[i].kernel.IC - kResults[j].kernel.IC);
+            const cellColor = dF > 0.3 ? '#ef4444' : dF > 0.1 ? '#f59e0b' : '#34d399';
+            html += `<td style="color:${cellColor}">ΔF=${dF.toFixed(3)}<br/>ΔIC=${dIC.toFixed(3)}</td>`;
+          }
+        }
+        html += '</tr>';
+      }
+      html += '</table>';
+      wrap.innerHTML = html;
+    }
+
+    // Heatmap of Hellinger-like distances
+    const canvas = document.getElementById('comp-heatmap-canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const n = kResults.length;
+      const cellSize = Math.min(60, Math.floor(650 / n));
+      const totalW = cellSize * n + 100;
+      const totalH = cellSize * n + 80;
+
+      const area = setupCanvas(canvas, Math.max(totalW, 300), Math.max(totalH, 300));
+      clearChart(area);
+
+      const ctx = area.ctx;
+      const offsetX = 80;
+      const offsetY = 40;
+
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          const x = offsetX + j * cellSize;
+          const y = offsetY + i * cellSize;
+          if (i === j) {
+            ctx.fillStyle = '#0c0c14';
+          } else {
+            const dH = Math.abs(
+              Math.sqrt(Math.max(0, kResults[i].kernel.IC)) -
+              Math.sqrt(Math.max(0, kResults[j].kernel.IC))
+            );
+            const intensity = Math.min(dH / 0.5, 1);
+            const r = Math.round(50 + intensity * 200);
+            const g = Math.round(200 - intensity * 170);
+            const b = Math.round(100 - intensity * 50);
+            ctx.fillStyle = `rgb(${r},${g},${b})`;
+          }
+          ctx.fillRect(x, y, cellSize - 1, cellSize - 1);
+        }
+      }
+
+      // Labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '9px monospace';
+      for (let i = 0; i < n; i++) {
+        ctx.textAlign = 'right';
+        ctx.fillText(kResults[i].name.slice(0, 10), offsetX - 4, offsetY + i * cellSize + cellSize / 2 + 3);
+        ctx.save();
+        ctx.translate(offsetX + i * cellSize + cellSize / 2, offsetY - 4);
+        ctx.rotate(-Math.PI / 4);
+        ctx.textAlign = 'left';
+        ctx.fillText(kResults[i].name.slice(0, 10), 0, 0);
+        ctx.restore();
+      }
+
+      // Title
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '12px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('Hellinger-like Distance |√IC₁ − √IC₂|', totalW / 2, totalH - 10);
+    }
+  }
+
+  /* ─── Multi-Sweep ─────────────────────────────────────────────── */
+
+  function runMultiSweep() {
+    const w = Array(nChannels).fill(1 / nChannels);
+    const metric = (document.getElementById('ms-metric') as HTMLSelectElement)?.value ?? 'IC';
+    const steps = parseInt((document.getElementById('ms-steps') as HTMLInputElement)?.value ?? '150');
+    const results = multiSweep(channelValues, w, steps);
+
+    const canvas = document.getElementById('ms-chart-canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const area = setupCanvas(canvas, 700, 380, { margins: { left: 64 } });
+      clearChart(area);
+
+      // Find Y range
+      let yMin = Infinity, yMax = -Infinity;
+      for (const res of results) {
+        for (const pt of res.points) {
+          const v = (pt as Record<string, number>)[metric] ?? 0;
+          if (v < yMin) yMin = v;
+          if (v > yMax) yMax = v;
+        }
+      }
+      const yPad = (yMax - yMin) * 0.1 || 0.1;
+      yMin -= yPad;
+      yMax += yPad;
+
+      const metricLabels: Record<string, string> = {
+        IC: 'IC (Integrity Composite)', F: 'F (Fidelity)',
+        S: 'S (Bernoulli Entropy)', delta: 'Δ (Heterogeneity Gap)', omega: 'ω (Drift)',
+      };
+
+      drawGrid(area, { label: 'Channel Value', min: 0, max: 1, ticks: 10 },
+        { label: metricLabels[metric] ?? metric, min: yMin, max: yMax, ticks: 8 });
+      drawAxes(area, { label: 'Channel Value', min: 0, max: 1 },
+        { label: metricLabels[metric] ?? metric, min: yMin, max: yMax });
+
+      const xR = { min: 0, max: 1 };
+      const yR = { min: yMin, max: yMax };
+
+      // Draw each channel's sweep
+      for (const res of results) {
+        const data = res.points.map(pt => ({ x: pt.param, y: (pt as Record<string, number>)[metric] ?? 0 }));
+        drawCurve(area, data, xR, yR, {
+          color: CHANNEL_COLORS[res.channelIndex % CHANNEL_COLORS.length],
+          lineWidth: 1.8,
+        });
+      }
+
+      // Mark current positions
+      for (let i = 0; i < nChannels; i++) {
+        const currentVal = channelValues[i];
+        const w2 = Array(nChannels).fill(1 / nChannels);
+        const k = computeKernel(channelValues, w2);
+        const yVal = (k as Record<string, number>)[metric] ?? 0;
+        drawPoint(area, currentVal, yVal, xR, yR, {
+          color: CHANNEL_COLORS[i % CHANNEL_COLORS.length],
+          radius: 4,
+        });
+      }
+
+      drawLegend(area,
+        results.map(r => ({ label: `c${r.channelIndex + 1}`, color: CHANNEL_COLORS[r.channelIndex % CHANNEL_COLORS.length] })),
+        { x: area.plotX + area.plotW - 120, y: area.plotY + 10 },
+      );
+    }
+
+    // Ranking cards
+    const ranking = document.getElementById('ms-ranking');
+    if (ranking) {
+      const sorted = [...results].sort((a, b) => b.icRange - a.icRange);
+      ranking.innerHTML = sorted.map((r, idx) => `
+        <div class="ms-rank-card">
+          <div class="ch-label" style="color:${CHANNEL_COLORS[r.channelIndex % CHANNEL_COLORS.length]}">
+            #${idx + 1} — c${r.channelIndex + 1}
+          </div>
+          <div class="ch-stat">IC range: ${r.icRange.toFixed(4)}</div>
+          <div class="ch-stat">F range: ${r.fRange.toFixed(4)}</div>
+          <div class="ch-stat">Regime transitions: ${r.regimeTransitions}</div>
+        </div>
+      `).join('');
+    }
+  }
+
+  /* ─── Bootstrap ───────────────────────────────────────────────── */
+
+  init();
+</script>
