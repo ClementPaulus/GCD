@@ -1,6 +1,6 @@
 """Tests for closures/atomic_physics/recursive_instantiation.py.
 
-Validates the Recursive Instantiation Theory — six theorems (T11–T16)
+Validates the Recursive Instantiation Theory — six theorems (T-RI-1–T-RI-6)
 proving that elements are recursive collapse returns with cumulative
 drift as the dominant stability predictor.
 
@@ -8,7 +8,7 @@ Test hierarchy:
     test_00_*  — smoke tests (fast, no data dependency)
     test_10_*  — dataclass / structure tests
     test_20_*  — computation tests (step distances, cumulative drift)
-    test_30_*  — theorem tests (T11–T16)
+    test_30_*  — theorem tests (T-RI-1–T-RI-6)
     test_40_*  — census / classification tests
     test_50_*  — integration tests (all theorems together)
 """
@@ -34,12 +34,12 @@ from closures.atomic_physics.recursive_instantiation import (
     display_summary,
     display_theorem,
     run_all_theorems,
-    theorem_T11_cumulative_drift_dominance,
-    theorem_T12_recursive_collapse_budget,
-    theorem_T13_non_returnable_states,
-    theorem_T14_magic_number_drift_absorption,
-    theorem_T15_period_efficiency_exhaustion,
-    theorem_T16_constant_heterogeneity_rate,
+    theorem_TRI1_cumulative_drift_dominance,
+    theorem_TRI2_recursive_collapse_budget,
+    theorem_TRI3_non_returnable_states,
+    theorem_TRI4_magic_number_drift_absorption,
+    theorem_TRI5_period_efficiency_exhaustion,
+    theorem_TRI6_constant_heterogeneity_rate,
 )
 
 # ═══════════════════════════════════════════════════════════════════
@@ -196,23 +196,23 @@ class Test20Computation:
 
 
 # ═══════════════════════════════════════════════════════════════════
-# 30 — THEOREM TESTS (T11–T16)
+# 30 — THEOREM TESTS (T-RI-1–T-RI-6)
 # ═══════════════════════════════════════════════════════════════════
 
 
 class Test30Theorems:
     """Verify each theorem proves independently."""
 
-    def test_30_T11_cumulative_drift_dominance(self, analysis: RecursiveAnalysis) -> None:
-        result = theorem_T11_cumulative_drift_dominance(analysis)
+    def test_30_T_RI1_cumulative_drift_dominance(self, analysis: RecursiveAnalysis) -> None:
+        result = theorem_TRI1_cumulative_drift_dominance(analysis)
         assert result.verdict == "PROVEN", f"T11 FALSIFIED: {result.details}"
         assert result.n_passed == result.n_tests
         assert result.n_failed == 0
         # ρ should be strongly negative
         assert result.details["rho_drift"] < -0.5
 
-    def test_31_T12_recursive_collapse_budget(self, analysis: RecursiveAnalysis) -> None:
-        result = theorem_T12_recursive_collapse_budget(analysis)
+    def test_31_T_RI2_recursive_collapse_budget(self, analysis: RecursiveAnalysis) -> None:
+        result = theorem_TRI2_recursive_collapse_budget(analysis)
         assert result.verdict == "PROVEN", f"T12 FALSIFIED: {result.details}"
         assert result.n_passed == result.n_tests
         # Accuracy > 80%
@@ -220,8 +220,8 @@ class Test30Theorems:
         # Mean stable τ_R < mean radio τ_R
         assert result.details["mean_tau_stable"] < result.details["mean_tau_radio"]
 
-    def test_32_T13_non_returnable_states(self, analysis: RecursiveAnalysis) -> None:
-        result = theorem_T13_non_returnable_states(analysis)
+    def test_32_T_RI3_non_returnable_states(self, analysis: RecursiveAnalysis) -> None:
+        result = theorem_TRI3_non_returnable_states(analysis)
         assert result.verdict == "PROVEN", f"T13 FALSIFIED: {result.details}"
         assert result.n_passed == result.n_tests
         # At least 15 tears
@@ -229,23 +229,23 @@ class Test30Theorems:
         # Quantum percentage ≥ 80%
         assert result.details["pct_quantum"] >= 80
 
-    def test_33_T14_magic_number_drift_absorption(self, analysis: RecursiveAnalysis) -> None:
-        result = theorem_T14_magic_number_drift_absorption(analysis)
+    def test_33_T_RI4_magic_number_drift_absorption(self, analysis: RecursiveAnalysis) -> None:
+        result = theorem_TRI4_magic_number_drift_absorption(analysis)
         assert result.verdict == "PROVEN", f"T14 FALSIFIED: {result.details}"
         assert result.n_passed == result.n_tests
         # All magic Z≥20 stable
         assert result.details["magic_all_stable"] is True
 
-    def test_34_T15_period_efficiency_exhaustion(self, analysis: RecursiveAnalysis) -> None:
-        result = theorem_T15_period_efficiency_exhaustion(analysis)
+    def test_34_T_RI5_period_efficiency_exhaustion(self, analysis: RecursiveAnalysis) -> None:
+        result = theorem_TRI5_period_efficiency_exhaustion(analysis)
         assert result.verdict == "PROVEN", f"T15 FALSIFIED: {result.details}"
         assert result.n_passed == result.n_tests
         # Period 7 has 0% stable
         ps = result.details["period_stats"]
         assert ps[7]["n_stable"] == 0
 
-    def test_35_T16_constant_heterogeneity_rate(self, analysis: RecursiveAnalysis) -> None:
-        result = theorem_T16_constant_heterogeneity_rate(analysis)
+    def test_35_T_RI6_constant_heterogeneity_rate(self, analysis: RecursiveAnalysis) -> None:
+        result = theorem_TRI6_constant_heterogeneity_rate(analysis)
         assert result.verdict == "PROVEN", f"T16 FALSIFIED: {result.details}"
         assert result.n_passed == result.n_tests
         # Mean gap/Z in expected range
@@ -334,7 +334,7 @@ class Test50Integration:
     def test_53_theorem_names_sequential(self, all_theorems: list[TheoremResult]) -> None:
         names = [r.name for r in all_theorems]
         for i, name in enumerate(names):
-            assert f"T{11 + i}" in name
+            assert f"T-RI-{i + 1}" in name
 
     def test_54_display_summary_runs(
         self, all_theorems: list[TheoremResult], capsys: pytest.CaptureFixture[str]
@@ -355,7 +355,7 @@ class Test50Integration:
     ) -> None:
         display_theorem(all_theorems[0])
         out = capsys.readouterr().out
-        assert "T11" in out
+        assert "T-RI-1" in out
 
     def test_57_display_theorem_verbose(
         self, all_theorems: list[TheoremResult], capsys: pytest.CaptureFixture[str]

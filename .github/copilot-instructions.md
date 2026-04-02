@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.3.0** · **17,191 tests** · **20 domains** · **193 closure modules** · **47 lemmas** · **44 structural identities**
+**UMCP v2.3.0** · **17,639 tests** · **20 domains** · **193 closure modules** · **47 lemmas** · **44 structural identities**
 
 ## Foundational Principle — Read This First
 
@@ -587,7 +587,7 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 17,191 tests (pytest --collect-only | grep ":" | wc -l to verify)
+pytest                                       # 17,639 tests (pytest --collect-only | grep ":" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
@@ -653,12 +653,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**17,191 test cases** across **200 test files** in `tests/` (199 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_319_*`). Single `tests/conftest.py` provides:
+**17,639 test cases** across **202 test files** in `tests/` (201 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_319_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 17,191 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 17,639 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -682,7 +682,7 @@ umcp validate <target>
 | `test_160` | Contract claims | 77 |
 | `test_170–178` | CLI subcommands, batch validate, τ_R sentinel, schema, lemmas, finance, public API, ledger hash-chain | 204 |
 | `test_180–183` | Materials science, crystal, bioactive, photonic databases | 619 |
-| `test_190–195` | Atomic physics closures, scale ladder | 190 |
+| `test_190–197` | Atomic physics closures, theorems, spectral theorems, scale ladder | 638 |
 | `test_200–201` | Fleet, recursive instantiation, neutrino oscillation | 182 |
 | `test_210–237` | Cross-domain, casepack roundtrip, registry sweep, domain unit tests | 882 |
 | `test_238` | Kernel structural theorems (T-KS-1 through T-KS-7) | 47 |
@@ -749,7 +749,7 @@ umcp validate <target>
 | `test_319` | Unified kinematics theorems (T-KN-1 through T-KN-10) | 24 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 1,895 |
-| **TOTAL** | | **17,191** |
+| **TOTAL** | | **17,639** |
 
 ## Extension System
 

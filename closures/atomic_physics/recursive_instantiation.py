@@ -346,14 +346,14 @@ def compute_recursive_analysis(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T11: CUMULATIVE DRIFT DOMINANCE
+# THEOREM T-RI-1: CUMULATIVE DRIFT DOMINANCE
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T11_cumulative_drift_dominance(
+def theorem_TRI1_cumulative_drift_dominance(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T11: Cumulative Drift Dominance.
+    """T-RI-1: Cumulative Drift Dominance.
 
     STATEMENT:
       Cumulative trace-space drift is the strongest single predictor
@@ -424,7 +424,7 @@ def theorem_T11_cumulative_drift_dominance(
         tests_passed += 1
 
     return TheoremResult(
-        name="T11: Cumulative Drift Dominance",
+        name="T-RI-1: Cumulative Drift Dominance",
         statement=("|ρ(cum_drift, stability)| > |ρ(gap, stab)| > |ρ(F, stab)| > |ρ(IC, stab)|"),
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -446,14 +446,14 @@ def theorem_T11_cumulative_drift_dominance(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T12: RECURSIVE COLLAPSE BUDGET
+# THEOREM T-RI-2: RECURSIVE COLLAPSE BUDGET
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T12_recursive_collapse_budget(
+def theorem_TRI2_recursive_collapse_budget(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T12: Recursive Collapse Budget.
+    """T-RI-2: Recursive Collapse Budget.
 
     STATEMENT:
       The recursive collapse budget τ_R(Z) = cum_drift(Z) / IC(Z)
@@ -526,7 +526,7 @@ def theorem_T12_recursive_collapse_budget(
         tests_passed += 1
 
     return TheoremResult(
-        name="T12: Recursive Collapse Budget",
+        name="T-RI-2: Recursive Collapse Budget",
         statement="τ_R = cum_drift/IC separates stable/radioactive at >80% accuracy",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -546,14 +546,14 @@ def theorem_T12_recursive_collapse_budget(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T13: NON-RETURNABLE STATE THEOREM
+# THEOREM T-RI-3: NON-RETURNABLE STATE THEOREM
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T13_non_returnable_states(
+def theorem_TRI3_non_returnable_states(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T13: Non-Returnable State Theorem.
+    """T-RI-3: Non-Returnable State Theorem.
 
     STATEMENT:
       The 21 largest step distances (d_trace ≥ 0.8, "tears") correspond
@@ -640,7 +640,7 @@ def theorem_T13_non_returnable_states(
         tests_passed += 1
 
     return TheoremResult(
-        name="T13: Non-Returnable State Theorem",
+        name="T-RI-3: Non-Returnable State Theorem",
         statement="Tears (d≥0.8) are quantum discontinuities (block/noble-gas boundaries)",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -659,14 +659,14 @@ def theorem_T13_non_returnable_states(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T14: MAGIC NUMBER DRIFT ABSORPTION
+# THEOREM T-RI-4: MAGIC NUMBER DRIFT ABSORPTION
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T14_magic_number_drift_absorption(
+def theorem_TRI4_magic_number_drift_absorption(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T14: Magic Number Drift Absorption.
+    """T-RI-4: Magic Number Drift Absorption.
 
     STATEMENT:
       Magic proton numbers (2, 8, 20, 28, 50, 82) act as drift absorbers
@@ -739,7 +739,7 @@ def theorem_T14_magic_number_drift_absorption(
         tests_passed += 1
 
     return TheoremResult(
-        name="T14: Magic Number Drift Absorption",
+        name="T-RI-4: Magic Number Drift Absorption",
         statement="Magic numbers reduce local gap and anchor stability (τ_R < threshold)",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -758,14 +758,14 @@ def theorem_T14_magic_number_drift_absorption(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T15: PERIOD EFFICIENCY EXHAUSTION
+# THEOREM T-RI-5: PERIOD EFFICIENCY EXHAUSTION
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T15_period_efficiency_exhaustion(
+def theorem_TRI5_period_efficiency_exhaustion(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T15: Period Efficiency Exhaustion.
+    """T-RI-5: Period Efficiency Exhaustion.
 
     STATEMENT:
       Period efficiency η = ⟨IC⟩ / ⟨step_distance⟩ measures how well
@@ -860,7 +860,7 @@ def theorem_T15_period_efficiency_exhaustion(
         t4 = False
 
     return TheoremResult(
-        name="T15: Period Efficiency Exhaustion",
+        name="T-RI-5: Period Efficiency Exhaustion",
         statement="η peaks at Period 6, declines at Period 7 (0% stable)",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -874,14 +874,14 @@ def theorem_T15_period_efficiency_exhaustion(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T16: CONSTANT HETEROGENEITY RATE
+# THEOREM T-RI-6: CONSTANT HETEROGENEITY RATE
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T16_constant_heterogeneity_rate(
+def theorem_TRI6_constant_heterogeneity_rate(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T16: Constant Heterogeneity Rate.
+    """T-RI-6: Constant Heterogeneity Rate.
 
     STATEMENT:
       The cumulative gap divided by Z converges to a narrow band for Z ≥ 25:
@@ -945,7 +945,7 @@ def theorem_T16_constant_heterogeneity_rate(
         tests_passed += 1
 
     return TheoremResult(
-        name="T16: Constant Heterogeneity Rate",
+        name="T-RI-6: Constant Heterogeneity Rate",
         statement=f"gap/Z → {mean_gpz:.3f} ± {std_gpz:.3f} for Z ≥ 25",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -963,17 +963,17 @@ def theorem_T16_constant_heterogeneity_rate(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T17: NOBLE GAS COHERENCE MAXIMUM
+# THEOREM T-RI-7: NOBLE GAS COHERENCE MAXIMUM
 # ═══════════════════════════════════════════════════════════════════
 
 # Noble gas atomic numbers (closed electron shells)
 NOBLE_GAS_Z: tuple[int, ...] = (2, 10, 18, 36, 54, 86)
 
 
-def theorem_T17_noble_gas_coherence(
+def theorem_TRI7_noble_gas_coherence(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T17: Noble Gas Heterogeneity Extremum.
+    """T-RI-7: Noble Gas Heterogeneity Extremum.
 
     STATEMENT:
       Noble gases (He, Ne, Ar, Kr, Xe, Rn) have the LARGEST
@@ -1043,7 +1043,7 @@ def theorem_T17_noble_gas_coherence(
         tests_passed += 1
 
     return TheoremResult(
-        name="T17: Noble Gas Heterogeneity Extremum",
+        name="T-RI-7: Noble Gas Heterogeneity Extremum",
         statement="Noble gases have Δ above period median (6/6) — inertness = dead channels",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -1061,14 +1061,14 @@ def theorem_T17_noble_gas_coherence(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T18: BLOCK-DEPENDENT FIDELITY SPECTRUM
+# THEOREM T-RI-8: BLOCK-DEPENDENT FIDELITY SPECTRUM
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T18_block_fidelity_spectrum(
+def theorem_TRI8_block_fidelity_spectrum(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T18: Block-Dependent Fidelity Spectrum.
+    """T-RI-8: Block-Dependent Fidelity Spectrum.
 
     STATEMENT:
       The four orbital blocks (s, p, d, f) produce distinct mean F
@@ -1122,7 +1122,7 @@ def theorem_T18_block_fidelity_spectrum(
             tests_passed += 1
 
     return TheoremResult(
-        name="T18: Block-Dependent Fidelity Spectrum",
+        name="T-RI-8: Block-Dependent Fidelity Spectrum",
         statement="d-block has highest ⟨F⟩ among four orbital blocks",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -1136,12 +1136,12 @@ def theorem_T18_block_fidelity_spectrum(
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T19: ATOMIC TIER-1 IDENTITY VERIFICATION
+# THEOREM T-RI-9: ATOMIC TIER-1 IDENTITY VERIFICATION
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T19_atomic_tier1_identities() -> TheoremResult:
-    """T19: Atomic Tier-1 Identity Verification.
+def theorem_TRI9_atomic_tier1_identities() -> TheoremResult:
+    """T-RI-9: Atomic Tier-1 Identity Verification.
 
     STATEMENT:
       The three algebraic identities hold across all 118 elements
@@ -1211,7 +1211,7 @@ def theorem_T19_atomic_tier1_identities() -> TheoremResult:
         tests_passed += 1
 
     return TheoremResult(
-        name="T19: Atomic Tier-1 Identity Verification",
+        name="T-RI-9: Atomic Tier-1 Identity Verification",
         statement="F+ω=1, IC≤F, IC=exp(κ) hold for all 118 elements — zero exceptions",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -1229,14 +1229,14 @@ def theorem_T19_atomic_tier1_identities() -> TheoremResult:
 
 
 # ═══════════════════════════════════════════════════════════════════
-# THEOREM T20: RECURSIVE CATEGORY EXHAUSTIVE PARTITION
+# THEOREM T-RI-10: RECURSIVE CATEGORY EXHAUSTIVE PARTITION
 # ═══════════════════════════════════════════════════════════════════
 
 
-def theorem_T20_category_exhaustive_partition(
+def theorem_TRI10_category_exhaustive_partition(
     analysis: RecursiveAnalysis | None = None,
 ) -> TheoremResult:
-    """T20: Recursive Category Exhaustive Partition.
+    """T-RI-10: Recursive Category Exhaustive Partition.
 
     STATEMENT:
       The 7 GCD categories (PRISTINE, ROBUST, STRESSED, MARGINAL,
@@ -1299,7 +1299,7 @@ def theorem_T20_category_exhaustive_partition(
         tests_passed += 1
 
     return TheoremResult(
-        name="T20: Recursive Category Exhaustive Partition",
+        name="T-RI-10: Recursive Category Exhaustive Partition",
         statement="7 GCD categories perfectly partition 118 elements by nuclear stability",
         n_tests=tests_total,
         n_passed=tests_passed,
@@ -1335,16 +1335,16 @@ def run_all_theorems(
         analysis = compute_recursive_analysis()
 
     return [
-        theorem_T11_cumulative_drift_dominance(analysis),
-        theorem_T12_recursive_collapse_budget(analysis),
-        theorem_T13_non_returnable_states(analysis),
-        theorem_T14_magic_number_drift_absorption(analysis),
-        theorem_T15_period_efficiency_exhaustion(analysis),
-        theorem_T16_constant_heterogeneity_rate(analysis),
-        theorem_T17_noble_gas_coherence(analysis),
-        theorem_T18_block_fidelity_spectrum(analysis),
-        theorem_T19_atomic_tier1_identities(),
-        theorem_T20_category_exhaustive_partition(analysis),
+        theorem_TRI1_cumulative_drift_dominance(analysis),
+        theorem_TRI2_recursive_collapse_budget(analysis),
+        theorem_TRI3_non_returnable_states(analysis),
+        theorem_TRI4_magic_number_drift_absorption(analysis),
+        theorem_TRI5_period_efficiency_exhaustion(analysis),
+        theorem_TRI6_constant_heterogeneity_rate(analysis),
+        theorem_TRI7_noble_gas_coherence(analysis),
+        theorem_TRI8_block_fidelity_spectrum(analysis),
+        theorem_TRI9_atomic_tier1_identities(),
+        theorem_TRI10_category_exhaustive_partition(analysis),
     ]
 
 
