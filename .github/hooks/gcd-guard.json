@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python scripts/orientation_checkpoint.py --verify",
+        "timeout": 30
+      }
+    ],
+    "PreToolUse": [
+      {
+        "toolNames": ["replace_string_in_file", "create_file", "multi_replace_string_in_file", "edit_notebook_file"],
+        "type": "command",
+        "command": "python -c \"import sys, json; data=json.load(sys.stdin); fp=data.get('toolInput',{}).get('filePath',''); sys.exit(2) if any(fp.endswith(f) for f in ['frozen_contract.py','kernel_optimized.py']) and 'src/umcp/' in fp else sys.exit(0)\"",
+        "timeout": 5
+      }
+    ]
+  }
+}
