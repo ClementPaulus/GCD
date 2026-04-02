@@ -44,7 +44,7 @@ def _all_results():
 
 def _by(results, attr):
     """Group results by an attribute."""
-    groups: dict[str, list] = {}
+    groups: dict = {}
     for r in results:
         groups.setdefault(getattr(r, attr), []).append(r)
     return groups
