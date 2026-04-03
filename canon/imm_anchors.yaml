@@ -8,11 +8,12 @@ domain: "Immunology"
 hierarchy: "GCD > IMM (Tier-2)"
 description: >
   Canon anchors for the immunology domain closure.
-  Maps 52 entities across 4 sub-closures (immune cells, cytokines,
-  vaccines, autoimmune diseases) to 8-channel trace vectors.
-  Each sub-closure uses domain-specific channels grounded in
-  immunological measurements. 24 theorems proven (T-IC-1–6,
-  T-CY-1–6, T-VR-1–6, T-AI-1–6).
+  Maps 76 entities across 6 sub-closures (immune cells, cytokines,
+  vaccines, autoimmune diseases, neuroimmune bridge, PNI) to
+  8-channel trace vectors. Each sub-closure uses domain-specific
+  channels grounded in immunological measurements. 36 theorems
+  proven (T-IC-1–6, T-CY-1–6, T-VR-1–6, T-AI-1–6, T-NI-1–6,
+  T-PNI-1–6).
 
 axioms:
   - id: "AX-IMM0"
@@ -114,6 +115,24 @@ channels:
     - chronicity
     - systemic_inflammation
     - treatment_responsiveness
+  neuroimmune:
+    - bbb_integrity
+    - microglial_activation_inv
+    - cytokine_cns_penetration_inv
+    - neurotransmitter_preservation
+    - hpa_axis_regulation
+    - autonomic_balance
+    - neuroimmune_resolution
+    - cognitive_preservation
+  psychoneuroimmunology:
+    - psychological_coherence
+    - autonomic_balance
+    - cortisol_regulation
+    - inflammatory_tone
+    - immune_competence
+    - sleep_architecture
+    - social_connectedness
+    - allostatic_reserve
 
 anchors:
   IMM-A1:
@@ -140,6 +159,22 @@ anchors:
     name: "Natural Killer cell"
     description: "Innate immune sentinel — rapid effector, limited memory"
     regime: "Watch"
+  IMM-A7:
+    name: "Young healthy (neuroimmune)"
+    description: "Intact BBB, quiescent microglia, preserved neurotransmission — neuroimmune baseline"
+    regime: "Watch"
+  IMM-A8:
+    name: "Sepsis encephalopathy"
+    description: "Acute neuroimmune crisis — BBB breakdown, cytokine storm in CNS"
+    regime: "Collapse"
+  IMM-A9:
+    name: "Secure attachment (PNI)"
+    description: "Resilient PNI state — coherent emotional regulation, robust immune function"
+    regime: "Watch"
+  IMM-A10:
+    name: "Burnout syndrome"
+    description: "Chronic PNI collapse — lowest IC among stressors, total allostatic overload"
+    regime: "Collapse"
 
 categories:
   - "Innate immune cells (NK, neutrophil, macrophage, dendritic, mast, eosinophil, basophil, monocyte)"
@@ -148,6 +183,8 @@ categories:
   - "Regulatory cytokines (IL-10, TGF-β, IL-35)"
   - "Th-polarizing cytokines (IL-4, IL-12, IL-23, IL-21)"
   - "Vaccine platforms (mRNA, viral vector, inactivated, live attenuated, subunit, conjugate)"
+  - "Neuroimmune interface states (healthy, acute, chronic, intermediate)"
+  - "PNI paradigms (resilient, acute stressors, chronic stressors, clinical PNI)"
   - "Organ-specific autoimmune diseases (T1D, MS, Hashimoto's, myasthenia gravis, celiac)"
   - "Systemic autoimmune diseases (SLE, RA, scleroderma, Sjögren's)"
   - "Overlap autoimmune (MCTD, dermatomyositis, anti-synthetase)"

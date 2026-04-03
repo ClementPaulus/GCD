@@ -1352,6 +1352,46 @@ registry:
           n_channels: 8
           n_entities: 12
           n_theorems: 6
+      - name: "neuroimmune_bridge"
+        path: "closures/immunology/neuroimmune_bridge.py"
+        description: "Neuroimmune bridge closure: 12 neuroimmune interface states (3 healthy + 3 acute + 3 chronic + 3 intermediate) × 8 channels → Tier-1 invariants. Bridges immunology and clinical neuroscience through BBB integrity, microglial activation, cytokine CNS penetration, and cognitive preservation. 6 theorems (T-NI-1 through T-NI-6)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["neuroimmune_state_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        channels:
+          - "bbb_integrity"
+          - "microglial_activation_inv"
+          - "cytokine_cns_penetration_inv"
+          - "neurotransmitter_preservation"
+          - "hpa_axis_regulation"
+          - "autonomic_balance"
+          - "neuroimmune_resolution"
+          - "cognitive_preservation"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 6
+      - name: "psychoneuroimmunology"
+        path: "closures/immunology/psychoneuroimmunology.py"
+        description: "Psychoneuroimmunology (PNI) closure: 12 PNI paradigms (3 resilient + 3 acute stressors + 3 chronic stressors + 3 clinical PNI) × 8 channels → Tier-1 invariants. Models bidirectional interactions among psychological states, neural circuits, and immune function. 6 theorems (T-PNI-1 through T-PNI-6)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["pni_paradigm_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        channels:
+          - "psychological_coherence"
+          - "autonomic_balance"
+          - "cortisol_regulation"
+          - "inflammatory_tone"
+          - "immune_competence"
+          - "sleep_architecture"
+          - "social_connectedness"
+          - "allostatic_reserve"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 6
 
     clinical_neuroscience:
       - name: "neurocognitive_kernel"
@@ -1583,8 +1623,8 @@ extensions:
     immunology:
       archetype: multi-subsystem
       channels: 8
-      entities: 52
-      theorems: 24
+      entities: 76
+      theorems: 36
       tier1_bootstrap: false
-      theorem_prefix: "TIC/TCY/TVR/TAI"
-      note: "52 entities across 4 sub-closures: immune cells (16), cytokines (12), vaccines (12), autoimmune (12)"
+      theorem_prefix: "TIC/TCY/TVR/TAI/TNI/TPNI"
+      note: "76 entities across 6 sub-closures: immune cells (16), cytokines (12), vaccines (12), autoimmune (12), neuroimmune bridge (12), PNI (12)"

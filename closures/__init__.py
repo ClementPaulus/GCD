@@ -22,7 +22,7 @@ Available Subpackages:
     - evolution: 40 organisms, 20 species brain kernel, 60 kernel states
     - dynamic_semiotics: 30 sign systems, 8 semiotic channels, semiotic kernel
     - continuity_theory: Butzbach embedding, 20 systems, degenerate limit proof
-    - immunology: Immune cells, cytokines, vaccines, autoimmune diseases (52 entities, 24 theorems)
+    - immunology: Immune cells, cytokines, vaccines, autoimmune diseases, neuroimmune bridge, PNI (76 entities, 36 theorems)
 
 See closures/registry.yaml for the complete closure registry.
 """
