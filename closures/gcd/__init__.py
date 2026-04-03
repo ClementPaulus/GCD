@@ -6,6 +6,7 @@ the kernel with energy potential, entropic collapse, field resonance,
 momentum flux, generative flux, and universal regime calibration.
 
 Modules:
+    drift_engine.py                — Controlled collapse-return loop (T-DE-1 through T-DE-6)
     energy_potential.py            — Energy landscape and potential wells
     entropic_collapse.py           — Entropy-driven collapse dynamics
     field_resonance.py             — Field resonance patterns
