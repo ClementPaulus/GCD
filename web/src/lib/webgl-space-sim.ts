@@ -129,7 +129,7 @@ uniform float uGWStrain;
 #define PI     3.14159265359
 #define RS     1.0
 #define M_BH   (RS * 0.5)
-#define STEPS  200
+#define STEPS  350
 #define FAR    80.0
 
 // ── Hash & noise ──
@@ -260,7 +260,8 @@ void main() {
     float r  = length(pos);
     minDist  = min(minDist, r);
 
-    if (r < RS * 0.5) { captured = true; break; }
+    // Tighter capture: r < RS * 0.35 for sharper shadow boundary
+    if (r < RS * 0.35) { captured = true; break; }
     if (r > FAR) break;
     if (alpha > 0.97) break;
 
@@ -286,10 +287,10 @@ void main() {
     float gwP = sin(r * 30.0 - uTime * 3.0) * sin(2.0 * atan(pos.z, pos.x));
     accel += rhat * gwP * uGWStrain * 0.004;
 
-    // Adaptive step
-    float h_near = clamp(0.1 * (r - RS * 0.4), 0.015, 0.5);
-    float h_far  = 1.2;
-    float step   = mix(h_near, h_far, smoothstep(3.5, 7.0, r));
+    // Adaptive step — much finer near horizon for crisp shadow edge
+    float h_near = clamp(0.06 * (r - RS * 0.3), 0.008, 0.35);
+    float h_far  = 1.0;
+    float step   = mix(h_near, h_far, smoothstep(2.5, 6.0, r));
 
     // Velocity-Verlet
     vec3 velHalf = vel + accel * step * 0.5;
@@ -753,7 +754,7 @@ export function initSpaceSim(
   // -- Resize (native DPR for max resolution) --
   const FOV = 0.9;
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    const dpr = Math.min(window.devicePixelRatio || 1, 3.0);
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
     canvas.width  = Math.round(w * dpr);
