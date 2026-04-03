@@ -22,6 +22,7 @@ Available Subpackages:
     - evolution: 40 organisms, 20 species brain kernel, 60 kernel states
     - dynamic_semiotics: 30 sign systems, 8 semiotic channels, semiotic kernel
     - continuity_theory: Butzbach embedding, 20 systems, degenerate limit proof
+    - immunology: Immune cells, cytokines, vaccines, autoimmune diseases (52 entities, 24 theorems)
 
 See closures/registry.yaml for the complete closure registry.
 """
@@ -31,7 +32,7 @@ from pathlib import Path
 # Closure package root
 CLOSURES_ROOT = Path(__file__).parent
 
-# Available closure domains (17 total)
+# Available closure domains (18 total)
 CLOSURE_DOMAINS = [
     "gcd",
     "rcft",
@@ -50,6 +51,7 @@ CLOSURE_DOMAINS = [
     "dynamic_semiotics",
     "continuity_theory",
     "consciousness_coherence",
+    "immunology",
 ]
 
 __all__ = ["CLOSURES_ROOT", "CLOSURE_DOMAINS"]

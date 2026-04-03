@@ -1,0 +1,203 @@
+# canon/imm_anchors.yaml
+# Immunology Canon Anchors — UMCP.CANON.IMM.v1
+# Cross-references: closures/immunology/
+schema: canon.domain_anchors.schema.json
+id: "UMCP.CANON.IMM.v1"
+version: "1.0.0"
+domain: "Immunology"
+hierarchy: "GCD > IMM (Tier-2)"
+description: >
+  Canon anchors for the immunology domain closure.
+  Maps 52 entities across 4 sub-closures (immune cells, cytokines,
+  vaccines, autoimmune diseases) to 8-channel trace vectors.
+  Each sub-closure uses domain-specific channels grounded in
+  immunological measurements. 24 theorems proven (T-IC-1–6,
+  T-CY-1–6, T-VR-1–6, T-AI-1–6).
+
+axioms:
+  - id: "AX-IMM0"
+    name: "Immune Duality"
+    statement: >
+      Every immune entity partitions its functional budget
+      exhaustively: what the system retains (F) + what it
+      loses to collapse (ω) = 1. High F means robust immune
+      function; high ω means immunological compromise. No third
+      reservoir exists.
+    frozen: true
+
+  - id: "AX-IMM1"
+    name: "Innate-Adaptive Split (T-IC-1)"
+    statement: >
+      Innate and adaptive immune arms occupy distinct regions
+      of the kernel manifold. The adaptive arm shows higher
+      mean fidelity than innate, reflecting the greater
+      specificity and memory capacity of adaptive immunity.
+    frozen: true
+
+  - id: "AX-IMM2"
+    name: "Cytokine Storm Signature (T-CY-2)"
+    statement: >
+      Pro-inflammatory cytokines occupy higher drift (ω) regions
+      than regulatory cytokines. Regulatory cytokines (IL-10,
+      TGF-β, IL-35) cluster in Watch/Stable regimes, while
+      pro-inflammatory mediators (TNF-α, IL-1β, IL-6) show
+      higher collapse proximity.
+    frozen: true
+
+  - id: "AX-IMM3"
+    name: "Vaccine Platform Hierarchy (T-VR-1)"
+    statement: >
+      Vaccine platforms stratify by mean fidelity: live-attenuated
+      and viral-vector platforms achieve higher F than inactivated
+      or subunit platforms, reflecting their broader immune
+      activation signatures.
+    frozen: true
+
+  - id: "AX-IMM4"
+    name: "Autoimmune Geometric Slaughter (T-AI-3)"
+    statement: >
+      Systemic autoimmune diseases exhibit the largest
+      heterogeneity gap (Δ = F − IC) among autoimmune categories,
+      driven by channel heterogeneity. High self-antigen breadth
+      combined with variable treatment responsiveness creates
+      geometric slaughter of multiplicative coherence.
+    frozen: true
+
+symbols:
+  - name: "F"
+    tier: 1
+    definition: "Fidelity — immune functional retention"
+  - name: "IC"
+    tier: 1
+    definition: "Integrity composite — multiplicative coherence across 8 channels"
+  - name: "Treg"
+    tier: 2
+    definition: "Regulatory T cells — maps to regulatory_capacity channel"
+  - name: "ICS"
+    tier: 2
+    definition: "Intracellular cytokine staining — informs effector potency"
+
+channels:
+  immune_cell:
+    - activation_threshold
+    - proliferation_capacity
+    - cytokine_breadth
+    - self_tolerance
+    - tissue_residence
+    - effector_potency
+    - memory_formation
+    - regulatory_capacity
+  cytokine:
+    - pleiotropism
+    - pro_inflammatory_index
+    - signal_half_life
+    - receptor_affinity
+    - pathway_crosstalk
+    - inducibility
+    - tissue_specificity
+    - feedback_strength
+  vaccine:
+    - humoral_efficacy
+    - cellular_efficacy
+    - innate_priming
+    - duration_of_protection
+    - safety_profile
+    - breadth_of_coverage
+    - manufacturing_scalability
+    - memory_persistence
+  autoimmune:
+    - self_antigen_breadth
+    - t_cell_autoreactivity
+    - autoantibody_titer
+    - tissue_damage_rate
+    - treg_dysfunction
+    - chronicity
+    - systemic_inflammation
+    - treatment_responsiveness
+
+anchors:
+  IMM-A1:
+    name: "Memory CD8+ T cell"
+    description: "High fidelity adaptive cell — strong memory formation and effector potency"
+    regime: "Stable"
+  IMM-A2:
+    name: "TNF-alpha"
+    description: "Master pro-inflammatory cytokine — high drift, pleiotropic effects"
+    regime: "Watch"
+  IMM-A3:
+    name: "mRNA COVID-19 vaccine (BNT162b2)"
+    description: "High humoral + cellular efficacy — novel platform anchor"
+    regime: "Watch"
+  IMM-A4:
+    name: "Systemic Lupus Erythematosus"
+    description: "Systemic autoimmune — high antigen breadth, large heterogeneity gap"
+    regime: "Collapse"
+  IMM-A5:
+    name: "IL-10"
+    description: "Master regulatory cytokine — suppresses inflammation, high feedback"
+    regime: "Watch"
+  IMM-A6:
+    name: "Natural Killer cell"
+    description: "Innate immune sentinel — rapid effector, limited memory"
+    regime: "Watch"
+
+categories:
+  - "Innate immune cells (NK, neutrophil, macrophage, dendritic, mast, eosinophil, basophil, monocyte)"
+  - "Adaptive immune cells (CD4+, CD8+, Treg, B cell, plasma cell, memory T, memory B, γδ T)"
+  - "Pro-inflammatory cytokines (TNF-α, IL-1β, IL-6, IFN-γ, IL-17)"
+  - "Regulatory cytokines (IL-10, TGF-β, IL-35)"
+  - "Th-polarizing cytokines (IL-4, IL-12, IL-23, IL-21)"
+  - "Vaccine platforms (mRNA, viral vector, inactivated, live attenuated, subunit, conjugate)"
+  - "Organ-specific autoimmune diseases (T1D, MS, Hashimoto's, myasthenia gravis, celiac)"
+  - "Systemic autoimmune diseases (SLE, RA, scleroderma, Sjögren's)"
+  - "Overlap autoimmune (MCTD, dermatomyositis, anti-synthetase)"
+
+theorems:
+  - id: "T-IC-1"
+    name: "Innate-Adaptive Arm Separation"
+  - id: "T-IC-2"
+    name: "Effector Potency Ordering"
+  - id: "T-IC-3"
+    name: "Memory Formation Gradient"
+  - id: "T-IC-4"
+    name: "Tissue Residence Divergence"
+  - id: "T-IC-5"
+    name: "Regulatory Capacity Concentration"
+  - id: "T-IC-6"
+    name: "Immune Cell Channel Correlation"
+  - id: "T-CY-1"
+    name: "Pro-inflammatory Drift Dominance"
+  - id: "T-CY-2"
+    name: "Regulatory Cytokine Stability"
+  - id: "T-CY-3"
+    name: "Pleiotropism-IC Correlation"
+  - id: "T-CY-4"
+    name: "Feedback Strength Ordering"
+  - id: "T-CY-5"
+    name: "Signal Half-life Regime Association"
+  - id: "T-CY-6"
+    name: "Cytokine Channel Correlation"
+  - id: "T-VR-1"
+    name: "Platform Fidelity Hierarchy"
+  - id: "T-VR-2"
+    name: "Humoral-Cellular Efficacy Split"
+  - id: "T-VR-3"
+    name: "Duration-Memory Persistence Link"
+  - id: "T-VR-4"
+    name: "Safety-Efficacy Trade-off"
+  - id: "T-VR-5"
+    name: "Manufacturing Scalability Gradient"
+  - id: "T-VR-6"
+    name: "Vaccine Channel Correlation"
+  - id: "T-AI-1"
+    name: "Organ-Specific vs Systemic Split"
+  - id: "T-AI-2"
+    name: "Treg Dysfunction Ordering"
+  - id: "T-AI-3"
+    name: "Systemic Heterogeneity Gap"
+  - id: "T-AI-4"
+    name: "Chronicity Regime Association"
+  - id: "T-AI-5"
+    name: "Treatment Responsiveness Gradient"
+  - id: "T-AI-6"
+    name: "Autoimmune Channel Correlation"

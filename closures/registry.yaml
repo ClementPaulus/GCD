@@ -1271,6 +1271,88 @@ registry:
           n_entities: 12
           n_theorems: 6
 
+    immunology:
+      - name: "immune_cell_kernel"
+        path: "closures/immunology/immune_cell_kernel.py"
+        description: "Immune cell kernel: 16 immune cell populations (8 innate + 8 adaptive) × 8 channels → Tier-1 invariants. Maps activation threshold, proliferation capacity, cytokine breadth, self-tolerance, tissue residence, effector potency, memory formation, and regulatory capacity. 6 theorems (T-IC-1 through T-IC-6)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["immune_cell_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        channels:
+          - "activation_threshold"
+          - "proliferation_capacity"
+          - "cytokine_breadth"
+          - "self_tolerance"
+          - "tissue_residence"
+          - "effector_potency"
+          - "memory_formation"
+          - "regulatory_capacity"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 16
+          n_theorems: 6
+      - name: "cytokine_network"
+        path: "closures/immunology/cytokine_network.py"
+        description: "Cytokine network closure: 12 cytokine mediators (5 pro-inflammatory + 4 Th-polarizing + 3 regulatory) × 8 channels → Tier-1 invariants. 6 theorems (T-CY-1 through T-CY-6)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["cytokine_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        channels:
+          - "pleiotropism"
+          - "pro_inflammatory_index"
+          - "signal_half_life"
+          - "receptor_affinity"
+          - "pathway_crosstalk"
+          - "inducibility"
+          - "tissue_specificity"
+          - "feedback_strength"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 6
+      - name: "vaccine_response"
+        path: "closures/immunology/vaccine_response.py"
+        description: "Vaccine response closure: 12 vaccines across 6 platforms × 8 channels → Tier-1 invariants. 6 theorems (T-VR-1 through T-VR-6)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["vaccine_platform_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        channels:
+          - "humoral_efficacy"
+          - "cellular_efficacy"
+          - "innate_priming"
+          - "duration_of_protection"
+          - "safety_profile"
+          - "breadth_of_coverage"
+          - "manufacturing_scalability"
+          - "memory_persistence"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 6
+      - name: "autoimmune_kernel"
+        path: "closures/immunology/autoimmune_kernel.py"
+        description: "Autoimmune disease kernel: 12 autoimmune diseases (5 organ-specific + 4 systemic + 3 overlap) × 8 channels → Tier-1 invariants. 6 theorems (T-AI-1 through T-AI-6)."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["autoimmune_disease_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "regime"]
+        channels:
+          - "self_antigen_breadth"
+          - "t_cell_autoreactivity"
+          - "autoantibody_titer"
+          - "tissue_damage_rate"
+          - "treg_dysfunction"
+          - "chronicity"
+          - "systemic_inflammation"
+          - "treatment_responsiveness"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 6
+
     clinical_neuroscience:
       - name: "neurocognitive_kernel"
         path: "closures/clinical_neuroscience/neurocognitive_kernel.py"
@@ -1498,3 +1580,11 @@ extensions:
       tier1_bootstrap: false
       theorem_prefix: "TST"
       note: "Backward-compatible aliases retained for prove_theorem_TST* names"
+    immunology:
+      archetype: multi-subsystem
+      channels: 8
+      entities: 52
+      theorems: 24
+      tier1_bootstrap: false
+      theorem_prefix: "TIC/TCY/TVR/TAI"
+      note: "52 entities across 4 sub-closures: immune cells (16), cytokines (12), vaccines (12), autoimmune (12)"
