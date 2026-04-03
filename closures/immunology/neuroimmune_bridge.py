@@ -293,7 +293,7 @@ def verify_t_ni_3(results: list[NIKernelResult]) -> dict:
     for e, r in zip(NI_ENTITIES, results, strict=True):
         recovery_vals.append(e.neuroimmune_recovery)
         f_vals.append(r.F)
-    corr = float(stats.spearmanr(recovery_vals, f_vals)[0])
+    corr = float(stats.spearmanr(recovery_vals, f_vals)[0])  # type: ignore[arg-type]
     return {
         "theorem": "T-NI-3",
         "description": "Recovery capacity correlates with fidelity",
@@ -337,7 +337,7 @@ def verify_t_ni_5(results: list[NIKernelResult]) -> dict:
     ic_vals = [r.IC for r in results]
     for i, ch_name in enumerate(NI_CHANNELS):
         ch_vals = [e.trace_vector()[i] for e in NI_ENTITIES]
-        rho = float(stats.spearmanr(ch_vals, ic_vals)[0])
+        rho = float(stats.spearmanr(ch_vals, ic_vals)[0])  # type: ignore[arg-type]
         correlations[ch_name] = round(rho, 4)
     best_channel = max(correlations, key=correlations.get)  # type: ignore[arg-type]
     return {

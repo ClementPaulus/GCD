@@ -268,7 +268,7 @@ def verify_t_pni_2(results: list[PNIKernelResult]) -> dict:
     ic_vals = [r.IC for r in results]
     for i, ch_name in enumerate(PNI_CHANNELS):
         ch_vals = [e.trace_vector()[i] for e in PNI_ENTITIES]
-        rho = float(stats.spearmanr(ch_vals, ic_vals)[0])
+        rho = float(stats.spearmanr(ch_vals, ic_vals)[0])  # type: ignore[arg-type]
         correlations[ch_name] = round(rho, 4)
     best_channel = max(correlations, key=correlations.get)  # type: ignore[arg-type]
     social_rho = correlations["social_connectedness"]
@@ -341,7 +341,7 @@ def verify_t_pni_5(results: list[PNIKernelResult]) -> dict:
     """
     reserve_vals = [e.allostatic_reserve for e in PNI_ENTITIES]
     f_vals = [r.F for r in results]
-    corr = float(stats.spearmanr(reserve_vals, f_vals)[0])
+    corr = float(stats.spearmanr(reserve_vals, f_vals)[0])  # type: ignore[arg-type]
     return {
         "theorem": "T-PNI-5",
         "description": "Allostatic reserve correlates with fidelity",
