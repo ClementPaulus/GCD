@@ -229,7 +229,7 @@
           <div class="text-kernel-400">contract_freeze() → trace_embed() → kernel_compute() → ledger_reconcile() → stance_derive()</div>
         </div>`},cpp:{name:"C++17 — The Accelerator",color:"text-cyan-400",detail:`
         <p>Links against the C99 core via CMake. Provides <strong>vectorized kernel/seam computation</strong> with pybind11 zero-copy NumPy bridge.</p>
-        <div class="grid grid-cols-3 gap-3 my-3">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-3">
           <div class="bg-kernel-950 rounded-lg p-3 text-center">
             <div class="text-lg font-bold text-cyan-400">~50×</div>
             <div class="text-[10px] text-kernel-500">Kernel speedup</div>

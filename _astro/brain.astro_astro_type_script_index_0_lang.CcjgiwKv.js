@@ -4080,7 +4080,7 @@ void main() {
       </tr>`}).join(""),tl.querySelectorAll("tr").forEach(e=>{e.addEventListener("click",()=>{const t=e.dataset.entity;t&&Ir(t),document.getElementById("brain-model")?.scrollIntoView({behavior:"smooth"})})})}document.querySelectorAll(".cat-filter").forEach(i=>{i.addEventListener("click",()=>{Ma=i.dataset.filter||"all",Ga()})});document.querySelectorAll(".sortable").forEach(i=>{i.addEventListener("click",()=>{const e=i.dataset.sort||"F";ai===e?Pi=!Pi:(ai=e,Pi=!1),Ga()})});Ga();const xm=document.getElementById("category-summary"),xr=[...new Set(gt.map(i=>i.entity.category))];xm.innerHTML=xr.map(i=>{const e=gt.filter(a=>a.entity.category===i),t=e.reduce((a,o)=>a+o.F,0)/e.length,n=e.reduce((a,o)=>a+o.IC,0)/e.length,r=t-n,s=Dr[i];return`<div class="bg-kernel-900 border ${s.border}/30 rounded p-3">
       <div class="text-xs font-bold ${s.text} capitalize">${i.replace("_"," ")}</div>
       <div class="text-[10px] text-kernel-500 mt-1">n = ${e.length}</div>
-      <div class="grid grid-cols-3 gap-1 mt-2">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 mt-2">
         <div><span class="text-[9px] text-kernel-600">⟨F⟩</span><div class="text-xs font-mono text-kernel-300">${t.toFixed(3)}</div></div>
         <div><span class="text-[9px] text-kernel-600">⟨IC⟩</span><div class="text-xs font-mono text-kernel-300">${n.toFixed(3)}</div></div>
         <div><span class="text-[9px] text-kernel-600">⟨Δ⟩</span><div class="text-xs font-mono text-amber-400">${r.toFixed(3)}</div></div>
