@@ -60,6 +60,7 @@ __all__ = [
     "__version__",
     "accel",
     "check_seam_pass",
+    "classify_collapse_type",
     "classify_regime",
     "compute_extended_triad",
     "compute_full",
@@ -137,6 +138,7 @@ from .kernel_optimized import (
     GateMargins,
     KernelDiagnostics,
     OptimizedKernelComputer,
+    classify_collapse_type,
     diagnose,
 )
 from .measurement_engine import (

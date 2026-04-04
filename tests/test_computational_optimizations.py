@@ -22,6 +22,7 @@ from umcp.kernel_optimized import (
     CoherenceAnalyzer,
     OptimizedKernelComputer,
     ThresholdCalibrator,
+    classify_collapse_type,
 )
 from umcp.seam_optimized import (
     SeamChainAccumulator,
@@ -250,6 +251,63 @@ class TestThresholdCalibrator:
         # gap = 0.2, adjustment = base * (1 - 2*0.2) = 0.3 * 0.6 = 0.18
         assert threshold_hetero < 0.3
         assert threshold_hetero >= 0.1  # Clipped lower bound
+
+
+class TestCollapseTyping:
+    """Test suite for classify_collapse_type — the expressive diagnostic.
+
+    Replaces CoherenceAnalyzer (0% Watch agreement) and ThresholdCalibrator
+    (violated frozen parameter principle) with structural collapse typing.
+    """
+
+    def test_uniform_collapse_at_equator(self):
+        """All channels at c=0.5 → uniform, no dead channels."""
+        c = np.array([0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])
+        w = np.ones(8) / 8
+        result = classify_collapse_type(c, w)
+        assert result["collapse_type"] == "uniform"
+        assert result["n_dead"] == 0
+        assert abs(result["delta"]) < 1e-6  # IC ≈ F for homogeneous
+
+    def test_selective_collapse_one_dead_channel(self):
+        """One dead channel among healthy ones → selective collapse."""
+        c = np.array([0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 1e-9])
+        w = np.ones(8) / 8
+        result = classify_collapse_type(c, w)
+        assert result["collapse_type"] == "selective"
+        assert result["n_dead"] >= 1
+        assert result["IC_F"] < 0.2  # Geometric slaughter
+
+    def test_confinement_pattern(self):
+        """Confinement = selective collapse (dead color channel)."""
+        c = np.array([0.8, 0.5, 0.3, 1e-9, 0.6, 1e-9, 0.3, 0.5])
+        w = np.ones(8) / 8
+        result = classify_collapse_type(c, w)
+        assert result["collapse_type"] == "selective"
+        assert result["n_dead"] >= 1
+
+    def test_protected_system_near_c_star(self):
+        """Channels near c* = 0.7822 → uniform, high IC/F."""
+        c = np.full(8, 0.7822)
+        w = np.ones(8) / 8
+        result = classify_collapse_type(c, w)
+        assert result["collapse_type"] == "uniform"
+        assert result["IC_F"] > 0.99
+
+    def test_regime_is_canonical_4gate(self):
+        """classify_collapse_type returns canonical regime labels."""
+        c = np.array([0.95, 0.96, 0.97, 0.94, 0.93, 0.95, 0.96, 0.95])
+        w = np.ones(8) / 8
+        result = classify_collapse_type(c, w)
+        assert result["regime"] in {"STABLE", "WATCH", "COLLAPSE", "CRITICAL"}
+
+    def test_all_outputs_present(self):
+        """All expected keys are present in the result dict."""
+        c = np.array([0.5, 0.6, 0.7, 0.8])
+        w = np.ones(4) / 4
+        result = classify_collapse_type(c, w)
+        expected_keys = {"F", "IC", "IC_F", "delta", "C", "omega", "S", "kappa", "collapse_type", "n_dead", "regime"}
+        assert set(result.keys()) == expected_keys
 
 
 class TestSeamChainAccumulator:

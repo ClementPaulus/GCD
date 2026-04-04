@@ -381,6 +381,9 @@ class OptimizedKernelComputer:
 
 class CoherenceAnalyzer:
     """
+    DEPRECATED — Use frozen_contract.classify_regime() (4-gate) or
+    closures.gcd.collapse_taxonomy.classify_collapse() for structural typing.
+
     OPT-14: Coherence proxy for single-check validation (Lemma 26).
 
     Θ(t) = 1 - ω(t) + S(t)/ln(2) ∈ [0, 2]
@@ -393,6 +396,8 @@ class CoherenceAnalyzer:
     (1−ω) term alone exceeds the COHERENT threshold. Use the full 4-gate
     system from frozen_contract.classify_regime() for regime classification.
     Empirically verified: 0% agreement with 4-gate regime on Watch-regime data.
+
+    Retained for backward compatibility only. Do not use in new code.
     """
 
     @staticmethod
@@ -418,9 +423,15 @@ class CoherenceAnalyzer:
 
 class ThresholdCalibrator:
     """
+    DEPRECATED — Adaptive thresholds violate the frozen parameter principle.
+    Regime thresholds are seam-derived and frozen per run. Use
+    frozen_contract.classify_regime() with DEFAULT_THRESHOLDS.
+
     OPT-15: Adaptive threshold calibration via heterogeneity gap (Lemma 34).
 
     Δ_gap = F - IC provides principled threshold adjustment.
+
+    Retained for backward compatibility only. Do not use in new code.
     """
 
     @staticmethod
@@ -676,6 +687,67 @@ def check_composition_compatibility(
             f"cross-phase composition: geometric law error may exceed 0.5"
         )
     return True, "Same-phase subsystems: geometric composition law applies"
+
+
+def classify_collapse_type(
+    c: np.ndarray,
+    w: np.ndarray,
+    epsilon: float = _FROZEN_EPSILON,
+) -> dict[str, Any]:
+    """Structural collapse typing — the expressive diagnostic.
+
+    Combines kernel computation with collapse taxonomy to produce a
+    structural classification that goes beyond the 4-gate regime:
+
+    - collapse_type: "selective" (dead channels kill IC) vs "uniform" (all drift together)
+    - n_dead: Number of channels below ε threshold
+    - IC/F ratio: Multiplicative coherence fraction
+    - regime: Canonical 4-gate classification (STABLE/WATCH/COLLAPSE/CRITICAL)
+
+    This replaces the legacy _classify_heterogeneity labels
+    ("homogeneous"/"coherent"/"heterogeneous"/"fragmented") with a
+    structurally meaningful two-axis classification.
+
+    Args:
+        c: Trace vector in [0, 1]ⁿ
+        w: Weight vector on the simplex Δⁿ
+        epsilon: Guard band (frozen parameter)
+
+    Returns:
+        Dict with keys: F, IC, IC_F, delta, C, omega, collapse_type,
+        n_dead, regime, S, kappa
+    """
+    computer = OptimizedKernelComputer(epsilon=epsilon)
+    outputs = computer.compute(c, w)
+
+    # Canonical 4-gate regime
+    regime_enum = _classify_regime(outputs.omega, outputs.F, outputs.S, outputs.C, outputs.IC)
+
+    # Collapse typing: selective vs uniform
+    c_clamped = np.clip(c, epsilon, 1.0 - epsilon)
+    dead_threshold = epsilon * 10  # Channel effectively dead
+    n_dead = int(np.sum(c_clamped <= dead_threshold))
+
+    ic_f = outputs.IC / outputs.F if epsilon < outputs.F else 0.0
+    delta = outputs.F - outputs.IC
+
+    # Selective: at least one dead channel AND significant gap
+    # Uniform: all channels alive, drift is collective
+    collapse_type = "selective" if n_dead > 0 and delta > 0.01 else "uniform"
+
+    return {
+        "F": outputs.F,
+        "IC": outputs.IC,
+        "IC_F": ic_f,
+        "delta": delta,
+        "C": outputs.C,
+        "omega": outputs.omega,
+        "S": outputs.S,
+        "kappa": outputs.kappa,
+        "collapse_type": collapse_type,
+        "n_dead": n_dead,
+        "regime": regime_enum.value,
+    }
 
 
 # Convenience functions for backward compatibility
