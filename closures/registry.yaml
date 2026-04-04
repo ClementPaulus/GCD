@@ -1005,6 +1005,18 @@ registry:
         cross_references:
           - "closures/evolution/evolution_kernel.py"
           - "closures/evolution/axiom0_instantiation_map.py"
+      - name: "fungi_kingdom"
+        path: "closures/evolution/fungi_kingdom.py"
+        description: "12 fungi species across 4 ecological categories (decomposers, symbionts, transformers, extremophiles) mapped to 8-channel trace → Tier-1 invariants. 6 theorems proven. All species in Collapse regime — fungi's liminal ecology produces moderate channels."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["name", "category", "phylum", "mycelial_extent", "decomposition_capacity", "symbiotic_integration", "reproductive_versatility", "metabolic_diversity", "environmental_breadth", "chemical_potency", "structural_persistence"]
+        outputs: ["F", "omega", "IC", "kappa", "S", "C", "regime"]
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+        cross_references:
+          - "closures/evolution/evolution_kernel.py"
+          - "closures/atomic_physics/periodic_kernel.py"
 
     unified:
       - name: "unified_minimal_structure"
