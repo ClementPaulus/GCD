@@ -102,18 +102,43 @@ const navGroups = [
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
 
-    <!-- Structured Data (JSON-LD) -->
+    <!-- Structured Data (JSON-LD) — machine-readable for AI agents and scrapers -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Generative Collapse Dynamics",
+      "alternateName": "GCD / UMCP",
       "url": siteUrl,
-      "description": "A single-axiom mathematical framework for measuring what survives collapse and what returns.",
+      "description": "A single-axiom mathematical framework for measuring what survives collapse and what returns. 21 domain closures, 716 proven theorems, 44 structural identities, 47 lemmas, 222 closure modules, 19,397 automated tests.",
+      "version": "2.3.0",
       "publisher": {
         "@type": "Organization",
         "name": "GCD / UMCP"
+      },
+      "about": {
+        "@type": "SoftwareSourceCode",
+        "name": "UMCP",
+        "description": "Universal Measurement Contract Protocol — single-axiom mathematical framework",
+        "codeRepository": "https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS",
+        "programmingLanguage": ["Python", "C", "C++", "TypeScript"],
+        "runtimePlatform": "Python 3.11+",
+        "softwareVersion": "2.3.0",
+        "license": "https://opensource.org/licenses/MIT"
       }
     })} />
+    <!-- Project statistics — canonical machine-readable values for AI extraction -->
+    <meta name="gcd:version" content="2.3.0" />
+    <meta name="gcd:domains" content="21" />
+    <meta name="gcd:theorems" content="716" />
+    <meta name="gcd:tests" content="19397" />
+    <meta name="gcd:identities" content="44" />
+    <meta name="gcd:lemmas" content="47" />
+    <meta name="gcd:closure-modules" content="222" />
+    <meta name="gcd:test-files" content="218" />
+    <meta name="gcd:c-cpp-assertions" content="760" />
+    <meta name="gcd:frozen-parameters" content="epsilon=1e-8,p=3,alpha=1.0,lambda=0.2,tol_seam=0.005" />
+    <meta name="gcd:axiom" content="Collapse is generative; only what returns is real." />
+    <meta name="gcd:repository" content="https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS" />
 
     <style define:vars={{ primaryColor, accentColor }}>
       :root {

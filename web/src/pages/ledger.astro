@@ -99,9 +99,9 @@ const sections = ['purpose', 'domains', 'viewer', 'budget', 'identities', 'compa
       </div>
     </section>
 
-    <!-- ═══════════ §2: THE 20 DOMAINS ═══════════ -->
+    <!-- ═══════════ §2: THE 21 DOMAINS ═══════════ -->
     <section id="domains" class="mb-10">
-      <h2 class="text-xl font-bold text-kernel-100 mb-4">The 20 Closure Domains</h2>
+      <h2 class="text-xl font-bold text-kernel-100 mb-4">The 21 Closure Domains</h2>
       <p class="text-sm text-kernel-400 mb-4">
         Each domain selects which real-world quantities become trace vector channels.
         The kernel function is the same everywhere — Tier-2 closures choose the <em>input</em>;
@@ -129,6 +129,7 @@ const sections = ['purpose', 'domains', 'viewer', 'budget', 'identities', 'compa
           { id: 'clinical_neuroscience', label: 'Clinical', cat: 'Neuro' },
           { id: 'dynamic_semiotics', label: 'Semiotics', cat: 'Language' },
           { id: 'continuity_theory', label: 'Continuity', cat: 'Theory' },
+          { id: 'immunology', label: 'Immunology', cat: 'Bio' },
         ].map(d => {
           const catColors = {
             Core: 'border-amber-700/40', Physics: 'border-blue-700/40',
@@ -323,6 +324,7 @@ const sections = ['purpose', 'domains', 'viewer', 'budget', 'identities', 'compa
     standard_model: { name: 'Standard Model', c: [0.50, 0.45, 0.40, 0.55, 0.48, 0.42, 0.52, 0.46], desc: '31 particles' },
     clinical_neuroscience: { name: 'Clinical Neuro', c: [0.75, 0.70, 0.68, 0.78, 0.72, 0.66], desc: 'Cortical kernel' },
     spacetime_memory: { name: 'Spacetime', c: [0.62, 0.58, 0.55, 0.65, 0.60, 0.56], desc: '40 entities' },
+    immunology: { name: 'Immunology', c: [0.80, 0.75, 0.72, 0.82, 0.78, 0.70], desc: 'Adaptive immunity' },
   };
 
   // All domain results

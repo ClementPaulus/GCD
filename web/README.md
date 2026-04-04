@@ -87,7 +87,7 @@ web/
 
 ### Dynamic Pages (~122)
 
-Each of the 20 closure domains generates:
+Each of the 21 closure domains generates:
 - `/domain/` — Domain index with regime badge, kernel panel, related graph
 - `/domain/theorems/` — Domain theorems
 - `/domain/entities/` — Domain entities
