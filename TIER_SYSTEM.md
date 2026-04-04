@@ -463,7 +463,7 @@ The field is required by `schemas/contract.schema.json` and `schemas/canon.ancho
 
 > *Omnis clausura per spinam transit.* — Every closure passes through the spine.
 
-This section codifies the structural patterns observed across 20 domain closures. New domains should follow these conventions to maintain cross-domain consistency and machine-readable structure.
+This section codifies the structural patterns observed across 21 domain closures. New domains should follow these conventions to maintain cross-domain consistency and machine-readable structure.
 
 ### Domain Archetypes
 
@@ -513,7 +513,7 @@ The `scripts/theorem_registry.py` auto-discovers functions matching `theorem_*`.
 
 ### The 10-Theorem Template
 
-15 of 20 domains converge to exactly 10 theorems. This is a structural attractor, not a requirement, but new domains should aim for 10 theorems covering these archetype slots:
+15 of 21 domains converge to exactly 10 theorems. This is a structural attractor, not a requirement, but new domains should aim for 10 theorems covering these archetype slots:
 
 | Slot | Archetype | What It Proves | Frequency |
 |:----:|-----------|----------------|:---------:|
@@ -532,7 +532,7 @@ The `scripts/theorem_registry.py` auto-discovers functions matching `theorem_*`.
 
 ### Channel Design
 
-- Standard channel count: **8** (used by 14 of 20 domains)
+- Standard channel count: **8** (used by 14 of 21 domains)
 - Extended channel count: **10** (awareness_cognition, clinical_neuroscience)
 - Minimal channel count: **3** (nuclear_physics — BE/A, temporal, valley)
 - Every channel must be a dimensionless value in [0, 1] after normalization
@@ -550,7 +550,7 @@ Every new domain must be:
 
 ### Entropy Passivity Observation
 
-Across all 20 domains, Bernoulli field entropy S appears in only 1 of 13 theorem files (7.7%), despite being a Tier-1 kernel output. This is not an error — S is asymptotically determined by F and C (the statistical constraint S ≈ f(F, C)), making it a *computed* diagnostic rather than an independent degree of freedom. The effective degrees of freedom for theorem construction are **F, κ, C** (equivalently F, IC, C). New theorems should derive from these three quantities; S participates through the constraint, not directly.
+Across all 21 domains, Bernoulli field entropy S appears in only 1 of 13 theorem files (7.7%), despite being a Tier-1 kernel output. This is not an error — S is asymptotically determined by F and C (the statistical constraint S ≈ f(F, C)), making it a *computed* diagnostic rather than an independent degree of freedom. The effective degrees of freedom for theorem construction are **F, κ, C** (equivalently F, IC, C). New theorems should derive from these three quantities; S participates through the constraint, not directly.
 
 ---
 
@@ -572,7 +572,7 @@ Across all 20 domains, Bernoulli field entropy S appears in only 1 of 13 theorem
   - Seam structure defined; closures implemented
   - ⚠️ Automated weld PASS/FAIL computation not yet integrated into CLI
 
-- ✅ **Tier-2**: 20 domain expansions active (598+ entities, 225+ theorems)
+- ✅ **Tier-2**: 21 domain expansions active (716+ theorems)
   - GCD, RCFT, Kinematics, Finance, Security, Astronomy
   - Nuclear, Quantum, Weyl, Atomic Physics, Materials Science, Standard Model
   - Everyday Physics, Evolution, Dynamic Semiotics, Consciousness Coherence

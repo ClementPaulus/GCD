@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Keywords 12 → 22, classifiers expanded (C, C++, Education, Chemistry, Astronomy,
   Bio-Informatics, AI), project URLs 7 → 10 (Kernel Specification, Catalogue, Contributing)
 - **`README_PYPI.md` rewrite**: 10 badges (C99, C++17, Theorems, Domains, Production/Stable),
-  all 20 domains listed with per-domain theorem counts, new C/C++ build section,
+  all 21 domains listed with per-domain theorem counts, new C/C++ build section,
   project structure includes `umcp_c/`/`umcp_cpp/`, expanded links
 - `README.md`: C99 badge, architecture tree includes C layer, build instructions
 - `.github/copilot-instructions.md`: C layer in architecture tree, key files table,
@@ -130,7 +130,7 @@ Restructured from series-based (E/B/D/N) to derivation-distance from Axiom-0:
 - New §1.15 Derivation Tree in CATALOGUE.md with legacy cross-reference table
 
 **Theorem Coverage Expansion**:
-- All 20 domains now have ≥10 theorems (247 total proven theorems)
+- All 21 domains now have ≥10 theorems (716 total proven theorems)
 - Theorem registry and deep structural pattern analysis (`scripts/theorem_registry.py`)
 - SM extended theorems T13–T27 (PMNS, CKM, Yukawa, coupling unification)
 

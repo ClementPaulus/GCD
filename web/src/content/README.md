@@ -15,7 +15,7 @@ content/
 ├── finance/index.md           # Finance
 ├── astronomy/index.md         # Astronomy
 ├── standard_model/index.md    # Standard Model
-├── ...                        # 20 domains total
+├── ...                        # 21 domains total
 └── <domain>/_data/<domain>.json  # Client-side data
 ```
 

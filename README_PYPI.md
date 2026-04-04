@@ -7,8 +7,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/LICENSE)
 [![CI](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/actions/workflows/validate.yml/badge.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/actions)
 [![Tests: 19,397](https://img.shields.io/badge/tests-19%2C397-brightgreen.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/tests)
-[![Theorems: 264](https://img.shields.io/badge/theorems-264-purple.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CATALOGUE.md)
-[![Domains: 20](https://img.shields.io/badge/domains-20-teal.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/closures)
+[![Theorems: 716](https://img.shields.io/badge/theorems-716-purple.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/CATALOGUE.md)
+[![Domains: 21](https://img.shields.io/badge/domains-21-teal.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/closures)
 [![Production/Stable](https://img.shields.io/badge/status-Production%2FStable-brightgreen.svg)](https://pypi.org/project/umcp/)
 
 **A contract-first validation framework for reproducible computational workflows.**
@@ -27,9 +27,9 @@ Built on **Generative Collapse Dynamics (GCD)**, a measurement theory derived fr
 |---------|-------------|
 | **Contract-first validation** | Define mathematical contracts before evidence. Frozen parameters ensure reproducibility. |
 | **Tier-1 kernel** | Six invariants (F, ω, S, C, κ, IC) computed from any bounded trace vector — domain-independent. |
-| **20 scientific domains** | From particle physics and cosmology to neuroscience and finance — all through one kernel. |
-| **264 proven theorems** | 47 lemmas, 44 structural identities, 264 theorems verified to machine precision. |
-| **19,397 tests** | Comprehensive test suite across 218 files with 220 closure modules. |
+| **21 scientific domains** | From particle physics and cosmology to neuroscience and finance — all through one kernel. |
+| **716 proven theorems** | 47 lemmas, 44 structural identities, 716 theorems verified to machine precision. |
+| **19,397 tests** | Comprehensive test suite across 218 files with 222 closure modules. |
 | **Three-valued verdicts** | Never boolean. Always CONFORMANT / NONCONFORMANT / NON\_EVALUABLE. |
 | **Three-layer architecture** | C99 orchestration (~1,900 lines) → C++17 accelerator → Python engine. 760 C/C++ assertions. |
 | **Interactive dashboard** | 46-page Streamlit dashboard for real-time kernel exploration. |
@@ -247,7 +247,7 @@ src/umcp_cpp/           # C++17 Accelerator (pybind11)
 ├── bindings/            # Zero-copy NumPy bridge
 └── tests/               # 434 Catch2 assertions
 
-closures/                # 20 domain closure modules (194 .py files)
+closures/                # 21 domain closure modules (222 .py files)
 contracts/               # 23 versioned mathematical contracts (YAML)
 casepacks/               # 29 self-contained validation packages
 schemas/                 # 17 JSON Schema Draft 2020-12 definitions

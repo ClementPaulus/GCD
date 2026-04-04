@@ -86,7 +86,7 @@ python scripts/pre_commit_protocol.py    # Full validation, must exit 0
 | C types & contract | `src/umcp_c/include/umcp_c/types.h`, `contract.h` |
 | C pipeline (the spine) | `src/umcp_c/include/umcp_c/pipeline.h` + `src/umcp_c/src/pipeline.c` |
 | C++ accelerator | `src/umcp_cpp/` (links umcp_c_core, pybind11, 434 Catch2 assertions) |
-| Closures (20 domains) | `closures/` |
+| Closures (21 domains) | `closures/` |
 | Contracts | `contracts/*.yaml` |
 | Tests (19,397) | `tests/` |
 | Orientation script | `scripts/orientation.py` (11 sections + compounding summary) |

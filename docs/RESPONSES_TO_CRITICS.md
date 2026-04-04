@@ -165,7 +165,7 @@ does not close: outbound cost exceeds return credit by 2.004 in κ-space.
 This is not a borderline case. It is not a marginal tension requiring
 interpretive judgment. It is a massive nonconformance.
 
-To put this in perspective, across the 20 domain closures in the v2.2.4
+To put this in perspective, across the 21 domain closures in the v2.2.4
 release line (astronomy, atomic physics, awareness-cognition, clinical neuroscience,
 consciousness coherence, continuity theory, dynamic semiotics, everyday physics,
 evolution, finance, GCD, kinematics, materials science, nuclear physics,
