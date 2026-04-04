@@ -76,6 +76,21 @@ registry:
         description: "Magnetic Quincke rollers: 8D Ψ-embedding, 12 experimental states, 8 structural theorems (Garza et al., Science Advances 2023)"
         inputs: ["quincke_config"]
         outputs: ["kernel_results", "theorems", "nano_connections", "scale_position", "summary"]
+      - name: "regime_derivation"
+        path: "closures/rcft/regime_derivation.py"
+        description: "Regime derivation: D(x,t) ↔ kernel regime mapping, 12 entities, 6 theorems (T-RD-1–T-RD-6)"
+        inputs: ["regime_config"]
+        outputs: ["kernel_results", "theorems", "budget_mapping", "regime_partition"]
+      - name: "equator_convergence"
+        path: "closures/rcft/equator_convergence.py"
+        description: "Equator convergence: scale recursion at c=1/2 self-dual fixed point, 12 entities, 6 theorems (T-EQ-1–T-EQ-6)"
+        inputs: ["scale_config"]
+        outputs: ["kernel_results", "theorems", "equator_distances", "convergence_rates"]
+      - name: "epistemic_agents"
+        path: "closures/rcft/epistemic_agents.py"
+        description: "Three-agent epistemic model: measurement/archive/horizon agents, 12 entities, 6 theorems (T-EA-1–T-EA-6)"
+        inputs: ["epistemic_config"]
+        outputs: ["kernel_results", "theorems", "agent_coherence", "geodesic_efficiency"]
     optimizations:
       - name: "tau_R_optimized"
         path: "src/umcp/tau_R_optimized.py"
