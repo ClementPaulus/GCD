@@ -68,7 +68,7 @@ const base = import.meta.env.BASE_URL;
         </a>
         <a href="#ch-8" class="toc-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-kernel-800/60 transition text-kernel-300 hover:text-kernel-100 no-underline">
           <span class="text-xs font-mono text-kernel-600 w-6 text-right">8</span>
-          <span>Cross-Domain Patterns <span class="text-kernel-600 text-xs ml-1">20 Domains</span></span>
+          <span>Cross-Domain Patterns <span class="text-kernel-600 text-xs ml-1">21 Domains</span></span>
         </a>
         <a href="#ch-9" class="toc-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-kernel-800/60 transition text-kernel-300 hover:text-kernel-100 no-underline">
           <span class="text-xs font-mono text-kernel-600 w-6 text-right">9</span>
@@ -279,7 +279,7 @@ const base = import.meta.env.BASE_URL;
           <p class="text-kernel-400 text-sm leading-relaxed">
             This means cross-domain comparison is not about comparing "the same thing measured differently" — it is about
             comparing different measured objects through the same kernel. The kernel is universal; the adapter is domain-specific.
-            This separation is what makes 20 domain closures commensurable.
+            This separation is what makes 21 domain closures commensurable.
           </p>
         </div>
       </div>
@@ -367,7 +367,7 @@ const base = import.meta.env.BASE_URL;
             </div>
             <div class="flex gap-3">
               <span class="text-amber-400/60 shrink-0">4.</span>
-              <span><strong class="text-kernel-200">Cross-domain universality.</strong> IC ≤ F holds with zero violations across 20 domains, 16,487 tests, and 406 scale-ladder objects — the architecture makes it universally diagnostic.</span>
+              <span><strong class="text-kernel-200">Cross-domain universality.</strong> IC ≤ F holds with zero violations across 21 domains, 19,397 tests, and 406 scale-ladder objects — the architecture makes it universally diagnostic.</span>
             </div>
           </div>
         </div>
@@ -476,7 +476,7 @@ const base = import.meta.env.BASE_URL;
                   <td class="py-2">Seam tolerance</td>
                   <td class="py-2 font-mono text-amber-400/80">0.005</td>
                   <td class="py-2 font-mono">tol<sub>seam</sub></td>
-                  <td class="py-2 text-kernel-400 text-xs">IC ≤ F at 100% (20 domains)</td>
+                  <td class="py-2 text-kernel-400 text-xs">IC ≤ F at 100% (21 domains)</td>
                 </tr>
                 <tr>
                   <td class="py-2">Domain</td>
@@ -1070,7 +1070,7 @@ const base = import.meta.env.BASE_URL;
     <section class="mb-20" id="ch-8">
       <div class="flex items-center gap-3 mb-6">
         <div class="w-8 h-px bg-kernel-700"></div>
-        <p class="text-xs tracking-[0.2em] uppercase text-kernel-500">&sect;8 &middot; Cross-Domain Patterns (20 Domains)</p>
+        <p class="text-xs tracking-[0.2em] uppercase text-kernel-500">&sect;8 &middot; Cross-Domain Patterns (21 Domains)</p>
         <div class="flex-1 h-px bg-kernel-800/60"></div>
       </div>
 
@@ -1672,7 +1672,7 @@ const base = import.meta.env.BASE_URL;
             </div>
           </div>
           <p class="text-[10px] text-kernel-600 mt-3 italic">
-            All lemmas verified computationally in the test suite (16,487 tests across 20 domain closures).
+            All lemmas verified computationally in the test suite (19,397 tests across 21 domain closures).
           </p>
         </div>
 
@@ -1966,9 +1966,9 @@ const base = import.meta.env.BASE_URL;
         <div class="bg-kernel-900/30 border border-kernel-800/30 rounded-xl p-5">
           <p class="text-xs text-kernel-600 uppercase tracking-wider mb-3">Verification</p>
           <p class="text-kernel-400 text-sm leading-relaxed">
-            The current release line contains <strong class="text-kernel-200">18,108 tests</strong> across
-            <strong class="text-kernel-200">20 domain closures</strong>,
-            <strong class="text-kernel-200">220 closure modules</strong>, and
+            The current release line contains <strong class="text-kernel-200">19,397 tests</strong> across
+            <strong class="text-kernel-200">21 domain closures</strong>,
+            <strong class="text-kernel-200">222 closure modules</strong>, and
             <strong class="text-kernel-200">47 lemmas</strong>.
             The three core Tier-1 identities (F + &omega; = 1, IC &le; F, IC = exp(&kappa;)) are verified with
             zero violations across the full test suite. The 44 structural identities are re-derivable by running

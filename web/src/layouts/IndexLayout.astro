@@ -6,7 +6,7 @@
 import BaseLayout from './BaseLayout.astro';
 
 const { frontmatter } = Astro.props;
-const { title = 'Generative Collapse Dynamics', description = 'A single-axiom mathematical framework that measures what survives collapse and what returns — across 20 scientific domains.' } = frontmatter || {};
+const { title = 'Generative Collapse Dynamics', description = 'A single-axiom mathematical framework that measures what survives collapse and what returns — across 21 scientific domains.' } = frontmatter || {};
 const base = import.meta.env.BASE_URL;
 
 /* ── Tool categories ────────────────────────────────── */
@@ -57,28 +57,29 @@ const corpus = [
   { title: 'Orientation', desc: 'Ten computational re-derivations. Understanding is computed.', href: `${base}orientation/`, latin: 'Intellectus Computatur' },
 ];
 
-/* ── Domain catalog: 20 closure domains ─────────────── */
+/* ── Domain catalog: 21 closure domains ─────────────── */
 const domainCatalog = [
-  { slug: 'gcd', name: 'Generative Collapse Dynamics', lens: 'Epistemology', modules: 9, category: 'Core', desc: 'The axiom, the kernel, the spine.', channels: 6, theorems: 25 },
+  { slug: 'gcd', name: 'Generative Collapse Dynamics', lens: 'Epistemology', modules: 11, category: 'Core', desc: 'The axiom, the kernel, the spine.', channels: 6, theorems: 37 },
   { slug: 'rcft', name: 'Recursive Collapse Field Theory', lens: 'Epistemology', modules: 13, category: 'Core', desc: 'Recursive field-theoretic structure of collapse.', channels: 8, theorems: 30 },
-  { slug: 'kinematics', name: 'Kinematics', lens: 'Ontology', modules: 11, category: 'Physics', desc: 'Motion, phase space, and trajectory analysis.', channels: 8, theorems: 16 },
+  { slug: 'kinematics', name: 'Kinematics', lens: 'Ontology', modules: 11, category: 'Physics', desc: 'Motion, phase space, and trajectory analysis.', channels: 8, theorems: 34 },
   { slug: 'weyl', name: 'WEYL Cosmology', lens: 'Ontology', modules: 7, category: 'Physics', desc: 'Modified gravity and cosmological structure.', channels: 8, theorems: 10 },
-  { slug: 'standard_model', name: 'Standard Model', lens: 'Ontology', modules: 14, category: 'Physics', desc: '31 particles → 8-channel trace. 57 proven theorems.', channels: 8, theorems: 57 },
+  { slug: 'standard_model', name: 'Standard Model', lens: 'Ontology', modules: 14, category: 'Physics', desc: '31 particles → 8-channel trace. 30 proven theorems.', channels: 8, theorems: 30 },
   { slug: 'nuclear_physics', name: 'Nuclear Physics', lens: 'Ontology', modules: 14, category: 'Physics', desc: 'Binding energy, decay, QGP, confinement.', channels: 8, theorems: 51 },
-  { slug: 'quantum_mechanics', name: 'Quantum Mechanics', lens: 'Phenomenology', modules: 20, category: 'Physics', desc: 'Wavefunction, entanglement, QDM, FQHE.', channels: 8, theorems: 93 },
-  { slug: 'atomic_physics', name: 'Atomic Physics', lens: 'Ontology', modules: 12, category: 'Physics', desc: '118 elements — full periodic kernel.', channels: 8, theorems: 10 },
-  { slug: 'materials_science', name: 'Materials Science', lens: 'Ontology', modules: 23, category: 'Physics', desc: '118 elements × 18 fields.', channels: 8, theorems: 22 },
+  { slug: 'quantum_mechanics', name: 'Quantum Mechanics', lens: 'Phenomenology', modules: 21, category: 'Physics', desc: 'Wavefunction, entanglement, QDM, FQHE.', channels: 8, theorems: 99 },
+  { slug: 'atomic_physics', name: 'Atomic Physics', lens: 'Ontology', modules: 12, category: 'Physics', desc: '118 elements — full periodic kernel.', channels: 8, theorems: 26 },
+  { slug: 'materials_science', name: 'Materials Science', lens: 'Ontology', modules: 23, category: 'Physics', desc: '118 elements × 18 fields.', channels: 8, theorems: 52 },
   { slug: 'everyday_physics', name: 'Everyday Physics', lens: 'Phenomenology', modules: 8, category: 'Physics', desc: 'Thermo, optics, E&M, waves, fluids.', channels: 8, theorems: 29 },
-  { slug: 'finance', name: 'Finance', lens: 'Policy', modules: 5, category: 'Applied', desc: 'Portfolio continuity and market coherence.', channels: 8, theorems: 12 },
-  { slug: 'security', name: 'Security & Audit', lens: 'Policy', modules: 18, category: 'Applied', desc: 'Input validation, audit, integrity.', channels: 8, theorems: 17 },
+  { slug: 'finance', name: 'Finance', lens: 'Policy', modules: 5, category: 'Applied', desc: 'Portfolio continuity and market coherence.', channels: 8, theorems: 22 },
+  { slug: 'security', name: 'Security & Audit', lens: 'Policy', modules: 18, category: 'Applied', desc: 'Input validation, audit, integrity.', channels: 8, theorems: 22 },
   { slug: 'astronomy', name: 'Astronomy', lens: 'Ontology', modules: 12, category: 'Science', desc: 'Stellar classification, HR diagram, ages.', channels: 8, theorems: 42 },
   { slug: 'evolution', name: 'Evolution & Neuroscience', lens: 'History', modules: 9, category: 'Biology', desc: '40 organisms, 10-channel brain kernel.', channels: 10, theorems: 22 },
   { slug: 'consciousness_coherence', name: 'Consciousness Coherence', lens: 'Phenomenology', modules: 5, category: 'Cognition', desc: '20 systems, 28 theorems, altered states.', channels: 8, theorems: 28 },
   { slug: 'awareness_cognition', name: 'Awareness & Cognition', lens: 'Phenomenology', modules: 4, category: 'Cognition', desc: '5+5 channel awareness-aptitude kernel.', channels: 10, theorems: 22 },
   { slug: 'clinical_neuroscience', name: 'Clinical Neuroscience', lens: 'Phenomenology', modules: 8, category: 'Cognition', desc: '10-channel cortical kernel, neurotransmitters.', channels: 10, theorems: 53 },
-  { slug: 'dynamic_semiotics', name: 'Dynamic Semiotics', lens: 'Semiotics', modules: 5, category: 'Humanities', desc: '30 sign systems, 8-channel semiotic kernel.', channels: 8, theorems: 18 },
+  { slug: 'dynamic_semiotics', name: 'Dynamic Semiotics', lens: 'Semiotics', modules: 8, category: 'Humanities', desc: '30 sign systems, 8-channel semiotic kernel.', channels: 8, theorems: 40 },
   { slug: 'continuity_theory', name: 'Continuity Theory', lens: 'History', modules: 5, category: 'Humanities', desc: 'Continuity law, topological persistence.', channels: 8, theorems: 29 },
   { slug: 'spacetime_memory', name: 'Spacetime Memory', lens: 'Ontology', modules: 8, category: 'Physics', desc: '40 entities, gravitational memory.', channels: 8, theorems: 46 },
+  { slug: 'immunology', name: 'Immunology', lens: 'Phenomenology', modules: 6, category: 'Biology', desc: 'Immune cell kernel, cytokine networks, vaccine response.', channels: 8, theorems: 36 },
 ];
 
 const categories = ['Core', 'Physics', 'Science', 'Biology', 'Cognition', 'Applied', 'Humanities'];
@@ -138,7 +139,7 @@ const totalModules = domainCatalog.reduce((s, d) => s + d.modules, 0);
     <p class="text-kernel-400 max-w-2xl mx-auto mb-12 leading-relaxed text-sm md:text-base">
       A mathematical framework built from a single axiom — measuring what survives collapse
       and what returns, verified across
-      <strong class="text-kernel-200">20 domains</strong>,
+      <strong class="text-kernel-200">{domainCatalog.length} domains</strong>,
       <strong class="text-kernel-200">{totalTheorems}+ theorems</strong>, and
       <strong class="text-kernel-200">44 structural identities</strong>.
     </p>
@@ -246,7 +247,7 @@ const totalModules = domainCatalog.reduce((s, d) => s + d.modules, 0);
       <div class="pl-4 border-l-2 border-green-500/30">
         <div class="text-[10px] uppercase tracking-widest text-green-400/70 mb-1">Tier-2 &middot; Expansion</div>
         <h3 class="text-base font-semibold text-kernel-200 mb-2">Domain Closures</h3>
-        <p class="text-xs text-kernel-500 leading-relaxed">20 domains select which real-world quantities become channels. {totalTheorems}+ theorems, {totalModules} modules. Same kernel, different questions.</p>
+        <p class="text-xs text-kernel-500 leading-relaxed">{domainCatalog.length} domains select which real-world quantities become channels. {totalTheorems}+ theorems, {totalModules} modules. Same kernel, different questions.</p>
       </div>
     </div>
   </section>
@@ -285,7 +286,7 @@ const totalModules = domainCatalog.reduce((s, d) => s + d.modules, 0);
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-purple-500/60 to-transparent"></div>
     <div class="text-center mb-8">
       <p class="text-xs tracking-[0.2em] uppercase text-kernel-600 mb-3">From quarks to consciousness</p>
-      <h2 class="text-3xl font-bold text-kernel-100">20 Domain Closures</h2>
+      <h2 class="text-3xl font-bold text-kernel-100">{domainCatalog.length} Domain Closures</h2>
       <p class="text-sm text-kernel-500 mt-3 max-w-lg mx-auto">Each domain selects which real-world quantities become channels. The kernel stays the same — only the question changes.</p>
     </div>
 
@@ -343,7 +344,7 @@ const totalModules = domainCatalog.reduce((s, d) => s + d.modules, 0);
         <div class="text-[11px] text-kernel-500 mt-1">DOF</div>
       </div>
       <div>
-        <div class="text-3xl font-bold text-kernel-300">20</div>
+        <div class="text-3xl font-bold text-kernel-300">{domainCatalog.length}</div>
         <div class="text-[11px] text-kernel-500 mt-1">Domains</div>
       </div>
       <div>

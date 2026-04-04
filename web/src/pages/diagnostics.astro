@@ -235,7 +235,7 @@ const base = import.meta.env.BASE_URL;
             <ul class="text-kernel-400 text-sm space-y-1.5 list-disc list-inside">
               <li>The <strong>unique integer</strong> where ω<sub>trap</sub> is a Cardano root of x³ + x − 1 = 0</li>
               <li>Produces the Watch→Collapse crossover at ω ≈ 0.30–0.40</li>
-              <li>Matches experimental trapping across all 20 closure domains</li>
+              <li>Matches experimental trapping across all 21 closure domains</li>
               <li><strong>Discovered</strong> by the seam — not chosen by convention</li>
             </ul>
           </div>
@@ -518,7 +518,7 @@ const base = import.meta.env.BASE_URL;
             <div class="bg-kernel-950 border border-kernel-600 rounded p-3 text-center">
               <span class="font-mono text-cyan-400">∂²N/∂ω∂C = ∂²N/∂ω∂κ = ∂²N/∂C∂κ = 0</span>
             </div>
-            <p class="text-kernel-400 text-sm">The budget numerator N(ω, C, Δκ) is additively separable. The state variables (ω, C, Δκ) are thermodynamically independent — an "ideal gas" structure. No cross-coupling. This explains why the system works across 20 domains without tuning.</p>
+            <p class="text-kernel-400 text-sm">The budget numerator N(ω, C, Δκ) is additively separable. The state variables (ω, C, Δκ) are thermodynamically independent — an "ideal gas" structure. No cross-coupling. This explains why the system works across 21 domains without tuning.</p>
           </div>
         </div>
 
@@ -833,7 +833,7 @@ const base = import.meta.env.BASE_URL;
       color: 'text-kernel-400',
       summary: 'Guard band — prevents division by zero, preserves machine precision',
       detail: `<p><span class="font-mono text-kernel-300">ε = 10⁻⁸</span> appears in the denominator to prevent the τ_R* ratio from diverging when both Γ(ω) and α·C are near zero. It is the matching scale where the effective pole residue equals ½ (Theorem T10).</p>
-        <p class="mt-2">ε is not a "small arbitrary number." It is the unique guard band where the pole at ω = 1 does not affect any measurement to machine precision (IEEE 754 double). Consistent across all 20 closure domains.</p>`
+        <p class="mt-2">ε is not a "small arbitrary number." It is the unique guard band where the pole at ω = 1 does not affect any measurement to machine precision (IEEE 754 double). Consistent across all 21 closure domains.</p>`
     },
   ];
 
