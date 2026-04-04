@@ -76,7 +76,7 @@ pre-commit install
 
 # 7. Verify installation
 umcp health
-pytest --co -q  # Should show 19,726 tests
+pytest --co -q  # Should show 19,921 tests
 ```
 
 ---
@@ -93,7 +93,7 @@ GENERATIVE-COLLAPSE-DYNAMICS/
 │   ├── cli.py             # Command-line interface
 │   ├── api_umcp.py        # REST API
 │   └── dashboard.py       # Streamlit dashboard
-├── tests/                 # Test suite (19,726 tests)
+├── tests/                 # Test suite (19,921 tests)
 ├── casepacks/             # Reproducible examples
 ├── closures/              # Computational functions
 ├── contracts/             # Mathematical contracts
@@ -220,7 +220,7 @@ feat(api): add ledger analysis endpoint
 
 fix(validator): correct seam tolerance check for edge case
 
-docs(readme): update test count to 19,726
+docs(readme): update test count to 19,921
 
 test(closures): add coverage for kinematic stability
 ```
