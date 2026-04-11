@@ -427,14 +427,14 @@ def step_stage_files(ctx: RepoContext) -> StepResult:
     )
 
 
-def step_update_test_count(ctx: RepoContext) -> StepResult:
-    """Step 5: update test count in documentation."""
+def step_sync_ground_truth(ctx: RepoContext) -> StepResult:
+    """Step 7: sync ground truth metrics to all documentation and web files."""
     t0 = time.monotonic()
-    test_count_script = ctx.root / "scripts" / "update_test_count.py"
+    sync_script = ctx.root / "scripts" / "sync_ground_truth.py"
 
-    if not test_count_script.exists():
+    if not sync_script.exists():
         return StepResult(
-            name="update test count",
+            name="sync ground truth",
             status=StepStatus.WARN,
             duration_s=time.monotonic() - t0,
             message="Script not found (non-blocking)",
@@ -442,18 +442,21 @@ def step_update_test_count(ctx: RepoContext) -> StepResult:
         )
 
     result = _run(
-        [ctx.python_exe, str(test_count_script)],
+        [ctx.python_exe, str(sync_script), "--skip-pytest"],
         cwd=ctx.root,
     )
 
     test_count = 0
+    update_count = 0
     for ln in result.stdout.split("\n"):
         m = re.search(r"Found\s+(\d+)\s+tests", ln)
         if m:
             test_count = int(m.group(1))
-            break
+        m2 = re.search(r"Updated\s+(\d+)\s+value", ln)
+        if m2:
+            update_count = int(m2.group(1))
 
-    # Re-stage all documentation files that may have been updated
+    # Re-stage all files that the sync script may have touched
     files_to_stage = [
         ctx.root / "README.md",
         ctx.root / "README_PYPI.md",
@@ -461,21 +464,34 @@ def step_update_test_count(ctx: RepoContext) -> StepResult:
         ctx.root / "AGENTS.md",
         ctx.root / "CLAUDE.md",
         ctx.root / "CONTRIBUTING.md",
-        ctx.root / "COMMIT_PROTOCOL.md",
         ctx.root / "QUICKSTART_TUTORIAL.md",
-        ctx.root / "web" / "src" / "pages" / "about.astro",
+        ctx.root / "CATALOGUE.md",
+        ctx.root / "web" / "src" / "lib" / "metrics.ts",
         ctx.root / "web" / "src" / "layouts" / "IndexLayout.astro",
+        ctx.root / "web" / "src" / "components" / "RosettaTranslator.astro",
+        ctx.root / "web" / "public" / "llms.txt",
+        ctx.root / "pyproject.toml",
+        ctx.root / "src" / "umcp" / "__init__.py",
+        ctx.root / "src" / "umcp" / "api_umcp.py",
         ctx.root / "scripts" / "test_count.txt",
+        ctx.root / "scripts" / "ground_truth.py",
     ]
     for f in files_to_stage:
         if f.exists():
             _run(["git", "add", str(f)], cwd=ctx.root)
 
     passed = result.returncode == 0
-    msg = f"{test_count} tests counted" if passed and test_count > 0 else "Test count updated"
+    parts = []
+    if test_count > 0:
+        parts.append(f"{test_count} tests")
+    if update_count > 0:
+        parts.append(f"{update_count} values synced")
+    else:
+        parts.append("all values in sync")
+    msg = ", ".join(parts) if parts else "Ground truth synced"
 
     return StepResult(
-        name="update test count",
+        name="sync ground truth",
         status=StepStatus.PASS if passed else StepStatus.WARN,
         duration_s=time.monotonic() - t0,
         message=msg,
@@ -795,7 +811,7 @@ def step_axiom_conformance(ctx: RepoContext) -> StepResult:
 #   1-4: Code quality (bounds, format, lint, types)
 #   5:   Stage files
 #   6:   Repo Health — version sync + drift detection (before integrity!)
-#   7:   Test count
+#   7:   Ground truth sync (replaces old test-count-only step)
 #   8:   Update integrity checksums (after health fix so fixed files get hashed)
 #   9:   Pytest bounds
 #   10:  UMCP validate
@@ -807,7 +823,7 @@ _STEP_REGISTRY: list[tuple[str, str]] = [
     ("Mypy Type Check", "mypy"),
     ("Stage Files", "stage"),
     ("Repo Health", "health"),
-    ("Update Test Count", "test_count"),
+    ("Sync Ground Truth", "ground_truth"),
     ("Update Integrity", "integrity"),
     ("Pytest Bounds", "pytest"),
     ("UMCP Validate", "validate"),
@@ -834,7 +850,7 @@ def run_protocol(ctx: RepoContext, mode: str = "fix") -> ProtocolReport:
         "mypy": lambda: step_mypy(ctx),
         "stage": lambda: step_stage_files(ctx),
         "health": lambda: step_repo_health(ctx, mode),
-        "test_count": lambda: step_update_test_count(ctx),
+        "ground_truth": lambda: step_sync_ground_truth(ctx),
         "integrity": lambda: step_update_integrity(ctx),
         "pytest": lambda: step_pytest(ctx),
         "validate": lambda: step_umcp_validate(ctx),

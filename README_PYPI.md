@@ -34,7 +34,7 @@ Built on **Generative Collapse Dynamics (GCD)**, a measurement theory derived fr
 | **Three-layer architecture** | C99 orchestration (~1,900 lines) → C++17 accelerator → Python engine. 760 C/C++ assertions. |
 | **Interactive dashboard** | 46-page Streamlit dashboard for real-time kernel exploration. |
 | **CLI + Python API** | Full command-line interface and programmatic access. |
-| **29 casepacks** | Self-contained validation packages with frozen contracts and expected outputs. |
+| **26 casepacks** | Self-contained validation packages with frozen contracts and expected outputs. |
 
 ---
 
@@ -252,7 +252,7 @@ src/umcp_cpp/           # C++17 Accelerator (pybind11)
 
 closures/                # 23 domain closure modules (245 .py files)
 contracts/               # 23 versioned mathematical contracts (YAML)
-casepacks/               # 29 self-contained validation packages
+casepacks/               # 26 self-contained validation packages
 schemas/                 # 17 JSON Schema Draft 2020-12 definitions
 canon/                   # 22 canonical anchor files
 ```
