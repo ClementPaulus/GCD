@@ -145,6 +145,64 @@ fixed discourse spine:
   ordinary language.
 \end{enumerate}
 
+Figure~\ref{fig:spine} maps the twelve stops onto the five spine
+stages visually.
+
+\begin{figure}[ht]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}c@{\,}l@{\quad}l@{}}
+  \toprule
+  \textbf{Stop} & \textbf{What happens} & \textbf{Spine stage} \\
+  \midrule
+  1 & Axiom declared    & \multirow{2}{*}{\textsc{Contract}} \\
+  2 & Parameters frozen  & \\
+  \midrule
+  3 & Channels chosen    & \multirow{3}{*}{\textsc{Canon}} \\
+  4 & Trace bounded      & \\
+  5 & Kernel computed    & \\
+  \midrule
+  6 & Ledger debited / credited & \textsc{Closures} \\
+  \midrule
+  7 & Regime classified  & \textsc{Integrity Ledger} \\
+  \midrule
+  8 & Casepack assembled & \multirow{5}{*}{\textsc{Stance}} \\
+  9 & CLI executed       & \\
+  10 & API called        & \\
+  11 & Latin rendered    & \\
+  12 & Ordinary reading  & \\
+  \bottomrule
+\end{tabular}
+\caption{The twelve stops mapped onto the five stages of the
+  fixed discourse spine:
+  Contract~$\to$~Canon~$\to$~Closures~$\to$~Integrity
+  Ledger~$\to$~Stance.}
+\label{fig:spine}
+\end{figure}
+
+\subsection{Source files}
+
+The worked example traces through the following repository paths
+(relative to the project root):
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+  \toprule
+  \textbf{Role} & \textbf{Path} \\
+  \midrule
+  Casepack      & \texttt{casepacks/hello\_world/} \\
+  Contract      & \texttt{contracts/UMA.INTSTACK.v1.yaml} \\
+  Kernel code   & \texttt{src/umcp/kernel\_optimized.py} \\
+  Seam budget   & \texttt{src/umcp/seam\_optimized.py} \\
+  Frozen params & \texttt{src/umcp/frozen\_contract.py} \\
+  Validator     & \texttt{src/umcp/validator.py} \\
+  CLI entry     & \texttt{src/umcp/cli.py} \\
+  This guide    & \texttt{THE\_FIRST\_PASS.md} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
 Appendix~\ref{app:heterogeneous} provides a heterogeneous
 counterexample.  Appendix~\ref{app:degenerate} establishes the
 precise relationship between the GCD kernel and classical results.
@@ -674,6 +732,32 @@ for three voltage readings and for 31~Standard Model
 particles~\cite{paulus2025physicscoherence}.  Only the Tier-2
 channel choice changes; the Tier-1 kernel and Tier-0 protocol are
 invariant.
+
+\subsection{Reproduce this pass}\label{sec:reproduce}
+
+Every number in this paper can be regenerated from the open-source
+repository~\cite{umcpmetadatarepo}.  The following commands suffice:
+
+\begin{center}
+\fboxsep=6pt
+\fbox{\parbox{0.88\columnwidth}{%
+\small
+\textbf{Clone \& install}\\[2pt]
+\texttt{git clone https://github.com/\\\hspace*{2em}calebpruett927/\\\hspace*{2em}GENERATIVE-COLLAPSE-DYNAMICS.git}\\[1pt]
+\texttt{cd GENERATIVE-COLLAPSE-DYNAMICS}\\[1pt]
+\texttt{pip install -e ".[all]"}\\[6pt]
+%
+\textbf{Validate the hello\_world casepack}\\[2pt]
+\texttt{umcp validate casepacks/hello\_world} \\[1pt]
+\texttt{\hspace*{2em}{-}{-}strict}\\[6pt]
+%
+\textbf{Run the orientation (10 sections)}\\[2pt]
+\texttt{python scripts/orientation.py}\\[6pt]
+%
+\textbf{Run the full test suite}\\[2pt]
+\texttt{pytest}
+}}
+\end{center}
 
 % ============================================================
 \section{Conclusions}\label{sec:conclusions}
