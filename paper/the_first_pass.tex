@@ -26,6 +26,7 @@
 \usepackage{xfrac}
 \usepackage{enumitem}
 \usepackage{array}
+\usepackage{fancyvrb}
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 % ── theorem environments ──
@@ -360,7 +361,7 @@ in Appendix~\ref{app:heterogeneous}.
 
 \subsection{Kernel summary}
 
-\begin{table}[h]
+\begin{table}[ht]
 \caption{Kernel outputs for $\tvec = (0.99, 0.99, 0.99)$ with
   equal weights.}
 \label{tab:kernel}
@@ -482,7 +483,7 @@ invariants, SS1M receipt with SHA-256 checksums).
 
 \subsection{Command-line validation}
 
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small]
 $ umcp validate casepacks/hello_world \
     --strict
 UMCP validation: CONFORMANT
@@ -491,7 +492,7 @@ UMCP validation: CONFORMANT
   validator=umcp-validator v2.3.1;
   policy strict=true;
   sha256=6fc79df4...
-\end{verbatim}
+\end{Verbatim}
 
 The validator performs, in sequence: JSON Schema validation
 (Draft~2020-12), semantic rule checks (15+~rules), kernel identity
@@ -503,15 +504,15 @@ Exit code: 0 = \conform{}, 1 = \nonconform{}.
 
 The same computation is available via the Python API:
 
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small]
 from umcp import validate
 result = validate("casepacks/hello_world")
 assert result["run_status"] == "CONFORMANT"
-\end{verbatim}
+\end{Verbatim}
 
 Or via the \texttt{MeasurementEngine} for raw data:
 
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small]
 from umcp.measurement_engine \
     import MeasurementEngine
 import numpy as np
@@ -523,7 +524,7 @@ result = engine.from_array(
 )
 row = result.invariants[0]
 # row.F == 0.99, row.regime == "Stable"
-\end{verbatim}
+\end{Verbatim}
 
 \subsection{The cognitive equalizer}
 
