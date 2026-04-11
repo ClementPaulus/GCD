@@ -630,27 +630,34 @@ reproduce the computation and verify the verdict.  The
 \begin{Verbatim}[fontsize=\small]
 casepacks/hello_world/
   manifest.json
-  raw_data.json
-  contract_ref.yaml
-  closure_registry.yaml
-  expected_outputs.json
-  ss1m_receipt.json
+  raw_measurements.csv
+  closures/
+    closure_registry.yaml
+  contracts/
+    contract.yaml
+    embedding.yaml
+    return.yaml
+    weights.yaml
+  expected/
+    invariants.json
+    psi.csv
+    ss1m_receipt.json
 \end{Verbatim}
 
 \begin{itemize}[leftmargin=*,nosep]
   \item \texttt{manifest.json}: provenance metadata---timestamps,
     tool versions, SHA-256 checksums binding every artifact to a
     unique digest.
-  \item \texttt{raw\_data.json}: the raw measurements (here,
+  \item \texttt{raw\_measurements.csv}: the raw measurements (here,
     three voltages at 9.9).
-  \item \texttt{contract\_ref.yaml}: pointer to the frozen contract
-    (\texttt{UMA.INTSTACK.v1}).
-  \item \texttt{closure\_registry.yaml}: lists which Tier-2 closures
-    are active for this run.
-  \item \texttt{expected\_outputs.json}: the embedded trace,
-    kernel invariants, and regime classification.
-  \item \texttt{ss1m\_receipt.json}: the Single-Source
-    Single-Measurement receipt with integrity checksums.
+  \item \texttt{contracts/}: the frozen contract files---contract
+    terms, embedding config, return policy, and weight declarations.
+  \item \texttt{closures/closure\_registry.yaml}: lists which Tier-2
+    closures are active for this run.
+  \item \texttt{expected/}: the expected outputs---embedded trace
+    (\texttt{psi.csv}), kernel invariants
+    (\texttt{invariants.json}), and the Single-Source
+    Single-Measurement receipt (\texttt{ss1m\_receipt.json}).
 \end{itemize}
 
 \subsection{Command-line validation}
@@ -679,7 +686,7 @@ The same computation is available via the Python API:
 \begin{Verbatim}[fontsize=\small]
 from umcp import validate
 result = validate("casepacks/hello_world")
-assert result["run_status"] == "CONFORMANT"
+assert result.status == "CONFORMANT"
 \end{Verbatim}
 
 Or via the \texttt{MeasurementEngine} for raw data:
@@ -698,34 +705,27 @@ row = result.invariants[0]
 # row.F == 0.99, row.regime == "Stable"
 \end{Verbatim}
 
-\subsection{The cognitive equalizer}
-
-Every execution path---CLI, Python API, REST endpoint, C99 core,
-C++ accelerator---passes through the same spine with the same frozen
-parameters and produces the same verdict.
-
 \subsection{REST endpoint}
 
 The optional FastAPI extension exposes the same spine over HTTP:
 
 \begin{Verbatim}[fontsize=\small]
-POST /api/v1/validate HTTP/1.1
+POST /validate HTTP/1.1
 Content-Type: application/json
 
-{"casepack": "casepacks/hello_world",
+{"path": "casepacks/hello_world",
  "strict": true}
 \end{Verbatim}
 
 \begin{Verbatim}[fontsize=\small]
 HTTP/1.1 200 OK
 
-{"run_status": "CONFORMANT",
+{"status": "CONFORMANT",
  "errors": 0,
  "warnings": 0,
- "regime": "Stable",
- "F": 0.99, "omega": 0.01,
- "IC": 0.99, "S": 0.056,
- "sha256": "6fc79df4..."}
+ "path": "casepacks/hello_world",
+ "strict": true,
+ "hash": "6fc79df4..."}
 \end{Verbatim}
 
 All three interfaces---CLI, Python API, REST---traverse the same
@@ -734,7 +734,9 @@ kernel or the contract.
 
 \subsection{The cognitive equalizer (Aequator Cognitivus)}
 
-This is the
+Every execution path---CLI, Python API, REST endpoint, C99 core,
+C++ accelerator---passes through the same spine with the same frozen
+parameters and produces the same verdict.  This is the
 \emph{Aequator Cognitivus}: the system produces identical output
 regardless of which cognitive agent operates it.  Thresholds are
 frozen, vocabulary is operationally defined, and verdicts are derived
