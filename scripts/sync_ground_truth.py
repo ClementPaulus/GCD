@@ -336,8 +336,16 @@ def _rules() -> list[SyncRule]:
         # ══════════════════════════════════════════════════════════
         # pyproject.toml description line
         # ══════════════════════════════════════════════════════════
+        SyncRule("pyproject.toml", r"(\d+) scientific domains", "{domain_count}", "pyproject description: domains"),
         SyncRule("pyproject.toml", r"(\d+) proven theorems", "{theorem_count}", "pyproject description: theorems"),
+        SyncRule(
+            "pyproject.toml", r"([\d,]+) tests, three-layer", "{test_count_comma}", "pyproject description: tests"
+        ),
         SyncRule("pyproject.toml", r"(\d+) closure modules", "{closure_count}", "pyproject description: closures"),
+        # ══════════════════════════════════════════════════════════
+        # MANIFEST.in version comment
+        # ══════════════════════════════════════════════════════════
+        SyncRule("MANIFEST.in", r"UMCP v([\d.]+)", "{version}", "MANIFEST.in version"),
         # ══════════════════════════════════════════════════════════
         # scripts/test_count.txt — canonical oracle for test count
         # ══════════════════════════════════════════════════════════
