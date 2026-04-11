@@ -27,6 +27,7 @@
 \usepackage{enumitem}
 \usepackage{array}
 \usepackage{fancyvrb}
+\usepackage[most]{tcolorbox}
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 % ── theorem environments ──
@@ -738,9 +739,17 @@ invariant.
 Every number in this paper can be regenerated from the open-source
 repository~\cite{umcpmetadatarepo}.  The following commands suffice:
 
-\begin{center}
-\fboxsep=6pt
-\fbox{\parbox{0.88\columnwidth}{%
+\begin{tcolorbox}[
+  colback=black!4,
+  colframe=black!60,
+  boxrule=1.2pt,
+  arc=2pt,
+  left=6pt, right=6pt, top=6pt, bottom=6pt,
+  title={\bfseries\sffamily Run This Now},
+  coltitle=white,
+  colbacktitle=black!70,
+  fonttitle=\small,
+]
 \small
 \textbf{Clone \& install}\\[2pt]
 \texttt{git clone https://github.com/\\\hspace*{2em}calebpruett927/\\\hspace*{2em}GENERATIVE-COLLAPSE-DYNAMICS.git}\\[1pt]
@@ -756,8 +765,7 @@ repository~\cite{umcpmetadatarepo}.  The following commands suffice:
 %
 \textbf{Run the full test suite}\\[2pt]
 \texttt{pytest}
-}}
-\end{center}
+\end{tcolorbox}
 
 % ============================================================
 \section{Conclusions}\label{sec:conclusions}
