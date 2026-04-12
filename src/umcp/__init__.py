@@ -23,10 +23,16 @@ from pathlib import Path
 from typing import Any
 
 __all__ = [
+    "CE_SYSTEM_PROMPT",
     "DEFAULT_CONTRACT",
     "DEFAULT_TZ",
     "VALIDATOR_NAME",
+    "AequatorCognitivus",
+    "CEChannels",
+    "CEReport",
+    "CEVerdict",
     "ClosureLoader",
+    "CognitiveEqualizer",
     "ComputationMode",
     "ContinuityLawSpec",
     "ContinuityVerdict",
@@ -120,7 +126,18 @@ from . import (
     universal_calculator,
     weld_lineage,
 )
+from . import (
+    cognitive_equalizer as cognitive_equalizer,
+)
 from .closures import ClosureLoader, get_closure_loader
+from .cognitive_equalizer import (
+    CE_SYSTEM_PROMPT,
+    AequatorCognitivus,
+    CEChannels,
+    CEReport,
+    CEVerdict,
+    CognitiveEqualizer,
+)
 from .continuity_law import ContinuityLawSpec, ContinuityVerdict, verify_continuity_law
 from .file_refs import UMCPFiles, get_umcp_files
 from .frozen_contract import (

@@ -40,8 +40,8 @@ export const LANGUAGE_COUNT = '3';
 export const LANGUAGE_COUNT_RAW = 3;
 
 /** Test files (numbered test_000 through test_338). */
-export const TEST_FILE_COUNT = '231';
-export const TEST_FILE_COUNT_RAW = 231;
+export const TEST_FILE_COUNT = '232';
+export const TEST_FILE_COUNT_RAW = 232;
 
 /** Base test functions before parametrization. */
 export const BASE_TEST_COUNT = '~800';

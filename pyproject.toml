@@ -181,6 +181,8 @@ umcp-api = "umcp.api_umcp:main"
 umcp-calc = "umcp.universal_calculator:main"
 umcp-finance = "umcp.finance_cli:main"
 umcp-mcp = "umcp_mcp.server:main"
+umcp-ce = "umcp.cognitive_equalizer:main"
+aequator-cognitivus = "umcp.cognitive_equalizer:main"
 
 # Note: Contract discovery is built into core validation engine.
 # These entry points are for external tool integration only.
