@@ -894,6 +894,8 @@ aequator-cognitivus --demo`}</pre>
     function runEvaluation() {
       const report = engage(currentChannels);
       updateDisplay(report);
+      updateLedgerDive(report);
+      addToHistory(report);
     }
 
     function updateDisplay(report: CEReport) {
@@ -1754,19 +1756,6 @@ aequator-cognitivus --demo`}</pre>
       });
     });
     renderRosetta('epistemology');
-
-    /* ═══════════════════════════════════════════════════════════
-       HOOK: Connect deep sections to main evaluation
-       ═══════════════════════════════════════════════════════════ */
-    // Patch runEvaluation to also update ledger dive and history
-    const _origRunEvaluation = runEvaluation;
-    runEvaluation = function() {
-      _origRunEvaluation();
-      // Re-run engage for deep sections
-      const report = engage(currentChannels);
-      updateLedgerDive(report);
-      addToHistory(report);
-    };
 
     /* ── Initial evaluation on page load ──── */
     runEvaluation();
