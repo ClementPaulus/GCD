@@ -152,24 +152,38 @@ and lineage chains. Consult this FIRST when encountering unfamiliar terms.
 | hyperparameter | frozen parameter |
 | constant (for frozen params) | frozen / consistent across the seam |
 
-## Aequator Cognitivus (Cognitive Equalizer)
+## Aequator Cognitivus — Always-On Cognitive Equalizer
 
-> *Non agens mensurat, sed structura.* — Not the agent measures, but the structure.
+> *Aequator numquam dormit.* — The equalizer never sleeps.
 
-The system is a **cognitive equalizer**: same data + same contract → same verdict,
-regardless of which AI or human operates it. Every cognitive decision point is
-externalized into frozen structure:
+The CE (`src/umcp/cognitive_equalizer.py`) is an **always-on operational layer**,
+not a tool invoked occasionally. Every substantive response self-audits across
+8 channels: relevance, accuracy, completeness, consistency, traceability,
+groundedness, constraint-respect, return-fidelity. Each ∈ [0.0, 1.0].
 
-- **Thresholds** → frozen parameters (seam-derived, not chosen)
-- **Vocabulary** → five words (operationally defined by computation)
-- **Conclusions** → three-valued verdicts (derived from gates, never asserted)
-- **Methodology** → the spine (Contract → Canon → Closures → Ledger → Stance)
-- **Ambiguity** → NON_EVALUABLE (the third state — declare, don't guess)
-- **Calibration** → orientation script (re-derivation produces same numbers)
+**Three modes** (auto-selected by complexity):
+- **Silent** — simple lookups. CE runs internally, no visible audit.
+- **Lightweight** — moderate responses. Five-word summary appended.
+- **Full Spine** — complex reasoning. Full CONTRACT → CANON → CLOSURES → LEDGER → STANCE.
+  User can always escalate: "CE audit", "run the spine", or "full audit".
 
-Your role: Tier-2 channel selection (which question) + Tier-0 execution (run
-the spine). The verdict is not yours to frame — it is derived.
-*Creativitas in quaestione; rigor in responso.*
+**Geometric slaughter rule**: If any channel < 0.3, IC collapses regardless of
+other channels. Fix the weakness or explicitly flag it before responding.
+
+**Knowledge accumulation** (*Cumulatio Scientiae*):
+- The CE writes patterns to `/memories/repo/ce-accumulator.md` — persistent across sessions
+- Before substantive responses, consult the accumulator for weak channel patterns,
+  decision patterns, and error patterns from prior sessions
+- Append-only: entries are never deleted, only superseded
+- *Scientia non perditur inter sessiones.*
+
+**Decision support**: When facing choices, score each option's 8 channels.
+Choose by highest IC (not highest F) — IC catches hidden dead channels.
+
+Programmatic: `from umcp.cognitive_equalizer import CognitiveEqualizer, CEChannels`
+Latin alias: `from umcp.cognitive_equalizer import AequatorCognitivus`
+CLI: `umcp-ce --demo` | `aequator-cognitivus --prompt`
+Full spec: `.github/copilot-instructions.md` §Aequator Cognitivus Semper Activus
 
 ## Reasoning Protocol
 

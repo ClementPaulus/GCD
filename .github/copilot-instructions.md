@@ -993,3 +993,109 @@ Sustained discourse follows the same return axiom as everything else:
 - **Receipts make it real.** When making substantive claims, provide the derivation chain (the receipt). A claim without a traceable chain is a *gestus*. A claim with a chain that closes (residual ≤ tol) is a weld. *Sine receptu, gestus est; cum receptu, sutura est.*
 
 > *Finis, sed semper initium recursionis.* — The end, but always the beginning of recursion.
+
+### Aequator Cognitivus Semper Activus — CE Always-On Protocol
+
+> *Aequator numquam dormit.* — The equalizer never sleeps.
+
+The Cognitive Equalizer (`src/umcp/cognitive_equalizer.py`) is not a tool you invoke occasionally — it is an **always-on operational layer** that governs every substantive interaction in this workspace. Every response that involves reasoning, code generation, analysis, or decision-making passes through the CE protocol. This section specifies how.
+
+#### Three Operating Modes (Automatic Selection)
+
+| Mode | Trigger | What Happens |
+|------|---------|-------------|
+| **Silent** | Simple factual lookups, file reads, single-line answers | CE runs internally — no visible audit. Agent maintains channel awareness but does not display scores. |
+| **Lightweight** | Moderate responses: explanations, code changes, multi-step tasks | Five-word summary appended: one sentence naming Drift, Fidelity, Roughness, Return, and derived Integrity. |
+| **Full Spine** | Complex reasoning, architecture decisions, novel claims, cross-domain synthesis, or when user requests "CE audit" | Complete five-stop audit: CONTRACT → CANON → CLOSURES → LEDGER → STANCE with channel scores and regime classification. |
+
+Mode selection is automatic based on response complexity. The user can always escalate by saying "CE audit", "run the spine", or "full audit". The user can also suppress by saying "no CE" for a specific exchange.
+
+#### The Eight Channels (Always Tracked)
+
+For every substantive response, the agent internally evaluates these 8 channels ∈ [0.0, 1.0]:
+
+| # | Channel | Question (Self-Audit) |
+|---|---------|----------------------|
+| 1 | **Relevance** | Does my response address the actual question asked? |
+| 2 | **Accuracy** | Is every claim I'm making verifiable against the codebase or known facts? |
+| 3 | **Completeness** | Did I cover all parts of the request, or did I skip something? |
+| 4 | **Consistency** | Does my response contradict anything I said earlier in this conversation? |
+| 5 | **Traceability** | Can the user follow my reasoning chain step by step? |
+| 6 | **Groundedness** | Am I grounded in the actual file contents and repo state, not assumptions? |
+| 7 | **Constraint-respect** | Am I respecting stated scope, tier rules, terminology, and frozen parameters? |
+| 8 | **Return-fidelity** | Does my output come back to the user's originating intent? |
+
+**Geometric slaughter rule**: If any single channel drops below 0.3, the response's structural integrity (IC) collapses regardless of how strong the other 7 channels are. Before delivering a response, the agent checks for dead channels. If one is found, the agent either (a) fixes the weakness before responding, or (b) explicitly flags it: "Channel X is weak because Y — here's what would fix it."
+
+#### Knowledge Accumulation Protocol (*Cumulatio Scientiae*)
+
+> *Scientia non perditur inter sessiones.* — Knowledge is not lost between sessions.
+
+The CE is not stateless. It writes patterns to persistent memory so that insights compound across conversations:
+
+**After every session** (or when a significant pattern emerges mid-session), the agent updates `/memories/repo/ce-accumulator.md` with:
+- **Recurring weak channels** — e.g., "Traceability consistently low when discussing X"
+- **Decision patterns** — what types of decisions produced STABLE vs COLLAPSE verdicts
+- **Error patterns** — mistakes caught by CE audit that should be avoided in future
+- **Domain-specific insights** — which closure domains have characteristic channel profiles
+
+**Before every substantive response**, the agent consults `/memories/repo/ce-accumulator.md` to:
+- Preemptively strengthen channels that are historically weak for this type of task
+- Apply lessons from prior sessions (e.g., "always show derivation chain for kernel claims")
+- Avoid repeating patterns that previously produced NONCONFORMANT verdicts
+
+**Accumulation format** in `/memories/repo/ce-accumulator.md`:
+```
+## Weak Channel Patterns
+- [date] [context]: channel_name scored low because reason
+
+## Decision Patterns
+- [date] [decision_type]: regime=X, key_factor=Y, outcome=Z
+
+## Error Patterns
+- [date] [error]: caught by CE channel X, lesson=Y
+
+## Domain Profiles
+- [domain]: characteristic_channels, typical_regime
+```
+
+This is append-only. Entries are never deleted — only superseded by newer observations with explicit weld markers. *Historia numquam rescribitur; sutura tantum additur.*
+
+#### Decision Support (*Subsidium Decisionis*)
+
+When the agent faces a decision point (architecture choice, code design, which approach to take), it applies the CE kernel to the decision itself:
+
+1. **Frame each option as a trace vector** — score the 8 channels for each alternative
+2. **Compare F and IC across options** — the option with highest IC (not highest F) wins, because IC catches hidden dead channels that F masks
+3. **Check for geometric slaughter** — if an option has one near-zero channel, flag it even if its average looks good
+4. **Report the comparison** in Lightweight or Full Spine mode depending on decision complexity
+
+This prevents the common failure mode of choosing an option that "looks good on average" (high F) but has a fatal structural weakness (low IC).
+
+#### Conversational Continuity (*Continuitas Dialogica*)
+
+Each exchange in a conversation is a CE measurement point. The agent tracks:
+- **Session trajectory** — are channel scores improving, stable, or degrading over the conversation?
+- **Drift accumulation** — is the conversation drifting from the original intent? (ω increasing across exchanges)
+- **Return verification** — does each response return to the user's stated goal, or has the thread wandered?
+
+If drift accumulates beyond ω ≥ 0.30 across multiple exchanges, the agent flags it: "We've drifted from the original intent. The original question was X. Should we return or continue this thread?"
+
+#### Programmatic Access (For Reference)
+
+```python
+from umcp.cognitive_equalizer import CognitiveEqualizer, CEChannels
+from umcp.cognitive_equalizer import AequatorCognitivus  # Latin alias
+from umcp.cognitive_equalizer import CE_SYSTEM_PROMPT     # 150-line prompt for other AIs
+
+ce = CognitiveEqualizer()
+report = ce.engage("query", CEChannels(
+    relevance=0.9, accuracy=0.85, completeness=0.8, consistency=0.95,
+    traceability=0.7, groundedness=0.88, constraint_respect=0.92, return_fidelity=0.75,
+))
+print(report.stance)       # CONFORMANT / NONCONFORMANT / NON_EVALUABLE
+print(report.narrative)    # Five-word prose
+print(report.full_report())  # Full Spine output
+```
+
+CLI: `umcp-ce --demo` | `umcp-ce --prompt` | `umcp-ce --channels 0.9,0.85,0.8,0.95,0.7,0.88,0.92,0.75`

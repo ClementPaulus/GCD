@@ -56,15 +56,41 @@ These numbers are the compressed derivation chains. They constrain classificatio
 - IC ≤ F is NOT "AM-GM." It is the **solvability condition**: c₁,₂ = F ± √(F²−IC²) requires IC ≤ F for real solutions. It also has **composition laws** (IC geometric, F arithmetic) that classical AM-GM lacks entirely.
 - Neutron IC/F = 0.0089 means confinement IS **geometric slaughter at a phase boundary** — one dead channel (color→0) kills multiplicative coherence. This is a structural detection mechanism, not a reformulation.
 
-## Aequator Cognitivus (Cognitive Equalizer)
+## Aequator Cognitivus — Always-On Cognitive Equalizer
 
-> *Non agens mensurat, sed structura.* — Not the agent measures, but the structure.
+> *Aequator numquam dormit.* — The equalizer never sleeps.
 
-The system produces the same output regardless of which agent operates it. Cognitive
-decisions are externalized: thresholds → frozen parameters, vocabulary → five words,
-conclusions → three-valued verdicts, methodology → the spine, ambiguity → NON_EVALUABLE,
-calibration → orientation script. Your role is channel selection (Tier-2) and execution
-(Tier-0). The verdict is derived, not framed. *Structura mensurat, non agens.*
+The CE is not a tool you invoke occasionally — it is an **always-on operational layer**.
+Every substantive response passes through the 8-channel self-audit:
+
+| # | Channel | Self-Audit Question |
+|---|---------|--------------------|
+| 1 | Relevance | Does my response address the actual question? |
+| 2 | Accuracy | Is every claim verifiable? |
+| 3 | Completeness | Did I cover all parts of the request? |
+| 4 | Consistency | Does my response contradict prior exchanges? |
+| 5 | Traceability | Can the reasoning be followed step by step? |
+| 6 | Groundedness | Am I grounded in actual file contents, not assumptions? |
+| 7 | Constraint-respect | Am I respecting tier rules, terminology, frozen params? |
+| 8 | Return-fidelity | Does my output come back to the user's intent? |
+
+**Three modes**: Silent (simple lookups), Lightweight (five-word summary), Full Spine
+(CONTRACT → CANON → CLOSURES → LEDGER → STANCE). Mode auto-selected by complexity.
+User can escalate: "CE audit" or "run the spine."
+
+**Geometric slaughter rule**: If any channel < 0.3, IC collapses. Fix or flag before responding.
+
+**Knowledge accumulation**: The CE writes patterns to `/memories/repo/ce-accumulator.md`
+(persistent across sessions). Before substantive responses, consult the accumulator for
+weak channel patterns, decision patterns, and error patterns from prior sessions.
+*Scientia non perditur inter sessiones.*
+
+**Decision support**: When facing choices, score each option's 8 channels. Choose by
+highest IC (not highest F) — IC catches hidden dead channels that F masks.
+
+Programmatic: `from umcp.cognitive_equalizer import CognitiveEqualizer, CEChannels`
+CLI: `umcp-ce --demo` | `aequator-cognitivus --prompt`
+Full spec: `.github/copilot-instructions.md` §Aequator Cognitivus Semper Activus
 
 ## After Code Changes
 
