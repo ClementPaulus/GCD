@@ -1,0 +1,180 @@
+export interface Props {
+  title?: string;
+}
+
+const { title = "Corpus Resolver" } = Astro.props;
+---
+
+<section class="corpus-resolver-panel" data-corpus-resolver>
+  <header class="corpus-resolver-panel__header">
+    <h2>{title}</h2>
+    <button type="button" id="corpus-clear-working-set">Clear set</button>
+  </header>
+
+  <form class="corpus-resolver-panel__form" id="corpus-search-form">
+    <label>
+      Search corpus
+      <input
+        id="corpus-search-input"
+        name="query"
+        type="search"
+        placeholder="Search papers, casepacks, contracts, theorems…"
+        required
+      />
+    </label>
+    <button type="submit">Search</button>
+  </form>
+
+  <div class="corpus-resolver-panel__status" id="corpus-search-status">
+    Ready.
+  </div>
+
+  <ul class="corpus-resolver-panel__results" id="corpus-search-results">
+    <li class="corpus-resolver-panel__placeholder">
+      No results yet.
+    </li>
+  </ul>
+
+  <script type="module">
+    import { searchCorpus } from "../lib/operator-api.ts";
+
+    const root = document.currentScript?.closest("[data-corpus-resolver]");
+    const form = root?.querySelector("#corpus-search-form");
+    const input = root?.querySelector("#corpus-search-input");
+    const status = root?.querySelector("#corpus-search-status");
+    const results = root?.querySelector("#corpus-search-results");
+    const clearButton = root?.querySelector("#corpus-clear-working-set");
+
+    function setStatus(text) {
+      if (status) status.textContent = text;
+    }
+
+    function renderResults(items) {
+      if (!results) return;
+
+      if (!items.length) {
+        results.innerHTML = `<li class="corpus-resolver-panel__placeholder">No results.</li>`;
+        return;
+      }
+
+      results.innerHTML = items.map((item) => `
+        <li class="corpus-resolver-panel__result">
+          <div>
+            <strong>${item.title}</strong>
+            <p>${item.kind}:${item.id}</p>
+            ${item.summary ? `<small>${item.summary}</small>` : ""}
+          </div>
+          <div class="corpus-resolver-panel__result-actions">
+            <button
+              type="button"
+              data-use-kind="${item.kind}"
+              data-use-id="${item.id}"
+              data-use-title="${item.title}"
+            >
+              Use
+            </button>
+          </div>
+        </li>
+      `).join("");
+    }
+
+    results?.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      if (target.matches("[data-use-kind]")) {
+        const ref = {
+          kind: target.dataset.useKind,
+          id: target.dataset.useId,
+          title: target.dataset.useTitle,
+        };
+
+        window.dispatchEvent(
+          new CustomEvent("operator:working-set:add", { detail: ref }),
+        );
+        setStatus(`Added ${ref.kind}:${ref.id} to working set.`);
+      }
+    });
+
+    clearButton?.addEventListener("click", () => {
+      window.dispatchEvent(new CustomEvent("operator:working-set:clear"));
+      setStatus("Working set cleared.");
+    });
+
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!input) return;
+
+      const query = input.value.trim();
+      if (!query) return;
+
+      setStatus(`Searching for "${query}"…`);
+
+      try {
+        const response = await searchCorpus({
+          query,
+          limit: 10,
+        });
+
+        renderResults(response.results);
+        setStatus(`Found ${response.results.length} result(s).`);
+      } catch (error) {
+        renderResults([]);
+        setStatus(error instanceof Error ? error.message : "Search failed.");
+      }
+    });
+  </script>
+</section>
+
+<style>
+  .corpus-resolver-panel {
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 1rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .corpus-resolver-panel__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .corpus-resolver-panel__form {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .corpus-resolver-panel__form input {
+    width: 100%;
+  }
+
+  .corpus-resolver-panel__results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .corpus-resolver-panel__result {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 0.75rem;
+  }
+
+  .corpus-resolver-panel__result p,
+  .corpus-resolver-panel__result small {
+    margin: 0.25rem 0 0;
+    display: block;
+  }
+
+  .corpus-resolver-panel__placeholder {
+    opacity: 0.8;
+  }
+</style>

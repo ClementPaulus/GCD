@@ -1,0 +1,136 @@
+import type { CEAudit } from "../lib/operator-types";
+
+export interface Props {
+  audit?: CEAudit | null;
+  title?: string;
+}
+
+const { audit = null, title = "CE Audit" } = Astro.props;
+
+function avg(values: number[]): number | null {
+  if (!values.length) return null;
+  return values.reduce((a, b) => a + b, 0) / values.length;
+}
+
+const initialValues = audit
+  ? [
+      audit.relevance,
+      audit.accuracy,
+      audit.completeness,
+      audit.consistency,
+      audit.traceability,
+      audit.groundedness,
+      audit.constraintRespect,
+      audit.returnFidelity,
+    ]
+  : [];
+
+const initialAverage = avg(initialValues);
+---
+
+<section class="ce-audit-card" data-ce-audit-card>
+  <header class="ce-audit-card__header">
+    <h2>{title}</h2>
+    <span id="ce-audit-average">
+      {initialAverage !== null ? initialAverage.toFixed(3) : "—"}
+    </span>
+  </header>
+
+  <div class="ce-audit-card__body" id="ce-audit-body">
+    {
+      audit ? (
+        <ul class="ce-audit-card__list">
+          <li>Relevance: {audit.relevance.toFixed(3)}</li>
+          <li>Accuracy: {audit.accuracy.toFixed(3)}</li>
+          <li>Completeness: {audit.completeness.toFixed(3)}</li>
+          <li>Consistency: {audit.consistency.toFixed(3)}</li>
+          <li>Traceability: {audit.traceability.toFixed(3)}</li>
+          <li>Groundedness: {audit.groundedness.toFixed(3)}</li>
+          <li>Constraint-respect: {audit.constraintRespect.toFixed(3)}</li>
+          <li>Return-fidelity: {audit.returnFidelity.toFixed(3)}</li>
+        </ul>
+      ) : (
+        <p class="ce-audit-card__placeholder">
+          No CE audit yet. Send an operator turn to populate this card.
+        </p>
+      )
+    }
+  </div>
+
+  <script type="module">
+    const root = document.currentScript?.closest("[data-ce-audit-card]");
+    const body = root?.querySelector("#ce-audit-body");
+    const average = root?.querySelector("#ce-audit-average");
+
+    function renderAudit(audit) {
+      if (!body || !average || !audit) return;
+
+      const values = [
+        audit.relevance,
+        audit.accuracy,
+        audit.completeness,
+        audit.consistency,
+        audit.traceability,
+        audit.groundedness,
+        audit.constraintRespect,
+        audit.returnFidelity,
+      ].filter((value) => typeof value === "number");
+
+      const avg = values.length
+        ? values.reduce((a, b) => a + b, 0) / values.length
+        : null;
+
+      average.textContent = avg !== null ? avg.toFixed(3) : "—";
+      body.innerHTML = `
+        <ul class="ce-audit-card__list">
+          <li>Relevance: ${Number(audit.relevance).toFixed(3)}</li>
+          <li>Accuracy: ${Number(audit.accuracy).toFixed(3)}</li>
+          <li>Completeness: ${Number(audit.completeness).toFixed(3)}</li>
+          <li>Consistency: ${Number(audit.consistency).toFixed(3)}</li>
+          <li>Traceability: ${Number(audit.traceability).toFixed(3)}</li>
+          <li>Groundedness: ${Number(audit.groundedness).toFixed(3)}</li>
+          <li>Constraint-respect: ${Number(audit.constraintRespect).toFixed(3)}</li>
+          <li>Return-fidelity: ${Number(audit.returnFidelity).toFixed(3)}</li>
+        </ul>
+      `;
+    }
+
+    window.addEventListener("operator:ce-audit", (event) => {
+      renderAudit(event.detail);
+    });
+  </script>
+</section>
+
+<style>
+  .ce-audit-card {
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 1rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .ce-audit-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .ce-audit-card__header span {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .ce-audit-card__list {
+    margin: 0;
+    padding-left: 1rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .ce-audit-card__placeholder {
+    margin: 0;
+    opacity: 0.8;
+  }
+</style>

@@ -1,0 +1,273 @@
+---
+import type { OperatorSession, SpineState, CorpusRef } from "../lib/operator-types";
+
+export interface Props {
+  session: OperatorSession;
+  initialSpine?: SpineState;
+}
+
+const { session } = Astro.props;
+
+<section
+  class="operator-chat"
+  data-session-id={session.sessionId}
+  data-ready={session.sessionId !== "bootstrap" ? "true" : "false"}
+>
+  <div class="operator-chat__messages" id="operator-messages">
+    <article class="operator-chat__message operator-chat__message--system">
+      <h2>GCD Operator</h2>
+      <p id="operator-status-text">
+        Initializing session…
+      </p>
+    </article>
+  </div>
+
+  <form class="operator-chat__composer" id="operator-chat-form">
+    <label>
+      Message
+      <textarea
+        id="operator-chat-input"
+        name="message"
+        rows="5"
+        placeholder="Explain the active contract and how it governs a casepack run."
+        required
+      ></textarea>
+    </label>
+    <div class="operator-chat__composer-actions">
+      <button type="submit" id="operator-chat-submit">Send</button>
+      <span id="operator-chat-working-set-count">Working set: 0</span>
+    </div>
+  </form>
+
+  <script type="module">
+    import { chatOperator } from "../lib/operator-api.ts";
+
+    const root = document.currentScript?.closest(".operator-chat");
+    const form = root?.querySelector("#operator-chat-form");
+    const input = root?.querySelector("#operator-chat-input");
+    const messages = root?.querySelector("#operator-messages");
+    const statusText = root?.querySelector("#operator-status-text");
+    const submitButton = root?.querySelector("#operator-chat-submit");
+    const workingSetCount = root?.querySelector("#operator-chat-working-set-count");
+
+    /** @type {Array<{kind: string, id: string, title?: string}>} */
+    let workingSet = [];
+
+    function isReady() {
+      return root?.dataset.ready === "true" && !!root?.dataset.sessionId;
+    }
+
+    function updateReadinessUi() {
+      const ready = isReady();
+      if (submitButton) submitButton.disabled = !ready;
+      if (statusText && ready) {
+        statusText.textContent = "Session ready. Ask a corpus-aware question.";
+      }
+    }
+
+    function updateWorkingSetUi() {
+      if (workingSetCount) {
+        workingSetCount.textContent = `Working set: ${workingSet.length}`;
+      }
+    }
+
+    function appendMessage(title, body, jsonData = null) {
+      if (!messages) return;
+      const article = document.createElement("article");
+      article.className = "operator-chat__message";
+      article.innerHTML = `
+        <h3>${title}</h3>
+        <p>${body}</p>
+        ${jsonData ? `<pre>${JSON.stringify(jsonData, null, 2)}</pre>` : ""}
+      `;
+      messages.appendChild(article);
+    }
+
+    window.addEventListener("operator:session-ready", (event) => {
+      const detail = event.detail || {};
+      if (!root) return;
+      root.dataset.sessionId = detail.session?.sessionId || "";
+      root.dataset.ready = "true";
+      updateReadinessUi();
+    });
+
+    window.addEventListener("operator:working-set:add", (event) => {
+      const item = event.detail;
+      if (!item?.kind || !item?.id) return;
+
+      const exists = workingSet.some((ref) => ref.kind === item.kind && ref.id === item.id);
+      if (!exists) {
+        workingSet = [...workingSet, item];
+        updateWorkingSetUi();
+      }
+    });
+
+    window.addEventListener("operator:working-set:clear", () => {
+      workingSet = [];
+      updateWorkingSetUi();
+    });
+
+    updateReadinessUi();
+    updateWorkingSetUi();
+
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const sessionId = root?.dataset.sessionId;
+      if (!input || !sessionId || !isReady()) {
+        appendMessage("System", "Operator session is not ready yet.");
+        return;
+      }
+
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage("You", text);
+      input.value = "";
+
+      try {
+        const response = await chatOperator({
+          sessionId,
+          message: text,
+          mode: "explain",
+          workingSet,
+        });
+
+        appendMessage(
+          "Operator",
+          response.answer.plainText,
+          {
+            structured: response.answer.structured,
+            usedObjects: response.usedObjects,
+            ceAudit: response.ceAudit,
+          },
+        );
+
+        if (response.ceAudit) {
+          window.dispatchEvent(
+            new CustomEvent("operator:ce-audit", { detail: response.ceAudit }),
+          );
+        }
+
+        if (response.answer?.structured) {
+          window.dispatchEvent(
+            new CustomEvent("operator:spine-update", {
+              detail: response.answer.structured,
+            }),
+          );
+        }
+      } catch (error) {
+        appendMessage("Error", error instanceof Error ? error.message : "Unknown operator error.");
+      }
+    });
+  </script>
+</section>
+
+<style>
+  .operator-chat {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .operator-chat__messages {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .operator-chat__message {
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 1rem;
+  }
+
+  .operator-chat__message pre {
+    margin-top: 0.75rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .operator-chat__composer {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .operator-chat__composer textarea {
+    width: 100%;
+  }
+
+  .operator-chat__composer-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .operator-chat__composer button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
+---
+<div class="operator-chat-panel">
+  <SpineInspector mode="chat" />
+  <form>
+    <input type="text" id="chatInput" />
+    <button type="submit">Send</button>
+  </form>
+  <script>
+    const form = document.querySelector("form");
+    const input = document.getElementById("chatInput");
+    const root = document.querySelector(".operator-chat-panel");
+
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      // Always read sessionId from the DOM at submit time
+      const sessionId = root?.dataset.sessionId;
+      if (!input || !sessionId || !isReady()) {
+        appendMessage("System", "Operator session is not ready yet.");
+        return;
+      }
+
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage("You", text);
+      input.value = "";
+
+      try {
+        const response = await chatOperator({
+          sessionId,
+          message: text,
+          mode: "explain",
+          workingSet,
+        });
+
+        appendMessage(
+          "Operator",
+          response.answer.plainText,
+          {
+            structured: response.answer.structured,
+            usedObjects: response.usedObjects,
+            ceAudit: response.ceAudit,
+          },
+        );
+
+        if (response.ceAudit) {
+          window.dispatchEvent(
+            new CustomEvent("operator:ce-audit", { detail: response.ceAudit }),
+          );
+        }
+
+        if (response.answer?.structured) {
+          window.dispatchEvent(
+            new CustomEvent("operator:spine-update", {
+              detail: response.answer.structured,
+            }),
+          );
+        }
+      } catch (error) {
+        appendMessage("Error", error instanceof Error ? error.message : "Unknown operator error.");
+      }
+    });
+  </script>
+</div>

@@ -1,0 +1,149 @@
+---
+export interface Props {
+  title?: string;
+  initialRun?: {
+    runId?: string;
+    status?: string;
+    casepackId?: string;
+    contractId?: string;
+    invariants?: Record<string, number> | null;
+    stance?: {
+      verdict?: string;
+      regime?: string;
+      critical?: boolean;
+      rationale?: string[];
+    } | null;
+    artifacts?: Array<{ name: string; url?: string }> | null;
+  } | null;
+}
+
+const { title = "Run Summary", initialRun = null } = Astro.props;
+---
+
+<section class="run-summary-card" data-run-summary-card>
+  <header class="run-summary-card__header">
+    <h2>{title}</h2>
+    <button type="button" id="run-summary-clear">Clear</button>
+  </header>
+
+  <div id="run-summary-body">
+    {
+      initialRun ? (
+        <div class="run-summary-card__content">
+          <p><strong>Run ID:</strong> {initialRun.runId ?? "—"}</p>
+          <p><strong>Status:</strong> {initialRun.status ?? "—"}</p>
+          <p><strong>Casepack:</strong> {initialRun.casepackId ?? "—"}</p>
+          <p><strong>Contract:</strong> {initialRun.contractId ?? "—"}</p>
+
+          <h3>Invariants</h3>
+          <pre>{JSON.stringify(initialRun.invariants ?? null, null, 2)}</pre>
+
+          <h3>Stance</h3>
+          <pre>{JSON.stringify(initialRun.stance ?? null, null, 2)}</pre>
+
+          <h3>Artifacts</h3>
+          <pre>{JSON.stringify(initialRun.artifacts ?? [], null, 2)}</pre>
+        </div>
+      ) : (
+        <p class="run-summary-card__placeholder">
+          No run selected. Inspect or stage a casepack to populate this card.
+        </p>
+      )
+    }
+  </div>
+
+  <script type="module">
+    const root = document.currentScript?.closest("[data-run-summary-card]");
+    const body = root?.querySelector("#run-summary-body");
+    const clearButton = root?.querySelector("#run-summary-clear");
+
+    function renderRun(run) {
+      if (!body) return;
+
+      if (!run) {
+        body.innerHTML = `
+          <p class="run-summary-card__placeholder">
+            No run selected. Inspect or stage a casepack to populate this card.
+          </p>
+        `;
+        return;
+      }
+
+      const invariants = run.invariants ?? null;
+      const stance = run.stance ?? null;
+      const artifacts = run.artifacts ?? [];
+
+      body.innerHTML = `
+        <div class="run-summary-card__content">
+          <p><strong>Run ID:</strong> ${run.runId ?? "—"}</p>
+          <p><strong>Status:</strong> ${run.status ?? "—"}</p>
+          <p><strong>Casepack:</strong> ${run.casepackId ?? "—"}</p>
+          <p><strong>Contract:</strong> ${run.contractId ?? "—"}</p>
+
+          <h3>Invariants</h3>
+          <pre>${JSON.stringify(invariants, null, 2)}</pre>
+
+          <h3>Stance</h3>
+          <pre>${JSON.stringify(stance, null, 2)}</pre>
+
+          <h3>Artifacts</h3>
+          <pre>${JSON.stringify(artifacts, null, 2)}</pre>
+        </div>
+      `;
+    }
+
+    window.addEventListener("operator:run-update", (event) => {
+      renderRun(event.detail);
+    });
+
+    window.addEventListener("operator:run-clear", () => {
+      renderRun(null);
+    });
+
+    clearButton?.addEventListener("click", () => {
+      window.dispatchEvent(new CustomEvent("operator:run-clear"));
+      renderRun(null);
+    });
+  </script>
+</section>
+
+<style>
+  .run-summary-card {
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 1rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .run-summary-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .run-summary-card__content {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .run-summary-card__content p,
+  .run-summary-card__content h3,
+  .run-summary-card__placeholder {
+    margin: 0;
+  }
+
+  .run-summary-card__content pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 0.75rem;
+  }
+
+  .run-summary-card__placeholder {
+    opacity: 0.8;
+  }
+</style>

@@ -1,0 +1,266 @@
+---
+import OperatorShell from "../../components/OperatorShell.astro";
+import CorpusResolverPanel from "../../components/CorpusResolverPanel.astro";
+import type { OperatorSession } from "../../lib/operator-types";
+
+const bootstrapSession: OperatorSession = {
+	sessionId: "bootstrap",
+	mode: "explain",
+	activeContractId: "UMA.INTSTACK.v1",
+	activeClosureIds: [],
+	activeCasepackId: null,
+	workingSet: [],
+	memory: {
+		recentObjects: [],
+		pinnedObjects: [],
+		recentQueries: [],
+	},
+	createdAt: new Date().toISOString(),
+	updatedAt: new Date().toISOString(),
+};
+---
+
+<OperatorShell title="GCD Operator · Contracts" sessionId={bootstrapSession.sessionId}>
+	<Fragment slot="left">
+		<section class="operator-sidebar-card">
+			<h2>Session</h2>
+			<p id="contracts-session-status">Initializing session…</p>
+			<p><strong>Session ID:</strong> <span id="contracts-session-id">—</span></p>
+			<p><strong>Active Contract:</strong> <span id="contracts-active-contract">—</span></p>
+		</section>
+
+		<CorpusResolverPanel />
+	</Fragment>
+
+	<section class="contracts-page">
+		<article class="operator-main-card">
+			<header class="operator-main-card__header">
+				<h2>Contracts</h2>
+				<button type="button" id="contracts-refresh">Refresh</button>
+			</header>
+
+			<p id="contracts-status">Loading contracts…</p>
+
+			<ul class="contracts-list" id="contracts-list">
+				<li class="contracts-list__placeholder">No contracts loaded yet.</li>
+			</ul>
+		</article>
+	</section>
+
+	<Fragment slot="right">
+		<section class="operator-sidebar-card">
+			<h2>Selected Contract</h2>
+			<pre id="contracts-detail-json">No contract selected.</pre>
+		</section>
+	</Fragment>
+
+	<script type="module">
+		import { bindContract, getCorpusObject, searchCorpus } from "../../lib/operator-api.ts";
+		import { ensureOperatorSession } from "../../lib/operator-session.ts";
+
+		const sessionStatus = document.getElementById("contracts-session-status");
+		const sessionIdEl = document.getElementById("contracts-session-id");
+		const activeContractEl = document.getElementById("contracts-active-contract");
+		const contractsStatus = document.getElementById("contracts-status");
+		const contractsList = document.getElementById("contracts-list");
+		const detailJson = document.getElementById("contracts-detail-json");
+		const refreshButton = document.getElementById("contracts-refresh");
+
+		let sessionId = "";
+		let activeContractId = "UMA.INTSTACK.v1";
+
+		function setStatus(text) {
+			if (contractsStatus) contractsStatus.textContent = text;
+		}
+
+		function renderContracts(results) {
+			if (!contractsList) return;
+
+			if (!results.length) {
+				contractsList.innerHTML = `<li class="contracts-list__placeholder">No contracts found.</li>`;
+				return;
+			}
+
+			contractsList.innerHTML = results.map((item) => `
+				<li class="contracts-list__item">
+					<div>
+						<strong>${item.title}</strong>
+						<p>${item.kind}:${item.id}</p>
+						${item.summary ? `<small>${item.summary}</small>` : ""}
+					</div>
+					<div class="contracts-list__actions">
+						<button type="button" data-inspect-id="${item.id}">Inspect</button>
+						<button type="button" data-activate-id="${item.id}">Activate</button>
+					</div>
+				</li>
+			`).join("");
+		}
+
+		async function inspectContract(contractId) {
+			try {
+				const response = await getCorpusObject("contract", contractId);
+				if (detailJson) {
+					detailJson.textContent = JSON.stringify(response.object, null, 2);
+				}
+			} catch (error) {
+				if (detailJson) {
+					detailJson.textContent =
+						error instanceof Error ? error.message : "Failed to inspect contract.";
+				}
+			}
+		}
+
+		async function loadContracts() {
+			setStatus("Loading contracts…");
+
+			try {
+				const response = await searchCorpus({
+					query: "",
+					kinds: ["contract"],
+					limit: 50,
+				});
+
+				renderContracts(response.results);
+				setStatus(`Loaded ${response.results.length} contract(s).`);
+			} catch (error) {
+				renderContracts([]);
+				setStatus(error instanceof Error ? error.message : "Failed to load contracts.");
+			}
+		}
+
+		contractsList?.addEventListener("click", async (event) => {
+			const target = event.target;
+			if (!(target instanceof HTMLElement)) return;
+
+			const inspectId = target.dataset.inspectId;
+			const activateId = target.dataset.activateId;
+
+			if (inspectId) {
+				await inspectContract(inspectId);
+				return;
+			}
+
+			if (activateId) {
+				if (!sessionId) {
+					setStatus("Session not ready.");
+					return;
+				}
+
+				try {
+					const response = await bindContract({
+						sessionId,
+						contractId: activateId,
+					});
+
+					activeContractId = response.activeContractId;
+					if (activeContractEl) activeContractEl.textContent = activeContractId;
+					if (detailJson) {
+						detailJson.textContent = JSON.stringify(response.spineState, null, 2);
+					}
+
+					window.dispatchEvent(
+						new CustomEvent("operator:spine-update", { detail: response.spineState }),
+					);
+
+					setStatus(`Activated contract ${activateId}.`);
+				} catch (error) {
+					setStatus(error instanceof Error ? error.message : "Failed to activate contract.");
+				}
+			}
+		});
+
+		refreshButton?.addEventListener("click", () => {
+			loadContracts();
+		});
+
+		async function bootstrap() {
+			try {
+				const envelope = await ensureOperatorSession({
+					mode: "explain",
+					activeContractId: "UMA.INTSTACK.v1",
+					activeClosureIds: [],
+					activeCasepackId: null,
+				});
+
+				sessionId = envelope.session.sessionId;
+				activeContractId = envelope.session.activeContractId || "UMA.INTSTACK.v1";
+
+				if (sessionStatus) sessionStatus.textContent = "Session ready.";
+				if (sessionIdEl) sessionIdEl.textContent = sessionId;
+				if (activeContractEl) activeContractEl.textContent = activeContractId;
+				if (detailJson) detailJson.textContent = JSON.stringify(envelope.spineState, null, 2);
+
+				window.dispatchEvent(
+					new CustomEvent("operator:session-ready", { detail: envelope }),
+				);
+
+				await loadContracts();
+				await inspectContract(activeContractId);
+			} catch (error) {
+				if (sessionStatus) {
+					sessionStatus.textContent =
+						error instanceof Error ? error.message : "Failed to initialize session.";
+				}
+				setStatus("Could not load contracts.");
+			}
+		}
+
+		bootstrap();
+	</script>
+</OperatorShell>
+
+<style>
+	.contracts-page {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.operator-main-card,
+	.operator-sidebar-card {
+		border: 1px solid rgba(255,255,255,0.12);
+		border-radius: 14px;
+		padding: 1rem;
+	}
+
+	.operator-main-card__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.contracts-list {
+		list-style: none;
+		padding: 0;
+		margin: 1rem 0 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.contracts-list__item {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		border: 1px solid rgba(255,255,255,0.08);
+		border-radius: 12px;
+		padding: 0.75rem;
+	}
+
+	.contracts-list__item p,
+	.contracts-list__item small {
+		margin: 0.25rem 0 0;
+		display: block;
+	}
+
+	.contracts-list__actions {
+		display: flex;
+		gap: 0.5rem;
+		align-items: start;
+	}
+
+	.operator-sidebar-card pre {
+		margin: 0;
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
+</style>

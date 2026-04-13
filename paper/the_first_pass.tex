@@ -178,17 +178,17 @@ stages visually.
   \draw[arr] (closures) -- (ledger);
   \draw[arr] (ledger) -- (stance);
 
-  % Stop annotations (right side of each node)
+  % Stop annotations (all on right side, now slightly right for optimal alignment)
   \node[stop, anchor=west] at (contract.east)
-    [xshift=7pt, yshift=9pt] {\textit{1--2}};
+    [xshift=0pt, yshift=9pt] {\textit{1--2}};
   \node[stop, anchor=west] at (canon.east)
-    [xshift=7pt, yshift=9pt] {\textit{3--5}};
+    [xshift=0pt, yshift=9pt] {\textit{3--5}};
   \node[stop, anchor=west] at (closures.east)
-    [xshift=7pt, yshift=9pt] {\textit{6}};
-  \node[stop, anchor=west] at (ledger.west)
-    [xshift=-16pt, yshift=9pt] {\textit{7}};
-  \node[stop, anchor=east] at (stance.east)
-    [xshift=16pt, yshift=9pt] {\textit{8--12}};
+    [xshift=0pt, yshift=9pt] {\textit{6}};
+  \node[stop, anchor=west] at (ledger.east)
+    [xshift=0pt, yshift=9pt] {\textit{7}};
+  \node[stop, anchor=west] at (stance.east)
+    [xshift=0pt, yshift=9pt] {\textit{8--12}};
 \end{tikzpicture}
 
 \vspace{0.4cm}
@@ -216,10 +216,9 @@ stages visually.
   \bottomrule
 \end{tabular}}
 \captionof{figure}{Twelve stops mapped onto the five spine stages.
-  The diagram traces the zigzag path through the spine;
-  stop numbers appear as superscripts.
-  Tier-1: kernel and its identities; Tier-0: protocol;
-  Tier-2: domain closures.
+  The diagram traces the zigzag path through the spine; stop numbers (italic) indicate the twelve sequential validation stops:
+  \textit{1--2}: Contract (freeze); \textit{3--5}: Canon (tell); \textit{6}: Closures (publish); \textit{7}: Integrity Ledger (reconcile); \textit{8--12}: Stance (read).
+  All stop numbers are placed consistently to the right of each node. Tier-1: kernel and its identities; Tier-0: protocol; Tier-2: domain closures.
   ``$1\!\leftarrow\!0$'': Tier-0 code evaluates a Tier-1 function.}
 \label{fig:spine}
 \end{center}

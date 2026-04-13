@@ -1,0 +1,326 @@
+---
+import OperatorShell from "../../components/OperatorShell.astro";
+import CorpusResolverPanel from "../../components/CorpusResolverPanel.astro";
+import RunSummaryCard from "../../components/RunSummaryCard.astro";
+import type { OperatorSession } from "../../lib/operator-types";
+
+const bootstrapSession: OperatorSession = {
+	sessionId: "bootstrap",
+	mode: "casepack",
+	activeContractId: "UMA.INTSTACK.v1",
+	activeClosureIds: [],
+	activeCasepackId: null,
+	workingSet: [],
+	memory: {
+		recentObjects: [],
+		pinnedObjects: [],
+		recentQueries: [],
+	},
+	createdAt: new Date().toISOString(),
+	updatedAt: new Date().toISOString(),
+};
+---
+
+<OperatorShell title="GCD Operator · Casepacks" sessionId={bootstrapSession.sessionId}>
+	<Fragment slot="left">
+		<section class="operator-sidebar-card">
+			<h2>Session</h2>
+			<p id="casepacks-session-status">Initializing session…</p>
+			<p><strong>Session ID:</strong> <span id="casepacks-session-id">—</span></p>
+			<p><strong>Contract:</strong> <span id="casepacks-contract-id">—</span></p>
+		</section>
+
+		<CorpusResolverPanel />
+	</Fragment>
+
+	<section class="casepacks-page">
+		<article class="operator-main-card">
+			<header class="operator-main-card__header">
+				<h2>Casepacks</h2>
+				<button type="button" id="casepacks-refresh">Refresh</button>
+			</header>
+
+			<p id="casepacks-status">Loading casepacks…</p>
+
+			<ul class="casepacks-list" id="casepacks-list">
+				<li class="casepacks-list__placeholder">No casepacks loaded yet.</li>
+			</ul>
+		</article>
+
+		<article class="operator-main-card">
+			<h2>Selected Casepack</h2>
+			<pre id="casepacks-detail-json">No casepack selected.</pre>
+		</article>
+	</section>
+
+	<Fragment slot="right">
+		<RunSummaryCard />
+	</Fragment>
+
+	<script type="module">
+		import { getCorpusObject, searchCorpus } from "../../lib/operator-api.ts";
+		import { ensureOperatorSession } from "../../lib/operator-session.ts";
+
+		const sessionStatus = document.getElementById("casepacks-session-status");
+		const sessionIdEl = document.getElementById("casepacks-session-id");
+		const contractEl = document.getElementById("casepacks-contract-id");
+		const casepacksStatus = document.getElementById("casepacks-status");
+		const casepacksList = document.getElementById("casepacks-list");
+		const detailJson = document.getElementById("casepacks-detail-json");
+		const refreshButton = document.getElementById("casepacks-refresh");
+
+		let sessionId = "";
+		let activeContractId = "UMA.INTSTACK.v1";
+
+		function setStatus(text) {
+			if (casepacksStatus) casepacksStatus.textContent = text;
+		}
+
+		function renderCasepacks(results) {
+			if (!casepacksList) return;
+
+			if (!results.length) {
+				casepacksList.innerHTML = `<li class="casepacks-list__placeholder">No casepacks found.</li>`;
+				return;
+			}
+
+			casepacksList.innerHTML = results.map((item) => `
+				<li class="casepacks-list__item">
+					<div>
+						<strong>${item.title}</strong>
+						<p>${item.kind}:${item.id}</p>
+						${item.summary ? `<small>${item.summary}</small>` : ""}
+					</div>
+					<div class="casepacks-list__actions">
+						<button type="button" data-inspect-id="${item.id}" data-inspect-title="${item.title}">Inspect</button>
+						<button type="button" data-run-id="${item.id}" data-run-title="${item.title}">Run</button>
+					</div>
+				</li>
+			`).join("");
+		}
+
+		async function inspectCasepack(casepackId, title = casepackId) {
+			try {
+				const response = await getCorpusObject("casepack", casepackId);
+
+				if (detailJson) {
+					detailJson.textContent = JSON.stringify(response.object, null, 2);
+				}
+
+				window.dispatchEvent(
+					new CustomEvent("operator:run-update", {
+						detail: {
+							runId: `staged:${casepackId}`,
+							status: "staged",
+							casepackId,
+							contractId: activeContractId,
+							invariants: null,
+							stance: {
+								verdict: "NON_EVALUABLE",
+								rationale: [
+									"Casepack selected and inspected.",
+									"Authoritative run execution endpoint is not wired in this pass."
+								]
+							},
+							artifacts: [],
+						},
+					}),
+				);
+
+				setStatus(`Inspected casepack ${title}.`);
+			} catch (error) {
+				if (detailJson) {
+					detailJson.textContent =
+						error instanceof Error ? error.message : "Failed to inspect casepack.";
+				}
+				setStatus("Inspection failed.");
+			}
+		}
+
+		async function loadCasepacks() {
+			setStatus("Loading casepacks…");
+
+			try {
+				const response = await searchCorpus({
+					query: "",
+					kinds: ["casepack"],
+					limit: 50,
+				});
+
+				renderCasepacks(response.results);
+				setStatus(`Loaded ${response.results.length} casepack(s).`);
+			} catch (error) {
+				renderCasepacks([]);
+				setStatus(error instanceof Error ? error.message : "Failed to load casepacks.");
+			}
+		}
+
+		async function pollRun(runId) {
+			const maxAttempts = 12;
+			const delayMs = 250;
+
+			for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+				const run = await getRun(runId);
+
+				window.dispatchEvent(
+					new CustomEvent("operator:run-update", { detail: run }),
+				);
+
+				if (run.status === "completed" || run.status === "failed") {
+					return run;
+				}
+
+				await new Promise((resolve) => setTimeout(resolve, delayMs));
+			}
+
+			return getRun(runId);
+		}
+
+		async function runCasepack(casepackId, title = casepackId) {
+			if (!sessionId) {
+				setStatus("Session not ready.");
+				return;
+			}
+
+			try {
+				setStatus(`Starting run for ${title}…`);
+
+				const started = await startCasepackRun(casepackId, {
+					sessionId,
+					contractId: activeContractId,
+					overrideInputs: null,
+				});
+
+				window.dispatchEvent(
+					new CustomEvent("operator:run-update", {
+						detail: {
+							runId: started.runId,
+							status: started.status,
+							casepackId,
+							contractId: activeContractId,
+							invariants: null,
+							stance: null,
+							artifacts: [],
+						},
+					}),
+				);
+
+				const finalRun = await pollRun(started.runId);
+				setStatus(`Run ${finalRun.runId} finished with status ${finalRun.status}.`);
+			} catch (error) {
+				setStatus(error instanceof Error ? error.message : "Failed to run casepack.");
+			}
+		}
+
+		casepacksList?.addEventListener("click", async (event) => {
+			const target = event.target;
+			if (!(target instanceof HTMLElement)) return;
+
+			const inspectId = target.dataset.inspectId;
+			const inspectTitle = target.dataset.inspectTitle;
+			const runId = target.dataset.runId;
+			const runTitle = target.dataset.runTitle;
+
+			if (inspectId) {
+				await inspectCasepack(inspectId, inspectTitle || inspectId);
+				return;
+			}
+
+			if (runId) {
+				await runCasepack(runId, runTitle || runId);
+			}
+		});
+
+		refreshButton?.addEventListener("click", () => {
+			loadCasepacks();
+		});
+
+		async function bootstrap() {
+			try {
+				const envelope = await ensureOperatorSession({
+					mode: "casepack",
+					activeContractId: "UMA.INTSTACK.v1",
+					activeClosureIds: [],
+					activeCasepackId: null,
+				});
+
+				sessionId = envelope.session.sessionId;
+				activeContractId = envelope.session.activeContractId || "UMA.INTSTACK.v1";
+
+				if (sessionStatus) sessionStatus.textContent = "Session ready.";
+				if (sessionIdEl) sessionIdEl.textContent = sessionId;
+				if (contractEl) contractEl.textContent = activeContractId;
+
+				window.dispatchEvent(
+					new CustomEvent("operator:session-ready", { detail: envelope }),
+				);
+
+				await loadCasepacks();
+			} catch (error) {
+				if (sessionStatus) {
+					sessionStatus.textContent =
+						error instanceof Error ? error.message : "Failed to initialize session.";
+				}
+				setStatus("Could not load casepacks.");
+			}
+		}
+
+		bootstrap();
+	</script>
+</OperatorShell>
+
+<style>
+	.casepacks-page {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.operator-main-card,
+	.operator-sidebar-card {
+		border: 1px solid rgba(255,255,255,0.12);
+		border-radius: 14px;
+		padding: 1rem;
+	}
+
+	.operator-main-card__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.casepacks-list {
+		list-style: none;
+		padding: 0;
+		margin: 1rem 0 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.casepacks-list__item {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		border: 1px solid rgba(255,255,255,0.08);
+		border-radius: 12px;
+		padding: 0.75rem;
+	}
+
+	.casepacks-list__item p,
+	.casepacks-list__item small {
+		margin: 0.25rem 0 0;
+		display: block;
+	}
+
+	.casepacks-list__actions {
+		display: flex;
+		gap: 0.5rem;
+		align-items: start;
+	}
+
+	.operator-main-card pre {
+		margin: 0;
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
+</style>
