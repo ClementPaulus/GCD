@@ -76,7 +76,7 @@ pre-commit install
 
 # 7. Verify installation
 umcp health
-pytest --co -q  # Should show 20,221 tests
+pytest --co -q  # Should show 20,235 tests
 ```
 
 ---
@@ -93,7 +93,7 @@ GENERATIVE-COLLAPSE-DYNAMICS/
 │   ├── cli.py             # Command-line interface
 │   ├── api_umcp.py        # REST API
 │   └── dashboard.py       # Streamlit dashboard
-├── tests/                 # Test suite (20,221 tests)
+├── tests/                 # Test suite (20,235 tests)
 ├── casepacks/             # Reproducible examples
 ├── closures/              # Computational functions
 ├── contracts/             # Mathematical contracts
