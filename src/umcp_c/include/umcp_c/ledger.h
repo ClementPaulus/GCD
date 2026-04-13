@@ -36,7 +36,7 @@ extern "C" {
 typedef struct {
     uint64_t             timestamp;   /**< Monotonic row ID           */
     umcp_kernel_result_t kernel;      /**< Full kernel output         */
-    umcp_regime_t        regime;      /**< Derived regime label       */
+    umcp_regime_with_overlay_t regime;/**< Derived regime + overlay   */
     double               D_omega;     /**< Drift cost Γ(ω)           */
     double               D_C;         /**< Roughness cost α·C        */
     double               R;           /**< Return credit              */
@@ -67,9 +67,12 @@ typedef struct {
     double               cum_residual;   /**< Σ|residual|            */
     double               max_residual;   /**< max(|residual|)        */
     double               cum_delta_kappa;/**< Σ Δκ                   */
-    uint32_t             regime_counts[4]; /**< [STABLE, WATCH, COLLAPSE, CRITICAL] */
-    uint32_t             pass_count;     /**< Number of PASS seams   */
-    uint32_t             fail_count;     /**< Number of FAIL seams   */
+    uint32_t             stable_count;    /**< STABLE regime count    */
+    uint32_t             watch_count;     /**< WATCH regime count     */
+    uint32_t             collapse_count;  /**< COLLAPSE regime count  */
+    uint32_t             critical_count;  /**< CRITICAL overlay count */
+    uint32_t             pass_count;      /**< Number of PASS seams   */
+    uint32_t             fail_count;      /**< Number of FAIL seams   */
 } umcp_ledger_t;
 
 /* ─── Ledger Operations ─────────────────────────────────────────── */

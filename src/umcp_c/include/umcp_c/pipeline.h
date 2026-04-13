@@ -60,7 +60,7 @@ typedef struct {
  */
 typedef struct {
     umcp_kernel_result_t kernel;      /**< Full kernel output        */
-    umcp_regime_t        regime;      /**< Classified regime         */
+    umcp_regime_with_overlay_t regime;/**< Classified regime + overlay */
     umcp_verdict_t       identity_check; /**< Tier-1 identity result */
     umcp_seam_status_t   seam;        /**< Seam PASS/FAIL            */
     umcp_stance_t        stance;      /**< Combined stance           */

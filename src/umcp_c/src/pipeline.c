@@ -66,8 +66,8 @@ int umcp_pipeline_step(umcp_pipeline_t *pipeline,
 
     /* ── Stop 3: Closures (gates + cost computation) ──────────── */
 
-    /* Regime classification */
-    out->regime = umcp_classify_regime(&out->kernel, &ct->thresholds);
+    /* Regime classification (overlay-aware) */
+    out->regime = umcp_classify_regime_with_overlay(&out->kernel, &ct->thresholds);
 
     /* Identity validation */
     out->identity_check = umcp_validate_identities(&out->kernel, 1e-9);
@@ -136,8 +136,12 @@ int umcp_pipeline_step(umcp_pipeline_t *pipeline,
 
 umcp_stance_t umcp_pipeline_stance(const umcp_pipeline_t *pipeline)
 {
-    umcp_stance_t empty = {UMCP_REGIME_WATCH, UMCP_SEAM_PENDING,
-                            UMCP_NON_EVALUABLE, 0.0};
+    umcp_stance_t empty = {
+        .regime = {UMCP_REGIME_WATCH, 0},
+        .seam = UMCP_SEAM_PENDING,
+        .verdict = UMCP_NON_EVALUABLE,
+        .confidence = 0.0
+    };
     if (!pipeline || pipeline->ledger.count == 0) return empty;
 
     const umcp_ledger_entry_t *latest = umcp_ledger_latest(&pipeline->ledger);

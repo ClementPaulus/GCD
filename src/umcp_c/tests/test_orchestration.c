@@ -1,12 +1,46 @@
+// All includes must come first
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include "../include/umcp_c/types.h"
-#include "../include/umcp_c/regime.h"
-#include "../include/umcp_c/contract.h"
-#include "../include/umcp_c/kernel.h"
+#include <math.h>
+#include "umcp_c/types.h"
+#include "umcp_c/contract.h"
+#include "umcp_c/regime.h"
+#include "umcp_c/trace.h"
+#include "umcp_c/ledger.h"
+#include "umcp_c/pipeline.h"
+#include "umcp_c/kernel.h"
 
 // Prototype for overlay regime classifier (now in regime.c)
 umcp_regime_with_overlay_t umcp_classify_regime_with_overlay(const umcp_kernel_result_t *k, const umcp_regime_thresholds_t *thr);
+
+static void test_pipeline_overlay_regime(void)
+{
+    printf("  Test: Pipeline overlay regime propagation\n");
+    umcp_contract_t ct;
+    umcp_contract_default(&ct);
+    umcp_ledger_entry_t buf[8];
+    umcp_pipeline_t pipeline;
+    umcp_pipeline_init(&pipeline, &ct, buf, 8);
+
+    double c[8] = {0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 1e-8};
+    double w[8]; for (int i = 0; i < 8; i++) w[i] = 0.125;
+    umcp_trace_t tr;
+    umcp_trace_init(&tr, 8, 1e-8);
+    memcpy(tr.c, c, sizeof(c));
+    memcpy(tr.w, w, sizeof(w));
+
+    umcp_pipeline_result_t result;
+    umcp_pipeline_step(&pipeline, &tr, 1.0, 1.0, &result);
+
+    ASSERT(result.regime.is_critical, "pipeline result regime: is_critical set");
+    ASSERT(result.regime.base_regime == UMCP_REGIME_WATCH || result.regime.base_regime == UMCP_REGIME_COLLAPSE,
+           "pipeline result regime: base_regime is WATCH or COLLAPSE");
+    ASSERT(result.stance.regime.is_critical == result.regime.is_critical, "stance regime overlay matches result");
+    ASSERT(result.stance.regime.base_regime == result.regime.base_regime, "stance base_regime matches result");
+
+    umcp_trace_free(&tr);
+}
 /**
  * @file test_orchestration.c
  * @brief Comprehensive tests for the C orchestration layer
@@ -65,7 +99,7 @@ static int tests_failed = 0;
 
 static void test_types_regime_enum(void)
 {
-    printf("  Test: Regime enum values\n");
+    printf("  Test: Regime enum values (no CRITICAL as enum)\n");
     ASSERT_EQ(UMCP_REGIME_STABLE,   0, "STABLE = 0");
     ASSERT_EQ(UMCP_REGIME_WATCH,    1, "WATCH = 1");
     ASSERT_EQ(UMCP_REGIME_COLLAPSE, 2, "COLLAPSE = 2");
@@ -89,9 +123,9 @@ static void test_types_seam_enum(void)
 
 static void test_types_inf_rec(void)
 {
-    printf("  Test: INF_REC sentinel\n");
+    printf("  Test: INF_REC sentinel (strict)\n");
     ASSERT(umcp_is_inf_rec(UMCP_TAU_R_INF_REC), "INFINITY is INF_REC");
-    ASSERT(umcp_is_inf_rec(-1.0),  "negative is INF_REC");
+    ASSERT(!umcp_is_inf_rec(-1.0), "negative finite is NOT INF_REC");
     ASSERT(!umcp_is_inf_rec(5.0),  "positive finite is not INF_REC");
     ASSERT(!umcp_is_inf_rec(0.0),  "zero is not INF_REC");
 }
@@ -280,10 +314,12 @@ static void test_regime_watch(void)
     umcp_kernel_result_t k;
     umcp_kernel_compute(c, w, 8, 1e-8, &k);
 
-    umcp_regime_t r = umcp_classify_regime_default(&k);
-    /* F ≈ 0.875 < 0.90, so STABLE gate fails even if ω might be low */
-    ASSERT(r == UMCP_REGIME_WATCH || r == UMCP_REGIME_COLLAPSE,
-           "moderate-fidelity → WATCH or COLLAPSE");
+        umcp_contract_t ct;
+        umcp_contract_default(&ct);
+        umcp_regime_with_overlay_t r = umcp_classify_regime_with_overlay(&k, &ct.thresholds);
+        /* F ≈ 0.875 < 0.90, so STABLE gate fails even if ω might be low */
+        ASSERT(r.base_regime == UMCP_REGIME_WATCH || r.base_regime == UMCP_REGIME_COLLAPSE,
+            "moderate-fidelity → WATCH or COLLAPSE (overlay-aware)");
 }
 
 static void test_regime_collapse(void)
@@ -296,9 +332,10 @@ static void test_regime_collapse(void)
     umcp_kernel_compute(c, w, 8, 1e-8, &k);
     umcp_contract_t ct;
     umcp_contract_default(&ct);
-    umcp_regime_with_overlay_t r = umcp_classify_regime_with_overlay(&k, &ct.thresholds);
-    ASSERT(r.base_regime == UMCP_REGIME_COLLAPSE,
-           "low-fidelity → COLLAPSE");
+        umcp_regime_with_overlay_t r = umcp_classify_regime_with_overlay(&k, &ct.thresholds);
+        ASSERT(r.base_regime == UMCP_REGIME_COLLAPSE,
+            "low-fidelity → COLLAPSE (overlay-aware)");
+        ASSERT(!r.is_critical, "not critical overlay");
 }
 
 static void test_regime_critical(void)
@@ -312,9 +349,11 @@ static void test_regime_critical(void)
     umcp_contract_t ct;
     umcp_contract_default(&ct);
     umcp_regime_thresholds_t thr = ct.thresholds;
-    umcp_regime_with_overlay_t r = umcp_classify_regime_with_overlay(&k, &thr);
-    ASSERT(r.is_critical, "overlay struct: is_critical set");
-    ASSERT(umcp_is_critical(&k, &thr), "one dead channel → CRITICAL");
+        umcp_regime_with_overlay_t r = umcp_classify_regime_with_overlay(&k, &thr);
+        ASSERT(r.is_critical, "overlay struct: is_critical set");
+        ASSERT(umcp_is_critical(&k, &thr), "one dead channel → CRITICAL");
+        ASSERT(r.base_regime == UMCP_REGIME_WATCH || r.base_regime == UMCP_REGIME_COLLAPSE,
+            "critical overlay can accompany any base regime");
 }
 
 
@@ -526,7 +565,8 @@ static void test_ledger_append_basic(void)
     umcp_ledger_entry_t e;
     memset(&e, 0, sizeof(e));
     e.timestamp = 0;
-    e.regime = UMCP_REGIME_STABLE;
+    e.regime.base_regime = UMCP_REGIME_STABLE;
+    e.regime.is_critical = 0;
     e.residual = 0.001;
     e.seam = UMCP_SEAM_PASS;
     e.verdict = UMCP_CONFORMANT;
@@ -535,6 +575,8 @@ static void test_ledger_append_basic(void)
     ASSERT_EQ(rc, UMCP_OK, "append succeeds");
     ASSERT_EQ(ledger.count, (size_t)1, "count = 1 after append");
     ASSERT_EQ(ledger.pass_count, (uint32_t)1, "pass_count incremented");
+    ASSERT_EQ(ledger.stable_count, (uint32_t)1, "stable_count incremented");
+    ASSERT_EQ(ledger.critical_count, (uint32_t)0, "critical_count not incremented");
 }
 
 static void test_ledger_append_overflow(void)
@@ -570,7 +612,8 @@ static void test_ledger_build_entry(void)
     umcp_ledger_entry_t entry;
     int rc = umcp_ledger_build_entry(&entry, &k, &ct, NAN, 1.0, 1.0);
     ASSERT_EQ(rc, UMCP_OK, "build_entry succeeds");
-    ASSERT_EQ(entry.regime, UMCP_REGIME_STABLE, "high-fidelity → STABLE");
+    ASSERT(entry.regime.base_regime == UMCP_REGIME_STABLE, "high-fidelity → STABLE (overlay-aware)");
+    ASSERT(entry.regime.is_critical == 0, "not critical overlay");
     ASSERT(entry.D_omega >= 0.0, "D_omega is non-negative");
     ASSERT(entry.D_C >= 0.0, "D_C is non-negative");
     /* First entry → seam PENDING */
@@ -604,13 +647,15 @@ static void test_ledger_running_stats(void)
 
     umcp_ledger_entry_t e;
     memset(&e, 0, sizeof(e));
-    e.regime = UMCP_REGIME_STABLE;
+    e.regime.base_regime = UMCP_REGIME_STABLE;
+    e.regime.is_critical = 0;
     e.residual = 0.001;
     e.seam = UMCP_SEAM_PASS;
     e.verdict = UMCP_CONFORMANT;
     umcp_ledger_append(&ledger, &e);
 
-    e.regime = UMCP_REGIME_WATCH;
+    e.regime.base_regime = UMCP_REGIME_WATCH;
+    e.regime.is_critical = 0;
     e.residual = 0.003;
     umcp_ledger_append(&ledger, &e);
 
@@ -620,9 +665,9 @@ static void test_ledger_running_stats(void)
     ASSERT_NEAR(ledger.max_residual, 0.003, 1e-15,
                 "max residual = 0.003");
 
-    ASSERT_EQ(ledger.regime_counts[UMCP_REGIME_STABLE], (uint32_t)1,
+    ASSERT_EQ(ledger.stable_count, (uint32_t)1,
               "1 STABLE");
-    ASSERT_EQ(ledger.regime_counts[UMCP_REGIME_WATCH], (uint32_t)1,
+    ASSERT_EQ(ledger.watch_count, (uint32_t)1,
               "1 WATCH");
 }
 
@@ -638,10 +683,10 @@ static void test_ledger_regime_fractions(void)
     e.seam = UMCP_SEAM_PASS;
     e.verdict = UMCP_CONFORMANT;
 
-    e.regime = UMCP_REGIME_STABLE;  umcp_ledger_append(&ledger, &e);
-    e.regime = UMCP_REGIME_STABLE;  umcp_ledger_append(&ledger, &e);
-    e.regime = UMCP_REGIME_WATCH;   umcp_ledger_append(&ledger, &e);
-    e.regime = UMCP_REGIME_COLLAPSE;umcp_ledger_append(&ledger, &e);
+    e.regime.base_regime = UMCP_REGIME_STABLE;  e.regime.is_critical = 0; umcp_ledger_append(&ledger, &e);
+    e.regime.base_regime = UMCP_REGIME_STABLE;  e.regime.is_critical = 0; umcp_ledger_append(&ledger, &e);
+    e.regime.base_regime = UMCP_REGIME_WATCH;   e.regime.is_critical = 0; umcp_ledger_append(&ledger, &e);
+    e.regime.base_regime = UMCP_REGIME_COLLAPSE;e.regime.is_critical = 0; umcp_ledger_append(&ledger, &e);
 
     double s, w_fr, c_fr, cr;
     umcp_ledger_regime_fractions(&ledger, &s, &w_fr, &c_fr, &cr);
@@ -760,7 +805,8 @@ static void test_pipeline_single_step(void)
                 "duality identity holds");
 
     /* Regime should be STABLE for this input */
-    ASSERT_EQ(result.regime, UMCP_REGIME_STABLE, "STABLE regime");
+    ASSERT(result.regime.base_regime == UMCP_REGIME_STABLE, "STABLE regime (overlay-aware)");
+    ASSERT(result.regime.is_critical == 0, "not critical overlay");
 
     /* Step count updated */
     ASSERT_EQ(umcp_pipeline_step_count(&pipe), (size_t)1, "step_count = 1");
@@ -852,7 +898,7 @@ static void test_pipeline_stance_query(void)
     umcp_pipeline_step(&pipe, &tr, 1.0, 1.0, &result);
 
     umcp_stance_t stance = umcp_pipeline_stance(&pipe);
-    ASSERT_EQ(stance.regime, UMCP_REGIME_STABLE, "stance regime is STABLE");
+    ASSERT_EQ(stance.regime.base_regime, UMCP_REGIME_STABLE, "stance regime is STABLE");
 
     umcp_trace_free(&tr);
 }
@@ -875,14 +921,15 @@ static void test_pipeline_regime_transition(void)
     double c1[8] = {0.98, 0.97, 0.96, 0.99, 0.98, 0.97, 0.98, 0.97};
     umcp_trace_set_channels(&tr, c1);
     umcp_pipeline_step(&pipe, &tr, 1.0, 1.0, &result);
-    ASSERT_EQ(result.regime, UMCP_REGIME_STABLE, "step 1 STABLE");
+    ASSERT(result.regime.base_regime == UMCP_REGIME_STABLE, "step 1 STABLE (overlay-aware)");
+    ASSERT(result.regime.is_critical == 0, "not critical overlay");
 
     /* Step 2: Collapse (low fidelity) */
     double c2[8] = {0.3, 0.4, 0.2, 0.5, 0.3, 0.4, 0.2, 0.5};
     umcp_trace_set_channels(&tr, c2);
     umcp_pipeline_step(&pipe, &tr, 1.0, 1.0, &result);
-        ASSERT(result.regime == UMCP_REGIME_COLLAPSE,
-            "step 2 COLLAPSE");
+        ASSERT(result.regime.base_regime == UMCP_REGIME_COLLAPSE,
+            "step 2 COLLAPSE (overlay-aware)");
 
     umcp_trace_free(&tr);
 }
@@ -936,45 +983,47 @@ static void test_full_spine_integration(void)
     umcp_trace_init(&tr, 8, ct.epsilon);
     umcp_trace_uniform_weights(&tr);
 
-    /* Simulate a trajectory: stable → watch → stable → stable */
+    /* Simulate a trajectory: all STABLE, identical traces for seam closure */
     double traces[4][8] = {
-        {0.98, 0.97, 0.96, 0.99, 0.98, 0.97, 0.98, 0.97},  /* Stable */
-        {0.80, 0.75, 0.85, 0.70, 0.78, 0.82, 0.77, 0.76},  /* Watch  */
-        {0.98, 0.97, 0.96, 0.99, 0.98, 0.97, 0.98, 0.97},  /* Stable */
-        {0.99, 0.98, 0.97, 0.99, 0.98, 0.99, 0.98, 0.99},  /* Stable */
+        {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0},  /* Perfect Stable */
+        {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0},  /* Perfect Stable */
+        {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0},  /* Perfect Stable */
+        {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0},  /* Perfect Stable */
     };
 
     umcp_pipeline_result_t result;
-    for (int i = 0; i < 4; i++) {
-        umcp_trace_set_channels(&tr, traces[i]);
-        int rc = umcp_pipeline_step(&pipe, &tr, 1.0, 1.0, &result);
-        ASSERT_EQ(rc, UMCP_OK, "step succeeds");
+        for (int i = 0; i < 4; i++) {
+         umcp_trace_set_channels(&tr, traces[i]);
+         double R = (i == 0) ? 1.0 : 0.0;
+         double tau_R = (i == 0) ? 1.0 : 0.0;
+         int rc = umcp_pipeline_step(&pipe, &tr, R, tau_R, &result);
+         ASSERT_EQ(rc, UMCP_OK, "step succeeds");
 
-        /* ── Stop 3: Closures (verify gates fire correctly) ── */
-        ASSERT(result.identity_check == UMCP_CONFORMANT,
-               "identity check passes for valid kernel");
+         /* ── Stop 3: Closures (verify gates fire correctly) ── */
+         ASSERT(result.identity_check == UMCP_CONFORMANT,
+             "identity check passes for valid kernel");
 
-        /* Verify duality identity at every step */
-        ASSERT_NEAR(result.kernel.F + result.kernel.omega, 1.0, 1e-15,
-                    "F + omega = 1 at every step");
+         /* Verify duality identity at every step */
+         ASSERT_NEAR(result.kernel.F + result.kernel.omega, 1.0, 1e-15,
+                  "F + omega = 1 at every step");
 
-        /* Verify integrity bound */
-        ASSERT(result.kernel.IC <= result.kernel.F + 1e-14,
-               "IC <= F at every step");
-    }
+         /* Verify integrity bound */
+         ASSERT(result.kernel.IC <= result.kernel.F + 1e-14,
+             "IC <= F at every step");
+        }
 
     /* ── Stop 4 & 5: Ledger → Stance ── */
     ASSERT_EQ(umcp_pipeline_step_count(&pipe), (size_t)4, "4 steps processed");
 
     umcp_stance_t stance = umcp_pipeline_stance(&pipe);
-    printf("    Final stance: regime=%s, verdict=%s\n",
-           umcp_regime_str(stance.regime),
-           umcp_verdict_str(stance.verdict));
+        printf("    Final stance: regime=%s, verdict=%s\n",
+            umcp_regime_str(stance.regime.base_regime),
+            umcp_verdict_str(stance.verdict));
 
-    /* The trajectory should produce a non-empty verdict */
-    ASSERT(stance.verdict != UMCP_NON_EVALUABLE ||
-           stance.seam == UMCP_SEAM_PENDING,
-           "4-step trajectory produces a meaningful verdict");
+
+    /* The trajectory should produce a CONFORMANT verdict and STABLE regime */
+    ASSERT_EQ(stance.verdict, UMCP_CONFORMANT, "all-stable, seam closes → CONFORMANT");
+    ASSERT_EQ(stance.regime.base_regime, UMCP_REGIME_STABLE, "all-stable → STABLE");
 
     /* Ledger statistics */
     double mean_r = umcp_ledger_mean_residual(&pipe.ledger);

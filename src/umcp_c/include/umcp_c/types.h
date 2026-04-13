@@ -89,17 +89,19 @@ typedef enum {
  * Check if a return time represents INF_REC (no return).
  */
 static inline int umcp_is_inf_rec(double tau_R) {
-    return isinf(tau_R) || tau_R < 0.0;
+    return isinf(tau_R) && tau_R > 0.0;
 }
 
 /* ─── Stance (Derived from Regime + Seam) ───────────────────────── */
 
 /**
- * Stance = Regime + Seam outcome.
+ * Stance = Regime (with overlay) + Seam outcome.
  * The stance is always derived, never asserted.
+ *
+ * Regime overlay is preserved end-to-end: base_regime + is_critical.
  */
 typedef struct {
-    umcp_regime_t      regime;
+    umcp_regime_with_overlay_t regime;
     umcp_seam_status_t seam;
     umcp_verdict_t     verdict;
     double             confidence; /**< Ledger residual (lower = better) */

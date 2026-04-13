@@ -33,7 +33,10 @@ int umcp_ledger_init(umcp_ledger_t *ledger,
     ledger->pass_count      = 0;
     ledger->fail_count      = 0;
 
-    memset(ledger->regime_counts, 0, sizeof(ledger->regime_counts));
+    ledger->stable_count = 0;
+    ledger->watch_count = 0;
+    ledger->collapse_count = 0;
+    ledger->critical_count = 0;
 
     return UMCP_OK;
 }
@@ -58,9 +61,15 @@ int umcp_ledger_append(umcp_ledger_t *ledger,
     }
     ledger->cum_delta_kappa += entry->delta_kappa;
 
-    /* Regime distribution */
-    if (entry->regime >= 0 && entry->regime <= 3) {
-        ledger->regime_counts[entry->regime]++;
+    /* Regime distribution (overlay-aware) */
+    switch (entry->regime.base_regime) {
+        case UMCP_REGIME_STABLE:   ledger->stable_count++; break;
+        case UMCP_REGIME_WATCH:    ledger->watch_count++; break;
+        case UMCP_REGIME_COLLAPSE: ledger->collapse_count++; break;
+        default: break;
+    }
+    if (entry->regime.is_critical) {
+        ledger->critical_count++;
     }
 
     /* Seam counts */
@@ -86,8 +95,8 @@ int umcp_ledger_build_entry(
     /* Copy kernel output */
     entry->kernel = *result;
 
-    /* Classify regime */
-    entry->regime = umcp_classify_regime(result, &contract->thresholds);
+    /* Classify regime (overlay-aware) */
+    entry->regime = umcp_classify_regime_with_overlay(result, &contract->thresholds);
 
     /* Compute cost closures */
     entry->D_omega = umcp_gamma_omega(result->omega,
@@ -157,10 +166,10 @@ void umcp_ledger_regime_fractions(const umcp_ledger_t *ledger,
     }
 
     double total = (double)ledger->count;
-    if (stable)   *stable   = (double)ledger->regime_counts[UMCP_REGIME_STABLE]   / total;
-    if (watch)    *watch    = (double)ledger->regime_counts[UMCP_REGIME_WATCH]    / total;
-    if (collapse) *collapse = (double)ledger->regime_counts[UMCP_REGIME_COLLAPSE] / total;
-    if (critical) *critical = (double)ledger->regime_counts[3] / total; // 4th slot is for critical overlay
+    if (stable)   *stable   = (double)ledger->stable_count   / total;
+    if (watch)    *watch    = (double)ledger->watch_count    / total;
+    if (collapse) *collapse = (double)ledger->collapse_count / total;
+    if (critical) *critical = (double)ledger->critical_count / total;
 }
 
 umcp_verdict_t umcp_ledger_verdict(const umcp_ledger_t *ledger)
