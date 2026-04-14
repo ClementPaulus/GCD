@@ -5,7 +5,7 @@ import OperatorShell from "../components/OperatorShell.astro";
 import OperatorChatPanel from "../components/OperatorChatPanel.astro";
 import CorpusResolverPanel from "../components/CorpusResolverPanel.astro";
 import CEAuditCard from "../components/CEAuditCard.astro";
-import { createOperatorSession, getOperatorSession } from "../lib/operator-api.ts";
+import { createOperatorSession, getOperatorSession } from "../lib/operator-api-mock.ts";
 import type { OperatorSession, SessionEnvelope, CEAudit, SpineState } from "../lib/operator-types";
 
 let session: OperatorSession | null = null;

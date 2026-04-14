@@ -42,7 +42,7 @@ const { session } = Astro.props;
   </form>
 
   <script type="module">
-    import { chatOperator } from "../lib/operator-api.ts";
+    import { chatOperator } from "../lib/operator-api-mock.ts";
 
     const root = document.currentScript?.closest(".operator-chat");
     const form = root?.querySelector("#operator-chat-form");
