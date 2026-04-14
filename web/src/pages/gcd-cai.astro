@@ -1,10 +1,68 @@
-title: GCD Cognitive AI
-layout: "../layouts/BaseLayout.astro"
 ---
 import OperatorShell from "../components/OperatorShell.astro";
+import { createOperatorSession, getOperatorSession } from "../lib/operator-api.ts";
+import type { OperatorSession, SessionEnvelope } from "../lib/operator-types";
 
-<section>
-  <h1>GCD Cognitive AI</h1>
-  <p>Interact with the Generative Collapse Dynamics Cognitive AI below.</p>
-  <OperatorShell />
-</section>
+let session: OperatorSession | null = null;
+let spine: SessionEnvelope["spineState"] | null = null;
+
+if (typeof window !== "undefined") {
+  const storedSessionId = window.localStorage.getItem("operatorSessionId");
+  if (storedSessionId) {
+    try {
+      const envelope = await getOperatorSession(storedSessionId);
+      session = envelope.session;
+      spine = envelope.spineState;
+    } catch (e) {}
+  }
+  if (!session) {
+    const created = await createOperatorSession({ mode: "explain" });
+    session = created;
+    window.localStorage.setItem("operatorSessionId", session.sessionId);
+    const envelope = await getOperatorSession(session.sessionId);
+    spine = envelope.spineState;
+  }
+}
+---
+
+<OperatorShell title="GCD CAI · Collapse-Aware Intelligence" sessionId={session?.sessionId ?? ""}>
+  <Fragment slot="left">
+    <section class="operator-sidebar-card">
+      <h2>Session</h2>
+      <p><strong>Session ID:</strong> {session?.sessionId ?? "—"}</p>
+      <p><strong>Active Contract:</strong> {session?.activeContractId ?? "—"}</p>
+      <p><strong>Mode:</strong> {session?.mode ?? "—"}</p>
+    </section>
+  </Fragment>
+  <section>
+    <h2>Workspace Summary</h2>
+    <ul>
+      <li>Session created: {session?.createdAt ?? "—"}</li>
+      <li>Active contract: {session?.activeContractId ?? "—"}</li>
+      <li>Active casepack: {session?.activeCasepackId ?? "—"}</li>
+      <li>Closures: {session?.activeClosureIds?.length ?? 0}</li>
+    </ul>
+    <pre>{JSON.stringify(spine, null, 2)}</pre>
+  </section>
+</OperatorShell>
+
+<OperatorShell title="GCD CAI · Collapse-Aware Intelligence" sessionId={session?.sessionId ?? ""}>
+  <Fragment slot="left">
+    <section class="operator-sidebar-card">
+      <h2>Session</h2>
+      <p><strong>Session ID:</strong> {session?.sessionId ?? "—"}</p>
+      <p><strong>Active Contract:</strong> {session?.activeContractId ?? "—"}</p>
+      <p><strong>Mode:</strong> {session?.mode ?? "—"}</p>
+    </section>
+  </Fragment>
+  <section>
+    <h2>Workspace Summary</h2>
+    <ul>
+      <li>Session created: {session?.createdAt ?? "—"}</li>
+      <li>Active contract: {session?.activeContractId ?? "—"}</li>
+      <li>Active casepack: {session?.activeCasepackId ?? "—"}</li>
+      <li>Closures: {session?.activeClosureIds?.length ?? 0}</li>
+    </ul>
+    <pre>{JSON.stringify(spine, null, 2)}</pre>
+  </section>
+</OperatorShell>
