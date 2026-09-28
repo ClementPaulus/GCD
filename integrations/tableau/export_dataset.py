@@ -523,7 +523,7 @@ def export_dataset(root: Path, output_dir: Path, include_archive: bool = True) -
     )
     counts["trace_fields"] = _write_csv(
         output_dir / "trace_fields.csv",
-        ["run_key", "run_id", "source_scope", "row_index", "t", "field_name", "value_raw", "value_numeric", "source_path"],
+        [\n            "run_key",\n            "run_id",\n            "source_scope",\n            "row_index",\n            "t",\n            "field_name",\n            "value_raw",\n            "value_numeric",\n            "source_path",\n        ],
         _trace_rows(root, runs),
     )
     counts["missingness_events"] = _write_csv(
